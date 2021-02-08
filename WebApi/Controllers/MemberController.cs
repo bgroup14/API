@@ -16,9 +16,9 @@ namespace WebApi.Controllers
         {
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            Member member = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
+            Member memberr = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
             MemberDTO memberDTO = new MemberDTO();
-            memberDTO.name = member.email;
+            memberDTO.name = memberr.email;
             return memberDTO.name;
         }
 
