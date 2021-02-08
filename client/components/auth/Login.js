@@ -10,7 +10,7 @@ const Login = () => {
     const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
     const check = () => {
-        dispatch(login("fuck"))
+        dispatch(login("fudck"))
     }
     return (
         <View>
