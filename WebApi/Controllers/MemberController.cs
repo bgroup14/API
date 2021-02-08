@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         // GET api/<controller>/5
         public string Get(int id)
         {
-            return "value";
+            return "value test github!!!!";
         }
 
         // POST api/<controller>
