@@ -55,7 +55,7 @@ const LoginScreen = (props) => {
         <Text style={styles.navButtonText}>Forgot Password?</Text>
       </TouchableOpacity>
 
-      {Platform.OS === 'android' ? (
+      {/* {Platform.OS === 'android' ? ( */}
         <View>
           <SocialButton
             buttonTitle="Sign In with Facebook"
@@ -73,7 +73,7 @@ const LoginScreen = (props) => {
             onPress={() => googleLogin()}
           />
         </View>
-      ) : null}
+      {/* ) : null} */}
 
       <TouchableOpacity
 

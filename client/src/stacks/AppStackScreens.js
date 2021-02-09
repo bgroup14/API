@@ -8,7 +8,7 @@ import MainStackScreens from './MainStackScreens';
 
 //here we will have to chech from redux if user is logged in - if he is logged in we well show the mainStackScreens - else we show the auth screens
 
-const user = 'logged';
+const user = 'logged1';
 const AppStackScreens = () => {
     const AppStack = createStackNavigator();
 
