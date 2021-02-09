@@ -10,9 +10,10 @@ import Register from './components/auth/Register';
 
 import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreens from './src/stacks/AppStackScreens';
+import LoginScreenTest from './src/screens/LoginScreen';
 
 
-
+//<AppStackScreens />
 
 const rootReducer = combineReducers({
   auth: authReducer
