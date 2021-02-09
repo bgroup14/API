@@ -8,6 +8,11 @@ import authReducer from './store/reducers/auth';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 
+import { NavigationContainer } from '@react-navigation/native';
+import AppStackScreens from './src/stacks/AppStackScreens';
+
+
+
 
 const rootReducer = combineReducers({
   auth: authReducer
@@ -18,10 +23,9 @@ const store = createStore(rootReducer)
 export default function App() {
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Login />
-        <Register />
-      </View>
+      <NavigationContainer>
+        <AppStackScreens />
+      </NavigationContainer>
     </Provider>
   );
 }
