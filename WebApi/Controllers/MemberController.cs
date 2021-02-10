@@ -9,6 +9,7 @@ using WebApi.DTO;
 
 namespace WebApi.Controllers
 {
+    [RoutePrefix("api/member")]
     public class MemberController : ApiController
     {
         // GET api/<controller>
@@ -18,7 +19,7 @@ namespace WebApi.Controllers
 
             Member member = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
             MemberDTO memberDTO = new MemberDTO();
-            memberDTO.name = "My email is: "+member.email;
+            memberDTO.name = "My email is: " + member.email;
             return memberDTO.name;
         }
 
@@ -27,6 +28,11 @@ namespace WebApi.Controllers
         {
             return "value test github!!!!";
         }
+        [HttpPost]
+        [Route("login")]
+       /* public HttpResponseMessage Login(member)
+        {
+        }*/
 
         // POST api/<controller>
         public void Post([FromBody] string value)
