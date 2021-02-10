@@ -48,14 +48,15 @@ const LoginScreen = (props) => {
 
       <FormButton
         buttonTitle="Sign In"
-        onPress={() => login(email, password)}
+        // onPress={() => login(email, password)}
+        onPress={() => alert(1)}
       />
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
       </TouchableOpacity>
 
-      {/* {Platform.OS === 'android' ? ( */}
+
       <View>
         <SocialButton
           buttonTitle="Sign In with Facebook"
@@ -73,7 +74,7 @@ const LoginScreen = (props) => {
           onPress={() => googleLogin()}
         />
       </View>
-      {/* ) : null} */}
+
 
       <TouchableOpacity
 
