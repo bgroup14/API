@@ -4,7 +4,7 @@ import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 // import {AuthContext} from '../navigation/AuthProvider';
 
-const SignupScreenTest = (props) => {
+const SignupScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   // const [confirmPassword, setConfirmPassword] = useState();
@@ -75,7 +75,7 @@ const SignupScreenTest = (props) => {
   );
 };
 
-export default SignupScreenTest;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    //fontFamily: 'Kufam-SemiBoldItalic',
+    // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
