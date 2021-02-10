@@ -2,8 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SignInScreen from '../screens/SignInScreen'
-import SignUpScreen from '../screens/SignUpScreen'
+import SignUpScreen from '../screens/SignupScreen'
 import LoginScreen from '../screens/LoginScreen';
 
 const AuthStackScreens = () => {

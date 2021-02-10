@@ -23,7 +23,7 @@ const LoginScreen = (props) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image
-        source={require('../../assets/icon.png')}
+        source={require('../../assets/logo.png')}
         style={styles.logo}
       />
       <Text style={styles.text}>RN Social App</Text>
@@ -56,23 +56,23 @@ const LoginScreen = (props) => {
       </TouchableOpacity>
 
       {/* {Platform.OS === 'android' ? ( */}
-        <View>
-          <SocialButton
-            buttonTitle="Sign In with Facebook"
-            btnType="facebook"
-            color="#4867aa"
-            backgroundColor="#e6eaf4"
-            onPress={() => fbLogin()}
-          />
+      <View>
+        <SocialButton
+          buttonTitle="Sign In with Facebook"
+          btnType="facebook"
+          color="#4867aa"
+          backgroundColor="#e6eaf4"
+          onPress={() => fbLogin()}
+        />
 
-          <SocialButton
-            buttonTitle="Sign In with Google"
-            btnType="google"
-            color="#de4d41"
-            backgroundColor="#f5e7ea"
-            onPress={() => googleLogin()}
-          />
-        </View>
+        <SocialButton
+          buttonTitle="Sign In with Google"
+          btnType="google"
+          color="#de4d41"
+          backgroundColor="#f5e7ea"
+          onPress={() => googleLogin()}
+        />
+      </View>
       {/* ) : null} */}
 
       <TouchableOpacity
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   text: {
-    fontFamily: 'Kufam-SemiBoldItalic',
+    // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
