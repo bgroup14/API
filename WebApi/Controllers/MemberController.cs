@@ -32,22 +32,32 @@ namespace WebApi.Controllers
         [Route("login")]
         public HttpResponseMessage Login(MemberLoginDTO memberLogin)
         {
-            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
-            if (member == null)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
-            }
-            else
-            {
-                if (member.password != memberLogin.password)
+                Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
+                if (member == null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "Incorrect password");
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
                 }
+                else
+                {
+                    if (member.password != memberLogin.password)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Incorrect password");
+                    }
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Login success");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, "Login success");
         }
 
         // POST api/<controller>
