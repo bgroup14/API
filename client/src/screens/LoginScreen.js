@@ -12,13 +12,51 @@ import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
 
+import { login } from '../../store/actions/auth';
+
+
+
+
 // import {AuthContext} from '../navigation/AuthProvider';
+
+//Redux
+import { useSelector, useDispatch } from 'react-redux';
+
 
 const LoginScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const dispatch = useDispatch();
 
   // const {login, googleLogin, fbLogin} = useContext(AuthContext);
+
+  const signIn = () => {
+    alert(3)
+    dispatch(login("alanskverer@gmail.com", "123456"));
+
+  }
+
+  //or with fetch then
+
+  // const url = ``;
+  // fetch(url, {
+  //   method: 'GET',
+  //   mode: 'cors',
+  //   cache: 'no-cache',
+  //   credentials: 'same-origin',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+
+  //   },
+  //   redirect: 'follow',
+  //   referrerPolicy: 'no-referrer',
+  // }).then(response => {
+  //   return response.json();
+  // }
+  // ).then(response => {
+
+
+  // }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -48,15 +86,14 @@ const LoginScreen = (props) => {
 
       <FormButton
         buttonTitle="Sign In"
-        // onPress={() => login(email, password)}
-        onPress={() => alert(1)}
+        onPress={() => signIn()}
       />
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
       </TouchableOpacity>
 
-
+      {/* {Platform.OS === 'android' ? ( */}
       <View>
         <SocialButton
           buttonTitle="Sign In with Facebook"
@@ -74,7 +111,7 @@ const LoginScreen = (props) => {
           onPress={() => googleLogin()}
         />
       </View>
-
+      {/* ) : null} */}
 
       <TouchableOpacity
 
