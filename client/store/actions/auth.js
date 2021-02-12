@@ -1,13 +1,71 @@
 
-import LOGIN_SUCCESS from './types';
+import { View, StyleSheet, Button, Alert } from "react-native";
+import { LOGIN_SUCCESS } from './types';
+import axios from 'axios';
+
 //Login User
-export const login = (email, password) => {
 
-    return {
+export const login = (email, password) => async dispatch => {
 
-        type: "LOGIN_SUCCESS",
-        payload: email
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
     }
+    const body = JSON.stringify({ email, password })
+
+
+    try {
+        //if this will fail (status !=200 ) it will catch the error in the error block
+        const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/login", body, config);
+        console.log("we in");
+        console.log(res);
+        console.log(res.data);
+
+        dispatch({
+            type: LOGIN_SUCCESS,
+            //payload will be the what we recieve from the server
+            payload: res.data
+        });
+
+    } catch (err) {
+        //  const errors = err.response.data.errors;
+        //  console.log(err.response.data.msg)
+        // if (errors) {
+
+        //     errors.forEach(error => dispatch(setAlert(error.msg, 'danger'))
+
+        //     );
+        // } else {
+        //     dispatch(setAlert(err.response.data.msg, 'danger'))
+        // }
+
+        // dispatch({
+        //     type: LOGIN_FAIL,
+
+        // });
+        Alert.alert(
+            "OOPS!",
+            "Wrong Email Or Password",
+            [
+
+                { text: "OK" }
+            ],
+        );
+
+        // console.log("error" + err.response.data) 
+
+    }
+
+
+
+
+
+    // return {
+
+    //     type: "LOGIN_SUCCESS",
+    //     payload: email
+    // }
 
     //For async to work in dispatch i should add thunk redux
     // const url = "https://jsonplaceholder.typicode.com/todos/1"
@@ -47,4 +105,5 @@ export const login = (email, password) => {
 
 
 }
+
 

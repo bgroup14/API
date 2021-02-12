@@ -17,7 +17,6 @@ import { login } from '../../store/actions/auth';
 
 
 
-// import {AuthContext} from '../navigation/AuthProvider';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -26,37 +25,22 @@ import { useSelector, useDispatch } from 'react-redux';
 const LoginScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+
   const dispatch = useDispatch();
 
-  // const {login, googleLogin, fbLogin} = useContext(AuthContext);
 
   const signIn = () => {
-    alert(3)
-    dispatch(login("alanskverer@gmail.com", "123456"));
+    dispatch(login(email, password));
 
   }
 
-  //or with fetch then
+  const emailChangeHandler = (text) => {
+    setEmail(text);
+  }
+  const passwordChangeHanlder = (text) => {
+    setPassword(text);
+  }
 
-  // const url = ``;
-  // fetch(url, {
-  //   method: 'GET',
-  //   mode: 'cors',
-  //   cache: 'no-cache',
-  //   credentials: 'same-origin',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-
-  //   },
-  //   redirect: 'follow',
-  //   referrerPolicy: 'no-referrer',
-  // }).then(response => {
-  //   return response.json();
-  // }
-  // ).then(response => {
-
-
-  // }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -67,8 +51,8 @@ const LoginScreen = (props) => {
       <Text style={styles.text}>RN Social App</Text>
 
       <FormInput
-        labelValue={email}
-        onChangeText={(userEmail) => setEmail(userEmail)}
+        // labelValue={email}
+        onChangeText={(text) => emailChangeHandler(text)}
         placeholderText="Email"
         iconType="user"
         keyboardType="email-address"
@@ -77,8 +61,8 @@ const LoginScreen = (props) => {
       />
 
       <FormInput
-        labelValue={password}
-        onChangeText={(userPassword) => setPassword(userPassword)}
+        //   labelValue={password}
+        onChangeText={(text) => passwordChangeHanlder(text)}
         placeholderText="Password"
         iconType="lock"
         secureTextEntry={true}
@@ -89,9 +73,9 @@ const LoginScreen = (props) => {
         onPress={() => signIn()}
       />
 
-      <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
+      {/* <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* {Platform.OS === 'android' ? ( */}
       <View>
