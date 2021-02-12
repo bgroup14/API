@@ -4,7 +4,7 @@ import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 // import {AuthContext} from '../navigation/AuthProvider';
 
-const SignupScreen = (props) => {
+const FeedSettingsScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   // const [confirmPassword, setConfirmPassword] = useState();
@@ -13,7 +13,7 @@ const SignupScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Create an account</Text>
+      <Text style={styles.text}>FeedSettingsScreen</Text>
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/logo.png')}
@@ -24,7 +24,7 @@ const SignupScreen = (props) => {
       <FormInput
         // labelValue={email}
         //   onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Full Name"
+        placeholderText="Full"
         iconType="user"
         //keyboardType="email-address"
         autoCapitalize="none"
@@ -59,7 +59,9 @@ const SignupScreen = (props) => {
 
       <FormButton
         buttonTitle="Sign Up"
-        onPress={() => props.navigation.navigate('ProfileSetup')}
+      // onPress={() => props.navigation.navigate('ProfileSetup')}
+
+      //  onPress={() => register(email, password)} go to - profile setup
       />
 
 
@@ -75,7 +77,7 @@ const SignupScreen = (props) => {
   );
 };
 
-export default SignupScreen;
+export default FeedSettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
