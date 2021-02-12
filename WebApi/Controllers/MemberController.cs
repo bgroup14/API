@@ -59,6 +59,35 @@ namespace WebApi.Controllers
             }
 
         }
+        [HttpGet]
+        [Route("checkifmemberexists")]
+
+
+        public HttpResponseMessage CheckIfMemberExists(MemberLoginDTO memberLogin)
+        {
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+                Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
+                if (member == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, "User dosent exists");
+                }
+              
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "User exists");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+
+        }
+
+
 
         // POST api/<controller>
         public void Post([FromBody] string value)
