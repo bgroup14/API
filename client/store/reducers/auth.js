@@ -9,6 +9,7 @@ const initialState = {
 
 // this state name is counter! we define it in the combine reducer.
 function authReducer(state = initialState, action) {
+    console.log("in the reducer")
     const { type, payload } = action
     switch (type) {
         case LOGIN_SUCCESS:
