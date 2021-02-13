@@ -59,7 +59,7 @@ namespace WebApi.Controllers
             }
 
         }
-        [HttpGet]
+        [HttpPost]
         [Route("checkifmemberexists")]
 
 
