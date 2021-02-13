@@ -1,16 +1,39 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
-// import {AuthContext} from '../navigation/AuthProvider';
+import { Checkbox } from 'galio-framework';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileSetup = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  // const [confirmPassword, setConfirmPassword] = useState();
+  const [signUpDetails, setSignUpDetails] = useState({});
 
-  // const {register} = useContext(AuthContext);
 
+  useEffect(() => {
+    getData();
+  }, [])
+
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('signUpDetails')
+      let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
+      if (jsonObj != null) {
+        setSignUpDetails(jsonObj)
+        console.log("sign up details from previous page: " + jsonObj.fullName)
+      }
+
+    } catch (e) {
+      console.log("error !!")
+      // error reading value
+    }
+  }
+
+  const check = () => {
+    console.log(signUpDetails.fullName)
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Setup</Text>
@@ -56,6 +79,7 @@ const ProfileSetup = (props) => {
         iconType="lock"
         secureTextEntry={true}
       />
+
 
       <FormButton
         buttonTitle="Next"
