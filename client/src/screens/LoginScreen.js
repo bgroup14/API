@@ -14,6 +14,18 @@ import SocialButton from '../components/SocialButton';
 
 import { login } from '../../store/actions/auth';
 
+import * as Facebook from 'expo-facebook';
+
+import { LOGIN_SUCCESS } from '../../store/actions/types';
+
+import axios from 'axios';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+// import { useStateWithCallbackInstant } from 'use-state-with-callback'
+
+
 
 
 
@@ -25,8 +37,20 @@ import { useSelector, useDispatch } from 'react-redux';
 const LoginScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [fullName, setFullName] = useState();
+  const [fbImage, setFbImage] = useState();
 
   const dispatch = useDispatch();
+
+  const storeData = async (value) => {
+    try {
+      console.log("storing in async storage...")
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('signUpDetails', jsonValue)
+    } catch (e) {
+      // saving error
+    }
+  }
 
 
   const signIn = () => {
@@ -40,6 +64,88 @@ const LoginScreen = (props) => {
   const passwordChangeHanlder = (text) => {
     setPassword(text);
   }
+  const goToProfileSetup = () => {
+    props.navigation.navigate('ProfileSetup')
+  }
+
+  async function btnFBLogin() {
+    let appId = '221942186335440';
+    let appName = 'VolunteerMatch'
+    try {
+      await Facebook.initializeAsync(({ appId, appName }));
+      const { type, token, expires, permissions, declinedPermissions, }
+        = await Facebook.logInWithReadPermissionsAsync({
+          permissions: ['public_profile', 'email'],
+        });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture&
+    access_token=${token}`);
+        let res = await response.json();
+        console.log("res email is: ")
+        console.log(res.email);
+        setEmail(res.email);
+        setFullName(res.name);
+        setFbImage(res.picture.data.url)
+
+
+
+
+
+
+        const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
+
+        const config = {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+
+        let bodyObj = {
+          email: res.email
+        }
+        const body = JSON.stringify(bodyObj)
+
+
+        //Check if user already has been registered - if he did, redirect to feed. if not - redirect to profile setup
+        try {
+          //check if member exists on DB - if exusts will catch 
+          const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists", body, config);
+          // save in async storage
+          let signUpDetails = {
+            email,
+            fullName,
+            fbImage
+          }
+          console.log("sign up details to async storage: ")
+          console.log(signUpDetails)
+          storeData(signUpDetails).then(
+
+            goToProfileSetup()
+            //   props.navigation.navigate('ProfileSetup')
+          );
+
+
+        } catch (error) {
+          console.log("user email exists on db")
+          //If email is in db - redirect to home screen with LOGIN_SUCCESS
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: email
+          });
+        }
+
+      }
+    }
+    catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+
+
+
+
+  }
+
 
 
   return (
@@ -84,7 +190,7 @@ const LoginScreen = (props) => {
           btnType="facebook"
           color="#4867aa"
           backgroundColor="#e6eaf4"
-          onPress={() => fbLogin()}
+          onPress={() => btnFBLogin()}
         />
 
         <SocialButton
