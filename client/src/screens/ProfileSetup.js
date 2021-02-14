@@ -15,6 +15,19 @@ const ProfileSetup = (props) => {
     getData();
   }, [])
 
+  const deleteAsync = async () => {
+    try {
+      await AsyncStorage.removeItem('signUpDetails');
+      const jsonValue = await AsyncStorage.getItem('signUpDetails')
+      console.log(jsonValue)
+
+      console.log("deleted!")
+    }
+    catch (exception) {
+      console.log(exception)
+    }
+
+  }
 
   const getData = async () => {
     try {
@@ -32,6 +45,7 @@ const ProfileSetup = (props) => {
   }
 
   const check = () => {
+
     console.log(signUpDetails.fullName)
   }
   return (
@@ -84,6 +98,20 @@ const ProfileSetup = (props) => {
       <FormButton
         buttonTitle="Next"
         onPress={() => props.navigation.navigate('FeedSettings')}
+
+      //  onPress={() => register(email, password)} go to - profile setup
+      />
+
+      <FormButton
+        buttonTitle="check async storage"
+        onPress={() => check()}
+
+      //  onPress={() => register(email, password)} go to - profile setup
+      />
+
+      <FormButton
+        buttonTitle="delete async storage"
+        onPress={() => deleteAsync()}
 
       //  onPress={() => register(email, password)} go to - profile setup
       />
