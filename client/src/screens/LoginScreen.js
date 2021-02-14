@@ -37,8 +37,7 @@ import { useSelector, useDispatch } from 'react-redux';
 const LoginScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [fullName, setFullName] = useState();
-  const [fbImage, setFbImage] = useState();
+
 
   const dispatch = useDispatch();
 
@@ -84,15 +83,6 @@ const LoginScreen = (props) => {
         let res = await response.json();
         console.log("res email is: ")
         console.log(res.email);
-        setEmail(res.email);
-        setFullName(res.name);
-        setFbImage(res.picture.data.url)
-
-
-
-
-
-
         const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
 
         const config = {
@@ -110,20 +100,18 @@ const LoginScreen = (props) => {
         //Check if user already has been registered - if he did, redirect to feed. if not - redirect to profile setup
         try {
           //check if member exists on DB - if exusts will catch 
-          const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists", body, config);
+          await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists", body, config);
           // save in async storage
           let signUpDetails = {
-            email,
-            fullName,
-            fbImage
+            email: res.email,
+            fullName: res.name,
+            fbImage: res.picture.data.url
           }
           console.log("sign up details to async storage: ")
           console.log(signUpDetails)
-          storeData(signUpDetails).then(
+          await storeData(signUpDetails);
+          goToProfileSetup();
 
-            goToProfileSetup()
-            //   props.navigation.navigate('ProfileSetup')
-          );
 
 
         } catch (error) {
@@ -140,10 +128,6 @@ const LoginScreen = (props) => {
     catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);
     }
-
-
-
-
   }
 
 
