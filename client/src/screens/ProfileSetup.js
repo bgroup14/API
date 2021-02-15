@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import { Checkbox } from 'galio-framework';
@@ -48,14 +48,23 @@ const ProfileSetup = (props) => {
 
     console.log(signUpDetails.fullName)
   }
+  let image = signUpDetails.fbImage ? <Image
+    source={{ uri: signUpDetails.fbImage }}
+    style={styles.logo}
+  /> : <TouchableOpacity onPress={() => alert(1)}>
+      <Image
+        source={require('../../assets/camera.png')}
+        style={styles.camera}
+      />
+
+    </TouchableOpacity>
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Setup</Text>
       <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/logo.png')}
-          style={styles.logo}
-        />
+        {image}
       </View>
 
       <FormInput
@@ -159,6 +168,11 @@ const styles = StyleSheet.create({
   logo: {
     height: 150,
     width: 150,
+    resizeMode: 'cover',
+  },
+  camera: {
+    height: 50,
+    width: 50,
     resizeMode: 'cover',
   },
   imageContainer: {
