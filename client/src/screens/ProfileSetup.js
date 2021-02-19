@@ -1,32 +1,91 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Button } from 'react-native';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import { Checkbox } from 'galio-framework';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import MyOverlay from '../components/MyOverlay';
+
+import * as ImagePicker from 'expo-image-picker';
+import { Camera } from 'expo-camera';
 
 const ProfileSetup = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
 
   useEffect(() => {
     getData();
-  }, [])
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, [cameraOn])
 
-  const deleteAsync = async () => {
+
+  const takePhoto = async () => {
+    const photo = await ref.current.takePictureAsync();
     try {
-      await AsyncStorage.removeItem('signUpDetails');
-      const jsonValue = await AsyncStorage.getItem('signUpDetails')
-      console.log(jsonValue)
+      setSelectedImage({ localUri: photo.uri });
+      setImageHasSelected(true)
+      setCameraOn(false);
+      console.debug(photo)
+    } catch (error) {
 
-      console.log("deleted!")
-    }
-    catch (exception) {
-      console.log(exception)
     }
 
+  }
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const ref = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageHasSelected, setImageHasSelected] = useState(false);
+  const [cameraOn, setCameraOn] = useState(false);
+
+
+  const openImagePickerAsync = async () => {
+    toggleOverlay();
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    console.log("picker res is:!!!")
+    console.log(pickerResult);
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    setSelectedImage(pickerResult.uri);
+    setImageHasSelected(true);
+
+  };
+
+
+
+
+
+  const checkImage = () => {
+    console.log(selectedImage)
   }
 
   const getData = async () => {
@@ -51,7 +110,7 @@ const ProfileSetup = (props) => {
   let image = signUpDetails.fbImage ? <Image
     source={{ uri: signUpDetails.fbImage }}
     style={styles.logo}
-  /> : <TouchableOpacity onPress={() => alert(1)}>
+  /> : <TouchableOpacity onPress={() => toggleOverlay()}>
       <Image
         source={require('../../assets/camera.png')}
         style={styles.camera}
@@ -59,82 +118,133 @@ const ProfileSetup = (props) => {
 
     </TouchableOpacity>
 
+  if (selectedImage !== null) {
+    image = <TouchableOpacity onPress={() => toggleOverlay()}>
+      <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
+
+    </TouchableOpacity>
+
+  }
+
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Profile Setup</Text>
-      <View style={styles.imageContainer}>
-        {image}
+    <Fragment>
+      <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
+        <View style={styles.container} >
+          <Text style={styles.overlayHeadline}>Set Up Profile Picture</Text>
+          <View style={styles.btnContainer}>
+            <Button
+              icon={
+                <Icon
+                  name="image"
+                  size={25}
+                  color="blue"
+                  style={{ padding: 10 }}
+                />
+              }
+              title="Choose From Gallery"
+              type='outline'
+              buttonStyle={styles.profilePictureBtn}
+              // onPress={() => { openImagePickerAsync() }}
+              onPress={() => openImagePickerAsync()}
+
+            />
+            <Button
+              icon={
+                <Icon
+                  name="camera"
+                  size={25}
+                  color="blue"
+                  style={{ padding: 10 }}
+
+                />
+              }
+              title="Take Photo"
+              type='outline'
+              buttonStyle={styles.profilePictureBtn}
+              onPress={() => takePhoto()}
+
+            />
+          </View>
+        </View>
+      </MyOverlay>
+
+      <View style={styles.container}>
+
+        <Text style={styles.text}>Profile Setup</Text>
+        <View style={styles.imageContainer}>
+          {image}
+        </View>
+
+        <FormInput
+          // labelValue={email}
+          //   onChangeText={(userEmail) => setEmail(userEmail)}
+          placeholderText="Full"
+          iconType="user"
+          //keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        <FormInput
+          labelValue={email}
+          //   onChangeText={(userEmail) => setEmail(userEmail)}
+          placeholderText="Email"
+          iconType="mail"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        <FormInput
+          labelValue={password}
+          //   onChangeText={(userPassword) => setPassword(userPassword)}
+          placeholderText="Password"
+          iconType="lock"
+          secureTextEntry={true}
+        />
+
+        <FormInput
+          //  labelValue={confirmPassword}
+          //  onChangeText={(userPassword) => setPassword(userPassword)}
+          placeholderText="Confirm Password"
+          iconType="lock"
+          secureTextEntry={true}
+        />
+
+
+        <FormButton
+          buttonTitle="Next"
+          onPress={() => props.navigation.navigate('FeedSettings')}
+
+        //  onPress={() => register(email, password)} go to - profile setup
+        />
+
+        <FormButton
+          buttonTitle="check async storage"
+          onPress={() => check()}
+
+        //  onPress={() => register(email, password)} go to - profile setup
+        />
+
+        <FormButton
+          buttonTitle="check image"
+          onPress={() => checkImage()}
+
+        //  onPress={() => register(email, password)} go to - profile setup
+        />
+
+
+
+
+
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => props.navigation.navigate('SignIn')}>
+          <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+        </TouchableOpacity>
       </View>
-
-      <FormInput
-        // labelValue={email}
-        //   onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Full"
-        iconType="user"
-        //keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-
-      <FormInput
-        labelValue={email}
-        //   onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email"
-        iconType="mail"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-
-      <FormInput
-        labelValue={password}
-        //   onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-
-      <FormInput
-        //  labelValue={confirmPassword}
-        //  onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Confirm Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-
-
-      <FormButton
-        buttonTitle="Next"
-        onPress={() => props.navigation.navigate('FeedSettings')}
-
-      //  onPress={() => register(email, password)} go to - profile setup
-      />
-
-      <FormButton
-        buttonTitle="check async storage"
-        onPress={() => check()}
-
-      //  onPress={() => register(email, password)} go to - profile setup
-      />
-
-      <FormButton
-        buttonTitle="delete async storage"
-        onPress={() => deleteAsync()}
-
-      //  onPress={() => register(email, password)} go to - profile setup
-      />
-
-
-
-
-
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => props.navigation.navigate('SignIn')}>
-        <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-      </TouchableOpacity>
-    </View>
+    </Fragment>
   );
 };
 
@@ -177,6 +287,25 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     padding: 20
+  },
+  overlayStyle: {
+    height: '20',
+    width: '80%'
+  },
+  overlayHeadline: {
+    fontSize: 24
+  },
+  btnContainer: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    alignItems: 'stretch',
+    padding: 20,
+
+  },
+  profilePictureBtn: {
+    justifyContent: 'flex-start',
+    // alignItems: 'flex-start',
+
   }
 
 });
