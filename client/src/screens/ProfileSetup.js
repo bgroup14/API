@@ -2,14 +2,12 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
-import { Checkbox } from 'galio-framework';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MyOverlay from '../components/MyOverlay';
-
 import * as ImagePicker from 'expo-image-picker';
-import { Camera } from 'expo-camera';
+import MyCamera from '../components/MyCamera';
 
 const ProfileSetup = (props) => {
   const [email, setEmail] = useState();
@@ -24,17 +22,17 @@ const ProfileSetup = (props) => {
 
   useEffect(() => {
     getData();
-    (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, [cameraOn])
+
+  }, [])
 
 
   const takePhoto = async () => {
+    toggleOverlay();
+    setCameraOn(true)
     const photo = await ref.current.takePictureAsync();
     try {
-      setSelectedImage({ localUri: photo.uri });
+
+      setSelectedImage(photo.uri);
       setImageHasSelected(true)
       setCameraOn(false);
       console.debug(photo)
@@ -51,10 +49,8 @@ const ProfileSetup = (props) => {
     return <Text>No access to camera</Text>;
   }
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const ref = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageHasSelected, setImageHasSelected] = useState(false);
   const [cameraOn, setCameraOn] = useState(false);
 
 
@@ -82,11 +78,6 @@ const ProfileSetup = (props) => {
 
 
 
-
-
-  const checkImage = () => {
-    console.log(selectedImage)
-  }
 
   const getData = async () => {
     try {
@@ -126,8 +117,15 @@ const ProfileSetup = (props) => {
 
   }
 
+  const getCamImage = (imagePath) => {
+    setSelectedImage(imagePath)
+  }
 
-  return (
+
+
+
+
+  let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} /> :
     <Fragment>
       <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
         <View style={styles.container} >
@@ -145,7 +143,6 @@ const ProfileSetup = (props) => {
               title="Choose From Gallery"
               type='outline'
               buttonStyle={styles.profilePictureBtn}
-              // onPress={() => { openImagePickerAsync() }}
               onPress={() => openImagePickerAsync()}
 
             />
@@ -169,26 +166,23 @@ const ProfileSetup = (props) => {
         </View>
       </MyOverlay>
 
-      <View style={styles.container}>
 
+      <View style={styles.container}>
         <Text style={styles.text}>Profile Setup</Text>
         <View style={styles.imageContainer}>
           {image}
         </View>
 
         <FormInput
-          // labelValue={email}
-          //   onChangeText={(userEmail) => setEmail(userEmail)}
+
           placeholderText="Full"
           iconType="user"
-          //keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
         />
 
         <FormInput
           labelValue={email}
-          //   onChangeText={(userEmail) => setEmail(userEmail)}
           placeholderText="Email"
           iconType="mail"
           keyboardType="email-address"
@@ -227,12 +221,8 @@ const ProfileSetup = (props) => {
         //  onPress={() => register(email, password)} go to - profile setup
         />
 
-        <FormButton
-          buttonTitle="check image"
-          onPress={() => checkImage()}
 
-        //  onPress={() => register(email, password)} go to - profile setup
-        />
+
 
 
 
@@ -245,6 +235,13 @@ const ProfileSetup = (props) => {
         </TouchableOpacity>
       </View>
     </Fragment>
+
+
+  return (
+    <Fragment>
+      {profileSetupScreen}
+    </Fragment>
+
   );
 };
 
