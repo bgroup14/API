@@ -49,7 +49,14 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, "Login success");
+
+                MemberDTO memberDTO = new MemberDTO()
+                {
+                    id = member.id,
+                    name = member.fullName
+
+                };
+                return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
 
             }
             catch (Exception)
@@ -74,7 +81,8 @@ namespace WebApi.Controllers
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, "User dosent exists");
                 }
-              
+
+
 
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "User exists");
 
