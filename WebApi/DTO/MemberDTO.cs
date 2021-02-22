@@ -7,7 +7,7 @@ namespace WebApi.DTO
 {
     public class MemberDTO
     {
-
+        public int id;
         public string name;
     }
 }

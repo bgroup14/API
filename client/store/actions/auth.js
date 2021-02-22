@@ -18,8 +18,9 @@ export const login = (email, password) => async dispatch => {
     try {
         //if this will fail (status !=200 ) it will catch the error in the error block
         const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/login", body, config);
-        console.log("we in");
+
         console.log(res);
+        console.log("res data (payload is:)")
         console.log(res.data);
 
         dispatch({
