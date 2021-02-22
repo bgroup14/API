@@ -77,14 +77,20 @@ namespace WebApi.Controllers
                 VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
                 Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
-                if (member == null)
+                if (member != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, "User dosent exists");
+                    MemberDTO memberDTO = new MemberDTO()
+                    {
+                        id = member.id,
+                        name = member.fullName
+
+                    };
+                    return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
                 }
 
 
 
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "User exists");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
 
             }
             catch (Exception)

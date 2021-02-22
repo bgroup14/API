@@ -31,6 +31,7 @@ const SignupScreenTest = (props) => {
       await AsyncStorage.setItem('signUpDetails', jsonValue)
     } catch (e) {
       // saving error
+      console.log(e)
     }
   }
 
@@ -53,30 +54,10 @@ const SignupScreenTest = (props) => {
       }
     }
     const body = JSON.stringify({ email })
-    console.log(body)
     try {
 
       //check if member exists on DB
-      const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists", body, config);
-      console.log(res.status)
-      // save in async storage
-      let signUpDetails = {
-        email,
-        password,
-        fullName
-      }
-      console.log(signUpDetails)
-      storeData(signUpDetails).then(
-        props.navigation.navigate('ProfileSetup')
-      );
-
-      //prop nav to profile setup
-
-
-
-
-    } catch (err) {
-      console.log(err)
+      const res = await axios.post(url, body, config);
       Alert.alert(
         "OOPS!",
         "An account with this email already exists",
@@ -84,6 +65,43 @@ const SignupScreenTest = (props) => {
           { text: "OK" }
         ],
       );
+      console.log(res.status)
+      // save in async storage
+
+
+      //prop nav to profile setup
+
+
+
+
+    } catch (err) {
+
+      if (err.response.status == 400) {
+        let signUpDetails = {
+          email,
+          password,
+          fullName
+        }
+        //  console.log(signUpDetails)
+        storeData(signUpDetails).then(
+          props.navigation.navigate('ProfileSetup')
+        );
+
+      }
+      else if (err.response.status == 500) {
+        Alert.alert(
+          "OOPS!",
+          "General error, try again",
+          [
+            { text: "OK" }
+          ],
+        );
+        console.log("error is:")
+        console.log(err.response)
+      }
+
+
+
     }
 
   }
@@ -114,7 +132,7 @@ const SignupScreenTest = (props) => {
         labelValue={email}
         onChangeText={(text) => emailChangeHandler(text)}
         placeholderText="Email"
-        iconType="mail"
+        iconType="envelope"
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
