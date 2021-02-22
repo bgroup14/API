@@ -1,7 +1,8 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView, Platform } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
+import TextArea from '../components/TextArea';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,11 +10,15 @@ import MyOverlay from '../components/MyOverlay';
 import * as ImagePicker from 'expo-image-picker';
 import MyCamera from '../components/MyCamera';
 
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 const ProfileSetup = (props) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [city, setCity] = useState();
+  const [dateOfBirth, setDateOfBirth] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
   const [visible, setVisible] = useState(false);
+  const [bio, setBio] = useState();
+  const [occupation, setOccupation] = useState();
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -21,7 +26,7 @@ const ProfileSetup = (props) => {
 
 
   useEffect(() => {
-    getData();
+    getDataFromAS();
 
   }, [])
 
@@ -79,13 +84,13 @@ const ProfileSetup = (props) => {
 
 
 
-  const getData = async () => {
+  const getDataFromAS = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('signUpDetails')
       let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (jsonObj != null) {
         setSignUpDetails(jsonObj)
-        console.log("sign up details from previous page: " + jsonObj.fullName)
+        console.log("sign up name from previous page: " + jsonObj.fullName)
       }
 
     } catch (e) {
@@ -125,10 +130,61 @@ const ProfileSetup = (props) => {
 
 
 
+
+
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+
+  const checkDate = () => {
+    console.log(date)
+  }
+
+
+
+
+
+
+
+
+
+  let datePicker = show ?
+    <DateTimePicker
+      testID="dateTimePicker"
+      value={date}
+      mode={mode}
+      is24Hour={true}
+      display="default"
+      onChange={onChange}
+      animationType={"fade"}
+    /> : <Text></Text>
+
+
+
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} /> :
-    <Fragment>
+    <ScrollView>
       <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
         <View style={styles.container} >
+
+
+
+
           <Text style={styles.overlayHeadline}>Set Up Profile Picture</Text>
           <View style={styles.btnContainer}>
             <Button
@@ -174,36 +230,44 @@ const ProfileSetup = (props) => {
         </View>
 
         <FormInput
-
-          placeholderText="Full"
-          iconType="user"
+          labelValue={city}
+          placeholderText="City"
+          iconType="home"
           autoCapitalize="none"
-          autoCorrect={false}
-        />
+          autoCorrect={true}
+          onChangeText={(text) => setCity(text)} />
+
+        <TouchableOpacity onPress={showDatepicker}>
+          <FormInput
+            onDatePress={showDatepicker}
+            labelValue={"2"}
+            placeholderText="Date of birth"
+            iconType="calendar"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            editable={false}
+            onChangeText={(text) => setDateOfBirth(text)}
+          />
+
+        </TouchableOpacity>
 
         <FormInput
-          labelValue={email}
-          placeholderText="Email"
-          iconType="mail"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-
-        <FormInput
-          labelValue={password}
+          labelValue={occupation}
           //   onChangeText={(userPassword) => setPassword(userPassword)}
-          placeholderText="Password"
-          iconType="lock"
+          placeholderText="Occupation"
+          iconType="suitcase"
           secureTextEntry={true}
+          onChangeText={(text) => setOccupation(text)}
         />
+        <TextArea
+          labelValue={bio}
+          placeholderText="What do you want people to know about you?"
+          iconType="calendar"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setBio(text)}
 
-        <FormInput
-          //  labelValue={confirmPassword}
-          //  onChangeText={(userPassword) => setPassword(userPassword)}
-          placeholderText="Confirm Password"
-          iconType="lock"
-          secureTextEntry={true}
         />
 
 
@@ -211,20 +275,13 @@ const ProfileSetup = (props) => {
           buttonTitle="Next"
           onPress={() => props.navigation.navigate('FeedSettings')}
 
-        //  onPress={() => register(email, password)} go to - profile setup
         />
 
         <FormButton
-          buttonTitle="check async storage"
-          onPress={() => check()}
+          buttonTitle="Check Date console log"
+          onPress={() => checkDate()}
 
-        //  onPress={() => register(email, password)} go to - profile setup
         />
-
-
-
-
-
 
 
 
@@ -234,13 +291,14 @@ const ProfileSetup = (props) => {
           <Text style={styles.navButtonText}>Have an account? Sign In</Text>
         </TouchableOpacity>
       </View>
-    </Fragment>
+    </ScrollView>
 
 
   return (
-    <Fragment>
+    <View style={{ backgroundColor: '#f9fafd', flex: 1 }}>
       {profileSetupScreen}
-    </Fragment>
+      {datePicker}
+    </View>
 
   );
 };

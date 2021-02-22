@@ -6,7 +6,7 @@ import {
   Image,
   Platform,
   StyleSheet,
-  ScrollView
+  ScrollView, Alert
 } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
@@ -43,7 +43,6 @@ const LoginScreen = (props) => {
 
   const storeData = async (value) => {
     try {
-      console.log("storing in async storage...")
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem('signUpDetails', jsonValue)
     } catch (e) {
@@ -81,7 +80,7 @@ const LoginScreen = (props) => {
         const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&
     access_token=${token}`);
         let res = await response.json();
-        console.log("res email is: ")
+        console.log("facebook email is: ")
         console.log(res.email);
         const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
 
@@ -99,28 +98,43 @@ const LoginScreen = (props) => {
 
         //Check if user already has been registered - if he did, redirect to feed. if not - redirect to profile setup
         try {
-          //check if member exists on DB - if exusts will catch 
-          await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists", body, config);
-          // save in async storage
-          let signUpDetails = {
-            email: res.email,
-            fullName: res.name,
-            fbImage: res.picture.data.url
-          }
-          console.log("sign up details to async storage: ")
-          console.log(signUpDetails)
-          await storeData(signUpDetails);
-          goToProfileSetup();
-
+          //check if member  exists on DB - if  dosent exists will catch  400 or 500 error
+          let res = await axios.post(url, body, config);
+          //If email is in  db - redirect to home screen with LOGIN_SUCCESS and send the user details from server as payload 
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: res.data
+          });
 
 
         } catch (error) {
-          console.log("user email exists on db")
-          //If email is in db - redirect to home screen with LOGIN_SUCCESS
-          dispatch({
-            type: LOGIN_SUCCESS,
-            payload: email
-          });
+          // if error code is 400 - user email not in db so redirect to profie setup 
+          if (error.response.status == 400) {
+            let signUpDetails = {
+              email: res.email,
+              fullName: res.name,
+              fbImage: res.picture.data.url
+            }
+            await storeData(signUpDetails);
+            goToProfileSetup();
+
+          }
+          else if (error.response.status == 500) {
+            Alert.alert(
+              "OOPS!",
+              "General error, try again",
+              [
+                { text: "OK" }
+              ],
+            );
+            console.log("error is:")
+            console.log(error.response)
+          }
+
+
+
+
+
         }
 
       }
