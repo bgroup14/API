@@ -12,6 +12,10 @@ import MyCamera from '../components/MyCamera';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+import DropDownPicker from 'react-native-dropdown-picker';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+
+
 const ProfileSetup = (props) => {
   const [city, setCity] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
@@ -19,6 +23,9 @@ const ProfileSetup = (props) => {
   const [visible, setVisible] = useState(false);
   const [bio, setBio] = useState();
   const [occupation, setOccupation] = useState();
+  const [dateLabel, setDateLabel] = useState('Date of birth');
+  const [gender, setGender] = useState();
+  const [hobbies, setHobbies] = useState({});
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -132,7 +139,7 @@ const ProfileSetup = (props) => {
 
 
 
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
@@ -140,6 +147,10 @@ const ProfileSetup = (props) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+    let slicedDate = selectedDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
+    //var s2 = s1.substring(1);
+    //let fuck = slicedDate.replace(' ', '+');
+    setDateLabel(slicedDate)
   };
 
   const showMode = (currentMode) => {
@@ -154,6 +165,8 @@ const ProfileSetup = (props) => {
 
   const checkDate = () => {
     console.log(date)
+    console.log(dateLabel)
+    console.log(gender)
   }
 
 
@@ -240,8 +253,8 @@ const ProfileSetup = (props) => {
         <TouchableOpacity onPress={showDatepicker}>
           <FormInput
             onDatePress={showDatepicker}
-            labelValue={"2"}
-            placeholderText="Date of birth"
+            // labelValue={dateLabel}
+            placeholderText={dateLabel}
             iconType="calendar"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -257,9 +270,9 @@ const ProfileSetup = (props) => {
           //   onChangeText={(userPassword) => setPassword(userPassword)}
           placeholderText="Occupation"
           iconType="suitcase"
-          secureTextEntry={true}
           onChangeText={(text) => setOccupation(text)}
         />
+
         <TextArea
           labelValue={bio}
           placeholderText="What do you want people to know about you?"
@@ -268,6 +281,25 @@ const ProfileSetup = (props) => {
           autoCorrect={false}
           onChangeText={(text) => setBio(text)}
 
+        />
+
+
+        <DropDownPicker
+          placeholder="Gender"
+          items={[
+            { label: ' Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
+            { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
+          ]}
+          //defaultValue={null}
+          containerStyle={styles.dropDownContainer}
+          style={{ backgroundColor: 'white', borderRadius: 3, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#fff' }}
+          itemStyle={{
+
+            justifyContent: 'center', marginTop: 10
+          }}
+          dropDownStyle={{ backgroundColor: 'white' }}
+          onChangeItem={item => setGender(item.value)
+          }
         />
 
 
@@ -280,6 +312,7 @@ const ProfileSetup = (props) => {
         <FormButton
           buttonTitle="Check Date console log"
           onPress={() => checkDate()}
+
 
         />
 
@@ -295,7 +328,7 @@ const ProfileSetup = (props) => {
 
 
   return (
-    <View style={{ backgroundColor: '#f9fafd', flex: 1 }}>
+    <View>
       {profileSetupScreen}
       {datePicker}
     </View>
@@ -361,6 +394,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     // alignItems: 'flex-start',
 
-  }
+  },
+  dropDownContainer: {
+    marginTop: 5,
+    marginBottom: 10,
+    //height: 40,
+    width: '100%',
+    height: windowHeight / 15,
+    // borderColor: '#ccc',
+    // borderRadius: 3,
+    //borderWidth: 1,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    //backgroundColor: '#fff',
+  },
 
 });
