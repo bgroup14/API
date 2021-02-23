@@ -105,6 +105,31 @@ const ProfileSetup = (props) => {
       // error reading value
     }
   }
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('profileSetupDetails', jsonValue)
+    } catch (e) {
+      // saving error
+      console.log(e)
+    }
+  }
+  const goToFeedSettings = () => {
+
+    let profileSetupDetails = {
+      city,
+      occupation,
+      bio,
+      gender,
+      date: dateLabel,
+      //add hobbies array here
+
+    }
+    //  console.log(signUpDetails)
+    storeData(profileSetupDetails).then(
+      props.navigation.navigate('FeedSettings')
+    );
+  }
 
   const check = () => {
 
@@ -139,17 +164,20 @@ const ProfileSetup = (props) => {
 
 
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const onChangeDate = (event, selectedDate) => {
+    // alert(1)
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
+    // console.log(selectedDate.toString())
     let slicedDate = selectedDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
-    //var s2 = s1.substring(1);
-    //let fuck = slicedDate.replace(' ', '+');
+    // //var s2 = s1.substring(1);
+    // //let fuck = slicedDate.replace(' ', '+');
+
     setDateLabel(slicedDate)
   };
 
@@ -184,8 +212,7 @@ const ProfileSetup = (props) => {
       mode={mode}
       is24Hour={true}
       display="default"
-      onChange={onChange}
-      animationType={"fade"}
+      onChange={onChangeDate}
     /> : <Text></Text>
 
 
@@ -253,7 +280,7 @@ const ProfileSetup = (props) => {
         <TouchableOpacity onPress={showDatepicker}>
           <FormInput
             onDatePress={showDatepicker}
-            // labelValue={dateLabel}
+            labelValue={dateLabel}
             placeholderText={dateLabel}
             iconType="calendar"
             keyboardType="email-address"
@@ -301,11 +328,19 @@ const ProfileSetup = (props) => {
           onChangeItem={item => setGender(item.value)
           }
         />
+        <TouchableOpacity style={styles.dropDownContainer} >
+          <Button
+            title="Click to select your hobbies"
+            type="outline"
+            raised={true}
+            buttonStyle={{ padding: 15 }}
+          />
+        </TouchableOpacity>
 
 
         <FormButton
           buttonTitle="Next"
-          onPress={() => props.navigation.navigate('FeedSettings')}
+          onPress={() => goToFeedSettings()}
 
         />
 

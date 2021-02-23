@@ -1,61 +1,74 @@
-import React, { useContext, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
+import { Button } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { CheckBox } from 'react-native-elements'
+
+
+
 // import {AuthContext} from '../navigation/AuthProvider';
 
 const FeedSettingsScreen = (props) => {
   const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  // const [confirmPassword, setConfirmPassword] = useState();
+  const [signUpDetails, setSignUpDetails] = useState({});
+  const [profileSetupDetails, setProfileSetupDetails] = useState({});
 
-  // const {register} = useContext(AuthContext);
+
+
+  useEffect(() => {
+    getDataFromAS();
+
+  }, [])
+
+  const getDataFromAS = async () => {
+    try {
+      let jsonValue = await AsyncStorage.getItem('signUpDetails')
+      let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
+      if (jsonObj != null) {
+        setSignUpDetails(jsonObj)
+        console.log("sign up name from signup screen page: " + jsonObj.fullName)
+      }
+      let jsonValueTwo = await AsyncStorage.getItem('profileSetupDetails')
+      let jsonObjTwo = jsonValueTwo != null ? JSON.parse(jsonValueTwo) : null;
+      if (jsonObjTwo != null) {
+        setProfileSetupDetails(jsonObjTwo)
+        console.log("profile setup bio from profile setup page: " + jsonObjTwo.bio)
+      }
+
+
+    } catch (e) {
+      console.log("error in feed setting page !!")
+      console.log(e.message)
+      // error reading value
+    }
+  }
+  const check = () => {
+    console.log(profileSetupDetails.date)
+    console.log(signUpDetails.email)
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>FeedSettingsScreen</Text>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/logo.png')}
-          style={styles.logo}
+      <View style={{ flexDirection: 'row' }}>
+
+        <CheckBox
+          style
+          title='Want Help'
+          checked={false}
+        />
+        <CheckBox
+          title='Need Help'
+          checked={false}
+        />
+        <CheckBox
+          title='Both'
+          checked={false}
         />
       </View>
-
-      <FormInput
-        // labelValue={email}
-        //   onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Full"
-        iconType="user"
-        //keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-
-      <FormInput
-        labelValue={email}
-        //   onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email"
-        iconType="mail"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-
-      <FormInput
-        labelValue={password}
-        //   onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-
-      <FormInput
-        //  labelValue={confirmPassword}
-        //  onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Confirm Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
 
       <FormButton
         buttonTitle="Sign Up"
@@ -64,7 +77,9 @@ const FeedSettingsScreen = (props) => {
       //  onPress={() => register(email, password)} go to - profile setup
       />
 
-
+      <Button title='check  data from as'
+        onPress={() => check()}
+      />
 
 
 
@@ -73,7 +88,7 @@ const FeedSettingsScreen = (props) => {
         onPress={() => props.navigation.navigate('SignIn')}>
         <Text style={styles.navButtonText}>Have an account? Sign In</Text>
       </TouchableOpacity>
-    </View>
+    </View >
   );
 };
 
