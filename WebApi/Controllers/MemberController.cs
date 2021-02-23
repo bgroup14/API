@@ -88,7 +88,7 @@ namespace WebApi.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
                 }
 
-
+                
 
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
 
