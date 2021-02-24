@@ -169,12 +169,12 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
-    // alert(1)
+    //alert(1)
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
     // console.log(selectedDate.toString())
-    let slicedDate = selectedDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
+    let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
     // //var s2 = s1.substring(1);
     // //let fuck = slicedDate.replace(' ', '+');
 
