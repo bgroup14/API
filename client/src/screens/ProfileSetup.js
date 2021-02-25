@@ -26,6 +26,7 @@ const ProfileSetup = (props) => {
   const [dateLabel, setDateLabel] = useState('Date of birth');
   const [gender, setGender] = useState();
   const [hobbies, setHobbies] = useState({});
+  const [unixDate, setUnixDate] = useState(new Date());
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -121,7 +122,8 @@ const ProfileSetup = (props) => {
       occupation,
       bio,
       gender,
-      date: dateLabel,
+      date: unixDate,
+      myImage: selectedImage
       //add hobbies array here
 
     }
@@ -175,10 +177,9 @@ const ProfileSetup = (props) => {
     setDate(currentDate);
     // console.log(selectedDate.toString())
     let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
-    // //var s2 = s1.substring(1);
-    // //let fuck = slicedDate.replace(' ', '+');
-
     setDateLabel(slicedDate)
+    let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
+    setUnixDate(unixDateToSend)
   };
 
   const showMode = (currentMode) => {
@@ -194,9 +195,9 @@ const ProfileSetup = (props) => {
   const checkDate = () => {
     console.log(date)
     console.log(dateLabel)
-    console.log(gender)
+    console.log(unixDate)
+    //console.log(gender)
   }
-
 
 
 
@@ -216,8 +217,8 @@ const ProfileSetup = (props) => {
     /> : <Text></Text>
 
 
-
-  let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} /> :
+  let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
+    :
     <ScrollView>
       <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
         <View style={styles.container} >
@@ -352,7 +353,6 @@ const ProfileSetup = (props) => {
         />
 
 
-
         <TouchableOpacity
           style={styles.navButton}
           onPress={() => props.navigation.navigate('SignIn')}>
@@ -363,10 +363,10 @@ const ProfileSetup = (props) => {
 
 
   return (
-    <View>
+    <Fragment>
       {profileSetupScreen}
       {datePicker}
-    </View>
+    </Fragment>
 
   );
 };
