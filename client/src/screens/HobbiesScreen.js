@@ -6,7 +6,7 @@ import FormButton from '../components/FormButton';
 import { Button } from 'react-native';
 
 const HobbiesScreen = (props) => {
-  
+
   const [hobbies, setHobbies] = useState([]);
   const [initialHobbies, setInitialHobbies] = useState([]);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
@@ -16,7 +16,7 @@ const HobbiesScreen = (props) => {
   useEffect(() => {
     const fetchHobbies = async () => {
       console.log("fetching data..............");
-    const result = await axios(
+      const result = await axios(
         hobbiesFetchURL
       );
       setHobbies(result.data);
@@ -24,63 +24,63 @@ const HobbiesScreen = (props) => {
       setSelectedHobbies([]);
     };
     fetchHobbies();
-}, []);
+  }, []);
 
-const hobbyCheck = (hobby) => {
+  const hobbyCheck = (hobby) => {
     //console.log("Got hobby (ID: "+hobby.id+"): "+hobby.name);
     // setSelectedHobbies([...selectedHobbies, hobby]);
     // console.log("Array count: "+selectedHobbies.length);
     if (selectedHobbies.includes(hobby)) {
       //console.log("hobby is INCLUDED");
-      setSelectedHobbies(selectedHobbies.filter(function(el) { return el.id != hobby.id; }));
+      setSelectedHobbies(selectedHobbies.filter(function (el) { return el.id != hobby.id; }));
     }
     else {
       //console.log("hobby not included");
       setSelectedHobbies([...selectedHobbies, hobby]);
     }
 
-}
-
-const hobbyCheckSelected = (hobby) => {
-  return (selectedHobbies.includes(hobby));
-}
-
-const onChangeText = (searchText) => {
-  setHobbies(initialHobbies.filter(function(el) { return el.name.includes(searchText); }));
-  if (hobbies.length <= 0 || searchText.length <= 0) {
-    setHobbies(initialHobbies);
   }
-}
+
+  const hobbyCheckSelected = (hobby) => {
+    return (selectedHobbies.includes(hobby));
+  }
+
+  const onChangeText = (searchText) => {
+    setHobbies(initialHobbies.filter(function (el) { return el.name.includes(searchText); }));
+    if (hobbies.length <= 0 || searchText.length <= 0) {
+      setHobbies(initialHobbies);
+    }
+  }
 
 
-const saveHobbies = () => {
-  //dispatch(saveHobbies(selectedHobbies));
+  const saveHobbies = () => {
+    //dispatch(saveHobbies(selectedHobbies));
 
-}
+  }
 
   return (
     <View>
-        <ScrollView>
+      <ScrollView>
         <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}
-        onChangeText={text => onChangeText(text)}
-        placeholder="Search Hobby"
-      />
-      <FormButton
-        buttonTitle="Save"
-        onPress={() => saveHobbies()}
-      />
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}
+          onChangeText={text => onChangeText(text)}
+          placeholder="Search Hobby"
+        />
+        <FormButton
+          buttonTitle="Save"
+          onPress={() => saveHobbies()}
+        />
         <View style={styles.radioBtnContainer}>
-          {typeof(hobbies) !== 'undefined' && hobbies.length > 0 && hobbies.map((hobby) => (
-                    <CheckBox
-                    title={hobby.name}
-                    key={hobby.id}
-                    // onPress={() => selected != hobby.id ? setSelected(hobby.id) : setSelected(null)}
-                    checked={ hobbyCheckSelected(hobby) }
-                    // onPress={() => selectedHobbies.some(item => item.id === hobby.id) ? setSelectedHobbies(...selectedHobbies) : setSelectedHobbies([...selectedHobbies, hobby])}
-                    onPress={() => hobbyCheck(hobby) }
-                  />
-                ))}
+          {typeof (hobbies) !== 'undefined' && hobbies.length > 0 && hobbies.map((hobby) => (
+            <CheckBox
+              title={hobby.name}
+              key={hobby.id}
+              // onPress={() => selected != hobby.id ? setSelected(hobby.id) : setSelected(null)}
+              checked={hobbyCheckSelected(hobby)}
+              // onPress={() => selectedHobbies.some(item => item.id === hobby.id) ? setSelectedHobbies(...selectedHobbies) : setSelectedHobbies([...selectedHobbies, hobby])}
+              onPress={() => hobbyCheck(hobby)}
+            />
+          ))}
 
         </View>
       </ScrollView>

@@ -30,7 +30,6 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <AppStackScreens />
-        {/* <HobbiesStackScreens /> */}
       </NavigationContainer>
     </Provider>
   );

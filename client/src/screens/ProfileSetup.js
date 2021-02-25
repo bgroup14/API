@@ -330,6 +330,8 @@ const ProfileSetup = (props) => {
             type="outline"
             raised={true}
             buttonStyle={{ padding: 15 }}
+            onPress={() => props.navigation.navigate('HobbiesScreen')}
+
           />
         </TouchableOpacity>
 
