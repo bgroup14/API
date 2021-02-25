@@ -12,7 +12,7 @@ import Header from '../shared/header'
 const AuthStackScreens = () => {
     const AuthStack = createStackNavigator();
     return (
-        <AuthStack.Navigator headerMode='none'> {/*headerMode='screen'*/}
+        <AuthStack.Navigator headerMode='none'>
             <AuthStack.Screen name="SignIn" component={LoginScreen} />
             <AuthStack.Screen name="SignUp" component={SignUpScreen} />
             <AuthStack.Screen name="ProfileSetup" component={ProfileSetup} />
@@ -20,8 +20,8 @@ const AuthStackScreens = () => {
             <AuthStack.Screen name="HobbiesScreen" component={HobbiesScreen} options={{
                 headerStyle: {
                     backgroundColor: '#0538EB'
-                  },
-                  headerTitle: <Header title='Hobbies' />
+                },
+                headerTitle: <Header title='Hobbies' />
             }} />
         </AuthStack.Navigator>
     )
