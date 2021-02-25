@@ -1,9 +1,9 @@
 {
-  "expoServerPort": null,
-  "packagerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
+  "expoServerNgrokUrl": "https://4a-day.offek102030.client.exp.direct",
+  "packagerNgrokUrl": "https://packager.4a-day.offek102030.client.exp.direct",
+  "ngrokPid": 7932,
   "packagerPid": null,
   "webpackServerPort": null,
   "devToolsPort": 19002
