@@ -41,6 +41,8 @@ namespace DATA
         public string pictureUrl { get; set; }
         public Nullable<bool> isBanned { get; set; }
         public Nullable<int> systemScore { get; set; }
+        public string gender { get; set; }
+        public string city { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }

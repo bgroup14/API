@@ -15,7 +15,7 @@ namespace WebApi.DTO
         public string occupation;
         public string pictureUrl;
         public string gender;
-
+        public string city;
 
     }
 }
