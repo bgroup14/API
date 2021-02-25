@@ -103,7 +103,7 @@ const FeedSettingsScreen = (props) => {
       .then((responseData) => {
         console.log(responseData);
         if (responseData != "err") {
-          let picNameWOExt = picName.substring(0, picName.indexOf("."));
+          let picNameWOExt = imgName.substring(0, imgName.indexOf("."));
           let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
           setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
           // this.setState({
