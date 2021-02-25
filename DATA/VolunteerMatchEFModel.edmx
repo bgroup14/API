@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="bgroup14_prodModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="bgroup14_prodModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categories">
           <Key>
             <PropertyRef Name="id" />
@@ -106,6 +106,8 @@
           <Property Name="pictureUrl" Type="text" />
           <Property Name="isBanned" Type="bit" />
           <Property Name="systemScore" Type="int" />
+          <Property Name="gender" Type="varchar" MaxLength="255" />
+          <Property Name="city" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="MembersCategories">
           <Key>
@@ -465,8 +467,7 @@
             <End Role="Posts" EntitySet="Posts" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="bgroup14_prodModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -589,6 +590,8 @@
           <NavigationProperty Name="MembersCategories" Relationship="Self.FK__MembersCa__count__75A278F5" FromRole="Members" ToRole="MembersCategories" />
           <NavigationProperty Name="MembersHobbies" Relationship="Self.FK__MembersHo__membe__6B24EA82" FromRole="Members" ToRole="MembersHobbies" />
           <NavigationProperty Name="MembersPosts" Relationship="Self.FK__MembersPo__membe__0B91BA14" FromRole="Members" ToRole="MembersPosts" />
+          <Property Name="gender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MembersCategory">
           <Key>
@@ -1060,6 +1063,8 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Member">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="fullName" ColumnName="fullName" />

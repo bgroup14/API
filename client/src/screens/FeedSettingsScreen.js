@@ -19,6 +19,10 @@ const FeedSettingsScreen = (props) => {
   const [signUpDetails, setSignUpDetails] = useState({});
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
 
+  const [uploadedPicture, setUploadedPicture] = useState({});
+  const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
+
+
 
 
   useEffect(() => {
@@ -38,7 +42,8 @@ const FeedSettingsScreen = (props) => {
       let jsonObjTwo = jsonValueTwo != null ? JSON.parse(jsonValueTwo) : null;
       if (jsonObjTwo != null) {
         setProfileSetupDetails(jsonObjTwo)
-        console.log("profile setup bio from profile setup page: " + jsonObjTwo.bio)
+        console.log("profile setup image taken from profile setup page: " + jsonObjTwo.myImage)
+        console.log("profile setup facebook image: " + jsonObjTwo.fbImage)
       }
 
 
@@ -49,9 +54,79 @@ const FeedSettingsScreen = (props) => {
     }
   }
   const check = () => {
-    console.log(profileSetupDetails.date)
+    console.log("unix date is: " + profileSetupDetails.date)
+    console.log("gender is: " + profileSetupDetails.gender)
+    console.log("profie image path is : " + profileSetupDetails.myImage)
     console.log(signUpDetails.fullName)
   }
+
+
+
+
+
+
+  // btnUpload = () => {
+  //   let img = this.state.photoUri;
+
+  //   this.imageUpload(img, imgName);
+  // };
+
+  const imageUpload = () => {
+    alert(1);
+    // here is should check if profileSetupDetails.myImage != null - if it does i should upload the photo to the server
+    // if its null i should check if profileSetupDetails.fbImage != undefined if it does i should send the url image link as is to the db 
+    let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
+    let imgName = 'imgFromCamera.jpg';
+    let imgUri = profileSetupDetails.myImage
+    let dataI = new FormData();
+    dataI.append('image', {
+      uri: imgUri,
+      name: imgName,
+      type: 'image/jpg'
+    });
+    const config = {
+      method: 'POST',
+      body: dataI,
+    };
+
+    fetch(urlAPI, config)
+      .then((res) => {
+        console.log('res.status=', res.status);
+        if (res.status == 201) {
+          return res.json();
+        }
+        else {
+          console.log('error uploding res is  ...' + res.statusText + res.message);
+          return "err";
+        }
+      })
+      .then((responseData) => {
+        console.log(responseData);
+        if (responseData != "err") {
+          let picNameWOExt = picName.substring(0, picName.indexOf("."));
+          let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
+          setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
+          // this.setState({
+          //   uplodedPicUri: { uri: this.uplodedPicPath + imageNameWithGUID },
+          // });
+          console.log("img uploaded successfully!");
+        }
+        else {
+          console.log('error uploding ...');
+          alert('error uploding ...');
+        }
+      })
+      .catch(err => {
+        alert('err upload= ' + err);
+      });
+  }
+
+
+
+
+
+
+
 
 
   return (
@@ -159,8 +234,11 @@ const FeedSettingsScreen = (props) => {
         //  onPress={() => register(email, password)} go to - profile setup
         />
 
-        <Button title='check  data from as'
+        <Button title='check data from as'
           onPress={() => check()}
+        />
+        <Button title='Upload image'
+          onPress={() => imageUpload()}
         />
 
 

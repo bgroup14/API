@@ -123,7 +123,8 @@ const ProfileSetup = (props) => {
       bio,
       gender,
       date: unixDate,
-      myImage: selectedImage
+      myImage: selectedImage,
+      fbImage: signUpDetails.fbImage
       //add hobbies array here
 
     }
@@ -198,12 +199,6 @@ const ProfileSetup = (props) => {
     console.log(unixDate)
     //console.log(gender)
   }
-
-
-
-
-
-
 
 
   let datePicker = show ?
