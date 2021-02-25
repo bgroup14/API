@@ -13,6 +13,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreens from './src/stacks/AppStackScreens';
 import LoginScreenTest from './src/screens/LoginScreen';
 
+import HobbiesScreen from './src/screens/HobbiesScreen';
+import HobbiesStackScreens from './src/stacks/HobbiesStackTest';
+
 
 //<AppStackScreens />
 
@@ -27,6 +30,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <AppStackScreens />
+        {/* <HobbiesStackScreens /> */}
       </NavigationContainer>
     </Provider>
   );
