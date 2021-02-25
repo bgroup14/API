@@ -42,7 +42,7 @@ const ProfileSetup = (props) => {
   const takePhoto = async () => {
     toggleOverlay();
     setCameraOn(true)
-    const photo = await ref.current.takePictureAsync();
+    const photo = await ref.current.takePictureAsync({ quality: 0.2 });
     try {
 
       setSelectedImage(photo.uri);
@@ -172,7 +172,7 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
-    //alert(1)
+    alert(2)
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
