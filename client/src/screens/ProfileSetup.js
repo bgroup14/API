@@ -14,6 +14,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 const ProfileSetup = (props) => {
@@ -25,7 +27,7 @@ const ProfileSetup = (props) => {
   const [occupation, setOccupation] = useState();
   const [dateLabel, setDateLabel] = useState('Date of birth');
   const [gender, setGender] = useState();
-  const [hobbies, setHobbies] = useState({});
+  const [hobbies, setHobbies] = useState([]);
   const [unixDate, setUnixDate] = useState(new Date());
 
   const toggleOverlay = () => {
@@ -33,10 +35,18 @@ const ProfileSetup = (props) => {
   };
 
 
-  useEffect(() => {
-    getDataFromAS();
+  // useEffect(() => {
+  //   getDataFromAS();
 
-  }, [])
+  // }, [])
+
+  useFocusEffect(
+    React.useCallback(() => {
+
+      getDataFromAS();
+
+    }, [])
+  )
 
 
   const takePhoto = async () => {
@@ -100,6 +110,15 @@ const ProfileSetup = (props) => {
         setSignUpDetails(jsonObj)
         console.log("sign up name from previous page: " + jsonObj.fullName)
       }
+      const hobbiesJsonValue = await AsyncStorage.getItem('hobbies')
+      let jsonObjHobbies = hobbiesJsonValue != null ? JSON.parse(hobbiesJsonValue) : null;
+      if (jsonObjHobbies != null) {
+        setHobbies(jsonObjHobbies)
+        console.log("hobbies wwere saved!: ")
+      } else {
+        console.log("hobbies AS are null")
+      }
+
 
     } catch (e) {
       console.log("error !!")
@@ -135,8 +154,8 @@ const ProfileSetup = (props) => {
   }
 
   const check = () => {
+    console.log(hobbies)
 
-    console.log(signUpDetails.fullName)
   }
   let image = signUpDetails.fbImage ? <Image
     source={{ uri: signUpDetails.fbImage }}
@@ -348,6 +367,13 @@ const ProfileSetup = (props) => {
 
 
         />
+        <FormButton
+          buttonTitle="Check hobbies"
+          onPress={() => check()}
+
+
+        />
+
 
 
         <TouchableOpacity
