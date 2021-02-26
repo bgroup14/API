@@ -1,41 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, FlatList, SafeAreaView, Text } from 'react-native';
 import { CheckBox } from 'react-native-elements'
 import axios from 'axios';
 import FormButton from '../components/FormButton';
-import { Button } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const HobbiesScreen = (props) => {
 
   const [hobbies, setHobbies] = useState([]);
   const [initialHobbies, setInitialHobbies] = useState([]);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
-  const [selected, setSelected] = useState();
+  const [searchWord, setSearchWord] = useState();
+
+
   const hobbiesFetchURL = `http://proj.ruppin.ac.il/bgroup14/prod/api/hobbies`
 
   useEffect(() => {
-    const fetchHobbies = async () => {
-      console.log("fetching data..............");
-      const result = await axios(
-        hobbiesFetchURL
-      );
-      setHobbies(result.data);
-      setInitialHobbies(result.data);
-      setSelectedHobbies([]);
-    };
+    clearAsHobbies("hobbies")
     fetchHobbies();
+
+
   }, []);
 
+  const fetchHobbies = async () => {
+    console.log("fetching data...");
+    const result = await axios(
+      hobbiesFetchURL
+    );
+    setHobbies(result.data);
+    setInitialHobbies(result.data);
+
+  };
+  const storeDataToAs = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('hobbies', jsonValue)
+    } catch (e) {
+      // saving error
+      console.log(e)
+    }
+  }
+
+  const clearAsHobbies = async (key) => {
+
+    try {
+      await AsyncStorage.removeItem(key);
+      console.log("AS Hobbies removed")
+      return true;
+    }
+    catch (exception) {
+      return false;
+    }
+  }
+
   const hobbyCheck = (hobby) => {
-    //console.log("Got hobby (ID: "+hobby.id+"): "+hobby.name);
-    // setSelectedHobbies([...selectedHobbies, hobby]);
-    // console.log("Array count: "+selectedHobbies.length);
     if (selectedHobbies.includes(hobby)) {
-      //console.log("hobby is INCLUDED");
       setSelectedHobbies(selectedHobbies.filter(function (el) { return el.id != hobby.id; }));
     }
     else {
-      //console.log("hobby not included");
       setSelectedHobbies([...selectedHobbies, hobby]);
     }
 
@@ -45,7 +71,8 @@ const HobbiesScreen = (props) => {
     return (selectedHobbies.includes(hobby));
   }
 
-  const onChangeText = (searchText) => {
+  const onChangeSearchText = (searchText) => {
+    setSearchWord(searchText);
     setHobbies(initialHobbies.filter(function (el) { return el.name.includes(searchText); }));
     if (hobbies.length <= 0 || searchText.length <= 0) {
       setHobbies(initialHobbies);
@@ -54,36 +81,48 @@ const HobbiesScreen = (props) => {
 
 
   const saveHobbies = () => {
+    console.log(selectedHobbies)
+    storeDataToAs(selectedHobbies).then(
+      props.navigation.navigate('ProfileSetup')
+    );
     //dispatch(saveHobbies(selectedHobbies));
 
   }
+  let renderHobbies = hobbies.length > 0 ? <FlatList
+    keyExtractor={(item, index) => item.id.toString()}
+    data={hobbies}
+    renderItem={({ item }) => (
+      <CheckBox
+        title={item.name}
+        key={item.id}
+        checked={hobbyCheckSelected(item)}
+        onPress={() => hobbyCheck(item)}
+      />
+    )}
+
+
+
+  /> : <View><Text></Text ></View >
 
   return (
-    <View>
-      <ScrollView>
-        <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 10 }}
-          onChangeText={text => onChangeText(text)}
-          placeholder="Search Hobby"
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 0.9 }} >
+        <SearchBar
+          containerStyle={{ marginTop: windowHeight / 30 }}
+          placeholder="Search Hobby..."
+          onChangeText={(text) => onChangeSearchText(text)}
+          value={searchWord}
         />
+        {renderHobbies}
+
+      </SafeAreaView>
+      <View style={{ flex: 0.1 }}>
         <FormButton
           buttonTitle="Save"
           onPress={() => saveHobbies()}
         />
-        <View style={styles.radioBtnContainer}>
-          {typeof (hobbies) !== 'undefined' && hobbies.length > 0 && hobbies.map((hobby) => (
-            <CheckBox
-              title={hobby.name}
-              key={hobby.id}
-              // onPress={() => selected != hobby.id ? setSelected(hobby.id) : setSelected(null)}
-              checked={hobbyCheckSelected(hobby)}
-              // onPress={() => selectedHobbies.some(item => item.id === hobby.id) ? setSelectedHobbies(...selectedHobbies) : setSelectedHobbies([...selectedHobbies, hobby])}
-              onPress={() => hobbyCheck(hobby)}
-            />
-          ))}
+      </View>
 
-        </View>
-      </ScrollView>
     </View>
   );
 };
