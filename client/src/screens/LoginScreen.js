@@ -152,7 +152,6 @@ const LoginScreen = (props) => {
         source={require('../../assets/logo.png')}
         style={styles.logo}
       />
-      <Text style={styles.text}>RN Social App</Text>
 
       <FormInput
         // labelValue={email}
@@ -177,11 +176,8 @@ const LoginScreen = (props) => {
         onPress={() => signIn()}
       />
 
-      {/* <TouchableOpacity style={styles.forgotButton} onPress={() => { }}>
-        <Text style={styles.navButtonText}>Forgot Password?</Text>
-      </TouchableOpacity> */}
+      <Text style={styles.text}>OR</Text>
 
-      {/* {Platform.OS === 'android' ? ( */}
       <View>
         <SocialButton
           buttonTitle="Sign In with Facebook"
@@ -229,8 +225,8 @@ const styles = StyleSheet.create({
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
-    fontSize: 28,
-    marginBottom: 10,
+    fontSize: 20,
+    marginVertical: 30,
     color: '#051d5f',
   },
   navButton: {
