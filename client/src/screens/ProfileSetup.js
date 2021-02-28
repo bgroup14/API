@@ -191,7 +191,7 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
-    alert(2)
+    //alert(2)
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
