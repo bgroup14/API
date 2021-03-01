@@ -4,6 +4,7 @@ import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { windowHeight } from '../../utils/Dimentions';
 
 // import {AuthContext} from '../navigation/AuthProvider';
 
@@ -36,16 +37,10 @@ const SignupScreenTest = (props) => {
   }
 
   const signUn = async () => {
-    if (password !== confirmPassword) {
-      Alert.alert(
-        "OOPS!",
-        "Password dosen't match, try again",
-        [
-          { text: "OK" }
-        ],
-      );
+    if (!validatePassword(password, confirmPassword) || !validateEmail(email)) {
       return null;
     }
+
     const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
 
     const config = {
@@ -105,6 +100,39 @@ const SignupScreenTest = (props) => {
     }
 
   }
+  const validateEmail = (email) => {
+
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let validation = re.test(String(email).toLowerCase());
+    if (validation) {
+      return true;
+    }
+    Alert.alert(
+      "OOPS!",
+      "Email is not in the correct format",
+      [
+        { text: "OK" }
+      ],
+    );
+    return false;
+
+  }
+  const validatePassword = (password, confirmPassword) => {
+    if (password !== confirmPassword) {
+      Alert.alert(
+        "OOPS!",
+        "Password dosen't match, try again",
+        [
+          { text: "OK" }
+        ],
+      );
+      return false;
+    }
+    return true;
+
+  }
+
+
 
 
   return (
@@ -118,12 +146,10 @@ const SignupScreenTest = (props) => {
       </View>
 
       <FormInput
-        // labelValue={email}
         onChangeText={(text) => fullNameChangeHanlder(text)}
         placeholderText="Full Name"
         iconType="user"
-        //keyboardType="email-address"
-        autoCapitalize="none"
+        autoCapitalize="words"
         autoCorrect={false}
         req
       />
@@ -135,6 +161,7 @@ const SignupScreenTest = (props) => {
         iconType="envelope"
         keyboardType="email-address"
         autoCapitalize="none"
+        keyboardType="email-address"
         autoCorrect={false}
       />
 
@@ -147,28 +174,24 @@ const SignupScreenTest = (props) => {
       />
 
       <FormInput
-        //  labelValue={confirmPassword}
         onChangeText={(text) => confirmPasswordChangeHanlder(text)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
       />
+      <View style={styles.signUpBtnContainer}>
 
-      <FormButton
-        buttonTitle="Sign Up"
-        //  onPress={() => register(email, password)} go to - profile setup
-        onPress={() => signUn()}
-      />
+        <FormButton
+          buttonTitle="Sign Up"
+          onPress={() => signUn()}
+        />
 
-
-
-
-
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => props.navigation.navigate('SignIn')}>
-        <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.navButton}
+          onPress={() => props.navigation.navigate('SignIn')}>
+          <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -207,6 +230,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     padding: 20
+  },
+  signUpBtnContainer: {
+    marginTop: windowHeight / 6,
+    alignItems: 'center',
+    width: '100%'
   }
 
 });

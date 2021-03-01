@@ -9,7 +9,6 @@ import { CheckBox } from 'react-native-elements'
 
 
 
-// import {AuthContext} from '../navigation/AuthProvider';
 
 const FeedSettingsScreen = (props) => {
   const [userType, setUserType] = useState();
@@ -18,6 +17,7 @@ const FeedSettingsScreen = (props) => {
   const [fromAge, setFromAge] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
+  const [hobbies, setHobbies] = useState({});
 
   const [uploadedPicture, setUploadedPicture] = useState({});
   const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
@@ -42,8 +42,12 @@ const FeedSettingsScreen = (props) => {
       let jsonObjTwo = jsonValueTwo != null ? JSON.parse(jsonValueTwo) : null;
       if (jsonObjTwo != null) {
         setProfileSetupDetails(jsonObjTwo)
-        console.log("profile setup image taken from profile setup page: " + jsonObjTwo.myImage)
-        console.log("profile setup facebook image: " + jsonObjTwo.fbImage)
+        console.log("profile setup image is : " + jsonObjTwo.image)
+      }
+      let jsonValueThree = await AsyncStorage.getItem('hobbies')
+      let jsonObjThree = jsonValueThree != null ? JSON.parse(jsonValueThree) : null;
+      if (jsonObjThree != null) {
+        setHobbies(jsonObjThree)
       }
 
 
@@ -58,26 +62,16 @@ const FeedSettingsScreen = (props) => {
     console.log("gender is: " + profileSetupDetails.gender)
     console.log("profie image path is : " + profileSetupDetails.myImage)
     console.log(signUpDetails.fullName)
+    console.log("hobbies length is " + hobbies.length)
   }
 
 
 
-
-
-
-  // btnUpload = () => {
-  //   let img = this.state.photoUri;
-
-  //   this.imageUpload(img, imgName);
-  // };
-
   const imageUpload = () => {
-    alert(1);
-    // here is should check if profileSetupDetails.myImage != null - if it does i should upload the photo to the server
-    // if its null i should check if profileSetupDetails.fbImage != undefined if it does i should send the url image link as is to the db 
+    //alert(1);
     let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
     let imgName = 'imgFromCamera.jpg';
-    let imgUri = profileSetupDetails.myImage
+    let imgUri = profileSetupDetails.image
     let dataI = new FormData();
     dataI.append('image', {
       uri: imgUri,
@@ -106,10 +100,12 @@ const FeedSettingsScreen = (props) => {
           let picNameWOExt = imgName.substring(0, imgName.indexOf("."));
           let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
           setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
+
           // this.setState({
           //   uplodedPicUri: { uri: this.uplodedPicPath + imageNameWithGUID },
           // });
           console.log("img uploaded successfully!");
+          // return uplodedPicPath + imageNameWithGUID;
         }
         else {
           console.log('error uploding ...');
@@ -121,14 +117,44 @@ const FeedSettingsScreen = (props) => {
       });
   }
 
+  const storeFeedSettingsToAs = async () => {
 
+    let value = {
+      userType,
+      postsLocation,
+      fromGender,
+      fromAge
+    }
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('feedSettings', jsonValue)
+      console.log("Feed settings saved to AS!")
+    } catch (e) {
+      // saving error
+      console.log(e)
+    }
+  }
 
+  const completeSignUp = async () => {
 
+    /// here i will check if profileSetupDetails.image includes 'https'
+    /// if it inculeds  we wont upload the picture and just continue with the function below
+    /// if it dosent inculeds 'https' we upload the picture to the server and then set the res url to profileSetupDetails.image and then send it to db with the function below
+    if (!profileSetupDetails.image.includes("https")) {
+      console.log("we in")
+      imageUpload();
+      profileSetupDetails.image = uploadedPicture.uri;
+      console.log("image url after uploading  is: " + profileSetupDetails.image)
+    }
+    //console.log(signUpDetails)
+    let fullSignUpDetails = {
+      ...signUpDetails,
+      ...profileSetupDetails
+    }
+    console.log(fullSignUpDetails)
+    /// now send fullSignUpDetails to the server 
 
-
-
-
-
+  }
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -229,7 +255,7 @@ const FeedSettingsScreen = (props) => {
 
         <FormButton
           buttonTitle="Complete Sign Up"
-        // onPress={() => props.navigation.navigate('ProfileSetup')}
+          onPress={() => completeSignUp()}
 
         //  onPress={() => register(email, password)} go to - profile setup
         />

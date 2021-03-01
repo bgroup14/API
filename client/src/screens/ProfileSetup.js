@@ -135,6 +135,7 @@ const ProfileSetup = (props) => {
     }
   }
   const goToFeedSettings = () => {
+    let image = setImage();
 
     let profileSetupDetails = {
       city,
@@ -142,9 +143,10 @@ const ProfileSetup = (props) => {
       bio,
       gender,
       date: unixDate,
-      myImage: selectedImage,
-      fbImage: signUpDetails.fbImage
-      //add hobbies array here
+      image,
+      // myImage: selectedImage,
+      // fbImage: signUpDetails.fbImage
+
 
     }
     //  console.log(signUpDetails)
@@ -152,6 +154,17 @@ const ProfileSetup = (props) => {
       props.navigation.navigate('FeedSettings')
     );
   }
+
+  const setImage = () => {
+    if (selectedImage != null) {
+      return selectedImage;
+    } else if (signUpDetails.fbImage != undefined) {
+      return signUpDetails.fbImage;
+    }
+
+
+  }
+
 
   const check = () => {
     console.log(hobbies)
@@ -215,7 +228,7 @@ const ProfileSetup = (props) => {
   const checkDate = () => {
     console.log(date)
     console.log(dateLabel)
-    console.log(unixDate)
+    console.log("unix date is: " + unixDate)
     //console.log(gender)
   }
 
@@ -309,7 +322,6 @@ const ProfileSetup = (props) => {
 
         <FormInput
           labelValue={occupation}
-          //   onChangeText={(userPassword) => setPassword(userPassword)}
           placeholderText="Occupation"
           iconType="suitcase"
           onChangeText={(text) => setOccupation(text)}
