@@ -18,6 +18,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 
+
+
 const ProfileSetup = (props) => {
   const [city, setCity] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
@@ -116,6 +118,7 @@ const ProfileSetup = (props) => {
         setHobbies(jsonObjHobbies)
         console.log("hobbies wwere saved!: ")
       } else {
+        setHobbies([])
         console.log("hobbies AS are null")
       }
 
@@ -168,12 +171,13 @@ const ProfileSetup = (props) => {
 
   const check = () => {
     console.log(hobbies)
+    console.log(hobbies.length)
 
   }
   let image = signUpDetails.fbImage ? <Image
     source={{ uri: signUpDetails.fbImage }}
-    style={styles.logo}
-  /> : <TouchableOpacity onPress={() => toggleOverlay()}>
+    style={styles.profileImage}
+  /> : <TouchableOpacity onPress={() => toggleOverlay()} >
       <Image
         source={require('../../assets/camera.png')}
         style={styles.camera}
@@ -183,7 +187,7 @@ const ProfileSetup = (props) => {
 
   if (selectedImage !== null) {
     image = <TouchableOpacity onPress={() => toggleOverlay()}>
-      <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
+      <Image source={{ uri: selectedImage }} style={styles.profileImage} />
 
     </TouchableOpacity>
 
@@ -232,6 +236,19 @@ const ProfileSetup = (props) => {
     //console.log(gender)
   }
 
+  const hobbisTitleFunc = () => {
+    if (hobbies.length == 0) {
+      return "Click to select your hobbies"
+    }
+    else if (hobbies.length == 1) {
+      return "You have selected 1 hobby"
+    }
+    else {
+      return `You have selected ${hobbies.length} hobbies`
+    }
+
+  }
+
 
   let datePicker = show ?
     <DateTimePicker
@@ -244,15 +261,13 @@ const ProfileSetup = (props) => {
     /> : <Text></Text>
 
 
+
+
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
     <ScrollView>
       <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
         <View style={styles.container} >
-
-
-
-
           <Text style={styles.overlayHeadline}>Set Up Profile Picture</Text>
           <View style={styles.btnContainer}>
             <Button
@@ -308,7 +323,7 @@ const ProfileSetup = (props) => {
         <TouchableOpacity onPress={showDatepicker}>
           <FormInput
             onDatePress={showDatepicker}
-            labelValue={dateLabel}
+            // labelValue={dateLabel}
             placeholderText={dateLabel}
             iconType="calendar"
             keyboardType="email-address"
@@ -327,15 +342,6 @@ const ProfileSetup = (props) => {
           onChangeText={(text) => setOccupation(text)}
         />
 
-        <TextArea
-          labelValue={bio}
-          placeholderText="What do you want people to know about you?"
-          iconType="calendar"
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) => setBio(text)}
-
-        />
 
 
         <DropDownPicker
@@ -346,18 +352,28 @@ const ProfileSetup = (props) => {
           ]}
           //defaultValue={null}
           containerStyle={styles.dropDownContainer}
-          style={{ backgroundColor: 'white', borderRadius: 3, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#fff' }}
+          style={{ borderRadius: 15, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#fff' }}
           itemStyle={{
 
             justifyContent: 'center', marginTop: 10
           }}
-          dropDownStyle={{ backgroundColor: 'white' }}
+          dropDownStyle={{ backgroundColor: '#fff' }}
           onChangeItem={item => setGender(item.value)
           }
         />
+        <TextArea
+          labelValue={bio}
+          placeholderText="What do you want people to know about you?"
+          iconType="calendar"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={(text) => setBio(text)}
+
+        />
+
         <TouchableOpacity style={styles.dropDownContainer} >
           <Button
-            title="Click to select your hobbies"
+            title={hobbisTitleFunc()}
             type="outline"
             raised={true}
             buttonStyle={{ padding: 15 }}
@@ -410,7 +426,7 @@ export default ProfileSetup;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    // backgroundColor: '#f9fafd',
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -434,13 +450,13 @@ const styles = StyleSheet.create({
     //  fontFamily: 'Lato-Regular',
   },
   logo: {
-    height: 150,
-    width: 150,
+    height: 200,
+    width: 200,
     resizeMode: 'cover',
   },
   camera: {
-    height: 50,
-    width: 50,
+    height: 100,
+    width: 100,
     resizeMode: 'cover',
   },
   imageContainer: {
@@ -478,5 +494,9 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     //backgroundColor: '#fff',
   },
+  profileImage: {
+    width: 120,
+    height: 120
+  }
 
 });

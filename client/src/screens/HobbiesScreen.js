@@ -116,7 +116,7 @@ const HobbiesScreen = (props) => {
         {renderHobbies}
 
       </SafeAreaView>
-      <View style={{ flex: 0.1 }}>
+      <View style={{ flex: 0.1, alignItems: 'center' }}>
         <FormButton
           buttonTitle="Save"
           onPress={() => saveHobbies()}

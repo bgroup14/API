@@ -125,6 +125,8 @@ const FeedSettingsScreen = (props) => {
       fromGender,
       fromAge
     }
+
+    /// change this to send it to the server insead of the asyc storage
     try {
       const jsonValue = JSON.stringify(value)
       await AsyncStorage.setItem('feedSettings', jsonValue)
@@ -158,23 +160,23 @@ const FeedSettingsScreen = (props) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.text}>FeedSettingsScreen</Text>
-        <Text>Do you</Text>
+        <Text style={styles.text}>Feed Settings</Text>
+        <Text style={styles.feedSettingsFilterText}>Do you</Text>
         <View style={styles.radioBtnContainer}>
 
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
             checked={userType == 1}
             onPress={() => userType != 1 ? setUserType(1) : setUserType(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Need Help'
             checked={userType == 2}
             onPress={() => userType != 2 ? setUserType(2) : setUserType(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Both'
             checked={userType == 3}
             onPress={() => userType != 3 ? setUserType(3) : setUserType(null)}
@@ -183,68 +185,68 @@ const FeedSettingsScreen = (props) => {
         </View>
 
 
-        <Text>Post's Location</Text>
+        <Text style={styles.feedSettingsFilterText}>Post's Location</Text>
 
 
         <View style={styles.radioBtnContainer}>
 
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='My Area'
             checked={postsLocation == 1}
             onPress={() => postsLocation != 1 ? setPostsLocation(1) : setUserType(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='30KM'
             checked={postsLocation == 2}
             onPress={() => postsLocation != 2 ? setPostsLocation(2) : setPostsLocation(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='All Country'
             checked={postsLocation == 3}
             onPress={() => postsLocation != 3 ? setPostsLocation(3) : setPostsLocation(null)}
 
           />
         </View>
-        <Text>From Who</Text>
+        <Text style={styles.feedSettingsFilterText}>Who you want to interact with</Text>
         <View style={styles.radioBtnContainer}>
 
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Man'
             checked={fromGender == 1}
             onPress={() => fromGender != 1 ? setFromGender(1) : setFromGender(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Woman'
             checked={fromGender == 2}
             onPress={() => fromGender != 2 ? setFromGender(2) : setFromGender(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title="Dosen't Matter"
             checked={fromGender == 3}
             onPress={() => fromGender != 3 ? setFromGender(3) : setFromGender(null)}
 
           />
         </View>
-        <Text>Volunteer's Age</Text>
+        <Text style={styles.feedSettingsFilterText}>Other Participante Age</Text>
         <View style={styles.radioBtnContainer}>
 
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
             checked={fromAge == 1}
             onPress={() => fromAge != 1 ? setFromAge(1) : setFromAge(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Need Help'
             checked={fromAge == 2}
             onPress={() => fromAge != 2 ? setFromAge(2) : setFromAge(null)}
 
           />
-          <CheckBox
+          <CheckBox containerStyle={styles.CheckBox}
             title='Both'
             checked={fromAge == 3}
             onPress={() => fromAge != 3 ? setFromAge(3) : setFromAge(null)}
@@ -283,7 +285,7 @@ export default FeedSettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    // backgroundColor: '#f9fafd',
     flex: 1,
     alignItems: 'center',
     padding: 15,
@@ -292,12 +294,16 @@ const styles = StyleSheet.create({
   radioBtnContainer: {
     // flexDirection: 'row',
     //flexWrap: 'wrap',
-    borderWidth: 2,
+    // borderWidth: 1,
     borderColor: '#ccc',
     //justifyContent: 'flex-start',
     marginVertical: 15,
     width: '100%',
-
+    elevation: 4,
+    shadowOffset: { width: 5, height: 5 },
+    shadowColor: "grey",
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
 
 
   }
@@ -325,6 +331,17 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     padding: 20
+  },
+  CheckBox:
+  {
+    borderRadius: 10,
+    backgroundColor: 'white',
+    marginVertical: 10,
+    borderColor: '#fff'
+  },
+  feedSettingsFilterText: {
+    fontSize: 20,
+    fontStyle: 'italic'
   }
 
 
