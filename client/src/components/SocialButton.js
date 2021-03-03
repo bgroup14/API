@@ -30,12 +30,12 @@ export default SocialButton;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginTop: 10,
-    width: '100%',
+    marginTop: 15,
+    width: '90%',
     height: windowHeight / 15,
     padding: 10,
     flexDirection: 'row',
-    borderRadius: 3,
+    borderRadius: 10,
   },
   iconWrapper: {
     width: 30,

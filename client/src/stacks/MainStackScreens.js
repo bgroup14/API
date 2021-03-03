@@ -15,12 +15,14 @@ const MainStackScreens = () => {
     const tabBarOptions = {
         showLabel: false,
         style: {
-            backgroundColor: 'white',
+            backgroundColor: '#fff',
             paddingBottom: 12
         }
     }
 
     const screenOptions = (({ route }) => ({
+
+
         tabBarIcon: ({ focused }) => {
             let iconName = "ios-home"
 

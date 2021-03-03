@@ -6,11 +6,16 @@ import {
   Image,
   Platform,
   StyleSheet,
-  ScrollView, Alert
+  ScrollView,
+  Alert,
+  ImageBackground,
+  TextInput
 } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+
 
 import { login } from '../../store/actions/auth';
 
@@ -32,6 +37,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
+import { Fragment } from 'react';
 
 
 const LoginScreen = (props) => {
@@ -147,64 +153,95 @@ const LoginScreen = (props) => {
 
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Image
-        source={require('../../assets/logo.png')}
-        style={styles.logo}
-      />
 
-      <FormInput
-        // labelValue={email}
-        onChangeText={(text) => emailChangeHandler(text)}
-        placeholderText="Email"
-        iconType="user"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+    <ScrollView>
+      <View style={styles.container}>
 
-      <FormInput
-        //   labelValue={password}
-        onChangeText={(text) => passwordChangeHanlder(text)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-
-      <FormButton
-        buttonTitle="Sign In"
-        onPress={() => signIn()}
-      />
-
-      <Text style={styles.text}>OR</Text>
-
-      <View>
-        <SocialButton
-          buttonTitle="Sign In with Facebook"
-          btnType="facebook"
-          color="#4867aa"
-          backgroundColor="#e6eaf4"
-          onPress={() => btnFBLogin()}
+        <Image
+          source={require('../../assets/logo.png')}
+          style={styles.logo}
         />
 
-        <SocialButton
-          buttonTitle="Sign In with Google"
-          btnType="google"
-          color="#de4d41"
-          backgroundColor="#f5e7ea"
-          onPress={() => googleLogin()}
+        <FormInput
+          // labelValue={email}
+          onChangeText={(text) => emailChangeHandler(text)}
+          placeholderText="Email"
+          iconType="user"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
-      </View>
-      {/* ) : null} */}
 
-      <TouchableOpacity
+        <FormInput
+          //   labelValue={password}
+          onChangeText={(text) => passwordChangeHanlder(text)}
+          placeholderText="Password"
+          iconType="lock"
+          secureTextEntry={true}
+        />
 
-        style={styles.forgotButton}
-        onPress={() => props.navigation.navigate('SignUp')}>
-        <Text style={styles.navButtonText}>
-          Don't have an acount? Create here
+
+
+
+        <FormButton
+          buttonTitle="Sign In!"
+          onPress={() => signIn()}
+        />
+
+        <Text style={styles.text}>OR</Text>
+        {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+
+          <TouchableOpacity onPress={() => alert(2)} style={{ marginHorizontal: 20 }}>
+            <Image source={require('../../assets/google.png')} style={{ width: 60, height: 60 }} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => btnFBLogin()} style={{ marginHorizontal: 20 }}>
+            <Image source={require('../../assets/facebook.png')} style={{ width: 60, height: 60 }} />
+          </TouchableOpacity>
+
+        </View> */}
+
+        <View>
+          <SocialButton
+            buttonTitle="Sign In with Facebook"
+            btnType="facebook"
+            color="#4867aa"
+            backgroundColor="#e6eaf4"
+
+            onPress={() => btnFBLogin()}
+          />
+
+          <SocialButton
+            buttonTitle="Sign In with Google"
+            btnType="google"
+            color="#de4d41"
+            backgroundColor="#f5e7ea"
+            onPress={() => googleLogin()}
+          />
+        </View>
+        {/* ) : null} */}
+        <View style={{ flex: 1 }}>
+
+          <TouchableOpacity style={{ alignSelf: 'center', marginTop: 32 }}
+          // onPress={() => this.props.navigation.navigate('Register')}
+          >
+            <Text style={{ color: '#1a75ff', fontSize: 12 }}>
+              New to VolunteerMatch? <Text style={{ fontWeight: '500', color: '#1a75ff' }}>
+                Sign up
+</Text>
+            </Text>
+
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+
+          style={styles.forgotButton}
+          onPress={() => props.navigation.navigate('SignUp')}>
+          <Text style={styles.navButtonText}>
+            Don't have an acount? Create here
         </Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -213,20 +250,26 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    //  backgroundColor: '#e6f2ff',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     paddingTop: 50
   },
   logo: {
-    height: 150,
-    width: 150,
+
+    height: 200,
+    width: 200,
     resizeMode: 'cover',
+    marginBottom: 30
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 20,
-    marginVertical: 30,
+    marginTop: 30,
+    marginBottom: 20,
+    // marginVertical: 30,
     color: '#051d5f',
   },
   navButton: {
@@ -234,6 +277,7 @@ const styles = StyleSheet.create({
   },
   forgotButton: {
     marginVertical: 35,
+
   },
   navButtonText: {
     fontSize: 18,
