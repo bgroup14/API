@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { CheckBox } from 'react-native-elements'
+import HorizontalLine from '../components/HorizontalLine';
 
 
 
@@ -14,10 +15,11 @@ const FeedSettingsScreen = (props) => {
   const [userType, setUserType] = useState();
   const [postsLocation, setPostsLocation] = useState();
   const [fromGender, setFromGender] = useState();
-  const [fromAge, setFromAge] = useState();
+  const [participantAge, setParticipantAge] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
   const [hobbies, setHobbies] = useState({});
+  const [imageWasUploaded, setImageWasUploaded] = useState(false);
 
   const [uploadedPicture, setUploadedPicture] = useState({});
   const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
@@ -28,7 +30,15 @@ const FeedSettingsScreen = (props) => {
   useEffect(() => {
     getDataFromAS();
 
+
   }, [])
+  useEffect(() => {
+    if (userType != undefined && !imageWasUploaded) {
+      imageUpload();
+      setImageWasUploaded(true)
+    }
+  }, [userType])
+
 
   const getDataFromAS = async () => {
     try {
@@ -51,6 +61,7 @@ const FeedSettingsScreen = (props) => {
       }
 
 
+
     } catch (e) {
       console.log("error in feed setting page !!")
       console.log(e.message)
@@ -58,11 +69,13 @@ const FeedSettingsScreen = (props) => {
     }
   }
   const check = () => {
+    console.log("photo after uploading is  " + uploadedPicture.uri)
     console.log("unix date is: " + profileSetupDetails.date)
     console.log("gender is: " + profileSetupDetails.gender)
     console.log("profie image path is : " + profileSetupDetails.myImage)
     console.log(signUpDetails.fullName)
     console.log("hobbies length is " + hobbies.length)
+
   }
 
 
@@ -101,6 +114,7 @@ const FeedSettingsScreen = (props) => {
           let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
           setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
 
+
           // this.setState({
           //   uplodedPicUri: { uri: this.uplodedPicPath + imageNameWithGUID },
           // });
@@ -123,7 +137,7 @@ const FeedSettingsScreen = (props) => {
       userType,
       postsLocation,
       fromGender,
-      fromAge
+      // fromAge
     }
 
     /// change this to send it to the server insead of the asyc storage
@@ -137,119 +151,147 @@ const FeedSettingsScreen = (props) => {
     }
   }
 
-  const completeSignUp = async () => {
+  const completeSignUp = () => {
+
 
     /// here i will check if profileSetupDetails.image includes 'https'
     /// if it inculeds  we wont upload the picture and just continue with the function below
     /// if it dosent inculeds 'https' we upload the picture to the server and then set the res url to profileSetupDetails.image and then send it to db with the function below
-    if (!profileSetupDetails.image.includes("https")) {
-      console.log("we in")
-      imageUpload();
-      profileSetupDetails.image = uploadedPicture.uri;
-      console.log("image url after uploading  is: " + profileSetupDetails.image)
+    // if (!profileSetupDetails.image.includes("https")) {
+
+    const feedSettings = {
+
+      memberType: userType,
+      postsLocation,
+      fromGender,
+      participantAge
     }
+
+    console.log("Mmber type is:" + feedSettings.memberType)
+    console.log("Mmber postlocaion is:" + feedSettings.postsLocation)
+    console.log("Mmber from gender is:" + feedSettings.fromGender)
+    console.log("Mmber from age is:" + feedSettings.participantAge)
+    profileSetupDetails.image = uploadedPicture.uri;
+
     //console.log(signUpDetails)
     let fullSignUpDetails = {
       ...signUpDetails,
-      ...profileSetupDetails
+      ...profileSetupDetails,
+
     }
     console.log(fullSignUpDetails)
     /// now send fullSignUpDetails to the server 
 
   }
   return (
-    <ScrollView>
+    <ScrollView >
       <View style={styles.container}>
-        <Text style={styles.text}>Feed Settings</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.text}>Feed Settings</Text>
+        </View>
         <Text style={styles.feedSettingsFilterText}>Do you</Text>
-        <View style={styles.radioBtnContainer}>
+
+        <View kstyle={styles.radioBtnContainer}>
 
           <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
-            checked={userType == 1}
-            onPress={() => userType != 1 ? setUserType(1) : setUserType(null)}
+            checked={userType == 'Want To Help'}
+            onPress={() => userType != 'Want To Help' ? setUserType('Want To Help') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='Need Help'
-            checked={userType == 2}
-            onPress={() => userType != 2 ? setUserType(2) : setUserType(null)}
+            checked={userType == 'Need Help'}
+            onPress={() => userType != 'Need Help' ? setUserType('Need Help') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='Both'
-            checked={userType == 3}
-            onPress={() => userType != 3 ? setUserType(3) : setUserType(null)}
+            checked={userType == 'Both'}
+            onPress={() => userType != 'Both' ? setUserType('Both') : setUserType(null)}
 
           />
         </View>
+        <HorizontalLine />
 
 
-        <Text style={styles.feedSettingsFilterText}>Post's Location</Text>
+
+        <Text style={styles.feedSettingsFilterText}>Post's location</Text>
 
 
         <View style={styles.radioBtnContainer}>
 
           <CheckBox containerStyle={styles.CheckBox}
             title='My Area'
-            checked={postsLocation == 1}
-            onPress={() => postsLocation != 1 ? setPostsLocation(1) : setUserType(null)}
+            checked={postsLocation == 'My Area'}
+            onPress={() => postsLocation != 'My Area' ? setPostsLocation('My Area') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='30KM'
-            checked={postsLocation == 2}
-            onPress={() => postsLocation != 2 ? setPostsLocation(2) : setPostsLocation(null)}
+            checked={postsLocation == '30KM'}
+            onPress={() => postsLocation != '30KM' ? setPostsLocation('30KM') : setPostsLocation(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='All Country'
-            checked={postsLocation == 3}
-            onPress={() => postsLocation != 3 ? setPostsLocation(3) : setPostsLocation(null)}
+            checked={postsLocation == 'All Country'}
+            onPress={() => postsLocation != 'All Country' ? setPostsLocation('All Country') : setPostsLocation(null)}
 
           />
         </View>
-        <Text style={styles.feedSettingsFilterText}>Who you want to interact with</Text>
+        <HorizontalLine />
+
+        <Text style={styles.feedSettingsFilterText}>Participant gender</Text>
         <View style={styles.radioBtnContainer}>
 
           <CheckBox containerStyle={styles.CheckBox}
             title='Man'
-            checked={fromGender == 1}
-            onPress={() => fromGender != 1 ? setFromGender(1) : setFromGender(null)}
+            checked={fromGender == 'Man'}
+            onPress={() => fromGender != 'Man' ? setFromGender('Man') : setFromGender(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='Woman'
-            checked={fromGender == 2}
-            onPress={() => fromGender != 2 ? setFromGender(2) : setFromGender(null)}
+            checked={fromGender == 'Woman'}
+            onPress={() => fromGender != 'Woman' ? setFromGender('Woman') : setFromGender(null)}
+
+          />
+          <CheckBox containerStyle={styles.CheckBox}
+            title="Both"
+            checked={fromGender == "Both"}
+            onPress={() => fromGender != "Both" ? setFromGender("Both") : setFromGender(null)}
+
+          />
+
+        </View>
+        <HorizontalLine />
+        <Text style={styles.feedSettingsFilterText}>Participant age</Text>
+        <View style={styles.radioBtnContainer}>
+
+          <CheckBox containerStyle={styles.CheckBox}
+            title='16-30'
+            checked={participantAge == 1}
+            onPress={() => participantAge != 1 ? setParticipantAge(1) : setParticipantAge(null)}
+
+          />
+
+          <CheckBox containerStyle={styles.CheckBox}
+            title='30-50'
+            checked={participantAge == 2}
+            onPress={() => participantAge != 2 ? setParticipantAge(2) : setParticipantAge(null)}
+
+          />
+          <CheckBox containerStyle={styles.CheckBox}
+            title='50 +'
+            checked={participantAge == 3}
+            onPress={() => participantAge != 3 ? setParticipantAge(3) : setParticipantAge(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title="Dosen't Matter"
-            checked={fromGender == 3}
-            onPress={() => fromGender != 3 ? setFromGender(3) : setFromGender(null)}
-
-          />
-        </View>
-        <Text style={styles.feedSettingsFilterText}>Other Participante Age</Text>
-        <View style={styles.radioBtnContainer}>
-
-          <CheckBox containerStyle={styles.CheckBox}
-            title='Want To Help'
-            checked={fromAge == 1}
-            onPress={() => fromAge != 1 ? setFromAge(1) : setFromAge(null)}
-
-          />
-          <CheckBox containerStyle={styles.CheckBox}
-            title='Need Help'
-            checked={fromAge == 2}
-            onPress={() => fromAge != 2 ? setFromAge(2) : setFromAge(null)}
-
-          />
-          <CheckBox containerStyle={styles.CheckBox}
-            title='Both'
-            checked={fromAge == 3}
-            onPress={() => fromAge != 3 ? setFromAge(3) : setFromAge(null)}
+            checked={participantAge == 4}
+            onPress={() => participantAge != 4 ? setParticipantAge(4) : setParticipantAge(null)}
 
           />
         </View>
@@ -270,14 +312,14 @@ const FeedSettingsScreen = (props) => {
         />
 
 
-
+        {/* 
         <TouchableOpacity
           style={styles.navButton}
           onPress={() => props.navigation.navigate('SignIn')}>
           <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ View>
-    </ScrollView>
+    </ScrollView >
   );
 };
 
@@ -287,15 +329,15 @@ const styles = StyleSheet.create({
   container: {
     // backgroundColor: '#f9fafd',
     flex: 1,
-    alignItems: 'center',
-    padding: 15,
+    // alignItems: 'center',
+    padding: 20,
 
   },
   radioBtnContainer: {
     // flexDirection: 'row',
     //flexWrap: 'wrap',
     // borderWidth: 1,
-    borderColor: '#ccc',
+    //   borderColor: '#ccc',
     //justifyContent: 'flex-start',
     marginVertical: 15,
     width: '100%',
@@ -334,14 +376,20 @@ const styles = StyleSheet.create({
   },
   CheckBox:
   {
-    borderRadius: 10,
-    backgroundColor: 'white',
+    //   borderRadius: 10,
+    backgroundColor: '#f2f2f2',
     marginVertical: 10,
-    borderColor: '#fff'
+    //  borderColor: '#fff'
+    borderWidth: 0
   },
   feedSettingsFilterText: {
     fontSize: 20,
     fontStyle: 'italic'
+  },
+  headerContainer:
+  {
+    flex: 1,
+    alignItems: 'center'
   }
 
 

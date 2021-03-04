@@ -200,7 +200,7 @@ export default SignupScreenTest;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    //  backgroundColor: '#f9fafd',
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
