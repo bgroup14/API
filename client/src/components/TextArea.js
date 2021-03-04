@@ -18,7 +18,8 @@ const TextArea = ({ labelValue, placeholderText, iconType, ...rest }) => {
         placeholder={placeholderText}
         placeholderTextColor="#666"
         {...rest}
-        maxLength={120} />
+        maxLength={120}
+      />
     </View>
   );
 };
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 5,
     marginBottom: 10,
-    width: '100%',
+    width: '98%',
     height: windowHeight / 8,
     borderColor: '#ccc',
     borderRadius: 15,
@@ -44,7 +45,6 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     // fontFamily: 'Lato-Regular',
-    color: '#333',
     textAlignVertical: 'top'
 
   },

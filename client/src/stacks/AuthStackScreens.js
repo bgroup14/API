@@ -16,7 +16,7 @@ const AuthStackScreens = () => {
         <AuthStack.Navigator headerMode='none' screenOptions={{
             headerStyle: { elevation: 0 },
             // cardStyle: { backgroundColor: '#f2f2f2' }
-            cardStyle: { backgroundColor: '#fff' }
+            cardStyle: { backgroundColor: '#f2f2f2' }
         }} >
             <AuthStack.Screen name="SignIn" component={LoginScreen} />
             <AuthStack.Screen name="SignUp" component={SignUpScreen} />

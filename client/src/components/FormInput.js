@@ -30,13 +30,14 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 5,
     marginBottom: 10,
-    width: '100%',
+    width: windowWidth / 1.1,
     height: windowHeight / 15,
     borderColor: '#ccc',
     borderRadius: 15,
     borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff'
   },
   iconStyle: {
     padding: 10,

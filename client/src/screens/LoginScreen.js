@@ -27,6 +27,11 @@ import axios from 'axios';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { Divider } from 'react-native-elements';
+
+
+
+
 
 // import { useStateWithCallbackInstant } from 'use-state-with-callback'
 
@@ -154,42 +159,58 @@ const LoginScreen = (props) => {
 
   return (
 
-    <ScrollView>
-      <View style={styles.container}>
-
+    // <ScrollView style={{ flex: 1 }}>
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/logo.png')}
+          source={require('../../assets/logo.jpg')}
           style={styles.logo}
         />
 
-        <FormInput
-          // labelValue={email}
-          onChangeText={(text) => emailChangeHandler(text)}
-          placeholderText="Email"
-          iconType="user"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+      </View>
 
-        <FormInput
-          //   labelValue={password}
-          onChangeText={(text) => passwordChangeHanlder(text)}
-          placeholderText="Password"
-          iconType="lock"
-          secureTextEntry={true}
-        />
+      {/* <View style={{ flex: 1 }}>
+        <Text style={{ fontSize: 24 }}>
+          Welcome Back
+        </Text>
+      </View> */}
+
+      <FormInput
+        // labelValue={email}
+        onChangeText={(text) => emailChangeHandler(text)}
+        placeholderText="Email"
+        iconType="user"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+
+      <FormInput
+        //   labelValue={password}
+        onChangeText={(text) => passwordChangeHanlder(text)}
+        placeholderText="Password"
+        iconType="lock"
+        secureTextEntry={true}
+      />
 
 
 
 
-        <FormButton
-          buttonTitle="Sign In!"
-          onPress={() => signIn()}
-        />
+      <FormButton
+        buttonTitle="Sign In!"
+        onPress={() => signIn()}
+      />
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20, marginTop: 20 }}>
+        <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+        <View>
+          <Text style={{ width: 50, textAlign: 'center', fontSize: 16 }}>OR</Text>
+        </View>
+        <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+      </View>
 
-        <Text style={styles.text}>OR</Text>
-        {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+      {/* <Text style={styles.text}>OR</Text> */}
+
+      {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
 
           <TouchableOpacity onPress={() => alert(2)} style={{ marginHorizontal: 20 }}>
             <Image source={require('../../assets/google.png')} style={{ width: 60, height: 60 }} />
@@ -200,49 +221,46 @@ const LoginScreen = (props) => {
 
         </View> */}
 
-        <View>
-          <SocialButton
-            buttonTitle="Sign In with Facebook"
-            btnType="facebook"
-            color="#4867aa"
-            backgroundColor="#e6eaf4"
+      <View>
+        <SocialButton
+          buttonTitle="Sign In with Facebook"
+          btnType="facebook"
+          color="#4867aa"
+          backgroundColor="#e6eaf4"
 
-            onPress={() => btnFBLogin()}
-          />
+          onPress={() => btnFBLogin()}
+        />
 
-          <SocialButton
-            buttonTitle="Sign In with Google"
-            btnType="google"
-            color="#de4d41"
-            backgroundColor="#f5e7ea"
-            onPress={() => googleLogin()}
-          />
-        </View>
-        {/* ) : null} */}
-        <View style={{ flex: 1 }}>
+        <SocialButton
+          buttonTitle="Sign In with Google"
+          btnType="google"
+          color="#de4d41"
+          backgroundColor="#f5e7ea"
+          onPress={() => googleLogin()}
+        />
+      </View>
+      {/* ) : null} */}
+      <View style={{ flex: 1 }}>
 
-          <TouchableOpacity style={{ alignSelf: 'center', marginTop: 32 }}
-          // onPress={() => this.props.navigation.navigate('Register')}
-          >
-            <Text style={{ color: '#1a75ff', fontSize: 12 }}>
-              New to VolunteerMatch? <Text style={{ fontWeight: '500', color: '#1a75ff' }}>
-                Sign up
-</Text>
-            </Text>
 
-          </TouchableOpacity>
-        </View>
+      </View>
 
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        // alignItems: 'flex-end'
+      }}>
         <TouchableOpacity
-
-          style={styles.forgotButton}
+          //style={styles.forgotButton}
           onPress={() => props.navigation.navigate('SignUp')}>
           <Text style={styles.navButtonText}>
             Don't have an acount? Create here
         </Text>
+
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
+    // </ScrollView>
   );
 };
 
@@ -251,18 +269,28 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //  backgroundColor: '#e6f2ff',
-    justifyContent: 'center',
+    //backgroundColor: '#e6f2ff',
+    //justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    paddingTop: 50
+    //  padding: 20,
+    paddingTop: 20
   },
   logo: {
 
-    height: 200,
+    // justifyContent: 'flex-end',
+    height: 180,
     width: 200,
-    resizeMode: 'cover',
-    marginBottom: 30
+    //resizeMode: 'cover',
+    marginBottom: 30,
+
+
+  },
+  logoContainer: {
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: windowHeight / 12
+
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
@@ -276,11 +304,12 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   forgotButton: {
-    marginVertical: 35,
+    marginBottom: 200
+    //marginVertical: 35,
 
   },
   navButtonText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '500',
     color: '#2e64e5',
     //fontFamily: 'Lato-Regular',

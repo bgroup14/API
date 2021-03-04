@@ -15,6 +15,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
+import MyBottomSheet from '../components/MyBottomSheet';
+
+
+// import { BottomSheet } from 'react-native-btr';
+
 
 
 
@@ -265,10 +270,10 @@ const ProfileSetup = (props) => {
 
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
-    <ScrollView>
-      <MyOverlay isVisible={visible} onBackdropPress={toggleOverlay} style={styles.overlayStyle} >
-        <View style={styles.container} >
-          <Text style={styles.overlayHeadline}>Set Up Profile Picture</Text>
+    <ScrollView >
+
+      <MyBottomSheet visible={visible} toggle={toggleOverlay} >
+        <View>
           <View style={styles.btnContainer}>
             <Button
               icon={
@@ -303,93 +308,115 @@ const ProfileSetup = (props) => {
             />
           </View>
         </View>
-      </MyOverlay>
-
+      </MyBottomSheet>
 
       <View style={styles.container}>
-        <Text style={styles.text}>Profile Setup</Text>
-        <View style={styles.imageContainer}>
-          {image}
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.text}>Profile Setup</Text>
+          <View style={styles.imageContainer}>
+            {image}
+          </View>
         </View>
 
-        <FormInput
-          labelValue={city}
-          placeholderText="City"
-          iconType="home"
-          autoCapitalize="none"
-          autoCorrect={true}
-          onChangeText={(text) => setCity(text)} />
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>CURRENT CITY</Text>
 
-        <TouchableOpacity onPress={showDatepicker}>
+
           <FormInput
-            onDatePress={showDatepicker}
-            // labelValue={dateLabel}
-            placeholderText={dateLabel}
+            labelValue={city}
+            placeholderText="City"
+            iconType="home"
+            autoCapitalize="none"
+            autoCorrect={true}
+            onChangeText={(text) => setCity(text)} />
+        </View>
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>DATE OF BIRTH</Text>
+          <TouchableOpacity onPress={showDatepicker}>
+            <FormInput
+              onDatePress={showDatepicker}
+              // labelValue={dateLabel}
+              placeholderText={dateLabel}
+              iconType="calendar"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              editable={false}
+              onChangeText={(text) => setDateOfBirth(text)}
+            />
+
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>OCCUPATION</Text>
+
+          <FormInput
+            labelValue={occupation}
+            placeholderText="Occupation"
+            iconType="suitcase"
+            onChangeText={(text) => setOccupation(text)}
+          />
+        </View>
+
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>GENDER</Text>
+
+          <DropDownPicker
+            placeholder="Select"
+            items={[
+              { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
+              { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
+            ]}
+            //defaultValue={null}
+            containerStyle={styles.dropDownContainer}
+            // style={{ borderWidth: 1, borderColor: '#ccc' }}
+            itemStyle={{
+
+              justifyContent: 'center', marginTop: 10
+            }}
+            onChangeItem={item => setGender(item.value)
+            }
+          />
+        </View>
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>SHORT BIO</Text>
+
+          <TextArea
+            labelValue={bio}
+            placeholderText="What do you want people to know about you?"
             iconType="calendar"
-            keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
-            editable={false}
-            onChangeText={(text) => setDateOfBirth(text)}
-          />
-
-        </TouchableOpacity>
-
-        <FormInput
-          labelValue={occupation}
-          placeholderText="Occupation"
-          iconType="suitcase"
-          onChangeText={(text) => setOccupation(text)}
-        />
-
-
-
-        <DropDownPicker
-          placeholder="Gender"
-          items={[
-            { label: ' Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
-            { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
-          ]}
-          //defaultValue={null}
-          containerStyle={styles.dropDownContainer}
-          style={{ borderRadius: 15, borderWidth: 1, borderColor: '#ccc', backgroundColor: '#fff' }}
-          itemStyle={{
-
-            justifyContent: 'center', marginTop: 10
-          }}
-          dropDownStyle={{ backgroundColor: '#fff' }}
-          onChangeItem={item => setGender(item.value)
-          }
-        />
-        <TextArea
-          labelValue={bio}
-          placeholderText="What do you want people to know about you?"
-          iconType="calendar"
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={(text) => setBio(text)}
-
-        />
-
-        <TouchableOpacity style={styles.dropDownContainer} >
-          <Button
-            title={hobbisTitleFunc()}
-            type="outline"
-            raised={true}
-            buttonStyle={{ padding: 15 }}
-            onPress={() => props.navigation.navigate('HobbiesScreen')}
+            onChangeText={(text) => setBio(text)}
 
           />
-        </TouchableOpacity>
+        </View >
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>HOBBIES</Text>
+
+          <TouchableOpacity style={styles.dropDownContainer} >
+            <Button
+              title={hobbisTitleFunc()}
+              type="outline"
+              raised={true}
+              buttonStyle={{ padding: 15 }}
+              onPress={() => props.navigation.navigate('HobbiesScreen')}
+
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ marginTop: 40 }} >
+          <FormButton
+            buttonTitle="Next"
+            onPress={() => goToFeedSettings()}
+
+          />
+        </View>
 
 
-        <FormButton
-          buttonTitle="Next"
-          onPress={() => goToFeedSettings()}
-
-        />
-
-        <FormButton
+        {/* <FormButton
           buttonTitle="Check Date console log"
           onPress={() => checkDate()}
 
@@ -400,24 +427,36 @@ const ProfileSetup = (props) => {
           onPress={() => check()}
 
 
-        />
+        /> */}
 
 
 
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => props.navigation.navigate('SignIn')}>
-          <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-        </TouchableOpacity>
+        {/* <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 30
+        }}>
+          <TouchableOpacity
+            style={styles.navButton}
+            onPress={() => props.navigation.navigate('SignIn')}>
+            <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+          </TouchableOpacity>
+        </View> */}
+
+
       </View>
-    </ScrollView>
+    </ScrollView >
 
 
   return (
+    // <Fragment>
+
     <Fragment>
       {profileSetupScreen}
       {datePicker}
     </Fragment>
+    // </Fragment>
 
   );
 };
@@ -426,14 +465,16 @@ export default ProfileSetup;
 
 const styles = StyleSheet.create({
   container: {
+    //  backgroundColor: 'fff',
     // backgroundColor: '#f9fafd',
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    padding: 20,
+    // flex: 1,
+    // justifyContent: 'flex-start',
+    //  alignItems: 'flex-start',
+    padding: 15,
 
   },
   text: {
+
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
@@ -463,40 +504,38 @@ const styles = StyleSheet.create({
     padding: 20
   },
   overlayStyle: {
-    height: '20',
+    flex: 1,
+    height: '200',
     width: '80%'
   },
   overlayHeadline: {
     fontSize: 24
   },
   btnContainer: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'stretch',
-    padding: 20,
 
   },
   profilePictureBtn: {
     justifyContent: 'flex-start',
-    // alignItems: 'flex-start',
+    borderWidth: 0
 
   },
   dropDownContainer: {
+
     marginTop: 5,
     marginBottom: 10,
-    //height: 40,
-    width: '100%',
+    width: '98%',
     height: windowHeight / 15,
-    // borderColor: '#ccc',
-    // borderRadius: 3,
-    //borderWidth: 1,
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    //backgroundColor: '#fff',
+
   },
   profileImage: {
     width: 120,
     height: 120
+  },
+  setupParams: {
+    fontSize: 14,
+    fontStyle: 'italic'
+  },
+  setupParamsContainer: {
   }
 
 });
