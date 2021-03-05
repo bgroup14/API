@@ -69,12 +69,15 @@ const FeedSettingsScreen = (props) => {
     }
   }
   const check = () => {
+
     // console.log("photo after uploading is  " + uploadedPicture.uri)
     // console.log("unix date is: " + profileSetupDetails.date)
     // console.log("gender is: " + profileSetupDetails.gender)
     // console.log("profie image path is : " + profileSetupDetails.myImage)
     // console.log(signUpDetails.fullName)
-    // console.log("hobbies length is " + hobbies.length)
+    console.log("hobbies length is " + hobbies.length)
+    console.log("hobbies name is " + hobbies[0].name)
+    console.log("hobbies id is " + hobbies[0].id)
 
   }
 
@@ -184,11 +187,19 @@ const FeedSettingsScreen = (props) => {
 
     //console.log(signUpDetails)
     let fullSignUpDetails = {
-      ...signUpDetails,
-      ...profileSetupDetails,
+      signUpDetails,
+      profileSetupDetails,
+      feedSettings,
+      hobbies
+
 
     }
-    console.log(fullSignUpDetails)
+
+    /// here i should check every thing that is inside fullsignupdetails and to see that its not null or undefiend
+    ///and then send everything to the server
+
+    console.log("full sign up details " + fullSignUpDetails.profileSetupDetails.image)
+    // console.log("full sign up details " + fullSignUpDetails.hobbies[0].name)
     /// now send fullSignUpDetails to the server 
 
 
@@ -196,7 +207,7 @@ const FeedSettingsScreen = (props) => {
   const checkIfFormIsFilled = (obj) => {
 
 
-    for (x in obj) {
+    for (const x in obj) {
 
       if (obj[x] === null || obj[x] === undefined) {
         return true;
@@ -326,13 +337,13 @@ const FeedSettingsScreen = (props) => {
 
         //  onPress={() => register(email, password)} go to - profile setup
         />
-
+        {/* 
         <Button title='check data from as'
           onPress={() => check()}
         />
         <Button title='Upload image'
           onPress={() => imageUpload()}
-        />
+        /> */}
 
 
         {/* 

@@ -205,11 +205,11 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
-    //alert(2)
+
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    // console.log(selectedDate.toString())
+    // // console.log(selectedDate.toString())
     let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
     setDateLabel(slicedDate)
     let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
