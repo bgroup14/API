@@ -29,7 +29,9 @@ export default function MyCamera(props) {
 
 
     try {
+
       const photo = await ref.current.takePictureAsync({ quality: 0.2 });
+      console.log("in my camera")
       props.sendImagePath(photo.uri)
       props.toggleCamera();
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import { Button } from 'react-native-elements';
@@ -15,7 +15,7 @@ const FeedSettingsScreen = (props) => {
   const [userType, setUserType] = useState();
   const [postsLocation, setPostsLocation] = useState();
   const [fromGender, setFromGender] = useState();
-  const [participantAge, setParticipantAge] = useState();
+  const [participantAgeRange, setParticipantAgeRange] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
   const [hobbies, setHobbies] = useState({});
@@ -69,12 +69,12 @@ const FeedSettingsScreen = (props) => {
     }
   }
   const check = () => {
-    console.log("photo after uploading is  " + uploadedPicture.uri)
-    console.log("unix date is: " + profileSetupDetails.date)
-    console.log("gender is: " + profileSetupDetails.gender)
-    console.log("profie image path is : " + profileSetupDetails.myImage)
-    console.log(signUpDetails.fullName)
-    console.log("hobbies length is " + hobbies.length)
+    // console.log("photo after uploading is  " + uploadedPicture.uri)
+    // console.log("unix date is: " + profileSetupDetails.date)
+    // console.log("gender is: " + profileSetupDetails.gender)
+    // console.log("profie image path is : " + profileSetupDetails.myImage)
+    // console.log(signUpDetails.fullName)
+    // console.log("hobbies length is " + hobbies.length)
 
   }
 
@@ -131,25 +131,25 @@ const FeedSettingsScreen = (props) => {
       });
   }
 
-  const storeFeedSettingsToAs = async () => {
+  // const storeFeedSettingsToAs = async () => {
 
-    let value = {
-      userType,
-      postsLocation,
-      fromGender,
-      // fromAge
-    }
+  //   let value = {
+  //     userType,
+  //     postsLocation,
+  //     fromGender,
+  //    participantAgeRange
+  //   }
 
-    /// change this to send it to the server insead of the asyc storage
-    try {
-      const jsonValue = JSON.stringify(value)
-      await AsyncStorage.setItem('feedSettings', jsonValue)
-      console.log("Feed settings saved to AS!")
-    } catch (e) {
-      // saving error
-      console.log(e)
-    }
-  }
+  //   /// change this to send it to the server insead of the asyc storage
+  //   try {
+  //     const jsonValue = JSON.stringify(value)
+  //     await AsyncStorage.setItem('feedSettings', jsonValue)
+  //     console.log("Feed settings saved to AS!")
+  //   } catch (e) {
+  //     // saving error
+  //     console.log(e)
+  //   }
+  // }
 
   const completeSignUp = () => {
 
@@ -164,13 +164,22 @@ const FeedSettingsScreen = (props) => {
       memberType: userType,
       postsLocation,
       fromGender,
-      participantAge
+      participantAgeRange
+    }
+    if (checkIfFormIsFilled(feedSettings)) {
+      Alert.alert(
+        "",
+        "Please fill the entire form",
+        [
+          { text: "OK" }
+        ],
+      );
+      return null
     }
 
-    console.log("Mmber type is:" + feedSettings.memberType)
-    console.log("Mmber postlocaion is:" + feedSettings.postsLocation)
-    console.log("Mmber from gender is:" + feedSettings.fromGender)
-    console.log("Mmber from age is:" + feedSettings.participantAge)
+
+
+
     profileSetupDetails.image = uploadedPicture.uri;
 
     //console.log(signUpDetails)
@@ -181,6 +190,20 @@ const FeedSettingsScreen = (props) => {
     }
     console.log(fullSignUpDetails)
     /// now send fullSignUpDetails to the server 
+
+
+  }
+  const checkIfFormIsFilled = (obj) => {
+
+
+    for (x in obj) {
+
+      if (obj[x] === null || obj[x] === undefined) {
+        return true;
+      }
+    }
+    return false;
+
 
   }
   return (
@@ -224,7 +247,7 @@ const FeedSettingsScreen = (props) => {
           <CheckBox containerStyle={styles.CheckBox}
             title='My Area'
             checked={postsLocation == 'My Area'}
-            onPress={() => postsLocation != 'My Area' ? setPostsLocation('My Area') : setUserType(null)}
+            onPress={() => postsLocation != 'My Area' ? setPostsLocation('My Area') : setPostsLocation(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
@@ -271,27 +294,27 @@ const FeedSettingsScreen = (props) => {
 
           <CheckBox containerStyle={styles.CheckBox}
             title='16-30'
-            checked={participantAge == 1}
-            onPress={() => participantAge != 1 ? setParticipantAge(1) : setParticipantAge(null)}
+            checked={participantAgeRange == "16 30"}
+            onPress={() => participantAgeRange != "16 30" ? setParticipantAgeRange("16 30") : setParticipantAgeRange(null)}
 
           />
 
           <CheckBox containerStyle={styles.CheckBox}
             title='30-50'
-            checked={participantAge == 2}
-            onPress={() => participantAge != 2 ? setParticipantAge(2) : setParticipantAge(null)}
+            checked={participantAgeRange == "30-50"}
+            onPress={() => participantAgeRange != "30-50" ? setParticipantAgeRange("30-50") : setParticipantAgeRange(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='50 +'
-            checked={participantAge == 3}
-            onPress={() => participantAge != 3 ? setParticipantAge(3) : setParticipantAge(null)}
+            checked={participantAgeRange == "50 99"}
+            onPress={() => participantAgeRange != "50 99" ? setParticipantAgeRange("50 99") : setParticipantAgeRange(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title="Dosen't Matter"
-            checked={participantAge == 4}
-            onPress={() => participantAge != 4 ? setParticipantAge(4) : setParticipantAge(null)}
+            checked={participantAgeRange == "16 99"}
+            onPress={() => participantAgeRange != "16 99" ? setParticipantAgeRange("16 99") : setParticipantAgeRange(null)}
 
           />
         </View>
