@@ -59,19 +59,20 @@ const ProfileSetup = (props) => {
   const takePhoto = async () => {
     toggleOverlay();
     setCameraOn(true)
-    const photo = await ref.current.takePictureAsync({ quality: 0.2 });
-    try {
+    // const photo = await ref.current.takePictureAsync({ quality: 0.2 });
+    // console.log("in my profile setup")
+    // try {
 
-      setSelectedImage(photo.uri);
-      setImageHasSelected(true)
-      setCameraOn(false);
-      console.debug(photo)
-    } catch (error) {
+    //   setSelectedImage(photo.uri);
+    //   //setImageHasSelected(true)
+    //   setCameraOn(false);
+    //   console.debug(photo)
+    // } catch (error) {
 
-    }
+    // }
 
   }
-
+  //Check if delete this below???
   if (hasPermission === null) {
     return <View />;
   }
@@ -79,7 +80,6 @@ const ProfileSetup = (props) => {
     return <Text>No access to camera</Text>;
   }
   const [hasPermission, setHasPermission] = useState(null);
-  const ref = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [cameraOn, setCameraOn] = useState(false);
 
@@ -87,26 +87,18 @@ const ProfileSetup = (props) => {
   const openImagePickerAsync = async () => {
     toggleOverlay();
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
     if (permissionResult.granted === false) {
       alert("Permission to access camera roll is required!");
       return;
     }
-
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
     console.log("picker res is:!!!")
     console.log(pickerResult);
-
     if (pickerResult.cancelled === true) {
       return;
     }
-
     setSelectedImage(pickerResult.uri);
-    setImageHasSelected(true);
-
   };
-
-
 
 
   const getDataFromAS = async () => {
