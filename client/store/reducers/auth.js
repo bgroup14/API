@@ -3,8 +3,10 @@ const initialState = {
     // token: localStorage.getItem('token'),
     // isAuthenticated: null,
     // loading: true,
-    user: null,
+    userName: null,
+    userId: null,
     isLogged: false
+
 };
 
 // this state name is counter! we define it in the combine reducer.
@@ -19,7 +21,8 @@ function authReducer(state = initialState, action) {
                 // ...state,
                 // // isAuthenticated: true,
                 // // loading: false,
-                user: payload,
+                userName: payload.name,
+                userId: payload.id,
                 isLogged: true
 
             }

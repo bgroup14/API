@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { CheckBox } from 'react-native-elements'
 import HorizontalLine from '../components/HorizontalLine';
+import MyLinearGradient from '../components/MyLinearGradient';
 
 
 
@@ -219,13 +220,14 @@ const FeedSettingsScreen = (props) => {
   }
   return (
     <ScrollView >
+      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Feed Settings</Text>
         </View>
         <Text style={styles.feedSettingsFilterText}>Do you</Text>
 
-        <View kstyle={styles.radioBtnContainer}>
+        <View style={styles.radioBtnContainer}>
 
           <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
@@ -375,11 +377,14 @@ const styles = StyleSheet.create({
     //justifyContent: 'flex-start',
     marginVertical: 15,
     width: '100%',
-    elevation: 4,
-    shadowOffset: { width: 5, height: 5 },
-    shadowColor: "grey",
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
+    // elevation: 4,
+    // shadowOffset: { width: 5, height: 5 },
+    // shadowColor: "grey",
+    // shadowOpacity: 0.5,
+    // shadowRadius: 10,
+    // backgroundColor: '#dfe9f3'
+    backgroundColor: '#f2f2f2'
+
 
 
   }
@@ -411,10 +416,13 @@ const styles = StyleSheet.create({
   CheckBox:
   {
     //   borderRadius: 10,
-    backgroundColor: '#f2f2f2',
+    // backgroundColor: '#f2f2f2',
     marginVertical: 10,
     //  borderColor: '#fff'
-    borderWidth: 0
+    borderWidth: 0,
+    // backgroundColor: '#dfe9f3'
+    backgroundColor: '#f2f2f2'
+
   },
   feedSettingsFilterText: {
     fontSize: 20,

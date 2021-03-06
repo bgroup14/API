@@ -7,10 +7,10 @@ import LoginScreen from '../screens/LoginScreen';
 
 import ProfileSetup from '../screens/ProfileSetup';
 import FeedSettingsScreen from '../screens/FeedSettingsScreen';
-import HobbiesScreen from '../screens/HobbiesScreen';
+import Notifications from '../screens/Notifications';
 import Header from '../shared/header'
 
-const AuthStackScreens = () => {
+const TestStack = () => {
     const AuthStack = createStackNavigator();
     return (
         <AuthStack.Navigator headerMode='none' screenOptions={{
@@ -18,15 +18,12 @@ const AuthStackScreens = () => {
             cardStyle: { backgroundColor: '#f2f2f2' }
             // cardStyle: { backgroundColor: '#f2f2f2' }
         }} >
-            <AuthStack.Screen name="SignIn" component={LoginScreen} />
-            <AuthStack.Screen name="SignUp" component={SignUpScreen} />
-            <AuthStack.Screen name="ProfileSetup" component={ProfileSetup} />
-            <AuthStack.Screen name="FeedSettings" component={FeedSettingsScreen} />
-            <AuthStack.Screen name="HobbiesScreen" component={HobbiesScreen} />
+
+            <AuthStack.Screen name="Notifications" component={Notifications} />
         </AuthStack.Navigator>
     )
 }
 
-export default AuthStackScreens
+export default TestStack
 
 
