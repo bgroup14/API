@@ -7,6 +7,10 @@ import MyProfileScreen from '../screens/MyProfileScreen'
 import ChatScreen from '../screens/ChatScreen'
 import PostPublishScreen from '../screens/PostPublishScreen'
 import SearchScreen from '../screens/SearchScreen'
+import Notifications from '../screens/Notifications';
+
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 const MainStackScreens = () => {
 
@@ -16,7 +20,6 @@ const MainStackScreens = () => {
         showLabel: false,
         style: {
             backgroundColor: '#fff',
-            paddingBottom: 12
         }
     }
 
@@ -46,7 +49,7 @@ const MainStackScreens = () => {
                     break;
             }
             if (route.name == "PostPublish") {
-                return <Ionicons name='add-circle' size={42} color="#23a8d9"
+                return <Ionicons name='add-circle' size={42} color="#2948ff"
                     style={{
                         shadowColor: '#23a8d9',
                         shadowOffset: { width: 0, height: 10 },
@@ -57,20 +60,24 @@ const MainStackScreens = () => {
             }
 
 
-            return <Ionicons name={iconName} size={24} color={focused ? "#3c4ab5" : "#666666"} />
+
+            return <Ionicons name={iconName} size={24} color={focused ? "black" : "#666666"} />
         }
     }))
 
 
+
     return (
-        <MainStack.Navigator tabBarOptions={tabBarOptions} screenOptions={screenOptions}>
-            <MainStack.Screen name="Home" component={HomeScreen} />
-            <MainStack.Screen name="Search" component={SearchScreen} />
+
+        <MainStack.Navigator tabBarOptions={tabBarOptions} screenOptions={screenOptions} >
+            <MainStack.Screen name="Home" component={HomeScreen} options={{ title: 'My home' }} />
+            <MainStack.Screen name="Search" component={SearchScreen} options={{ title: 'My home' }} />
             <MainStack.Screen name="PostPublish" component={PostPublishScreen} />
             <MainStack.Screen name="Chat" component={ChatScreen} />
             <MainStack.Screen name="MyProfile" component={MyProfileScreen} />
-
         </MainStack.Navigator>
+
+
     )
 }
 export default MainStackScreens;

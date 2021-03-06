@@ -16,6 +16,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
+import MyLinearGradient from '../components/MyLinearGradient';
 
 
 // import { BottomSheet } from 'react-native-btr';
@@ -445,6 +446,8 @@ const ProfileSetup = (props) => {
     // <Fragment>
 
     <Fragment>
+      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} />
+
       {profileSetupScreen}
       {datePicker}
     </Fragment>
@@ -473,15 +476,8 @@ const styles = StyleSheet.create({
     color: '#051d5f',
     margin: 40
   },
-  navButton: {
-    marginTop: 15,
-  },
-  navButtonText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#2e64e5',
-    //  fontFamily: 'Lato-Regular',
-  },
+
+
   logo: {
     height: 200,
     width: 200,

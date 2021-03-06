@@ -27,7 +27,8 @@ import axios from 'axios';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Divider } from 'react-native-elements';
+
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -43,6 +44,7 @@ import { Divider } from 'react-native-elements';
 //Redux
 import { useSelector, useDispatch } from 'react-redux';
 import { Fragment } from 'react';
+import MyLinearGradient from '../components/MyLinearGradient';
 
 
 const LoginScreen = (props) => {
@@ -156,14 +158,17 @@ const LoginScreen = (props) => {
   }
 
 
-
+  //firstColor="#a1c4fd" secondColor="#c2e9fb"
   return (
 
     // <ScrollView style={{ flex: 1 }}>
     <View style={styles.container}>
+      {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={1000} /> */}
+      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
+
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/logo.jpg')}
+          source={require('../../assets/logo.png')}
           style={styles.logo}
         />
 
@@ -314,4 +319,11 @@ const styles = StyleSheet.create({
     color: '#2e64e5',
     //fontFamily: 'Lato-Regular',
   },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 500
+  }
 });
