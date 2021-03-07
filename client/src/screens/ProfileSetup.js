@@ -400,7 +400,7 @@ const ProfileSetup = (props) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ marginTop: 40 }} >
+        <View  >
           <FormButton
             buttonTitle="Next"
             onPress={() => goToFeedSettings()}
