@@ -5,7 +5,8 @@ const initialState = {
     // loading: true,
     userName: null,
     userId: null,
-    isLogged: false
+    isLogged: false,
+    userType: null
 
 };
 
@@ -23,7 +24,9 @@ function authReducer(state = initialState, action) {
                 // // loading: false,
                 userName: payload.name,
                 userId: payload.id,
-                isLogged: true
+                isLogged: true,
+                ///change below to payload.userType
+                userType: 'Both'
 
             }
 

@@ -17,7 +17,7 @@ const HobbiesScreen = (props) => {
   const [searchWord, setSearchWord] = useState();
 
 
-  const hobbiesFetchURL = `http://proj.ruppin.ac.il/bgroup14/prod/api/hobbies`
+  const hobbiesFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/hobbies`
 
   useEffect(() => {
     clearAsHobbies("hobbies")

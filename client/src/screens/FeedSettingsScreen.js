@@ -231,8 +231,8 @@ const FeedSettingsScreen = (props) => {
 
           <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
-            checked={userType == 'Want To Help'}
-            onPress={() => userType != 'Want To Help' ? setUserType('Want To Help') : setUserType(null)}
+            checked={userType == 'Give Help'}
+            onPress={() => userType != 'Give Help' ? setUserType('Give Help') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}

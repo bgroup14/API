@@ -19,7 +19,7 @@ namespace WebApi.Controllers
 
             Member member = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
             MemberDTO memberDTO = new MemberDTO();
-            memberDTO.name = "My email: " + member.email;
+            memberDTO.name = "My email is: " + member.email;
             return memberDTO.name;
         }
 
@@ -82,7 +82,8 @@ namespace WebApi.Controllers
                     MemberDTO memberDTO = new MemberDTO()
                     {
                         id = member.id,
-                        name = member.fullName
+                        name = member.fullName,
+                        
 
                     };
                     return Request.CreateResponse(HttpStatusCode.OK, memberDTO);

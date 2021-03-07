@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -35,13 +35,19 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 export default function App() {
-  return (
+  const windowHeight = useWindowDimensions().height;
 
-    <Provider store={store}>
-      <NavigationContainer  >
-        <AppStackScreens />
-      </NavigationContainer>
-    </Provider>
+  return (
+    <View style={{
+      minHeight: Math.round(windowHeight + 30),
+      // flex: 1
+    }}>
+      <Provider store={store}>
+        <NavigationContainer  >
+          <AppStackScreens />
+        </NavigationContainer>
+      </Provider>
+    </View>
   );
 }
 

@@ -69,7 +69,7 @@ const MainStackScreens = () => {
 
     return (
 
-        <MainStack.Navigator tabBarOptions={tabBarOptions} screenOptions={screenOptions} >
+        <MainStack.Navigator tabBarOptions={tabBarOptions} screenOptions={screenOptions}  >
             <MainStack.Screen name="Home" component={HomeScreen} options={{ title: 'My home' }} />
             <MainStack.Screen name="Search" component={SearchScreen} options={{ title: 'My home' }} />
             <MainStack.Screen name="PostPublish" component={PostPublishScreen} />
