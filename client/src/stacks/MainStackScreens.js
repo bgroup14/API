@@ -9,7 +9,6 @@ import PostPublishScreen from '../screens/PostPublishScreen'
 import SearchScreen from '../screens/SearchScreen'
 import Notifications from '../screens/Notifications';
 
-import { createStackNavigator } from '@react-navigation/stack';
 
 
 const MainStackScreens = () => {
@@ -18,6 +17,8 @@ const MainStackScreens = () => {
 
     const tabBarOptions = {
         showLabel: false,
+        keyboardHidesTabBar: true,
+        activeTintColor: '#2948ff',
         style: {
             backgroundColor: '#fff',
         }

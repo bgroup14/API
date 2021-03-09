@@ -16,49 +16,27 @@ import { CheckBox } from 'react-native';
 import HorizontalLine from '../components/HorizontalLine';
 import { Divider } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-import FormButton from '../components/FormButton';
 
 
 
 
 
 
-//what kind of volunteering activity would you like to have
 const PostPublishScreen = () => {
     let index = 0;
     const activityTypes = [
         { key: index++, section: true, label: 'Post Purpose' },
         { key: index++, label: 'Search For Help' },
         { key: index++, label: 'Give Help' },
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
     ];
+
     let indexFromWho = 0;
     const fromWho = [
         { key: indexFromWho++, section: true, label: 'Participant Gender' },
+        { key: indexFromWho++, label: 'Dosent Matter' },
         { key: indexFromWho++, label: 'Man' },
         { key: indexFromWho++, label: 'Woman' },
-        { key: indexFromWho++, label: "Dosen't Matter" },
 
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
-    ];
-    let indexFromAge = 0;
-    const fromAge = [
-        { key: indexFromAge++, section: true, label: 'Participant Age' },
-        { key: indexFromAge++, label: '16-30' },
-        { key: indexFromAge++, label: '30-50' },
-        { key: indexFromAge++, label: '50+' },
-        { key: indexFromAge++, label: "Dosen't Matter" },
-
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
     ];
 
     const [postContent, setPostContent] = useState();
@@ -69,27 +47,17 @@ const PostPublishScreen = () => {
 
 
     let userName = useSelector(state => state.auth.userName);
-    const [userType, setUserType] = useState(useSelector(state => state.auth.userType));
-    console.log(userType)
-    const [participantGender, setParticipantGender] = useState(useSelector(state => state.auth.participantGender));
-    console.log(participantGender)
-    const [participantAge, setParticipantAge] = useState(useSelector(state => state.auth.participantAge));
-    const [initalUserTypeValue, setInitalUserTypeValue] = useState(userType)
+    let userType = useSelector(state => state.auth.userType);
 
-
-    ///DELETE all this if lines below!
+    ///DELETE THIS 4 lines below!
     if (userName === null) {
         userName = 'Alan skverer'
     }
-    // if (userType === null) {
-    //     setUserType('Give Help')
-    // }
-    // if (participanteGender === null) {
-    //     setParticipanteGender('Dosent Matter')
-    // }
-    // if (participanteAge === null) {
-    //     setParticipanteAge('50+')
-    // }
+    if (userType === null) {
+        userType = 'Give Help'
+    }
+    const [userPostType, setUserPostType] = useState(userType);
+    const [userPostGender, setUserPostGender] = useState("Dosen't Matter");
 
     let userFirstName = userName.split(" ")[0];
     function capitalizeFirstLetter(string) {
@@ -118,36 +86,50 @@ const PostPublishScreen = () => {
         if (userType == 'Both') {
             return "How would you like to give / get help today?"
 
-        }
-        else if (userType == 'Give Help') {
+        } else if (userType == 'Give Help') {
             return "How would you like to give help today?"
-        }
 
+        }
         return "How would you like to get help today?"
 
     }
 
     let userGiveOrGet = setUserGiveOrGetHelp();
     let greeting = createGreeting();
+
     let items = [
+
+
         { label: 'Sport', value: 'male', icon: () => <Icon name="running" size={22} color="#000000" /> },
         { label: 'Study', value: 'female', icon: () => <Icon name="book" size={24} color="#000000" /> },
         { label: 'Mental', value: 'female', icon: () => <Icon name="phone" size={24} color="#000000" /> },
         { label: 'Elder People', value: 'female', icon: () => <Icon name="hand-holding-heart" size={24} color="#000000" /> },
         { label: 'General', value: 'female', icon: () => <Icon name="hands-helping" size={24} color="#000000" /> },
+
     ]
+
+
+
+
+
+
 
     const resetPost = () => {
         setPostContent("")
 
     }
-
-
     return (
+
+
+
         <View style={styles.container}  >
+            <KeyboardAvoidingView
+                behavior='position'
+                keyboardVerticalOffset={30}
+            ></KeyboardAvoidingView>
+
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-            {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
-            <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} />
+            <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} />
 
 
             <View style={styles.barContainer}><Text style={styles.barText}>Publish Post</Text>
@@ -157,8 +139,6 @@ const PostPublishScreen = () => {
             </View>
             <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting} {userFirstName}</Text>
                 <Text style={{ padding: 10, fontSize: 16 }}>{userGiveOrGet}</Text>
-
-
                 <View style={styles.selectCategoryContainer}>
                     <DropDownPicker
                         placeholder="Select Category"
@@ -176,7 +156,7 @@ const PostPublishScreen = () => {
                 </View>
 
             </View >
-            <View style={styles.txtAreaContainer} >
+            <View style={{ alignItems: 'center' }} >
                 <PublishPostTextArea
                     labelValue={postContent}
                     placeholderText="What's on your mind?"
@@ -187,84 +167,147 @@ const PostPublishScreen = () => {
 
                 />
             </View>
-
-            <View style={styles.postOptionsContainer}>
-                <View style={styles.optionContainer}>
+            <View style={{ flex: 0.2 }}></View>
+            <View style={{ flex: 2.5 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, paddingHorizontal: 30 }}>
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Do You</Text>
-
-
+                    {/* <ModalSelector
+                            data={activityTypes}
+                            initValue="Select something yummy!"
+                            onChange={(option) => { alert(`${option.label}`) }} /> */}
                     <ModalSelector
                         data={activityTypes}
-
-                        style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
+                        initValue={userPostType}
                         supportedOrientations={['landscape']}
                         accessible={true}
                         scrollViewAccessibilityLabel={'Scrollable options'}
                         cancelButtonAccessibilityLabel={'Cancel Button'}
-                        onChange={(option) => { setUserType(option.label == "Search For Help" ? "Need Help" : "Give Help") }} >
+                        onChange={(option) => { setUserPostType(option.label == "Search For Help" ? "Need Help" : "Give Help") }}
+                    // /style={{ marginLeft: 40 }}
+                    >
+
 
                         <TextInput
-                            textAlign="center"
-                            style={styles.postBtnText}
+                            style={{ borderWidth: 1, borderColor: '#ccc', height: 40, color: 'black', padding: 10, fontSize: 16 }}
                             editable={false}
-                            value={userType == "Both" ? "Select" : userType} />
-                    </ModalSelector>
-                </View>
+                            // placeholder="Select something yummy!"
+                            value={userPostType} />
 
+                    </ModalSelector>
+
+
+
+                    {/* <ModalDropdown style={{ alignItems: 'flex-end' }} onSelect={(value => alert(value))}
+                            defaultValue={userType} options={['Need Help', 'Give Help']}
+                            dropdownStyle={{ height: 80, width: 80 }}
+                            textStyle={{ fontSize: 14 }} /> */}
+
+                </View>
+                {/* <HorizontalLine /> */}
                 <Divider />
 
-                <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Gender</Text>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, marginTop: 10, paddingHorizontal: 30 }}>
+                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Gender</Text>
+                    {/* <ModalSelector
+                            data={activityTypes}
+                            initValue="Select something yummy!"
+                            onChange={(option) => { alert(`${option.label}`) }} /> */}
                     <ModalSelector
                         data={fromWho}
-                        initValue={participantGender}
+                        initValue={userPostGender}
                         supportedOrientations={['landscape']}
                         accessible={true}
                         scrollViewAccessibilityLabel={'Scrollable options'}
                         cancelButtonAccessibilityLabel={'Cancel Button'}
-                        onChange={(option) => { setParticipantGender(option.label) }}>
+                        onChange={(option) => { setUserPostType(option.label == "Search For Help" ? "Need Help" : "Give Help") }}
+                    // /style={{ marginLeft: 40 }}
+                    >
+
 
                         <TextInput
-                            textAlign="center"
-                            style={styles.postBtnText}
+                            style={{ borderWidth: 1, borderColor: '#ccc', height: 40, color: 'black', padding: 10, fontSize: 16 }}
                             editable={false}
-                            value={participantGender} />
+                            // placeholder="Select something yummy!"
+                            value={userPostGender} />
+
                     </ModalSelector>
 
+
+
+                    {/* <ModalDropdown style={{ alignItems: 'flex-end' }} onSelect={(value => alert(value))}
+                            defaultValue={userType} options={['Need Help', 'Give Help']}
+                            dropdownStyle={{ height: 80, width: 80 }}
+                            textStyle={{ fontSize: 14 }} /> */}
+
                 </View>
+                {/* <HorizontalLine /> */}
                 <Divider />
 
-                <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Age</Text>
 
+
+
+
+
+
+
+
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10, marginTop: 10, paddingHorizontal: 30 }}>
+                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Gender</Text>
+                    {/* <ModalSelector
+                            data={activityTypes}
+                            initValue="Select something yummy!"
+                            onChange={(option) => { alert(`${option.label}`) }} /> */}
                     <ModalSelector
-                        data={fromAge}
-                        initValue={participantAge}
+                        data={fromWho}
+                        initValue={userPostGender}
                         supportedOrientations={['landscape']}
                         accessible={true}
                         scrollViewAccessibilityLabel={'Scrollable options'}
                         cancelButtonAccessibilityLabel={'Cancel Button'}
-                        onChange={(option) => { setParticipantAge(option.label) }}>
+                        onChange={(option) => { setUserPostType(option.label == "Search For Help" ? "Need Help" : "Give Help") }}
+                    // /style={{ marginLeft: 40 }}
+                    >
+
 
                         <TextInput
-                            textAlign="center"
-                            style={styles.postBtnText}
+                            style={{ borderWidth: 1, borderColor: '#ccc', height: 40, color: 'black', padding: 10, fontSize: 16 }}
                             editable={false}
-                            value={participantAge} />
+                            // placeholder="Select something yummy!"
+                            value={userPostGender} />
 
                     </ModalSelector>
 
 
-                </View>
 
+                    {/* <ModalDropdown style={{ alignItems: 'flex-end' }} onSelect={(value => alert(value))}
+                            defaultValue={userType} options={['Need Help', 'Give Help']}
+                            dropdownStyle={{ height: 80, width: 80 }}
+                            textStyle={{ fontSize: 14 }} /> */}
+
+                </View>
+                {/* <HorizontalLine /> */}
                 <Divider />
 
 
 
 
 
-            </View>
 
 
 
@@ -272,13 +315,17 @@ const PostPublishScreen = () => {
 
 
 
-            <View style={styles.btnContainer}>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text></Text>
+                </View>
+
+                {/* <View style={{ alignItems: 'flex-end' }}>
+
+                    </View> */}
 
 
-                <FormButton
-                    buttonTitle="Sign In!"
-                // onPress={() => signIn()}
-                />
+
             </View>
 
         </View >
@@ -301,8 +348,8 @@ const styles = StyleSheet.create({
     },
     barContainer: {
 
-        // flex: 0.6,
-        marginTop: windowHeight / 100,
+        flex: 0.6,
+
         justifyContent: 'space-between',
         alignItems: 'center',
         //  marginLeft: 30,
@@ -310,7 +357,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingLeft: 20,
         paddingRight: 30,
-        height: windowHeight / 10,
 
 
 
@@ -321,80 +367,34 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 22,
         fontWeight: 'bold',
-        marginTop: 20,
-
+        marginTop: 20
 
     },
     barReset: {
         color: 'red',
-        marginTop: windowHeight / 40
+        marginTop: 20
     },
     bellIcon: {
         color: '#ffffff',
         fontSize: 24
     },
     userGreetingContainer: {
-        //  flex: 1,
+        flex: 1,
         // justifyContent: 'flex-start',
-        alignItems: 'center',
-        height: windowHeight / 6,
+        alignItems: 'center'
 
     },
     userGreetingText: {
         fontSize: 18,
-    },
-    dropDownContainer: {
+    }, dropDownContainer: {
 
-
-        // marginTop: 5,
-        //  marginBottom: 10,
+        marginTop: 5,
+        marginBottom: 10,
         width: '98%',
         height: windowHeight / 15,
 
     },
-    txtAreaContainer:
-    {
-        alignItems: 'center',
-        height: windowHeight / 5,
-    },
-
-    postOptionsContainer: {
-        // flex: 2.5
-        height: windowHeight / 2.4,
-
-
-    },
-    optionContainer: {
-        height: windowHeight / 13,
-
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        // marginTop: windowHeight / 100,
-        paddingHorizontal: windowWidth / 28,
-        alignItems: 'center',
-
-        // justifyContent: 'space-between'
-    },
-    btnContainer: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    postBtnText: {
-
-        borderWidth: 1,
-        marginTop: windowHeight / 60,
-        borderColor: '#ccc',
-        height: windowHeight / 25,
-        color: '#000000',
-        fontSize: 16,
-        width: windowWidth / 3.1
-    },
-    selectCategoryContainer:
-    {
-        width: '95%',
-        marginLeft: windowWidth / 50
-    }
-
+    selectCategoryContainer: { width: '95%', marginLeft: 10 }
 
 
 })

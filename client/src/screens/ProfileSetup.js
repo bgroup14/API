@@ -176,12 +176,12 @@ const ProfileSetup = (props) => {
     source={{ uri: signUpDetails.fbImage }}
     style={styles.profileImage}
   /> : <TouchableOpacity onPress={() => toggleOverlay()} >
-      <Image
-        source={require('../../assets/camera.png')}
-        style={styles.camera}
-      />
+    <Image
+      source={require('../../assets/camera.png')}
+      style={styles.camera}
+    />
 
-    </TouchableOpacity>
+  </TouchableOpacity>
 
   if (selectedImage !== null) {
     image = <TouchableOpacity onPress={() => toggleOverlay()}>

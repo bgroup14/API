@@ -38,16 +38,16 @@ export default function App() {
   const windowHeight = useWindowDimensions().height;
 
   return (
-    <View style={{
-      minHeight: Math.round(windowHeight + 30),
-      // flex: 1
-    }}>
-      <Provider store={store}>
-        <NavigationContainer  >
-          <AppStackScreens />
-        </NavigationContainer>
-      </Provider>
-    </View>
+    // <View style={{
+    //   //   minHeight: Math.round(windowHeight + 30),
+    //   // flex: 1
+    // }}>
+    <Provider store={store}>
+      <NavigationContainer  >
+        <AppStackScreens />
+      </NavigationContainer>
+    </Provider>
+    // </View>
   );
 }
 
