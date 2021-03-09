@@ -37,6 +37,26 @@ const SignupScreenTest = (props) => {
   }
 
   const signUn = async () => {
+    if (!fullName || !email || !password || !confirmPassword) {
+      Alert.alert(
+        "Missing info!",
+        "Please fill all fields and try again.",
+        [
+          { text: "OK" }
+        ],
+      );
+      return null;
+    }
+    else if (fullName.length <= 0 || email.length <= 0 || password.length <= 0 || confirmPassword.length <= 0) {
+      Alert.alert(
+        "Missing info!",
+        "Please fill all fields and try again.",
+        [
+          { text: "OK" }
+        ],
+      );
+      return null;
+    }
     if (!validatePassword(password, confirmPassword) || !validateEmail(email)) {
       return null;
     }
