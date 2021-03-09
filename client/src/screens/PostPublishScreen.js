@@ -17,6 +17,13 @@ import HorizontalLine from '../components/HorizontalLine';
 import { Divider } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import FormButton from '../components/FormButton';
+// import { Button } from 'react-native';
+import MyOverlay from '../components/MyOverlay';
+// import SearchScreen from './DatePicker';
+import DatePicker from '../components/DatePicker';
+import { Button } from 'react-native-elements';
+
+
 
 
 
@@ -63,6 +70,7 @@ const PostPublishScreen = () => {
 
     const [postContent, setPostContent] = useState();
     const [postCategory, setPostCategory] = useState();
+    const [specificDate, setSpecificDate] = useState(true);
 
 
 
@@ -142,9 +150,15 @@ const PostPublishScreen = () => {
 
     }
 
+    const [isVisible, setIsvisble] = useState(false);
+
+
 
     return (
         <View style={styles.container}  >
+            <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
+                <DatePicker />
+            </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
             <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} />
@@ -259,6 +273,22 @@ const PostPublishScreen = () => {
                 </View>
 
                 <Divider />
+                <View style={styles.optionContainer}>
+                    <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ marginHorizontal: windowWidth / 9 }}>
+                            <Button title="NO" type='solid' onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "green" } : { fontSize: 10 }} />
+
+                        </View>
+
+                        <Button title="YES" type='solid' onPress={() => setIsvisble(true)} />
+                    </View>
+
+                </View>
+                <Divider />
+
+
+
 
 
 

@@ -85,9 +85,10 @@ const FeedSettingsScreen = (props) => {
 
 
   const imageUpload = () => {
-    //alert(1);
+
     let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
-    let imgName = 'imgFromCamera.jpg';
+    // let imgName = 'imgFromCamera.jpg';
+    let imgName = signUpDetails.email + '_imgFromCamera.jpg';
     let imgUri = profileSetupDetails.image
     let dataI = new FormData();
     dataI.append('image', {

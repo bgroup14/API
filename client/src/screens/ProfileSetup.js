@@ -33,9 +33,9 @@ const ProfileSetup = (props) => {
   const [visible, setVisible] = useState(false);
   const [bio, setBio] = useState();
   const [occupation, setOccupation] = useState();
-  const [dateLabel, setDateLabel] = useState('Date of birth');
   const [gender, setGender] = useState();
   const [hobbies, setHobbies] = useState([]);
+  const [dateLabel, setDateLabel] = useState('Date of birth');
   const [unixDate, setUnixDate] = useState(new Date());
 
   const toggleOverlay = () => {
@@ -248,15 +248,17 @@ const ProfileSetup = (props) => {
   }
 
 
-  let datePicker = show ?
-    <DateTimePicker
-      testID="dateTimePicker"
-      value={date}
-      mode={mode}
-      is24Hour={true}
-      display="default"
-      onChange={onChangeDate}
-    /> : <Text></Text>
+  // let datePicker = show ?
+  //   <DateTimePicker
+  //     testID="dateTimePicker"
+  //     value={date}
+  //     mode={mode}
+  //     is24Hour={true}
+  //     display="default"
+  //     onChange={onChangeDate}
+  //   /> : <Text></Text>
+
+
 
 
 
@@ -264,6 +266,7 @@ const ProfileSetup = (props) => {
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
     <ScrollView >
+
 
       <MyBottomSheet visible={visible} toggle={toggleOverlay} >
         <View>
@@ -449,7 +452,16 @@ const ProfileSetup = (props) => {
       <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} />
 
       {profileSetupScreen}
-      {datePicker}
+      {show ? <DateTimePicker
+        testID="dateTimePicker"
+        value={date}
+        mode={mode}
+        is24Hour={true}
+        display="default"
+        onChange={onChangeDate}
+
+      /> : <View />}
+      {/* {datePicker} */}
     </Fragment>
     // </Fragment>
 
