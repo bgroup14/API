@@ -231,8 +231,8 @@ const FeedSettingsScreen = (props) => {
 
           <CheckBox containerStyle={styles.CheckBox}
             title='Want To Help'
-            checked={userType == 'Give Help'}
-            onPress={() => userType != 'Give Help' ? setUserType('Give Help') : setUserType(null)}
+            checked={userType == 'Give'}
+            onPress={() => userType != 'Give' ? setUserType('Give') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
@@ -294,9 +294,9 @@ const FeedSettingsScreen = (props) => {
 
           />
           <CheckBox containerStyle={styles.CheckBox}
-            title="Both"
-            checked={fromGender == "Both"}
-            onPress={() => fromGender != "Both" ? setFromGender("Both") : setFromGender(null)}
+            title="Dosen't Matter"
+            checked={fromGender == "Dosen't Matter"}
+            onPress={() => fromGender != "Dosen't Matter" ? setFromGender("Dosen't Matter") : setFromGender(null)}
 
           />
 
@@ -307,8 +307,8 @@ const FeedSettingsScreen = (props) => {
 
           <CheckBox containerStyle={styles.CheckBox}
             title='16-30'
-            checked={participantAgeRange == "16 30"}
-            onPress={() => participantAgeRange != "16 30" ? setParticipantAgeRange("16 30") : setParticipantAgeRange(null)}
+            checked={participantAgeRange == "16-30"}
+            onPress={() => participantAgeRange != "16-30" ? setParticipantAgeRange("16-30") : setParticipantAgeRange(null)}
 
           />
 
@@ -320,14 +320,14 @@ const FeedSettingsScreen = (props) => {
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='50 +'
-            checked={participantAgeRange == "50 99"}
-            onPress={() => participantAgeRange != "50 99" ? setParticipantAgeRange("50 99") : setParticipantAgeRange(null)}
+            checked={participantAgeRange == "50+"}
+            onPress={() => participantAgeRange != "50+" ? setParticipantAgeRange("50+") : setParticipantAgeRange(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
             title="Dosen't Matter"
-            checked={participantAgeRange == "16 99"}
-            onPress={() => participantAgeRange != "16 99" ? setParticipantAgeRange("16 99") : setParticipantAgeRange(null)}
+            checked={participantAgeRange == "Dosen't Matter"}
+            onPress={() => participantAgeRange != "Dosen't Matter" ? setParticipantAgeRange("Dosen't Matter") : setParticipantAgeRange(null)}
 
           />
         </View>

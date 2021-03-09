@@ -28,7 +28,7 @@ const AppStackScreens = () => {
         // </AppStack.Navigator>
 
         <AppStack.Navigator headerMode={isLogged ? 'none' : 'none'}>
-            {isLogged ? <Fragment>
+            {!isLogged ? <Fragment>
                 <AppStack.Screen name="Main" component={MainStackScreens} />
                 <AppStack.Screen name="Notifications" component={Notifications} />
             </Fragment>

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, ScrollView } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import axios from 'axios';
@@ -136,86 +136,90 @@ const SignupScreenTest = (props) => {
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Create an account</Text>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/logo.png')}
-          style={styles.logo}
-        />
+    <ScrollView >
+      <View style={styles.container}>
+        <Text style={styles.text}>Create an account</Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require('../../assets/logo.png')}
+            style={styles.logo}
+          />
+        </View>
+        <View >
+
+          <FormInput
+            onChangeText={(text) => fullNameChangeHanlder(text)}
+            placeholderText="Full Name"
+            iconType="user"
+            autoCapitalize="words"
+            autoCorrect={false}
+            req
+          />
+
+          <FormInput
+            labelValue={email}
+            onChangeText={(text) => emailChangeHandler(text)}
+            placeholderText="Email"
+            iconType="envelope"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            autoCorrect={false}
+          />
+
+          <FormInput
+            labelValue={password}
+            onChangeText={(text) => passwordChangeHanlder(text)}
+            placeholderText="Password"
+            iconType="lock"
+            secureTextEntry={true}
+          />
+
+          <FormInput
+            onChangeText={(text) => confirmPasswordChangeHanlder(text)}
+            placeholderText="Confirm Password"
+            iconType="lock"
+            secureTextEntry={true}
+          />
+        </View>
+        <View style={styles.signUpBtnContainer}>
+
+          <FormButton
+            buttonTitle="Sign Up"
+            onPress={() => signUn()}
+          />
+
+          <TouchableOpacity
+            style={styles.navButton}
+            onPress={() => props.navigation.navigate('SignIn')}>
+            <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <FormInput
-        onChangeText={(text) => fullNameChangeHanlder(text)}
-        placeholderText="Full Name"
-        iconType="user"
-        autoCapitalize="words"
-        autoCorrect={false}
-        req
-      />
-
-      <FormInput
-        labelValue={email}
-        onChangeText={(text) => emailChangeHandler(text)}
-        placeholderText="Email"
-        iconType="envelope"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        keyboardType="email-address"
-        autoCorrect={false}
-      />
-
-      <FormInput
-        labelValue={password}
-        onChangeText={(text) => passwordChangeHanlder(text)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-
-      <FormInput
-        onChangeText={(text) => confirmPasswordChangeHanlder(text)}
-        placeholderText="Confirm Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-      <View style={styles.signUpBtnContainer}>
-
-        <FormButton
-          buttonTitle="Sign Up"
-          onPress={() => signUn()}
-        />
-
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => props.navigation.navigate('SignIn')}>
-          <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default SignupScreenTest;
 
 const styles = StyleSheet.create({
+
   container: {
     //  backgroundColor: '#f9fafd',
     flex: 1,
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20,
+    padding: windowHeight / 40.381815,
 
   },
   text: {
     //fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: 10,
+    marginBottom: windowHeight / 80.76363,
     color: '#051d5f',
-    margin: 40
+    margin: windowHeight / 20.1909075
   },
   navButton: {
-    marginTop: 15,
+    marginTop: windowHeight / 53.84242,
   },
   navButtonText: {
     fontSize: 18,
@@ -224,12 +228,12 @@ const styles = StyleSheet.create({
     //fontFamily: 'Lato-Regular',
   },
   logo: {
-    height: 150,
-    width: 150,
+    height: windowHeight / 5.384242,
+    width: windowHeight / 5.384242,
     resizeMode: 'cover',
   },
   imageContainer: {
-    padding: 20
+    padding: windowHeight / 40.381815
   },
   signUpBtnContainer: {
     marginTop: windowHeight / 6,

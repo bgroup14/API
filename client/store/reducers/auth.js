@@ -6,7 +6,10 @@ const initialState = {
     userName: null,
     userId: null,
     isLogged: false,
-    userType: null
+    userType: "Both",
+    participantGender: "Dosen't Matter",
+    participantAge: "Dosen't Matter",
+
 
 };
 
@@ -26,7 +29,9 @@ function authReducer(state = initialState, action) {
                 userId: payload.id,
                 isLogged: true,
                 ///change below to payload.userType
-                userType: 'Both'
+                userType: 'Both',
+                participantGender: "Dosen't Matter",
+                participantAge: "Dosen't Matter"
 
             }
 

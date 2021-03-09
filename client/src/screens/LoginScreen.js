@@ -65,6 +65,7 @@ const LoginScreen = (props) => {
 
 
   const signIn = () => {
+    console.log(windowHeight)
     dispatch(login(email, password));
 
   }
@@ -278,30 +279,31 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
     alignItems: 'center',
     //  padding: 20,
-    paddingTop: 20
+    paddingTop: windowHeight / 40.381815,
+    maxHeight: windowHeight + 200
   },
   logo: {
 
     // justifyContent: 'flex-end',
-    height: 180,
-    width: 200,
+    height: windowHeight / 4.486868333,
+    width: windowHeight / 4.0381815,
     //resizeMode: 'cover',
-    marginBottom: 30,
+    marginBottom: windowHeight / 26.92121,
 
 
   },
   logoContainer: {
-    marginTop: 30,
+    marginTop: windowHeight / 26.92121,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: windowHeight / 12
+    marginBottom: 10
 
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 20,
-    marginTop: 30,
-    marginBottom: 20,
+    marginTop: windowHeight / 26.92121,
+    marginBottom: windowHeight / 40.381815,
     // marginVertical: 30,
     color: '#051d5f',
   },
@@ -309,7 +311,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   forgotButton: {
-    marginBottom: 200
+    marginBottom: windowHeight / 4.0381815
     //marginVertical: 35,
 
   },
@@ -324,6 +326,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: 500
+    height: windowHeight
   }
 });
