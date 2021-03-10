@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CheckBox } from 'react-native-elements'
 import HorizontalLine from '../components/HorizontalLine';
 import MyLinearGradient from '../components/MyLinearGradient';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
 
 
@@ -222,6 +223,9 @@ const FeedSettingsScreen = (props) => {
   return (
     <ScrollView >
       {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
+      <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1500} />
+      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#ace0f9" height={1500} /> */}
+
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Feed Settings</Text>
@@ -365,9 +369,9 @@ export default FeedSettingsScreen;
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: '#f9fafd',
-    flex: 1,
+    // flex: 1,
     // alignItems: 'center',
-    padding: 20,
+    padding: windowWidth / 20,
 
   },
   radioBtnContainer: {
@@ -376,7 +380,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     //   borderColor: '#ccc',
     //justifyContent: 'flex-start',
-    marginVertical: 15,
+    marginVertical: windowHeight / 80,
     width: '100%',
     // elevation: 4,
     // shadowOffset: { width: 5, height: 5 },
@@ -384,7 +388,7 @@ const styles = StyleSheet.create({
     // shadowOpacity: 0.5,
     // shadowRadius: 10,
     // backgroundColor: '#dfe9f3'
-    backgroundColor: '#f2f2f2'
+    //   backgroundColor: '#f2f2f2'
 
 
 
@@ -395,7 +399,8 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
-    margin: 40
+    marginBottom: windowHeight / 25,
+    marginTop: windowHeight / 30
   },
   navButton: {
     marginTop: 15,
@@ -422,7 +427,7 @@ const styles = StyleSheet.create({
     //  borderColor: '#fff'
     borderWidth: 0,
     // backgroundColor: '#dfe9f3'
-    backgroundColor: '#f2f2f2'
+    backgroundColor: 'transparent'
 
   },
   feedSettingsFilterText: {

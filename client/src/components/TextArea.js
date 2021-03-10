@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 5,
     marginBottom: 10,
-    width: '98%',
+    // width: '98%',
     height: windowHeight / 8,
     borderColor: '#ccc',
     borderRadius: 15,

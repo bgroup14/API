@@ -167,6 +167,7 @@ const LoginScreen = (props) => {
       {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={1000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
 
+
       <View style={styles.logoContainer}>
         <Image
           source={require('../../assets/logo.png')}
@@ -307,16 +308,16 @@ const styles = StyleSheet.create({
     // marginVertical: 30,
     color: '#051d5f',
   },
-  navButton: {
-    marginTop: 15,
-  },
+  // navButton: {
+  //   marginTop: windowHeight / 2,
+  // },
   forgotButton: {
     marginBottom: windowHeight / 4.0381815
     //marginVertical: 35,
 
   },
   navButtonText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
     color: '#2e64e5',
     //fontFamily: 'Lato-Regular',

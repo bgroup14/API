@@ -5,6 +5,7 @@ import FormButton from '../components/FormButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight } from '../../utils/Dimentions';
+import MyLinearGradient from '../components/MyLinearGradient';
 
 // import {AuthContext} from '../navigation/AuthProvider';
 
@@ -136,7 +137,9 @@ const SignupScreenTest = (props) => {
 
 
   return (
-    <ScrollView >
+    <View >
+      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
+
       <View style={styles.container}>
         <Text style={styles.text}>Create an account</Text>
         <View style={styles.imageContainer}>
@@ -188,15 +191,24 @@ const SignupScreenTest = (props) => {
             buttonTitle="Sign Up"
             onPress={() => signUn()}
           />
-
+          {/* 
           <TouchableOpacity
             style={styles.navButton}
             onPress={() => props.navigation.navigate('SignIn')}>
             <Text style={styles.navButtonText}>Have an account? Sign In</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            //style={styles.forgotButton}
+            style={{ marginTop: windowHeight / 35 }}
+            onPress={() => props.navigation.navigate('SignIn')}>
+            <Text style={styles.navButtonText}>
+              Have an account? Sign In
+        </Text>
+
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -206,23 +218,22 @@ const styles = StyleSheet.create({
 
   container: {
     //  backgroundColor: '#f9fafd',
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
-    padding: windowHeight / 40.381815,
+    //padding: windowHeight / 40.381815,
 
   },
   text: {
     //fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: windowHeight / 80.76363,
+    marginBottom: windowHeight / 100,
+    // marginBottom: windowHeight / 80.76363,
     color: '#051d5f',
-    margin: windowHeight / 20.1909075
+    margin: windowHeight / 15
   },
-  navButton: {
-    marginTop: windowHeight / 53.84242,
-  },
+
   navButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     color: '#2e64e5',
     //fontFamily: 'Lato-Regular',
@@ -233,7 +244,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    padding: windowHeight / 40.381815
+    margin: windowHeight / 40.381815
   },
   signUpBtnContainer: {
     marginTop: windowHeight / 6,
