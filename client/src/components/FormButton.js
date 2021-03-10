@@ -14,13 +14,13 @@ export default FormButton;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginTop: 15,
+    marginTop: windowHeight / 70,
     width: windowWidth / 1.1,
     height: windowHeight / 15,
     backgroundColor: '#2948ff',
     padding: 10,
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
   },
   buttonText: {

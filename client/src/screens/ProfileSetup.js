@@ -265,9 +265,7 @@ const ProfileSetup = (props) => {
 
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
-    <ScrollView >
-
-
+    <View >
       <MyBottomSheet visible={visible} toggle={toggleOverlay} >
         <View>
           <View style={styles.btnContainer}>
@@ -307,12 +305,13 @@ const ProfileSetup = (props) => {
       </MyBottomSheet>
 
       <View style={styles.container}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={{ alignItems: 'center' }} >
           <Text style={styles.text}>Profile Setup</Text>
           <View style={styles.imageContainer}>
             {image}
           </View>
         </View>
+
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>CURRENT CITY</Text>
@@ -343,6 +342,19 @@ const ProfileSetup = (props) => {
 
           </TouchableOpacity>
         </View>
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>SHORT BIO</Text>
+
+          <TextArea
+            labelValue={bio}
+            placeholderText="What do you want people to know about you?"
+            iconType="calendar"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) => setBio(text)}
+
+          />
+        </View >
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>OCCUPATION</Text>
@@ -361,8 +373,8 @@ const ProfileSetup = (props) => {
           <DropDownPicker
             placeholder="Select"
             items={[
-              { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
-              { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
+              { label: 'Male', value: 'male' },
+              { label: 'Female', value: 'female' },
             ]}
             //defaultValue={null}
             containerStyle={styles.dropDownContainer}
@@ -375,19 +387,7 @@ const ProfileSetup = (props) => {
             }
           />
         </View>
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>SHORT BIO</Text>
 
-          <TextArea
-            labelValue={bio}
-            placeholderText="What do you want people to know about you?"
-            iconType="calendar"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setBio(text)}
-
-          />
-        </View >
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>HOBBIES</Text>
 
@@ -396,7 +396,9 @@ const ProfileSetup = (props) => {
               title={hobbisTitleFunc()}
               type="outline"
               raised={true}
-              buttonStyle={{ padding: 15 }}
+              buttonStyle={{
+                padding: 15, width: windowWidth / 1.1,
+              }}
               onPress={() => props.navigation.navigate('HobbiesScreen')}
 
             />
@@ -404,11 +406,13 @@ const ProfileSetup = (props) => {
         </View>
 
         <View  >
-          <FormButton
-            buttonTitle="Next"
-            onPress={() => goToFeedSettings()}
+          <View style={{ alignItems: 'flex-start' }}>
+            <FormButton
+              buttonTitle="Next"
+              onPress={() => goToFeedSettings()}
 
-          />
+            />
+          </View>
         </View>
 
 
@@ -442,14 +446,17 @@ const ProfileSetup = (props) => {
 
 
       </View>
-    </ScrollView >
+    </View >
 
 
   return (
     // <Fragment>
 
     <Fragment>
-      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} />
+      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
+      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} /> */}
+      <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1000} />
+
 
       {profileSetupScreen}
       {show ? <DateTimePicker
@@ -474,34 +481,36 @@ const styles = StyleSheet.create({
   container: {
     //  backgroundColor: 'fff',
     // backgroundColor: '#f9fafd',
-    // flex: 1,
-    // justifyContent: 'flex-start',
-    //  alignItems: 'flex-start',
-    padding: 15,
+    //flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'stretch',
+
+    padding: windowWidth / 20,
 
   },
   text: {
 
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: 10,
+    marginBottom: 0,
     color: '#051d5f',
-    margin: 40
+    // marginLeft: windowHeight / 60,
+    marginTop: windowHeight / 100
   },
 
 
   logo: {
-    height: 200,
-    width: 200,
+    height: 100,
+    width: 100,
     resizeMode: 'cover',
   },
   camera: {
     height: 100,
     width: 100,
-    resizeMode: 'cover',
+    //  resizeMode: 'cover',
   },
   imageContainer: {
-    padding: 20
+    // marginLeft: windowWidth / 5
   },
   overlayStyle: {
     flex: 1,
@@ -521,21 +530,23 @@ const styles = StyleSheet.create({
   },
   dropDownContainer: {
 
-    marginTop: 5,
-    marginBottom: 10,
-    width: '98%',
+    marginTop: windowHeight / 110,
+    marginBottom: windowHeight / 100,
+    //width: '98%',
     height: windowHeight / 15,
 
   },
   profileImage: {
-    width: 120,
-    height: 120
+    width: windowWidth / 4,
+    height: windowWidth / 4,
+    margin: windowHeight / 80
   },
   setupParams: {
     fontSize: 14,
     fontStyle: 'italic'
   },
   setupParamsContainer: {
+    width: windowWidth / 1.1
   }
 
 });
