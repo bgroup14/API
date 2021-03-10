@@ -206,15 +206,27 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
+    // alert(1)
+
+    if (selectedDate === undefined) {
+      alert(1);
+      setShow(Platform.OS === 'ios');
+      return null;
+    }
 
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
+
     setDate(currentDate);
+
     // // console.log(selectedDate.toString())
     let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
     setDateLabel(slicedDate)
     let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
     setUnixDate(unixDateToSend)
+    // setShow(false);
+    // setShow(!show)
+
   };
 
   const showMode = (currentMode) => {
@@ -325,6 +337,34 @@ const ProfileSetup = (props) => {
             autoCorrect={true}
             onChangeText={(text) => setCity(text)} />
         </View>
+
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>SHORT BIO</Text>
+
+          <TextArea
+            labelValue={bio}
+            placeholderText="What do you want people to know about you?"
+            iconType="calendar"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) => setBio(text)}
+
+          />
+        </View >
+
+
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>OCCUPATION</Text>
+
+          <FormInput
+            labelValue={occupation}
+            placeholderText="Occupation"
+            iconType="suitcase"
+            onChangeText={(text) => setOccupation(text)}
+          />
+        </View>
+
+
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>DATE OF BIRTH</Text>
           <TouchableOpacity onPress={showDatepicker}>
@@ -342,30 +382,8 @@ const ProfileSetup = (props) => {
 
           </TouchableOpacity>
         </View>
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>SHORT BIO</Text>
 
-          <TextArea
-            labelValue={bio}
-            placeholderText="What do you want people to know about you?"
-            iconType="calendar"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setBio(text)}
 
-          />
-        </View >
-
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>OCCUPATION</Text>
-
-          <FormInput
-            labelValue={occupation}
-            placeholderText="Occupation"
-            iconType="suitcase"
-            onChangeText={(text) => setOccupation(text)}
-          />
-        </View>
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>GENDER</Text>
@@ -467,7 +485,7 @@ const ProfileSetup = (props) => {
         display="default"
         onChange={onChangeDate}
 
-      /> : <View />}
+      /> : null}
       {/* {datePicker} */}
     </Fragment>
     // </Fragment>

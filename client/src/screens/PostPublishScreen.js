@@ -71,6 +71,9 @@ const PostPublishScreen = () => {
     const [postContent, setPostContent] = useState();
     const [postCategory, setPostCategory] = useState();
     const [specificDate, setSpecificDate] = useState(true);
+    const [haveDateFromPicker, setHaveDateFromPicker] = useState(false);
+    const [dateLabel, setDateLabel] = useState();
+    const [timeOFtheDay, setTimeOFtheDay] = useState();
 
 
 
@@ -147,17 +150,25 @@ const PostPublishScreen = () => {
 
     const resetPost = () => {
         setPostContent("")
+        setHaveDateFromPicker(false)
 
     }
 
     const [isVisible, setIsvisble] = useState(false);
+
+    const receiveDateFromDatePicker = (dataObj) => {
+        setIsvisble(false)
+        setHaveDateFromPicker(true)
+        setDateLabel(dataObj.dateLabel)
+        setTimeOFtheDay(dataObj.timeOFtheDay)
+    }
 
 
 
     return (
         <View style={styles.container}  >
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
-                <DatePicker />
+                <DatePicker receiveDateFromDatePicker={(dataObj) => receiveDateFromDatePicker(dataObj)} />
             </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
@@ -273,7 +284,8 @@ const PostPublishScreen = () => {
                 </View>
 
                 <Divider />
-                <View style={styles.optionContainer}>
+                {!haveDateFromPicker ? <View style={styles.optionContainer}>
+
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ marginHorizontal: windowWidth / 9 }}>
@@ -284,7 +296,33 @@ const PostPublishScreen = () => {
                         <Button title="YES" type='solid' onPress={() => setIsvisble(true)} />
                     </View>
 
-                </View>
+
+                </View> :
+
+
+
+                    <View style={styles.optionContainer} >
+
+                        <Text style={{ marginTop: 10, fontSize: 16 }} >Metting Date</Text>
+                        <TouchableOpacity onPress={() => setIsvisble(true)}>
+                            <View style={{ marginHorizontal: windowWidth / 12 }} >
+                                <View >
+                                    <Text>{dateLabel}
+                                    </Text>
+                                </View>
+                                <Text>{timeOFtheDay}</Text>
+                            </View>
+                        </TouchableOpacity>
+
+
+
+                    </View>
+
+
+
+
+                }
+
                 <Divider />
 
 
