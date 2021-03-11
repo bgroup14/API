@@ -230,7 +230,7 @@ const DatePicker = (props) => {
             )} */}
 
             <View style={styles.saveBtnContainer}>
-                <Button type='clear' title="Save" onPress={() => sendDateToParent()} />
+                {choseDate ? <Button type='clear' title="Save" onPress={() => sendDateToParent()} /> : null}
             </View>
         </View>
     );
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
         // width: '95%',
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 40
+        marginTop: windowHeight / 20
     },
     header: {
         fontSize: 18
