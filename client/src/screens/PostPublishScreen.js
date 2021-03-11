@@ -75,6 +75,11 @@ const PostPublishScreen = () => {
     const [haveDateFromPicker, setHaveDateFromPicker] = useState(false);
     const [dateLabel, setDateLabel] = useState();
     const [timeOFtheDay, setTimeOFtheDay] = useState();
+    const [isLocationSet, setIsLocationSet] = useState(false);
+    const [locationLabel, setLocationLabel] = useState(null);
+    const [postLongitude, setPostLongitude] = useState();
+    const [postLatitude, setPostLatitude] = useState();
+
 
 
 
@@ -153,6 +158,7 @@ const PostPublishScreen = () => {
         setPostContent("")
         setHaveDateFromPicker(false)
         setSpecificDate(true);
+        setLocationLabel(null)
 
     }
 
@@ -166,6 +172,15 @@ const PostPublishScreen = () => {
         setTimeOFtheDay(dataObj.timeOFtheDay)
     }
 
+    // props.closeSetLocation();
+
+    const setLocation = (locationObj) => {
+        setLocationLabel(locationObj.locationLabel);
+        setPostLatitude(locationObj.latitude);
+        setPostLongitude(locationObj.longitude);
+        console.log("Post location saved!!")
+
+    }
 
 
     return (
@@ -173,8 +188,8 @@ const PostPublishScreen = () => {
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
                 <DatePicker receiveDateFromDatePicker={(dataObj) => receiveDateFromDatePicker(dataObj)} />
             </MyOverlay>
-            <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)} >
-                <SetLocationScreen />
+            <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}  >
+                <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
             </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
@@ -221,7 +236,7 @@ const PostPublishScreen = () => {
 
             <View style={styles.postOptionsContainer}>
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >You</Text>
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >You</Text>
 
 
                     <ModalSelector
@@ -244,8 +259,9 @@ const PostPublishScreen = () => {
 
                 <Divider />
 
+
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Gender</Text>
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Participant Gender</Text>
 
                     <ModalSelector
                         data={fromWho}
@@ -267,7 +283,7 @@ const PostPublishScreen = () => {
                 <Divider />
 
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Participant Age</Text>
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Participant Age</Text>
 
                     <ModalSelector
                         data={fromAge}
@@ -292,15 +308,19 @@ const PostPublishScreen = () => {
 
                 <Divider />
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Meeting Location</Text>
-
-                    <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
+                    {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
                         <TextInput
                             textAlign="center"
                             style={styles.postBtnText}
                             editable={false}
                             value='Select' />
-                    </TouchableOpacity>
+                    </TouchableOpacity> :
+                        <TouchableOpacity style={{ marginHorizontal: windowWidth / 9 }} onPress={() => setIsVisibleLocation(true)}>
+                            <Text>{locationLabel}</Text>
+                        </TouchableOpacity>}
+
+
                 </View>
                 <Divider />
 
