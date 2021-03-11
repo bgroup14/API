@@ -16,7 +16,7 @@ export default MyOverlay
 const styles = StyleSheet.create({
     overlay: {
         height: '35%',
-        width: '80%'
+        width: '75%',
 
     },
 

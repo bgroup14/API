@@ -22,6 +22,7 @@ import MyOverlay from '../components/MyOverlay';
 // import SearchScreen from './DatePicker';
 import DatePicker from '../components/DatePicker';
 import { Button } from 'react-native-elements';
+import SetLocationScreen from './SetLocationScreen';
 
 
 
@@ -35,7 +36,7 @@ const PostPublishScreen = () => {
     let index = 0;
     const activityTypes = [
         { key: index++, section: true, label: 'Post Purpose' },
-        { key: index++, label: 'Search For Help' },
+        { key: index++, label: 'Need Help' },
         { key: index++, label: 'Give Help' },
         // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
         // // etc...
@@ -151,10 +152,12 @@ const PostPublishScreen = () => {
     const resetPost = () => {
         setPostContent("")
         setHaveDateFromPicker(false)
+        setSpecificDate(true);
 
     }
 
     const [isVisible, setIsvisble] = useState(false);
+    const [isVisibleLocation, setIsVisibleLocation] = useState(false);
 
     const receiveDateFromDatePicker = (dataObj) => {
         setIsvisble(false)
@@ -169,6 +172,9 @@ const PostPublishScreen = () => {
         <View style={styles.container}  >
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
                 <DatePicker receiveDateFromDatePicker={(dataObj) => receiveDateFromDatePicker(dataObj)} />
+            </MyOverlay>
+            <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)} >
+                <SetLocationScreen />
             </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
@@ -215,7 +221,7 @@ const PostPublishScreen = () => {
 
             <View style={styles.postOptionsContainer}>
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: 10, fontSize: 16 }} >Do You</Text>
+                    <Text style={{ marginTop: 10, fontSize: 16 }} >You</Text>
 
 
                     <ModalSelector
@@ -226,7 +232,7 @@ const PostPublishScreen = () => {
                         accessible={true}
                         scrollViewAccessibilityLabel={'Scrollable options'}
                         cancelButtonAccessibilityLabel={'Cancel Button'}
-                        onChange={(option) => { setUserType(option.label == "Search For Help" ? "Need Help" : "Give Help") }} >
+                        onChange={(option) => { setUserType(option.label == "Need Help" ? "Need Help" : "Give Help") }} >
 
                         <TextInput
                             textAlign="center"
@@ -283,7 +289,23 @@ const PostPublishScreen = () => {
 
                 </View>
 
+
                 <Divider />
+                <View style={styles.optionContainer}>
+                    <Text style={{ marginTop: 10, fontSize: 16 }} >Meeting Location</Text>
+
+                    <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
+                        <TextInput
+                            textAlign="center"
+                            style={styles.postBtnText}
+                            editable={false}
+                            value='Select' />
+                    </TouchableOpacity>
+                </View>
+                <Divider />
+
+
+
                 {!haveDateFromPicker ? <View style={styles.optionContainer}>
 
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
@@ -303,34 +325,28 @@ const PostPublishScreen = () => {
 
                     <View style={styles.optionContainer} >
 
-                        <Text style={{ marginTop: 10, fontSize: 16 }} >Metting Date</Text>
+                        <Text style={{ marginTop: 10, fontSize: 16 }} >Meeting Date</Text>
                         <TouchableOpacity onPress={() => setIsvisble(true)}>
-                            <View style={{ marginHorizontal: windowWidth / 12 }} >
+                            <View style={{ marginHorizontal: windowWidth / 10 }} >
                                 <View >
-                                    <Text>{dateLabel}
+                                    <Text style={{ marginBottom: 3 }}>{dateLabel}
                                     </Text>
                                 </View>
                                 <Text>{timeOFtheDay}</Text>
                             </View>
                         </TouchableOpacity>
-
-
-
                     </View>
-
-
-
-
                 }
 
-                <Divider />
+
+                <View style={styles.btnContainer}>
 
 
-
-
-
-
-
+                    <FormButton
+                        buttonTitle="Publish Post"
+                    // onPress={() => signIn()}
+                    />
+                </View>
 
             </View>
 
@@ -339,15 +355,6 @@ const PostPublishScreen = () => {
 
 
 
-
-            <View style={styles.btnContainer}>
-
-
-                <FormButton
-                    buttonTitle="Sign In!"
-                // onPress={() => signIn()}
-                />
-            </View>
 
         </View >
 
@@ -445,7 +452,9 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: windowHeight / 50
+
     },
     postBtnText: {
 

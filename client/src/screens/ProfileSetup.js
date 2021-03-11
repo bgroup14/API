@@ -278,7 +278,7 @@ const ProfileSetup = (props) => {
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
     <View >
-      <MyBottomSheet visible={visible} toggle={toggleOverlay} >
+      <MyBottomSheet visible={visible} toggle={toggleOverlay} header="Set Profile Image" >
         <View>
           <View style={styles.btnContainer}>
             <Button

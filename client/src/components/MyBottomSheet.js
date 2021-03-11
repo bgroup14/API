@@ -49,8 +49,8 @@ const MyBottomSheet = (props) => {
                                     padding: 5,
                                     fontSize: 15,
                                 }}>
-                                Select Profile Image
-              </Text>
+                                {props.header}
+                            </Text>
                             {props.children}
 
                         </View>

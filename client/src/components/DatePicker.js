@@ -5,15 +5,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Button } from 'react-native-elements';
+import { set } from 'react-native-reanimated';
 
 
 
 
 const DatePicker = (props) => {
 
-    useEffect(() => {
 
-    }, [show])
 
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
@@ -38,6 +37,30 @@ const DatePicker = (props) => {
 
 
     const onChange = (event, selectedDate) => {
+        //  setShow(false)
+
+
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+
+
+        setDate(currentDate);
+
+        let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
+        setDateLabel(slicedDate)
+        let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
+        setUnixDate(unixDateToSend);
+        setChoseDate(true)
+
+        // setShow(Platform.OS === 'ios');
+
+
+
+
+
+
+
+
         // console.log(Platform.OS)
 
 
@@ -59,16 +82,7 @@ const DatePicker = (props) => {
 
 
         //saveDate(selectedDate)
-        const currentDate = selectedDate || date;
 
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-
-        let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
-        setDateLabel(slicedDate)
-        let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
-        setUnixDate(unixDateToSend);
-        setChoseDate(true)
 
         // setShow(!show)
         //        setShow(Platform.OS === 'ios');
@@ -134,8 +148,11 @@ const DatePicker = (props) => {
     return (
         <View >
 
+            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={styles.header} >Meeting Date</Text>
+            </View>
             <View style={styles.dateContainer}>
-                {dateLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={showDatepicker} title="Click to select date" /> : <View><Text style={{ fontSize: 16 }} >Selected date: {dateLabel}</Text><Button title="Change Date" onPress={showDatepicker} /></View>}
+                {dateLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={showDatepicker} title="Click to select date" /> : <View><Text style={{ fontSize: 16, marginBottom: 20 }} >Selected Date: {dateLabel}</Text><Button title="Change Date" onPress={showDatepicker} /></View>}
                 {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
             </View>
 
@@ -160,12 +177,43 @@ const DatePicker = (props) => {
                 <Button onPress={() => checkDate()} title="CHECK Time" /> */}
 
             </View>
+
+
+            {/* {show ?
+                <DatePicker
+                    defaultDate={new Date()}
+                    minimumDate={new Date(2018, 1, 1)}
+                    maximumDate={new Date(2099, 12, 31)}
+                    //  chosenDate={date}
+                    locale={"en"}
+                    modalTransparent={true}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText={(new Date()).toLocaleDateString()}
+                    textStyle={{ color: "grey" }}
+                    placeHolderTextStyle={{ color: "#d3d3d3" }}
+                    onChange={onChange}
+                    disabled={false}
+                    value={date}
+                /> : <View />} */}
+
             {show ? <DateTimePicker
+                defaultDate={new Date()}
+                chosenDate={date}
+                locale={"en"}
+                modalTransparent={true}
+                animationType={"fade"}
+                androidMode={"default"}
+                placeHolderText={(new Date()).toLocaleDateString()}
+                textStyle={{ color: "grey" }}
+                placeHolderTextStyle={{ color: "#d3d3d3" }}
+                disabled={false}
+
                 testID="dateTimePicker"
                 value={date}
                 mode={mode}
                 is24Hour={true}
-                display="default"
+                //display='spinner'
                 onChange={onChange}
                 minimumDate={new Date()}
             /> : <View />}
@@ -203,7 +251,8 @@ const styles = StyleSheet.create({
         //  marginBottom: 10,
         //width: '98%',
         height: windowHeight / 15,
-        marginBottom: windowHeight / 40,
+        // marginTop: windowHeight / 100,
+        marginBottom: windowHeight / 100,
 
 
     },
@@ -215,7 +264,10 @@ const styles = StyleSheet.create({
         // width: '95%',
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 20
+        marginTop: windowHeight / 40
+    },
+    header: {
+        fontSize: 18
     }
 
 
