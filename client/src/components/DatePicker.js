@@ -18,7 +18,7 @@ const DatePicker = (props) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateLabel, setDateLabel] = useState(null);
-    const [unixDate, setUnixDate] = useState(new Date());
+    const [unixDate, setUnixDate] = useState();
     const [timeOFtheDay, setTimeOFtheDay] = useState();
     const [choseDate, setChoseDate] = useState(false);
 
@@ -50,6 +50,7 @@ const DatePicker = (props) => {
         setDateLabel(slicedDate)
         let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
         setUnixDate(unixDateToSend);
+        console.log("unix is: " + unixDateToSend)
         setChoseDate(true)
 
         // setShow(Platform.OS === 'ios');
@@ -133,14 +134,16 @@ const DatePicker = (props) => {
             alert("You must choose date before saving")
             return null;
         }
-        let dataObj = {
+        let dateObj = {
             dateLabel,
-            timeOFtheDay
+            timeOFtheDay,
+            unixDate
         }
+        console.log(unixDate)
         // console.log(data.dateLabel)
         // console.log(data.timeOFtheDay)
         // props.getDatePickerData()
-        props.receiveDateFromDatePicker(dataObj)
+        props.receiveDateFromDatePicker(dateObj)
     }
 
 
