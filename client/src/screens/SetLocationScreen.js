@@ -14,22 +14,21 @@ const SetLocationScreen = (props) => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [adress, setAdress] = useState(null);
 
-    useEffect(() => {
-        (async () => {
+    // useEffect(() => {
+    //     (async () => {
 
-            let { status } = await Location.requestPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
+    //         let { status } = await Location.requestPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             setErrorMsg('Permission to access location was denied');
+    //             return;
+    //         }
 
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-        })();
-    }, []);
+    //         let location = await Location.getCurrentPositionAsync({});
+    //         setLocation(location);
+    //     })();
+    // }, []);
 
 
-    let text = 'Waiting..';
     if (errorMsg) {
         text = errorMsg;
     } else if (location) {
@@ -59,6 +58,15 @@ const SetLocationScreen = (props) => {
         props.closeSetLocation();
 
 
+
+    }
+    const setToZoom = () => {
+        let locationObj = {
+            locationLabel: "Zoom Meeting"
+
+        }
+        props.closeSetLocation();
+        props.setLocation(locationObj);
 
     }
 
@@ -105,7 +113,7 @@ const SetLocationScreen = (props) => {
                         title="Zoom"
                         type='clear'
                         buttonStyle={styles.locationBtn}
-                        onPress={() => props.closeSetLocation()}
+                        onPress={() => setToZoom()}
 
                     />
                 </View>

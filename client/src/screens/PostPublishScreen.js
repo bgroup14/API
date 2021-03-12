@@ -77,8 +77,10 @@ const PostPublishScreen = () => {
     const [timeOFtheDay, setTimeOFtheDay] = useState();
     const [isLocationSet, setIsLocationSet] = useState(false);
     const [locationLabel, setLocationLabel] = useState(null);
-    const [postLongitude, setPostLongitude] = useState();
-    const [postLatitude, setPostLatitude] = useState();
+    const [postLongitude, setPostLongitude] = useState(null);
+    const [postLatitude, setPostLatitude] = useState(null);
+    const [unixDate, setUnixDate] = useState();
+
 
 
 
@@ -147,11 +149,11 @@ const PostPublishScreen = () => {
     let userGiveOrGet = setUserGiveOrGetHelp();
     let greeting = createGreeting();
     let items = [
-        { label: 'Sport', value: 'male', icon: () => <Icon name="running" size={22} color="#000000" /> },
-        { label: 'Study', value: 'female', icon: () => <Icon name="book" size={24} color="#000000" /> },
-        { label: 'Mental', value: 'female', icon: () => <Icon name="phone" size={24} color="#000000" /> },
-        { label: 'Elder People', value: 'female', icon: () => <Icon name="hand-holding-heart" size={24} color="#000000" /> },
-        { label: 'General', value: 'female', icon: () => <Icon name="hands-helping" size={24} color="#000000" /> },
+        { label: 'Sport', value: 'Sport', icon: () => <Icon name="running" size={22} color="#000000" /> },
+        { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
+        { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
+        { label: 'Elder People', value: 'Elder', icon: () => <Icon name="hand-holding-heart" size={24} color="#000000" /> },
+        { label: 'General', value: 'General', icon: () => <Icon name="hands-helping" size={24} color="#000000" /> },
     ]
 
     const resetPost = () => {
@@ -159,17 +161,19 @@ const PostPublishScreen = () => {
         setHaveDateFromPicker(false)
         setSpecificDate(true);
         setLocationLabel(null)
+        setUnixDate(null)
 
     }
 
     const [isVisible, setIsvisble] = useState(false);
     const [isVisibleLocation, setIsVisibleLocation] = useState(false);
 
-    const receiveDateFromDatePicker = (dataObj) => {
+    const receiveDateFromDatePicker = (dateObj) => {
         setIsvisble(false)
         setHaveDateFromPicker(true)
-        setDateLabel(dataObj.dateLabel)
-        setTimeOFtheDay(dataObj.timeOFtheDay)
+        setDateLabel(dateObj.dateLabel)
+        setTimeOFtheDay(dateObj.timeOFtheDay)
+        setUnixDate(dateObj.unixDate)
     }
 
     // props.closeSetLocation();
@@ -182,11 +186,31 @@ const PostPublishScreen = () => {
 
     }
 
+    const publishPost = () => {
+        let isZoom = locationLabel === 'Zoom Meeting' ? true : false
+        let recurring = unixDate == null ? true : false
+
+        let postDetails = {
+            category: postCategory,
+            text: postContent,
+            helpType: userType,
+            participantGender,
+            participantAge,
+            latitude: postLatitude,
+            longitude: postLongitude,
+            isZoom,
+            unixDate,
+            recurring
+        }
+        console.log(postDetails)
+
+    }
+
 
     return (
         <View style={styles.container}  >
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
-                <DatePicker receiveDateFromDatePicker={(dataObj) => receiveDateFromDatePicker(dataObj)} />
+                <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
             </MyOverlay>
             <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}  >
                 <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
@@ -202,7 +226,7 @@ const PostPublishScreen = () => {
                 </TouchableOpacity>
             </View>
             <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting} {userFirstName}</Text>
-                <Text style={{ padding: 10, fontSize: 16 }}>{userGiveOrGet}</Text>
+                <Text style={{ padding: windowWidth / 30, fontSize: 16 }}>{userGiveOrGet}</Text>
 
 
                 <View style={styles.selectCategoryContainer}>
@@ -316,9 +340,20 @@ const PostPublishScreen = () => {
                             editable={false}
                             value='Select' />
                     </TouchableOpacity> :
-                        <TouchableOpacity style={{ marginHorizontal: windowWidth / 9 }} onPress={() => setIsVisibleLocation(true)}>
-                            <Text>{locationLabel}</Text>
+                        <TouchableOpacity onPress={() => setIsVisibleLocation(true)}>
+                            <TextInput
+                                textAlign="center"
+                                style={styles.postBtnText}
+                                editable={false}
+                                value={locationLabel} />
+                            {/* <Text style={{ fontSize: 16, margin: 6, paddingHorizontal: 4 }}>{locationLabel}</Text> */}
+                            {/* <Text style={styles.postBtnText}>{locationLabel}</Text> */}
                         </TouchableOpacity>}
+
+
+
+
+
 
 
                 </View>
@@ -364,7 +399,7 @@ const PostPublishScreen = () => {
 
                     <FormButton
                         buttonTitle="Publish Post"
-                    // onPress={() => signIn()}
+                        onPress={() => publishPost()}
                     />
                 </View>
 
@@ -480,7 +515,8 @@ const styles = StyleSheet.create({
 
         borderWidth: 1,
         marginTop: windowHeight / 60,
-        borderColor: '#ccc',
+        //borderColor: '#ccc',
+        borderColor: '#001433',
         height: windowHeight / 25,
         color: '#000000',
         fontSize: 16,
