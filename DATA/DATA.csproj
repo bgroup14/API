@@ -62,6 +62,9 @@
     <Compile Include="Favorite.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="FeedSetting.cs">
+      <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Gender.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>

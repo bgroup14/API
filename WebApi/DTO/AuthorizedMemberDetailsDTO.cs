@@ -5,13 +5,12 @@ using System.Web;
 
 namespace WebApi.DTO
 {
-    public class MemberDTO
+    public class AuthorizedMemberDetailsDTO
     {
         public int id;
         public string name;
         public string helpType;
-        public string gender;
-        public int? dateOfBirth;
-        
+        public string participantGender;
+        public string participantAge;
     }
 }

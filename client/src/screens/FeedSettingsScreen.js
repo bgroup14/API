@@ -38,7 +38,7 @@ const FeedSettingsScreen = (props) => {
 
   }, [])
   useEffect(() => {
-    if (userType != undefined && !imageWasUploaded) {
+    if (userType != undefined && !imageWasUploaded && profileSetupDetails.image != undefined) {
       imageUpload();
       setImageWasUploaded(true)
     }
@@ -57,6 +57,7 @@ const FeedSettingsScreen = (props) => {
       let jsonObjTwo = jsonValueTwo != null ? JSON.parse(jsonValueTwo) : null;
       if (jsonObjTwo != null) {
         setProfileSetupDetails(jsonObjTwo)
+
         console.log("profile setup image is : " + jsonObjTwo.image)
       }
       let jsonValueThree = await AsyncStorage.getItem('hobbies')
@@ -69,20 +70,20 @@ const FeedSettingsScreen = (props) => {
 
     } catch (e) {
       console.log("error in feed setting page !!")
-      console.log(e.message)
+      //  console.log(e.message)
       // error reading value
     }
   }
   const check = () => {
 
     // console.log("photo after uploading is  " + uploadedPicture.uri)
-    // console.log("unix date is: " + profileSetupDetails.date)
+    console.log("unix date is: " + profileSetupDetails.date)
     // console.log("gender is: " + profileSetupDetails.gender)
     // console.log("profie image path is : " + profileSetupDetails.myImage)
     // console.log(signUpDetails.fullName)
-    console.log("hobbies length is " + hobbies.length)
-    console.log("hobbies name is " + hobbies[0].name)
-    console.log("hobbies id is " + hobbies[0].id)
+    // console.log("hobbies length is " + hobbies.length)
+    // console.log("hobbies name is " + hobbies[0].name)
+    // console.log("hobbies id is " + hobbies[0].id)
 
   }
 
@@ -171,8 +172,8 @@ const FeedSettingsScreen = (props) => {
     const feedSettings = {
 
       memberType: userType,
-      postsLocation,
-      fromGender,
+      postLocation: postsLocation,
+      participantGender: fromGender,
       participantAgeRange
     }
     if (checkIfFormIsFilled(feedSettings)) {
@@ -188,11 +189,25 @@ const FeedSettingsScreen = (props) => {
 
 
 
+    profileSetupDetails.image = uploadedPicture.uri != undefined ? uploadedPicture.uri : null;
 
-    profileSetupDetails.image = uploadedPicture.uri;
+    let registerDetails = {
+      email: signUpDetails.email,
+      password: signUpDetails.password,
+      fullName: signUpDetails.fullName,
+      city: profileSetupDetails.city,
+      occupation: profileSetupDetails.occupation,
+      bio: profileSetupDetails.bio,
+      gender: profileSetupDetails.gender,
+      pictureUrl: profileSetupDetails.image,
+      dateOfBirth: profileSetupDetails.date,
+      feedSettings,
+      hobbies
+    }
 
     //console.log(signUpDetails)
     let fullSignUpDetails = {
+
       signUpDetails,
       profileSetupDetails,
       feedSettings,
@@ -204,13 +219,28 @@ const FeedSettingsScreen = (props) => {
     /// here i should check every thing that is inside fullsignupdetails and to see that its not null or undefiend
     ///and then send everything to the server
 
-    console.log("full sign up details " + fullSignUpDetails.profileSetupDetails.image)
+    console.log("full sign up details " + fullSignUpDetails.signUpDetails)
     // console.log("full sign up details " + fullSignUpDetails.hobbies[0].name)
     /// now send fullSignUpDetails to the server 
 
-    dispatch(register(fullSignUpDetails));
+    clearAsyncStorage()
+
+    dispatch(register(registerDetails));
 
 
+  }
+
+
+
+  const clearAsyncStorage = async () => {
+    const keys = ['hobbies', 'signUpDetails', 'profileSetupDetails']
+    try {
+      await AsyncStorage.multiRemove(keys)
+    } catch (e) {
+      // remove error
+    }
+
+    console.log('AS cleard')
   }
   const checkIfFormIsFilled = (obj) => {
 
@@ -240,9 +270,9 @@ const FeedSettingsScreen = (props) => {
         <View style={styles.radioBtnContainer}>
 
           <CheckBox containerStyle={styles.CheckBox}
-            title='Want To Help'
-            checked={userType == 'Give'}
-            onPress={() => userType != 'Give' ? setUserType('Give') : setUserType(null)}
+            title='Give Help'
+            checked={userType == 'Give Help'}
+            onPress={() => userType != 'Give Help' ? setUserType('Give Help') : setUserType(null)}
 
           />
           <CheckBox containerStyle={styles.CheckBox}
@@ -346,8 +376,17 @@ const FeedSettingsScreen = (props) => {
         <FormButton
           buttonTitle="Complete Sign Up"
           onPress={() => completeSignUp()}
-          // onPress={() => dispatch(register(fullSignUpDetails))}
-          
+        // onPress={() => dispatch(register(fullSignUpDetails))}
+
+
+        //  onPress={() => register(email, password)} go to - profile setup
+        />
+
+        <FormButton
+          buttonTitle="Complete Sign U!!!p"
+          onPress={() => check()}
+        // onPress={() => dispatch(register(fullSignUpDetails))}
+
 
         //  onPress={() => register(email, password)} go to - profile setup
         />

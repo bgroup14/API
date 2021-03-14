@@ -5,10 +5,10 @@ using System.Web;
 
 namespace WebApi.DTO
 {
-    public class HobbiesDTO
+    public class MembersHobbiesDTO
     {
-        public string name;
-        public int id;
-        
+        public int memberId;
+        public int hobbyId;
+
     }
 }

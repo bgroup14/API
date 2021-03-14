@@ -37,6 +37,7 @@
         <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" ManuallyRouted="false" />
         <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" ManuallyRouted="false" />
         <AssociationConnector Association="bgroup14_prodModel.FK__Posts__whereId__05D8E0BE" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.FeedSetting" Width="1.5" PointX="10.375" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

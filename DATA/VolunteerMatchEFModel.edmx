@@ -41,6 +41,17 @@
           <Property Name="memberId" Type="int" />
           <Property Name="favoritedMemberId" Type="int" />
         </EntityType>
+        <EntityType Name="FeedSettings">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="memberId" Type="int" />
+          <Property Name="memberType" Type="varchar" MaxLength="255" />
+          <Property Name="postLocation" Type="varchar" MaxLength="255" />
+          <Property Name="participantGender" Type="varchar" MaxLength="255" />
+          <Property Name="participantAgeRange" Type="varchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="Gender">
           <Key>
             <PropertyRef Name="id" />
@@ -390,6 +401,7 @@
           <EntitySet Name="ChatHistory" EntityType="Self.ChatHistory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Favorites" EntityType="Self.Favorites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FeedSettings" EntityType="Self.FeedSettings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Gender" EntityType="Self.Gender" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hobbies" EntityType="Self.Hobbies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Likes" EntityType="Self.Likes" Schema="dbo" store:Type="Tables" />
@@ -964,7 +976,19 @@
             <End Role="WhereActivity" EntitySet="WhereActivities" />
             <End Role="Posts" EntitySet="Posts" />
           </AssociationSet>
+          <EntitySet Name="FeedSettings" EntityType="bgroup14_prodModel.FeedSetting" />
         </EntityContainer>
+        <EntityType Name="FeedSetting">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="memberId" Type="Int32" />
+          <Property Name="memberType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="postLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="participantGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="participantAgeRange" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1146,6 +1170,18 @@
               <MappingFragment StoreEntitySet="WhereActivity">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeedSettings">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.FeedSetting">
+              <MappingFragment StoreEntitySet="FeedSettings">
+                <ScalarProperty Name="participantAgeRange" ColumnName="participantAgeRange" />
+                <ScalarProperty Name="participantGender" ColumnName="participantGender" />
+                <ScalarProperty Name="postLocation" ColumnName="postLocation" />
+                <ScalarProperty Name="memberType" ColumnName="memberType" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
