@@ -9,5 +9,8 @@ namespace WebApi.DTO
     {
         public int id;
         public string name;
+        public string helpType;
+        public string gender;
+        public int? dateOfBirth;
     }
 }
