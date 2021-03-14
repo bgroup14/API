@@ -16,6 +16,9 @@ namespace WebApi.DTO
         public string pictureUrl;
         public string gender;
         public string city;
+        public List<HobbiesDTO> hobbies;
+        public FeedSettingsDTO feedSettings;
+
 
     }
 }

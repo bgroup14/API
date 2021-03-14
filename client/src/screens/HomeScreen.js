@@ -17,9 +17,11 @@ import MyLinearGradient from '../components/MyLinearGradient';
 
 const HomeScreen = (props) => {
 
-    let userName = useSelector(state => state.auth.userName);
+    // let userName = useSelector(state => state.auth.userName);
+    let userName = useSelector(state => state.user.userName);
     ///DELETE THIS!
-    if (userName === null) {
+    console.log("user name fromn rerdux is:" + userName)
+    if (userName === null || userName === undefined) {
         userName = 'Alan skverer'
     }
     let userFirstName = userName.split(" ")[0];
@@ -50,7 +52,7 @@ const HomeScreen = (props) => {
 
 
 
-    const userId = useSelector(state => state.auth.userId);
+    // const userId = useSelector(state => state.auth.userId);
 
     return (
         <View style={styles.container}>

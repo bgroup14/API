@@ -21,7 +21,7 @@ import { login } from '../../store/actions/auth';
 
 import * as Facebook from 'expo-facebook';
 
-import { LOGIN_SUCCESS } from '../../store/actions/types';
+import { LOGIN_SUCCESS, USER_LOGGED } from '../../store/actions/types';
 
 import axios from 'axios';
 
@@ -114,11 +114,28 @@ const LoginScreen = (props) => {
         try {
           //check if member  exists on DB - if  dosent exists will catch  400 or 500 error
           let res = await axios.post(url, body, config);
-          //If email is in  db - redirect to home screen with LOGIN_SUCCESS and send the user details from server as payload 
+          console.log("here!!!")
+
+          console.log(res.data[0])
           dispatch({
             type: LOGIN_SUCCESS,
-            payload: res.data
+            //payload will be the what we recieve from the server
+            payload: res.data[0]
           });
+
+          dispatch({
+            type: USER_LOGGED,
+            //payload will be the what we recieve from the server
+            payload: res.data[0]
+          });
+
+          // dispatch(login(email, password));
+
+          //If email is in  db - redirect to home screen with LOGIN_SUCCESS and send the user details from server as payload 
+          // dispatch({
+          //   type: LOGIN_SUCCESS,
+          //   payload: res.data
+          // });
 
 
         } catch (error) {

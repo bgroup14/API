@@ -9,9 +9,10 @@ namespace WebApi.DTO
     {
         public int memberId;
         public string memberType;
-        public int postLocation;
+        public string postLocation;
         public string participantGender;
         public string participantAgeRange;
+        
     }
 
 }

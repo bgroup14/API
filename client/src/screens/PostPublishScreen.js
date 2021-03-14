@@ -82,16 +82,24 @@ const PostPublishScreen = () => {
 
 
 
-    let userName = useSelector(state => state.auth.userName);
-    const [userType, setUserType] = useState(useSelector(state => state.auth.userType));
-    const [participantGender, setParticipantGender] = useState(useSelector(state => state.auth.participantGender));
-    const [participantAge, setParticipantAge] = useState(useSelector(state => state.auth.participantAge));
+
+    // let userName = useSelector(state => state.auth.userName);
+    let userName = useSelector(state => state.user.userName);
+    // const [userType, setUserType] = useState(useSelector(state => state.auth.userType));
+    const [userType, setUserType] = useState(useSelector(state => state.user.userType));
+    console.log(userType)
+    // const [participantGender, setParticipantGender] = useState(useSelector(state => state.auth.participantGender));
+    const [participantGender, setParticipantGender] = useState(useSelector(state => state.user.participantGender));
+    console.log(participantGender)
+    // const [participantAge, setParticipantAge] = useState(useSelector(state => state.auth.participantAge));
+    const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
+
     const [initalUserTypeValue, setInitalUserTypeValue] = useState(userType)
 
 
     ///DELETE all this if lines below!
     if (userName === null) {
-        userName = 'Alan skverer'
+        userName = 'Alann'
     }
     // if (userType === null) {
     //     setUserType('Give Help')
@@ -286,7 +294,7 @@ const PostPublishScreen = () => {
 
             <View style={styles.postOptionsContainer}>
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >You</Text>
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Do You..</Text>
 
 
                     <ModalSelector

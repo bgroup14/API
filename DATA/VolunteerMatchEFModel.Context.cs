@@ -41,5 +41,6 @@ namespace DATA
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<WhereActivity> WhereActivities { get; set; }
+        public virtual DbSet<FeedSetting> FeedSettings { get; set; }
     }
 }

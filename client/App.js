@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
 import authReducer from './store/reducers/auth';
+import userReducer from './store/reducers/user';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 
@@ -20,7 +21,8 @@ import HobbiesStackScreens from './src/stacks/HobbiesStackTest';
 //<AppStackScreens />
 
 const rootReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  user: userReducer
 });
 
 //can add this to  NavigationContainer theme={MyTheme} 

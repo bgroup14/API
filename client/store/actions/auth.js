@@ -1,6 +1,6 @@
 
 import { View, StyleSheet, Button, Alert } from "react-native";
-import { LOGIN_SUCCESS, REGISTER_SUCCESS } from './types';
+import { LOGIN_SUCCESS, REGISTER_SUCCESS, USER_LOGGED } from './types';
 import axios from 'axios';
 
 //Login User
@@ -21,13 +21,20 @@ export const login = (email, password) => async dispatch => {
 
         console.log(res);
         console.log("res data (payload is:)")
-        console.log(res.data);
+        console.log(res.data[0]);
 
         dispatch({
             type: LOGIN_SUCCESS,
             //payload will be the what we recieve from the server
-            payload: res.data
+            payload: res.data[0]
         });
+
+        dispatch({
+            type: USER_LOGGED,
+            //payload will be the what we recieve from the server
+            payload: res.data[0]
+        });
+
 
     } catch (err) {
         //  const errors = err.response.data.errors;
@@ -112,25 +119,30 @@ export const register = (fullSignUpDetails) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json'
-        },
-        params: {
-            'data': JSON.stringify(fullSignUpDetails)
         }
+
     }
     const body = JSON.stringify(fullSignUpDetails)
-    console.log("Will register with body: "+body);
+    console.log("Will register with body: " + body);
 
     try {
         //if this will fail (status !=200 ) it will catch the error in the error block
         const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/register", body, config);
 
-        console.log(res);
+        console.log(res.data);
+
         console.log("res data (payload is:)")
 
         dispatch({
             type: REGISTER_SUCCESS,
             //payload will be the what we recieve from the server
-            //payload: res.data
+            payload: res.data
+        });
+
+        dispatch({
+            type: USER_LOGGED,
+            //payload will be the what we recieve from the server
+            payload: res.data
         });
 
     } catch (err) {
@@ -158,7 +170,7 @@ export const register = (fullSignUpDetails) => async dispatch => {
             ],
         );
 
-        console.log("register error"+ err) 
+        console.log("register error" + err)
 
     }
 

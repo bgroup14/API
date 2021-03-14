@@ -1,14 +1,14 @@
-import { LOGIN_SUCCESS, } from '../actions/types';
+import { LOGIN_SUCCESS, REGISTER_SUCCESS } from '../actions/types';
 const initialState = {
     // token: localStorage.getItem('token'),
     // isAuthenticated: null,
     // loading: true,
-    userName: null,
+    // userName: null,
     userId: null,
     isLogged: false,
-    userType: "Both",
-    participantGender: "Dosen't Matter",
-    participantAge: "Dosen't Matter",
+    // userType: "Both",
+    // participantGender: "Dosen't Matter",
+    // participantAge: "Dosen't Matter",
 
 
 };
@@ -20,18 +20,19 @@ function authReducer(state = initialState, action) {
     // console.log("the payload in the auth reducer is:")
     // console.log(payload)
     switch (type) {
+        case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
             return {
                 // ...state,
                 // // isAuthenticated: true,
                 // // loading: false,
-                userName: payload.name,
+                // userName: payload.name,
                 userId: payload.id,
                 isLogged: true,
-                ///change below to payload.userType
-                userType: 'Both',
-                participantGender: "Dosen't Matter",
-                participantAge: "Dosen't Matter"
+                // ///change below to payload.userType
+                // userType: 'Both',
+                // participantGender: "Dosen't Matter",
+                // participantAge: "Dosen't Matter"
 
             }
 

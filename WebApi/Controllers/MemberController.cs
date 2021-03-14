@@ -18,6 +18,7 @@ namespace WebApi.Controllers
         // GET api/<controller>
         public string Get()
         {
+            
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
             Member member = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
@@ -59,7 +60,21 @@ namespace WebApi.Controllers
                     name = member.fullName
 
                 };
-                return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
+                var AuthorizedMemberDetails = db.FeedSettings.Where(x => x.memberId == member.id).Select(x => new AuthorizedMemberDetailsDTO
+                {
+
+                    id = member.id,
+                    name = member.fullName,
+                    helpType = x.memberType,
+                    participantAge = x.participantAgeRange,
+                    participantGender = x.participantGender,
+
+
+                });
+
+                
+
+                return Request.CreateResponse(HttpStatusCode.OK, AuthorizedMemberDetails);
 
             }
             catch (Exception)
@@ -69,6 +84,9 @@ namespace WebApi.Controllers
             }
 
         }
+
+
+
         [HttpPost]
         [Route("checkifmemberexists")]
 
@@ -82,17 +100,25 @@ namespace WebApi.Controllers
                 Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
                 if (member != null)
                 {
-                    MemberDTO memberDTO = new MemberDTO()
+
+
+                    var AuthorizedMemberDetails = db.FeedSettings.Where(x => x.memberId == member.id).Select(x => new AuthorizedMemberDetailsDTO
                     {
+
                         id = member.id,
                         name = member.fullName,
-                        
+                        helpType = x.memberType,
+                        participantAge = x.participantAgeRange,
+                        participantGender = x.participantGender,
 
-                    };
-                    return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
+
+                    });
+
+                  
+                    return Request.CreateResponse(HttpStatusCode.OK, AuthorizedMemberDetails);
                 }
 
-                
+
 
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
 
@@ -105,60 +131,129 @@ namespace WebApi.Controllers
 
         }
 
+        /* [HttpPost]
+         [Route("register")]
+         public HttpResponseMessage Register([FromBody] string value)
+         {
+             try
+             {
+                 VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+                 var postData = Request.RequestUri.ParseQueryString()["data"].ToString();
+                 var jsonData = (JObject)JsonConvert.DeserializeObject(postData);
+
+                 string sqlMembers = "INSERT INTO [Members] (email, password, fullName, city, occupation, biography) VALUES ('" + jsonData["signUpDetails"]["email"] + "', '" + jsonData["signUpDetails"]["password"] + "', '" + jsonData["signUpDetails"]["fullName"] + "', '" + jsonData["profileSetupDetails"]["city"] + "', '" + jsonData["profileSetupDetails"]["occupation"] + "', '" + jsonData["profileSetupDetails"]["bio"] + "')";
+                 //return Request.CreateResponse(HttpStatusCode.OK, sqlMembers);
+                 db.Database.ExecuteSqlCommand(sqlMembers);
+
+                 string memberEmail = jsonData["signUpDetails"]["email"].ToString();
+
+                 Member member = db.Members.SingleOrDefault(x => x.email == memberEmail);
+                 if (member != null)
+                 {
+
+                     string sqlFeedSettings = "INSERT INTO [FeedSettings] (memberId, memberType, postLocation, participantGender, participantAgeRange) VALUES ('" + member.id + "', '" + jsonData["feedSettings"]["memberType"] + "', '" + jsonData["feedSettings"]["postsLocation"] + "', '" + jsonData["feedSettings"]["fromGender"].ToString().Replace("'", "") + "', '" + jsonData["feedSettings"]["participantAgeRange"] + "')";
+                     //return Request.CreateResponse(HttpStatusCode.OK, sqlFeedSettings);
+                     db.Database.ExecuteSqlCommand(sqlFeedSettings);
+
+                     string sqlHobbies = "INSERT INTO [MembersHobbies] (memberId, hobbyId) VALUES ";
+                     foreach (JObject hobby in jsonData["hobbies"])
+                     {
+                         sqlHobbies = sqlHobbies + "('" + member.id + "', '" + hobby["id"] + "'), ";
+                     }
+                     sqlHobbies = sqlHobbies.Remove(sqlHobbies.Length - 2);
+                     //return Request.CreateResponse(HttpStatusCode.OK, sqlHobbies);
+                     db.Database.ExecuteSqlCommand(sqlHobbies);
+
+                     MemberDTO memberDTO = new MemberDTO()
+                     {
+                         id = member.id,
+                         name = member.fullName,
+                         helpType = member.helpType,
+                         gender = member.gender,
+                         dateOfBirth = member.dateOfBirth
+
+                     };
+                     return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
+                 }
+
+
+
+                 return Request.CreateResponse(HttpStatusCode.BadRequest, "User creation failed");
+
+             }
+             catch (Exception e)
+             {
+                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured (User probably already exists): " + e.Message);
+             }
+
+         }*/
+
+
+
+
         [HttpPost]
         [Route("register")]
-        public HttpResponseMessage Register([FromBody] string value)
+        public HttpResponseMessage Register(MemberSignupDTO memberSignupDTO)
         {
             try
             {
                 VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Member member = new Member();
+                member.email = memberSignupDTO.email;
+                member.city = memberSignupDTO.city;
+                member.password = memberSignupDTO.password;
+                member.fullName = memberSignupDTO.fullName;
+                member.pictureUrl = memberSignupDTO.pictureUrl;
+                member.occupation = memberSignupDTO.occupation;
+                member.gender = memberSignupDTO.gender;
+                member.biography = memberSignupDTO.bio;
+                member.dateOfBirth = memberSignupDTO.dateOfBirth;
+                db.Members.Add(member);
+                db.SaveChanges();
+                FeedSetting feedSetting = new FeedSetting
+                {
+                    memberId = member.id,
+                    memberType = memberSignupDTO.feedSettings.memberType,
+                    participantAgeRange = memberSignupDTO.feedSettings.participantAgeRange,
+                    participantGender = memberSignupDTO.feedSettings.participantGender,
+                    postLocation = memberSignupDTO.feedSettings.postLocation
+                };
+                db.FeedSettings.Add(feedSetting);
+                /* db.SaveChanges();*/
 
-                var postData = Request.RequestUri.ParseQueryString()["data"].ToString();
-                var jsonData = (JObject)JsonConvert.DeserializeObject(postData);
 
-                string sqlMembers = "INSERT INTO [Members] (email, password, fullName, city, occupation, biography) VALUES ('" + jsonData["signUpDetails"]["email"] + "', '" + jsonData["signUpDetails"]["password"] + "', '" + jsonData["signUpDetails"]["fullName"] + "', '" + jsonData["profileSetupDetails"]["city"] + "', '" + jsonData["profileSetupDetails"]["occupation"] + "', '" + jsonData["profileSetupDetails"]["bio"] + "')";
-                //return Request.CreateResponse(HttpStatusCode.OK, sqlMembers);
-                db.Database.ExecuteSqlCommand(sqlMembers);
 
-                string memberEmail = jsonData["signUpDetails"]["email"].ToString();
-
-                Member member = db.Members.SingleOrDefault(x => x.email == memberEmail);
-                if (member != null)
+                foreach (HobbiesDTO hobby in memberSignupDTO.hobbies)
                 {
 
-                    string sqlFeedSettings = "INSERT INTO [FeedSettings] (memberId, memberType, postLocation, participantGender, participantAgeRange) VALUES ('" + member.id + "', '" + jsonData["feedSettings"]["memberType"] + "', '" + jsonData["feedSettings"]["postsLocation"] + "', '" + jsonData["feedSettings"]["fromGender"].ToString().Replace("'", "") + "', '" + jsonData["feedSettings"]["participantAgeRange"] + "')";
-                    //return Request.CreateResponse(HttpStatusCode.OK, sqlFeedSettings);
-                    db.Database.ExecuteSqlCommand(sqlFeedSettings);
+                    MembersHobby hobbies = new MembersHobby();
+                    hobbies.hobbyId = hobby.id;
+                    hobbies.memberId = member.id;
+                    db.MembersHobbies.Add(hobbies);
 
-                    string sqlHobbies = "INSERT INTO [MembersHobbies] (memberId, hobbyId) VALUES ";
-                    foreach (JObject hobby in jsonData["hobbies"])
-                    {
-                        sqlHobbies = sqlHobbies + "('" + member.id + "', '" + hobby["id"] + "'), ";
-                    }
-                    sqlHobbies = sqlHobbies.Remove(sqlHobbies.Length - 2);
-                    //return Request.CreateResponse(HttpStatusCode.OK, sqlHobbies);
-                    db.Database.ExecuteSqlCommand(sqlHobbies);
-
-                    MemberDTO memberDTO = new MemberDTO()
-                    {
-                        id = member.id,
-                        name = member.fullName,
-                        helpType = member.helpType,
-                        gender = member.gender,
-                        dateOfBirth = member.dateOfBirth
-
-                    };
-                    return Request.CreateResponse(HttpStatusCode.OK, memberDTO);
                 }
+                db.SaveChanges();
+
+                AuthorizedMemberDetailsDTO authorizedMemberDetailsDTO = new AuthorizedMemberDetailsDTO()
+                {
+                    id = member.id,
+                    name = member.fullName,
+                    participantAge = memberSignupDTO.feedSettings.participantAgeRange,
+                    participantGender = memberSignupDTO.feedSettings.participantGender,
+                    helpType = memberSignupDTO.feedSettings.memberType,
 
 
 
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "User creation failed");
+                };
+
+                return Request.CreateResponse(HttpStatusCode.OK, authorizedMemberDetailsDTO);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured (User probably already exists): "+e.Message);
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }
