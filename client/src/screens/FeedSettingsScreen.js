@@ -10,7 +10,10 @@ import HorizontalLine from '../components/HorizontalLine';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
+import { useSelector, useDispatch } from 'react-redux';
 
+import { register } from '../../store/actions/auth';
+import { REGISTER_SUCCESS } from '../../store/actions/types';
 
 
 const FeedSettingsScreen = (props) => {
@@ -26,7 +29,7 @@ const FeedSettingsScreen = (props) => {
   const [uploadedPicture, setUploadedPicture] = useState({});
   const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
 
-
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
@@ -205,6 +208,8 @@ const FeedSettingsScreen = (props) => {
     // console.log("full sign up details " + fullSignUpDetails.hobbies[0].name)
     /// now send fullSignUpDetails to the server 
 
+    dispatch(register(fullSignUpDetails));
+
 
   }
   const checkIfFormIsFilled = (obj) => {
@@ -341,6 +346,8 @@ const FeedSettingsScreen = (props) => {
         <FormButton
           buttonTitle="Complete Sign Up"
           onPress={() => completeSignUp()}
+          // onPress={() => dispatch(register(fullSignUpDetails))}
+          
 
         //  onPress={() => register(email, password)} go to - profile setup
         />

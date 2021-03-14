@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker';
 import MyCamera from '../components/MyCamera';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
@@ -33,9 +34,9 @@ const ProfileSetup = (props) => {
   const [visible, setVisible] = useState(false);
   const [bio, setBio] = useState();
   const [occupation, setOccupation] = useState();
+  const [dateLabel, setDateLabel] = useState('Date of birth');
   const [gender, setGender] = useState();
   const [hobbies, setHobbies] = useState([]);
-  const [dateLabel, setDateLabel] = useState('Date of birth');
   const [unixDate, setUnixDate] = useState(new Date());
 
   const toggleOverlay = () => {
@@ -206,27 +207,15 @@ const ProfileSetup = (props) => {
   const [show, setShow] = useState(false);
 
   const onChangeDate = (event, selectedDate) => {
-    // alert(1)
-
-    if (selectedDate === undefined) {
-      alert(1);
-      setShow(Platform.OS === 'ios');
-      return null;
-    }
 
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
-
     setDate(currentDate);
-
     // // console.log(selectedDate.toString())
     let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
     setDateLabel(slicedDate)
     let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
     setUnixDate(unixDateToSend)
-    // setShow(false);
-    // setShow(!show)
-
   };
 
   const showMode = (currentMode) => {
@@ -260,25 +249,24 @@ const ProfileSetup = (props) => {
   }
 
 
-  // let datePicker = show ?
-  //   <DateTimePicker
-  //     testID="dateTimePicker"
-  //     value={date}
-  //     mode={mode}
-  //     is24Hour={true}
-  //     display="default"
-  //     onChange={onChangeDate}
-  //   /> : <Text></Text>
-
-
+  let datePicker = show ?
+    <DateTimePicker
+      testID="dateTimePicker"
+      value={date}
+      mode={mode}
+      is24Hour={true}
+      display="default"
+      onChange={onChangeDate}
+    /> : <Text></Text>
 
 
 
 
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
-    <View >
-      <MyBottomSheet visible={visible} toggle={toggleOverlay} header="Set Profile Image" >
+    <ScrollView >
+
+      <MyBottomSheet visible={visible} toggle={toggleOverlay} >
         <View>
           <View style={styles.btnContainer}>
             <Button
@@ -317,13 +305,12 @@ const ProfileSetup = (props) => {
       </MyBottomSheet>
 
       <View style={styles.container}>
-        <View style={{ alignItems: 'center' }} >
+        <View style={{ alignItems: 'center' }}>
           <Text style={styles.text}>Profile Setup</Text>
           <View style={styles.imageContainer}>
             {image}
           </View>
         </View>
-
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>CURRENT CITY</Text>
@@ -337,34 +324,6 @@ const ProfileSetup = (props) => {
             autoCorrect={true}
             onChangeText={(text) => setCity(text)} />
         </View>
-
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>SHORT BIO</Text>
-
-          <TextArea
-            labelValue={bio}
-            placeholderText="What do you want people to know about you?"
-            iconType="calendar"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setBio(text)}
-
-          />
-        </View >
-
-
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>OCCUPATION</Text>
-
-          <FormInput
-            labelValue={occupation}
-            placeholderText="Occupation"
-            iconType="suitcase"
-            onChangeText={(text) => setOccupation(text)}
-          />
-        </View>
-
-
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>DATE OF BIRTH</Text>
           <TouchableOpacity onPress={showDatepicker}>
@@ -383,7 +342,16 @@ const ProfileSetup = (props) => {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>OCCUPATION</Text>
 
+          <FormInput
+            labelValue={occupation}
+            placeholderText="Occupation"
+            iconType="suitcase"
+            onChangeText={(text) => setOccupation(text)}
+          />
+        </View>
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>GENDER</Text>
@@ -391,8 +359,8 @@ const ProfileSetup = (props) => {
           <DropDownPicker
             placeholder="Select"
             items={[
-              { label: 'Male', value: 'male' },
-              { label: 'Female', value: 'female' },
+              { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
+              { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
             ]}
             //defaultValue={null}
             containerStyle={styles.dropDownContainer}
@@ -405,7 +373,19 @@ const ProfileSetup = (props) => {
             }
           />
         </View>
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>SHORT BIO</Text>
 
+          <TextArea
+            labelValue={bio}
+            placeholderText="What do you want people to know about you?"
+            iconType="calendar"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) => setBio(text)}
+
+          />
+        </View >
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>HOBBIES</Text>
 
@@ -414,9 +394,7 @@ const ProfileSetup = (props) => {
               title={hobbisTitleFunc()}
               type="outline"
               raised={true}
-              buttonStyle={{
-                padding: 15, width: windowWidth / 1.1,
-              }}
+              buttonStyle={{ padding: 15 }}
               onPress={() => props.navigation.navigate('HobbiesScreen')}
 
             />
@@ -424,13 +402,11 @@ const ProfileSetup = (props) => {
         </View>
 
         <View  >
-          <View style={{ alignItems: 'flex-start' }}>
-            <FormButton
-              buttonTitle="Next"
-              onPress={() => goToFeedSettings()}
+          <FormButton
+            buttonTitle="Next"
+            onPress={() => goToFeedSettings()}
 
-            />
-          </View>
+          />
         </View>
 
 
@@ -464,29 +440,17 @@ const ProfileSetup = (props) => {
 
 
       </View>
-    </View >
+    </ScrollView >
 
 
   return (
     // <Fragment>
 
     <Fragment>
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} /> */}
-      <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1000} />
-
+      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} />
 
       {profileSetupScreen}
-      {show ? <DateTimePicker
-        testID="dateTimePicker"
-        value={date}
-        mode={mode}
-        is24Hour={true}
-        display="default"
-        onChange={onChangeDate}
-
-      /> : null}
-      {/* {datePicker} */}
+      {datePicker}
     </Fragment>
     // </Fragment>
 
@@ -499,36 +463,34 @@ const styles = StyleSheet.create({
   container: {
     //  backgroundColor: 'fff',
     // backgroundColor: '#f9fafd',
-    //flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'stretch',
-
-    padding: windowWidth / 20,
+    // flex: 1,
+    // justifyContent: 'flex-start',
+    //  alignItems: 'flex-start',
+    padding: 15,
 
   },
   text: {
 
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: 0,
+    marginBottom: 10,
     color: '#051d5f',
-    // marginLeft: windowHeight / 60,
-    marginTop: windowHeight / 100
+    margin: 40
   },
 
 
   logo: {
-    height: 100,
-    width: 100,
+    height: 200,
+    width: 200,
     resizeMode: 'cover',
   },
   camera: {
     height: 100,
     width: 100,
-    //  resizeMode: 'cover',
+    resizeMode: 'cover',
   },
   imageContainer: {
-    // marginLeft: windowWidth / 5
+    padding: 20
   },
   overlayStyle: {
     flex: 1,
@@ -548,23 +510,21 @@ const styles = StyleSheet.create({
   },
   dropDownContainer: {
 
-    marginTop: windowHeight / 110,
-    marginBottom: windowHeight / 100,
-    //width: '98%',
+    marginTop: 5,
+    marginBottom: 10,
+    width: '98%',
     height: windowHeight / 15,
 
   },
   profileImage: {
-    width: windowWidth / 4,
-    height: windowWidth / 4,
-    margin: windowHeight / 80
+    width: 120,
+    height: 120
   },
   setupParams: {
     fontSize: 14,
     fontStyle: 'italic'
   },
   setupParamsContainer: {
-    width: windowWidth / 1.1
   }
 
 });
