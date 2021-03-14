@@ -1,21 +1,16 @@
 import React, { useState, Fragment } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, useWindowDimensions, KeyboardAvoidingView, Platform } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native'
 import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Icon as MyIcon } from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import PublishPostTextArea from '../components/PublishPostTextArea';
 
-import ModalDropdown from 'react-native-modal-dropdown';
 
 import ModalSelector from 'react-native-modal-selector'
-import { CheckBox } from 'react-native';
-import HorizontalLine from '../components/HorizontalLine';
 import { Divider } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
 import FormButton from '../components/FormButton';
 // import { Button } from 'react-native';
 import MyOverlay from '../components/MyOverlay';
@@ -79,7 +74,7 @@ const PostPublishScreen = () => {
     const [locationLabel, setLocationLabel] = useState(null);
     const [postLongitude, setPostLongitude] = useState(null);
     const [postLatitude, setPostLatitude] = useState(null);
-    const [unixDate, setUnixDate] = useState();
+    const [unixDate, setUnixDate] = useState(null);
 
 
 
@@ -89,9 +84,7 @@ const PostPublishScreen = () => {
 
     let userName = useSelector(state => state.auth.userName);
     const [userType, setUserType] = useState(useSelector(state => state.auth.userType));
-    console.log(userType)
     const [participantGender, setParticipantGender] = useState(useSelector(state => state.auth.participantGender));
-    console.log(participantGender)
     const [participantAge, setParticipantAge] = useState(useSelector(state => state.auth.participantAge));
     const [initalUserTypeValue, setInitalUserTypeValue] = useState(userType)
 
@@ -157,11 +150,11 @@ const PostPublishScreen = () => {
     ]
 
     const resetPost = () => {
-        setPostContent("")
+        setPostContent()
         setHaveDateFromPicker(false)
         setSpecificDate(true);
-        setLocationLabel(null)
-        setUnixDate(null)
+        setLocationLabel()
+        setUnixDate()
 
     }
 
@@ -180,8 +173,16 @@ const PostPublishScreen = () => {
 
     const setLocation = (locationObj) => {
         setLocationLabel(locationObj.locationLabel);
-        setPostLatitude(locationObj.latitude);
-        setPostLongitude(locationObj.longitude);
+        if (locationObj.latitude != undefined) {
+            setPostLatitude(locationObj.latitude);
+            setPostLongitude(locationObj.longitude);
+        }
+        else {
+            setPostLatitude(null);
+            setPostLongitude(null);
+
+        }
+
         console.log("Post location saved!!")
 
     }
@@ -189,6 +190,7 @@ const PostPublishScreen = () => {
     const publishPost = () => {
         let isZoom = locationLabel === 'Zoom Meeting' ? true : false
         let recurring = unixDate == null ? true : false
+
 
         let postDetails = {
             category: postCategory,
@@ -204,11 +206,35 @@ const PostPublishScreen = () => {
         }
         console.log(postDetails)
 
+
+        if (checkIfFormIsFilled(postDetails) || postDetails.helpType == "Both") {
+            Alert.alert(
+                "",
+                "Please fill the entire form",
+                [
+                    { text: "OK" }
+                ],
+            );
+            return null
+        }
+
+
+    }
+
+    const checkIfFormIsFilled = (obj) => {
+
+        for (const x in obj) {
+
+            if (obj[x] === undefined) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
     return (
-        <View style={styles.container}  >
+        <View style={styles.container}>
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
                 <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
             </MyOverlay>
