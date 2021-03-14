@@ -35,9 +35,9 @@ const ProfileSetup = (props) => {
   const [bio, setBio] = useState();
   const [occupation, setOccupation] = useState();
   const [dateLabel, setDateLabel] = useState('Date of birth');
-  const [gender, setGender] = useState();
+  const [gender, setGender] = useState(null);
   const [hobbies, setHobbies] = useState([]);
-  const [unixDate, setUnixDate] = useState(new Date());
+  const [unixDate, setUnixDate] = useState(null);
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -305,7 +305,7 @@ const ProfileSetup = (props) => {
       </MyBottomSheet>
 
       <View style={styles.container}>
-        <View style={{ alignItems: 'center' }}>
+        <View style={styles.headerContainer}>
           <Text style={styles.text}>Profile Setup</Text>
           <View style={styles.imageContainer}>
             {image}
@@ -325,6 +325,29 @@ const ProfileSetup = (props) => {
             onChangeText={(text) => setCity(text)} />
         </View>
         <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>SHORT BIO</Text>
+
+          <TextArea
+            labelValue={bio}
+            placeholderText="What do you want people to know about you?"
+            iconType="calendar"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={(text) => setBio(text)}
+
+          />
+        </View >
+        <View style={styles.setupParamsContainer}>
+          <Text style={styles.setupParams}>OCCUPATION</Text>
+
+          <FormInput
+            labelValue={occupation}
+            placeholderText="Occupation"
+            iconType="suitcase"
+            onChangeText={(text) => setOccupation(text)}
+          />
+        </View>
+        <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>DATE OF BIRTH</Text>
           <TouchableOpacity onPress={showDatepicker}>
             <FormInput
@@ -342,16 +365,7 @@ const ProfileSetup = (props) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>OCCUPATION</Text>
 
-          <FormInput
-            labelValue={occupation}
-            placeholderText="Occupation"
-            iconType="suitcase"
-            onChangeText={(text) => setOccupation(text)}
-          />
-        </View>
 
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>GENDER</Text>
@@ -373,19 +387,7 @@ const ProfileSetup = (props) => {
             }
           />
         </View>
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>SHORT BIO</Text>
 
-          <TextArea
-            labelValue={bio}
-            placeholderText="What do you want people to know about you?"
-            iconType="calendar"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setBio(text)}
-
-          />
-        </View >
         <View style={styles.setupParamsContainer}>
           <Text style={styles.setupParams}>HOBBIES</Text>
 
@@ -402,11 +404,13 @@ const ProfileSetup = (props) => {
         </View>
 
         <View  >
-          <FormButton
-            buttonTitle="Next"
-            onPress={() => goToFeedSettings()}
+          <View style={styles.nextBtnContainer}>
+            <FormButton
+              buttonTitle="Next"
+              onPress={() => goToFeedSettings()}
 
-          />
+            />
+          </View>
         </View>
 
 
@@ -473,9 +477,9 @@ const styles = StyleSheet.create({
 
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: 10,
+    // marginBottom: 10,
     color: '#051d5f',
-    margin: 40
+    marginTop: 10
   },
 
 
@@ -490,7 +494,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    padding: 20
+    margin: windowHeight / 50
   },
   overlayStyle: {
     flex: 1,
@@ -517,14 +521,22 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    width: 120,
-    height: 120
+    // marginTop: windowHeight / 30,f
+    width: windowWidth / 4,
+    height: windowWidth / 4
   },
   setupParams: {
     fontSize: 14,
     fontStyle: 'italic'
   },
   setupParamsContainer: {
+  },
+  headerContainer: {
+    // marginTop: windowHeight / ,
+    alignItems: 'center'
+  },
+  nextBtnContainer: {
+
   }
 
 });
