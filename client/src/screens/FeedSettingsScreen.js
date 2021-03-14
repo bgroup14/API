@@ -23,7 +23,7 @@ const FeedSettingsScreen = (props) => {
   const [participantAgeRange, setParticipantAgeRange] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
-  const [hobbies, setHobbies] = useState({});
+  const [hobbies, setHobbies] = useState([]);
   const [imageWasUploaded, setImageWasUploaded] = useState(false);
 
   const [uploadedPicture, setUploadedPicture] = useState({});
