@@ -216,6 +216,7 @@
     <Compile Include="Controllers\HobbiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
+    <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\AuthorizedMemberDetailsDTO.cs" />
     <Compile Include="DTO\FeedSettingsDTO.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="DTO\MembersHobbiesDTO.cs" />
     <Compile Include="DTO\MemberLoginDTO.cs" />
     <Compile Include="DTO\MemberSignupDTO.cs" />
+    <Compile Include="DTO\PostDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
