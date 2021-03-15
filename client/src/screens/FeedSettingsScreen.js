@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
-import FormInput from '../components/FormInput';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import FormButton from '../components/FormButton';
-import { Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { CheckBox } from 'react-native-elements'
 import HorizontalLine from '../components/HorizontalLine';
 import MyLinearGradient from '../components/MyLinearGradient';
@@ -13,10 +10,9 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { register } from '../../store/actions/auth';
-import { REGISTER_SUCCESS } from '../../store/actions/types';
 
 
-const FeedSettingsScreen = (props) => {
+const FeedSettingsScreen = () => {
   const [userType, setUserType] = useState();
   const [postsLocation, setPostsLocation] = useState();
   const [fromGender, setFromGender] = useState();
@@ -25,12 +21,9 @@ const FeedSettingsScreen = (props) => {
   const [profileSetupDetails, setProfileSetupDetails] = useState({});
   const [hobbies, setHobbies] = useState([]);
   const [imageWasUploaded, setImageWasUploaded] = useState(false);
-
   const [uploadedPicture, setUploadedPicture] = useState({});
   const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
-
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     getDataFromAS();
@@ -70,29 +63,13 @@ const FeedSettingsScreen = (props) => {
 
     } catch (e) {
       console.log("error in feed setting page !!")
-      //  console.log(e.message)
-      // error reading value
+
     }
   }
-  const check = () => {
-
-    // console.log("photo after uploading is  " + uploadedPicture.uri)
-    console.log("unix date is: " + profileSetupDetails.date)
-    // console.log("gender is: " + profileSetupDetails.gender)
-    // console.log("profie image path is : " + profileSetupDetails.myImage)
-    // console.log(signUpDetails.fullName)
-    // console.log("hobbies length is " + hobbies.length)
-    // console.log("hobbies name is " + hobbies[0].name)
-    // console.log("hobbies id is " + hobbies[0].id)
-
-  }
-
-
 
   const imageUpload = () => {
 
     let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
-    // let imgName = 'imgFromCamera.jpg';
     let imgName = signUpDetails.email + '_imgFromCamera.jpg';
     let imgUri = profileSetupDetails.image
     let dataI = new FormData();
@@ -124,12 +101,7 @@ const FeedSettingsScreen = (props) => {
           let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
           setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
 
-
-          // this.setState({
-          //   uplodedPicUri: { uri: this.uplodedPicPath + imageNameWithGUID },
-          // });
           console.log("img uploaded successfully!");
-          // return uplodedPicPath + imageNameWithGUID;
         }
         else {
           console.log('error uploding ...');
@@ -141,33 +113,9 @@ const FeedSettingsScreen = (props) => {
       });
   }
 
-  // const storeFeedSettingsToAs = async () => {
 
-  //   let value = {
-  //     userType,
-  //     postsLocation,
-  //     fromGender,
-  //    participantAgeRange
-  //   }
-
-  //   /// change this to send it to the server insead of the asyc storage
-  //   try {
-  //     const jsonValue = JSON.stringify(value)
-  //     await AsyncStorage.setItem('feedSettings', jsonValue)
-  //     console.log("Feed settings saved to AS!")
-  //   } catch (e) {
-  //     // saving error
-  //     console.log(e)
-  //   }
-  // }
 
   const completeSignUp = () => {
-
-
-    /// here i will check if profileSetupDetails.image includes 'https'
-    /// if it inculeds  we wont upload the picture and just continue with the function below
-    /// if it dosent inculeds 'https' we upload the picture to the server and then set the res url to profileSetupDetails.image and then send it to db with the function below
-    // if (!profileSetupDetails.image.includes("https")) {
 
     const feedSettings = {
 
@@ -187,8 +135,6 @@ const FeedSettingsScreen = (props) => {
       return null
     }
 
-
-
     profileSetupDetails.image = uploadedPicture.uri != undefined ? uploadedPicture.uri : null;
 
     let registerDetails = {
@@ -205,9 +151,7 @@ const FeedSettingsScreen = (props) => {
       hobbies
     }
 
-    //console.log(signUpDetails)
     let fullSignUpDetails = {
-
       signUpDetails,
       profileSetupDetails,
       feedSettings,
@@ -215,19 +159,9 @@ const FeedSettingsScreen = (props) => {
 
 
     }
-
-    /// here i should check every thing that is inside fullsignupdetails and to see that its not null or undefiend
-    ///and then send everything to the server
-
     console.log("full sign up details " + fullSignUpDetails.signUpDetails)
-    // console.log("full sign up details " + fullSignUpDetails.hobbies[0].name)
-    /// now send fullSignUpDetails to the server 
-
     clearAsyncStorage()
-
     dispatch(register(registerDetails));
-
-
   }
 
 
@@ -259,61 +193,47 @@ const FeedSettingsScreen = (props) => {
     <ScrollView >
       {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1500} />
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#ace0f9" height={1500} /> */}
 
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Text style={styles.text}>Feed Settings</Text>
         </View>
         <Text style={styles.feedSettingsFilterText}>Do you</Text>
-
         <View style={styles.radioBtnContainer}>
-
           <CheckBox containerStyle={styles.CheckBox}
             title='Give Help'
             checked={userType == 'Give Help'}
             onPress={() => userType != 'Give Help' ? setUserType('Give Help') : setUserType(null)}
-
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='Need Help'
             checked={userType == 'Need Help'}
             onPress={() => userType != 'Need Help' ? setUserType('Need Help') : setUserType(null)}
-
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='Both'
             checked={userType == 'Both'}
             onPress={() => userType != 'Both' ? setUserType('Both') : setUserType(null)}
-
           />
         </View>
         <HorizontalLine />
 
-
-
-        <Text style={styles.feedSettingsFilterText}>Post's location</Text>
-
-
+        <Text style={styles.feedSettingsFilterText}>Volunteering location</Text>
         <View style={styles.radioBtnContainer}>
-
           <CheckBox containerStyle={styles.CheckBox}
             title='My Area'
             checked={postsLocation == 'My Area'}
             onPress={() => postsLocation != 'My Area' ? setPostsLocation('My Area') : setPostsLocation(null)}
-
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='30KM'
             checked={postsLocation == '30KM'}
             onPress={() => postsLocation != '30KM' ? setPostsLocation('30KM') : setPostsLocation(null)}
-
           />
           <CheckBox containerStyle={styles.CheckBox}
             title='All Country'
             checked={postsLocation == 'All Country'}
             onPress={() => postsLocation != 'All Country' ? setPostsLocation('All Country') : setPostsLocation(null)}
-
           />
         </View>
         <HorizontalLine />
@@ -376,35 +296,8 @@ const FeedSettingsScreen = (props) => {
         <FormButton
           buttonTitle="Complete Sign Up"
           onPress={() => completeSignUp()}
-        // onPress={() => dispatch(register(fullSignUpDetails))}
-
-
-        //  onPress={() => register(email, password)} go to - profile setup
         />
 
-        <FormButton
-          buttonTitle="Complete Sign U!!!p"
-          onPress={() => check()}
-        // onPress={() => dispatch(register(fullSignUpDetails))}
-
-
-        //  onPress={() => register(email, password)} go to - profile setup
-        />
-        {/* 
-        <Button title='check data from as'
-          onPress={() => check()}
-        />
-        <Button title='Upload image'
-          onPress={() => imageUpload()}
-        /> */}
-
-
-        {/* 
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => props.navigation.navigate('SignIn')}>
-          <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-        </TouchableOpacity> */}
       </ View>
     </ScrollView >
   );
@@ -414,36 +307,17 @@ export default FeedSettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: '#f9fafd',
-    // flex: 1,
-    // alignItems: 'center',
     padding: windowWidth / 20,
 
   },
   radioBtnContainer: {
-    // flexDirection: 'row',
-    //flexWrap: 'wrap',
-    // borderWidth: 1,
-    //   borderColor: '#ccc',
-    //justifyContent: 'flex-start',
-    marginVertical: windowHeight / 80,
+
+    marginVertical: windowHeight / 150,
     width: '100%',
-    // elevation: 4,
-    // shadowOffset: { width: 5, height: 5 },
-    // shadowColor: "grey",
-    // shadowOpacity: 0.5,
-    // shadowRadius: 10,
-    // backgroundColor: '#dfe9f3'
-    //   backgroundColor: '#f2f2f2'
-
-
-
-  }
-  ,
+  },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    // marginBottom: 10,
     color: '#051d5f',
     marginBottom: windowHeight / 25,
     marginTop: windowHeight / 30
@@ -457,24 +331,12 @@ const styles = StyleSheet.create({
     color: '#2e64e5',
     //  fontFamily: 'Lato-Regular',
   },
-  logo: {
-    height: 150,
-    width: 150,
-    resizeMode: 'cover',
-  },
-  imageContainer: {
-    padding: 20
-  },
+
+
   CheckBox:
   {
-    //   borderRadius: 10,
-    // backgroundColor: '#f2f2f2',
-    marginVertical: 10,
-    //  borderColor: '#fff'
     borderWidth: 0,
-    // backgroundColor: '#dfe9f3'
     backgroundColor: 'transparent'
-
   },
   feedSettingsFilterText: {
     fontSize: 20,

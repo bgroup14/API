@@ -85,7 +85,6 @@ const HobbiesScreen = (props) => {
     storeDataToAs(selectedHobbies).then(
       props.navigation.navigate('ProfileSetup')
     );
-    //dispatch(saveHobbies(selectedHobbies));
 
   }
   let renderHobbies = hobbies.length > 0 ? <FlatList
@@ -138,18 +137,11 @@ const styles = StyleSheet.create({
 
   },
   radioBtnContainer: {
-    // flexDirection: 'row',
-    //flexWrap: 'wrap',
     borderWidth: 2,
     borderColor: '#ccc',
-    //justifyContent: 'flex-start',
     marginVertical: 15,
     width: '100%',
-
-
-
-  }
-  ,
+  },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
@@ -174,6 +166,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     padding: 20
   },
+
   button: {
 
   }

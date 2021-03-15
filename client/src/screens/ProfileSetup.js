@@ -1,12 +1,11 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, ScrollView, Platform } from 'react-native';
+import React, { Fragment, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import TextArea from '../components/TextArea';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import MyOverlay from '../components/MyOverlay';
 import * as ImagePicker from 'expo-image-picker';
 import MyCamera from '../components/MyCamera';
 
@@ -18,12 +17,6 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
 import MyLinearGradient from '../components/MyLinearGradient';
-
-
-// import { BottomSheet } from 'react-native-btr';
-
-
-
 
 
 
@@ -44,13 +37,9 @@ const ProfileSetup = (props) => {
   };
 
 
-  // useEffect(() => {
-  //   getDataFromAS();
-
-  // }, [])
-
   useFocusEffect(
     React.useCallback(() => {
+      console.log(windowHeight)
 
       getDataFromAS();
 
@@ -61,17 +50,6 @@ const ProfileSetup = (props) => {
   const takePhoto = async () => {
     toggleOverlay();
     setCameraOn(true)
-    // const photo = await ref.current.takePictureAsync({ quality: 0.2 });
-    // console.log("in my profile setup")
-    // try {
-
-    //   setSelectedImage(photo.uri);
-    //   //setImageHasSelected(true)
-    //   setCameraOn(false);
-    //   console.debug(photo)
-    // } catch (error) {
-
-    // }
 
   }
   //Check if delete this below???
@@ -146,12 +124,9 @@ const ProfileSetup = (props) => {
       gender,
       date: unixDate,
       image,
-      // myImage: selectedImage,
-      // fbImage: signUpDetails.fbImage
 
 
     }
-    //  console.log(signUpDetails)
     storeData(profileSetupDetails).then(
       props.navigation.navigate('FeedSettings')
     );
@@ -168,11 +143,7 @@ const ProfileSetup = (props) => {
   }
 
 
-  const check = () => {
-    console.log(hobbies)
-    console.log(hobbies.length)
 
-  }
   let image = signUpDetails.fbImage ? <Image
     source={{ uri: signUpDetails.fbImage }}
     style={styles.profileImage}
@@ -197,11 +168,6 @@ const ProfileSetup = (props) => {
   }
 
 
-
-
-
-
-
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -211,7 +177,6 @@ const ProfileSetup = (props) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
-    // // console.log(selectedDate.toString())
     let slicedDate = currentDate.toString().slice(3, 15).replace(/ /g, "/").substring(1); // format of Feb/01/2020
     setDateLabel(slicedDate)
     let unixDateToSend = Math.floor(selectedDate.getTime() / 1000)
@@ -232,7 +197,6 @@ const ProfileSetup = (props) => {
     console.log(date)
     console.log(dateLabel)
     console.log("unix date is: " + unixDate)
-    //console.log(gender)
   }
 
   const hobbisTitleFunc = () => {
@@ -414,49 +378,18 @@ const ProfileSetup = (props) => {
         </View>
 
 
-        {/* <FormButton
-          buttonTitle="Check Date console log"
-          onPress={() => checkDate()}
-
-
-        />
-        <FormButton
-          buttonTitle="Check hobbies"
-          onPress={() => check()}
-
-
-        /> */}
-
-
-
-        {/* <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 30
-        }}>
-          <TouchableOpacity
-            style={styles.navButton}
-            onPress={() => props.navigation.navigate('SignIn')}>
-            <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-          </TouchableOpacity>
-        </View> */}
-
-
       </View>
     </ScrollView >
 
 
   return (
-    // <Fragment>
 
     <Fragment>
       <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} />
-
       {profileSetupScreen}
       {datePicker}
     </Fragment>
-    // </Fragment>
+
 
   );
 };
@@ -465,19 +398,12 @@ export default ProfileSetup;
 
 const styles = StyleSheet.create({
   container: {
-    //  backgroundColor: 'fff',
-    // backgroundColor: '#f9fafd',
-    // flex: 1,
-    // justifyContent: 'flex-start',
-    //  alignItems: 'flex-start',
     padding: 15,
-
   },
   text: {
 
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    // marginBottom: 10,
     color: '#051d5f',
     marginTop: 10
   },
@@ -521,7 +447,6 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    // marginTop: windowHeight / 30,f
     width: windowWidth / 4,
     height: windowWidth / 4
   },
@@ -532,7 +457,6 @@ const styles = StyleSheet.create({
   setupParamsContainer: {
   },
   headerContainer: {
-    // marginTop: windowHeight / ,
     alignItems: 'center'
   },
   nextBtnContainer: {
