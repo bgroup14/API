@@ -6,6 +6,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight } from '../../utils/Dimentions';
 import MyLinearGradient from '../components/MyLinearGradient';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const SignupScreenTest = (props) => {
   const [email, setEmail] = useState();
