@@ -4,54 +4,26 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Platform,
   StyleSheet,
-  ScrollView,
   Alert,
-  ImageBackground,
-  TextInput
 } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-
-
 import { login } from '../../store/actions/auth';
-
 import * as Facebook from 'expo-facebook';
-
 import { LOGIN_SUCCESS, USER_LOGGED } from '../../store/actions/types';
-
 import axios from 'axios';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-import { LinearGradient } from 'expo-linear-gradient';
-
-
-
-
-
-// import { useStateWithCallbackInstant } from 'use-state-with-callback'
-
-
-
-
-
-
-//Redux
-import { useSelector, useDispatch } from 'react-redux';
-import { Fragment } from 'react';
 import MyLinearGradient from '../components/MyLinearGradient';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const LoginScreen = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-
-
   const dispatch = useDispatch();
 
   const storeData = async (value) => {
@@ -65,9 +37,7 @@ const LoginScreen = (props) => {
 
 
   const signIn = () => {
-    console.log(windowHeight)
     dispatch(login(email, password));
-
   }
 
   const emailChangeHandler = (text) => {
@@ -114,8 +84,6 @@ const LoginScreen = (props) => {
         try {
           //check if member  exists on DB - if  dosent exists will catch  400 or 500 error
           let res = await axios.post(url, body, config);
-          console.log("here!!!")
-
           console.log(res.data[0])
           dispatch({
             type: LOGIN_SUCCESS,
@@ -125,17 +93,9 @@ const LoginScreen = (props) => {
 
           dispatch({
             type: USER_LOGGED,
-            //payload will be the what we recieve from the server
+            //payload will be what we recieve from the server
             payload: res.data[0]
           });
-
-          // dispatch(login(email, password));
-
-          //If email is in  db - redirect to home screen with LOGIN_SUCCESS and send the user details from server as payload 
-          // dispatch({
-          //   type: LOGIN_SUCCESS,
-          //   payload: res.data
-          // });
 
 
         } catch (error) {
@@ -148,12 +108,11 @@ const LoginScreen = (props) => {
             }
             await storeData(signUpDetails);
             goToProfileSetup();
-
           }
           else if (error.response.status == 500) {
             Alert.alert(
               "OOPS!",
-              "General error, try again",
+              "General error, please try again.",
               [
                 { text: "OK" }
               ],
@@ -161,10 +120,6 @@ const LoginScreen = (props) => {
             console.log("error is:")
             console.log(error.response)
           }
-
-
-
-
 
         }
 
@@ -176,10 +131,8 @@ const LoginScreen = (props) => {
   }
 
 
-  //firstColor="#a1c4fd" secondColor="#c2e9fb"
   return (
 
-    // <ScrollView style={{ flex: 1 }}>
     <View style={styles.container}>
       {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={1000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
@@ -193,14 +146,7 @@ const LoginScreen = (props) => {
 
       </View>
 
-      {/* <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 24 }}>
-          Welcome Back
-        </Text>
-      </View> */}
-
       <FormInput
-        // labelValue={email}
         onChangeText={(text) => emailChangeHandler(text)}
         placeholderText="Email"
         iconType="user"
@@ -208,20 +154,15 @@ const LoginScreen = (props) => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-
       <FormInput
-        //   labelValue={password}
         onChangeText={(text) => passwordChangeHanlder(text)}
         placeholderText="Password"
         iconType="lock"
         secureTextEntry={true}
       />
 
-
-
-
       <FormButton
-        buttonTitle="Sign In!"
+        buttonTitle="Sign In"
         onPress={() => signIn()}
       />
       <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20, marginTop: 20 }}>
@@ -232,26 +173,12 @@ const LoginScreen = (props) => {
         <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
       </View>
 
-      {/* <Text style={styles.text}>OR</Text> */}
-
-      {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-
-          <TouchableOpacity onPress={() => alert(2)} style={{ marginHorizontal: 20 }}>
-            <Image source={require('../../assets/google.png')} style={{ width: 60, height: 60 }} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => btnFBLogin()} style={{ marginHorizontal: 20 }}>
-            <Image source={require('../../assets/facebook.png')} style={{ width: 60, height: 60 }} />
-          </TouchableOpacity>
-
-        </View> */}
-
       <View>
         <SocialButton
           buttonTitle="Sign In with Facebook"
           btnType="facebook"
           color="#4867aa"
           backgroundColor="#e6eaf4"
-
           onPress={() => btnFBLogin()}
         />
 
@@ -263,28 +190,16 @@ const LoginScreen = (props) => {
           onPress={() => googleLogin()}
         />
       </View>
-      {/* ) : null} */}
-      <View style={{ flex: 1 }}>
 
-
-      </View>
-
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        // alignItems: 'flex-end'
-      }}>
+      <View style={styles.forgetBtnContainer}>
         <TouchableOpacity
-          //style={styles.forgotButton}
           onPress={() => props.navigation.navigate('SignUp')}>
           <Text style={styles.navButtonText}>
             Don't have an acount? Create here
         </Text>
-
         </TouchableOpacity>
       </View>
     </View>
-    // </ScrollView>
   );
 };
 
@@ -293,57 +208,33 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: '#e6f2ff',
-    //justifyContent: 'center',
     alignItems: 'center',
-    //  padding: 20,
     paddingTop: windowHeight / 40.381815,
     maxHeight: windowHeight + 200
   },
   logo: {
-
-    // justifyContent: 'flex-end',
     height: windowHeight / 4.486868333,
     width: windowHeight / 4.0381815,
-    //resizeMode: 'cover',
     marginBottom: windowHeight / 26.92121,
-
-
   },
   logoContainer: {
     marginTop: windowHeight / 26.92121,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: windowHeight / 80
 
   },
-  text: {
-    // fontFamily: 'Kufam-SemiBoldItalic',
-    fontSize: 20,
-    marginTop: windowHeight / 26.92121,
-    marginBottom: windowHeight / 40.381815,
-    // marginVertical: 30,
-    color: '#051d5f',
-  },
-  // navButton: {
-  //   marginTop: windowHeight / 2,
-  // },
-  forgotButton: {
-    marginBottom: windowHeight / 4.0381815
-    //marginVertical: 35,
 
-  },
+
   navButtonText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#2e64e5',
     //fontFamily: 'Lato-Regular',
   },
-  background: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: windowHeight
+  forgetBtnContainer: {
+    flex: 1,
+    justifyContent: 'center'
   }
+
 });

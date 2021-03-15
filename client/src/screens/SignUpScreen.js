@@ -1,13 +1,11 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight } from '../../utils/Dimentions';
 import MyLinearGradient from '../components/MyLinearGradient';
-
-// import {AuthContext} from '../navigation/AuthProvider';
 
 const SignupScreenTest = (props) => {
   const [email, setEmail] = useState();
@@ -82,23 +80,18 @@ const SignupScreenTest = (props) => {
         ],
       );
       console.log(res.status)
-      // save in async storage
-
-
-      //prop nav to profile setup
 
 
 
 
     } catch (err) {
-
+      //if status code ==400 it means email is not in DB
       if (err.response.status == 400) {
         let signUpDetails = {
           email,
           password,
           fullName
         }
-        //  console.log(signUpDetails)
         storeData(signUpDetails).then(
           props.navigation.navigate('ProfileSetup')
         );
@@ -107,7 +100,7 @@ const SignupScreenTest = (props) => {
       else if (err.response.status == 500) {
         Alert.alert(
           "OOPS!",
-          "General error, try again",
+          "General error, try again.",
           [
             { text: "OK" }
           ],
@@ -115,9 +108,6 @@ const SignupScreenTest = (props) => {
         console.log("error is:")
         console.log(err.response)
       }
-
-
-
     }
 
   }
@@ -130,7 +120,7 @@ const SignupScreenTest = (props) => {
     }
     Alert.alert(
       "OOPS!",
-      "Email is not in the correct format",
+      "Email is not in the correct format.",
       [
         { text: "OK" }
       ],
@@ -211,14 +201,8 @@ const SignupScreenTest = (props) => {
             buttonTitle="Sign Up"
             onPress={() => signUn()}
           />
-          {/* 
+
           <TouchableOpacity
-            style={styles.navButton}
-            onPress={() => props.navigation.navigate('SignIn')}>
-            <Text style={styles.navButtonText}>Have an account? Sign In</Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity
-            //style={styles.forgotButton}
             style={{ marginTop: windowHeight / 35 }}
             onPress={() => props.navigation.navigate('SignIn')}>
             <Text style={styles.navButtonText}>
@@ -237,11 +221,7 @@ export default SignupScreenTest;
 const styles = StyleSheet.create({
 
   container: {
-    //  backgroundColor: '#f9fafd',
-    // flex: 1,
     alignItems: 'center',
-    //padding: windowHeight / 40.381815,
-
   },
   text: {
     //fontFamily: 'Kufam-SemiBoldItalic',
@@ -261,7 +241,6 @@ const styles = StyleSheet.create({
   logo: {
     height: windowHeight / 5.384242,
     width: windowHeight / 5.384242,
-    resizeMode: 'cover',
   },
   imageContainer: {
     margin: windowHeight / 40.381815

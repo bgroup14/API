@@ -264,7 +264,7 @@ const PostPublishScreen = () => {
 
             <View style={styles.postOptionsContainer}>
                 <View style={styles.optionContainer}>
-                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Do You..</Text>
+                    <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Do You</Text>
 
 
                     <ModalSelector
