@@ -4,6 +4,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 
 import * as Location from 'expo-location';
+import GooglePlacesInput from '../components/GooglePlacesInput';
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 
 
@@ -12,7 +15,8 @@ const SetLocationScreen = (props) => {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [adress, setAdress] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [addressShow, setAddressShow] = useState(false);
 
     // useEffect(() => {
     //     (async () => {
@@ -68,6 +72,23 @@ const SetLocationScreen = (props) => {
         props.closeSetLocation();
         props.setLocation(locationObj);
 
+    }
+    const getCityName = (cityName) => {
+        console.log("city name is: " + cityName)
+        // setCity(cityName)
+
+    }
+    const getCoordinets = (coordinates) => {
+
+        let locationObj = {
+            locationLabel: coordinates.locationLabel,
+            longitude: coordinates.longitude,
+            latitude: coordinates.latitude
+        }
+        props.setLocation(locationObj);
+        props.closeSetLocation();
+        console.log("lat issss:" + coordinates.latitude)
+        console.log("long issss:" + coordinates.longitude)
     }
 
 
@@ -130,10 +151,15 @@ const SetLocationScreen = (props) => {
                         title="Custom Address"
                         type='clear'
                         buttonStyle={styles.locationBtn}
-                    //  onPress={() => openImagePickerAsync()}
+                        onPress={() => setAddressShow(true)}
 
                     />
+
+
                 </View>
+                {addressShow ? <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)}
+                    meeting={true} sendCoordinatesObj={(coordinates) => getCoordinets(coordinates)} />
+                    : null}
             </View>
         </View>
     )

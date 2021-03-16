@@ -28,21 +28,22 @@ export default TextArea;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 5,
-    marginBottom: 10,
+    marginTop: windowHeight / 100,
+    marginBottom: windowHeight / 80,
     width: '98.5%',
-    height: windowHeight / 8,
+    height: windowHeight / 10,
     borderColor: '#ccc',
     borderRadius: 5,
     borderWidth: 1,
-    alignItems: 'center',
+    //alignItems: 'center',
     backgroundColor: '#fff',
 
 
   },
   input: {
 
-    padding: 10,
+    marginTop: 5,
+    marginLeft: 6,
     fontSize: 16,
     // fontFamily: 'Lato-Regular',
     textAlignVertical: 'top'

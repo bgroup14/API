@@ -33,12 +33,13 @@ namespace DATA
         public bool isZoom { get; set; }
         public Nullable<int> unixDate { get; set; }
         public bool recurring { get; set; }
-        public Nullable<int> longitude { get; set; }
-        public Nullable<int> latitude { get; set; }
+        public Nullable<double> longitude { get; set; }
+        public Nullable<double> latitude { get; set; }
         public string fromGender { get; set; }
         public string timeOfDay { get; set; }
         public Nullable<int> member_id { get; set; }
         public string category { get; set; }
+        public string cityName { get; set; }
     
         public virtual Category Category1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

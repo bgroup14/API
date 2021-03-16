@@ -15,11 +15,12 @@ namespace WebApi.DTO
         public int unixDate;
         public bool recurring;
         public string fromGender;
-        public int longitude;
-        public int latitude;
+        public double longitude;
+        public double latitude;
         public string timeOfDay;
         public int member_id;
         public string category;
+        public string cityName;
 
     }
 }

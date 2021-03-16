@@ -160,12 +160,13 @@
           <Property Name="isZoom" Type="bit" Nullable="false" />
           <Property Name="unixDate" Type="int" />
           <Property Name="recurring" Type="bit" Nullable="false" />
-          <Property Name="longitude" Type="int" />
-          <Property Name="latitude" Type="int" />
+          <Property Name="longitude" Type="float" />
+          <Property Name="latitude" Type="float" />
           <Property Name="fromGender" Type="varchar" MaxLength="255" />
           <Property Name="timeOfDay" Type="varchar" MaxLength="255" />
           <Property Name="member_id" Type="int" />
           <Property Name="category" Type="varchar" MaxLength="255" />
+          <Property Name="cityName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Reviews">
           <Key>
@@ -730,8 +731,8 @@
           <Property Name="isZoom" Type="Boolean" Nullable="false" />
           <Property Name="unixDate" Type="Int32" />
           <Property Name="recurring" Type="Boolean" Nullable="false" />
-          <Property Name="longitude" Type="Int32" />
-          <Property Name="latitude" Type="Int32" />
+          <Property Name="longitude" Type="Double" />
+          <Property Name="latitude" Type="Double" />
           <Property Name="fromGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="timeOfDay" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="member_id" Type="Int32" />
@@ -742,6 +743,7 @@
           <NavigationProperty Name="Likes" Relationship="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" FromRole="Post" ToRole="Like" />
           <NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" FromRole="Post" ToRole="Location" />
           <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="Post" ToRole="MembersPost" />
+          <Property Name="cityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Review">
           <Key>
@@ -1128,6 +1130,7 @@
           <EntitySetMapping Name="Posts">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Post">
               <MappingFragment StoreEntitySet="Posts">
+                <ScalarProperty Name="cityName" ColumnName="cityName" />
                 <ScalarProperty Name="category" ColumnName="category" />
                 <ScalarProperty Name="member_id" ColumnName="member_id" />
                 <ScalarProperty Name="timeOfDay" ColumnName="timeOfDay" />

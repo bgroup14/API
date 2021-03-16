@@ -21,7 +21,7 @@ import SetLocationScreen from './SetLocationScreen';
 import axios from 'axios';
 
 
-const PostPublishScreen = () => {
+const PostPublishScreen = (props) => {
     const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
 
     useEffect(() => {
@@ -209,7 +209,8 @@ const PostPublishScreen = () => {
             unixDate,
             recurring,
             member_id: userId,
-            timeOFtheDay
+            timeOfDay: timeOFtheDay,
+            cityName: locationLabel
         }
 
 
@@ -225,9 +226,19 @@ const PostPublishScreen = () => {
         try {
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishpost", body, config);
+            resetPost();
 
             console.log(res);
-            console.log("res data (payload is:)")
+            Alert.alert(
+                "Post Publish",
+                "Post published successfully. ",
+                [
+                    { text: "OK", onPress: () => props.navigation.navigate('Home') }
+
+                ],
+            );
+
+            // console.log("res data (payload is:)")
 
         } catch (err) {
 
@@ -248,10 +259,10 @@ const PostPublishScreen = () => {
 
     return (
         <View style={styles.container}>
-            <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
+            <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
                 <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
             </MyOverlay>
-            <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}  >
+            <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
                 <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
             </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}

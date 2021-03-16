@@ -53,10 +53,11 @@ namespace WebApi.Controllers
                     timeOfDay = postDTO.timeOfDay,
                     category = postDTO.category,
                     member_id = postDTO.member_id,
+                    cityName = postDTO.cityName
                 };
                 db.Posts.Add(newPost);
 
-                /*return Request.CreateResponse(HttpStatusCode.OK, "Post saved in DB");*/
+              /*  return Request.CreateResponse(HttpStatusCode.OK, postDTO.latitude);*/
 
 
                 MembersPost newMembersPost = new MembersPost()

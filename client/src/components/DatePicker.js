@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
         // width: '95%',
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 20
+        marginTop: windowHeight / 8
     },
     header: {
         fontSize: 18
