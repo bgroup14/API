@@ -1,4 +1,8 @@
+
 import React, { useState, useEffect } from 'react'
+
+
+
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native'
 import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
@@ -60,13 +64,16 @@ const PostPublishScreen = () => {
     const [postLongitude, setPostLongitude] = useState(null);
     const [postLatitude, setPostLatitude] = useState(null);
     const [unixDate, setUnixDate] = useState(null);
+
     const [fromAgeRange, setFromAgeRange] = useState(null);
     const [toAge, setToAge] = useState(null);
+
 
     let userName = useSelector(state => state.user.userName);
     let userId = useSelector(state => state.user.userId);
     const [userType, setUserType] = useState(useSelector(state => state.user.userType));
     const [participantGender, setParticipantGender] = useState(useSelector(state => state.user.participantGender));
+
     const [initalUserTypeValue, setInitalUserTypeValue] = useState(userType)
 
     let userFirstName = userName.split(" ")[0];
@@ -116,12 +123,14 @@ const PostPublishScreen = () => {
     ]
 
     const resetPost = () => {
-        setPostContent("")
+        setPostContent()
         setHaveDateFromPicker(false)
         setSpecificDate(true);
+
         setLocationLabel(null)
         setUnixDate(null)
         setTimeOFtheDay(null)
+
 
     }
 
@@ -139,8 +148,16 @@ const PostPublishScreen = () => {
 
     const setLocation = (locationObj) => {
         setLocationLabel(locationObj.locationLabel);
-        setPostLatitude(locationObj.latitude);
-        setPostLongitude(locationObj.longitude);
+        if (locationObj.latitude != undefined) {
+            setPostLatitude(locationObj.latitude);
+            setPostLongitude(locationObj.longitude);
+        }
+        else {
+            setPostLatitude(null);
+            setPostLongitude(null);
+
+        }
+
         console.log("Post location saved!!")
 
     }
@@ -178,6 +195,7 @@ const PostPublishScreen = () => {
         let isZoom = locationLabel === 'Zoom Meeting' ? true : false
         let recurring = unixDate == null ? true : false
 
+
         let postDetails = {
             category: postCategory,
             text: postContent,
@@ -193,6 +211,7 @@ const PostPublishScreen = () => {
             member_id: userId,
             timeOFtheDay
         }
+
 
         const config = {
             headers: {
@@ -223,11 +242,12 @@ const PostPublishScreen = () => {
 
 
         }
+
     }
 
 
     return (
-        <View style={styles.container}  >
+        <View style={styles.container}>
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)} >
                 <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
             </MyOverlay>
