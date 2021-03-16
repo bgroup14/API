@@ -1,4 +1,8 @@
-import React, { useState, Fragment } from 'react'
+
+import React, { useState, useEffect } from 'react'
+
+
+
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native'
 import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,36 +11,29 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import PublishPostTextArea from '../components/PublishPostTextArea';
-
-
 import ModalSelector from 'react-native-modal-selector'
 import { Divider } from 'react-native-elements';
 import FormButton from '../components/FormButton';
-// import { Button } from 'react-native';
 import MyOverlay from '../components/MyOverlay';
-// import SearchScreen from './DatePicker';
 import DatePicker from '../components/DatePicker';
 import { Button } from 'react-native-elements';
 import SetLocationScreen from './SetLocationScreen';
+import axios from 'axios';
 
 
-
-
-
-
-
-
-//what kind of volunteering activity would you like to have
 const PostPublishScreen = () => {
+    const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
+
+    useEffect(() => {
+        setAgeRange();
+    }, [participantAge])
+
     let index = 0;
     const activityTypes = [
-        { key: index++, section: true, label: 'Post Purpose' },
+        { key: index++, section: true, label: 'Do You' },
         { key: index++, label: 'Need Help' },
         { key: index++, label: 'Give Help' },
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
+
     ];
     let indexFromWho = 0;
     const fromWho = [
@@ -45,10 +42,6 @@ const PostPublishScreen = () => {
         { key: indexFromWho++, label: 'Woman' },
         { key: indexFromWho++, label: "Dosen't Matter" },
 
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
     ];
     let indexFromAge = 0;
     const fromAge = [
@@ -58,10 +51,6 @@ const PostPublishScreen = () => {
         { key: indexFromAge++, label: '50+' },
         { key: indexFromAge++, label: "Dosen't Matter" },
 
-        // { key: index++, label: 'Cranberries', accessibilityLabel: 'Tap here for cranberries' },
-        // // etc...
-        // // Can also add additional custom keys which are passed to the onChange callback
-        // { key: index++, label: 'Vegetable', customKey: 'Not a fruit' }
     ];
 
     const [postContent, setPostContent] = useState();
@@ -69,47 +58,23 @@ const PostPublishScreen = () => {
     const [specificDate, setSpecificDate] = useState(true);
     const [haveDateFromPicker, setHaveDateFromPicker] = useState(false);
     const [dateLabel, setDateLabel] = useState();
-    const [timeOFtheDay, setTimeOFtheDay] = useState();
+    const [timeOFtheDay, setTimeOFtheDay] = useState(null);
     const [isLocationSet, setIsLocationSet] = useState(false);
     const [locationLabel, setLocationLabel] = useState(null);
     const [postLongitude, setPostLongitude] = useState(null);
     const [postLatitude, setPostLatitude] = useState(null);
     const [unixDate, setUnixDate] = useState(null);
 
+    const [fromAgeRange, setFromAgeRange] = useState(null);
+    const [toAge, setToAge] = useState(null);
 
 
-
-
-
-
-
-    // let userName = useSelector(state => state.auth.userName);
     let userName = useSelector(state => state.user.userName);
-    // const [userType, setUserType] = useState(useSelector(state => state.auth.userType));
+    let userId = useSelector(state => state.user.userId);
     const [userType, setUserType] = useState(useSelector(state => state.user.userType));
-    console.log(userType)
-    // const [participantGender, setParticipantGender] = useState(useSelector(state => state.auth.participantGender));
     const [participantGender, setParticipantGender] = useState(useSelector(state => state.user.participantGender));
-    console.log(participantGender)
-    // const [participantAge, setParticipantAge] = useState(useSelector(state => state.auth.participantAge));
-    const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
 
     const [initalUserTypeValue, setInitalUserTypeValue] = useState(userType)
-
-
-    ///DELETE all this if lines below!
-    if (userName === null) {
-        userName = 'Alann'
-    }
-    // if (userType === null) {
-    //     setUserType('Give Help')
-    // }
-    // if (participanteGender === null) {
-    //     setParticipanteGender('Dosent Matter')
-    // }
-    // if (participanteAge === null) {
-    //     setParticipanteAge('50+')
-    // }
 
     let userFirstName = userName.split(" ")[0];
     function capitalizeFirstLetter(string) {
@@ -161,8 +126,11 @@ const PostPublishScreen = () => {
         setPostContent()
         setHaveDateFromPicker(false)
         setSpecificDate(true);
-        setLocationLabel()
-        setUnixDate()
+
+        setLocationLabel(null)
+        setUnixDate(null)
+        setTimeOFtheDay(null)
+
 
     }
 
@@ -177,7 +145,6 @@ const PostPublishScreen = () => {
         setUnixDate(dateObj.unixDate)
     }
 
-    // props.closeSetLocation();
 
     const setLocation = (locationObj) => {
         setLocationLabel(locationObj.locationLabel);
@@ -195,7 +162,36 @@ const PostPublishScreen = () => {
 
     }
 
-    const publishPost = () => {
+    const setAgeRange = () => {
+        switch (participantAge) {
+            case "16-30":
+                setFromAgeRange(16)
+                setToAge(30)
+                break;
+            case "30-50":
+                setFromAgeRange(30)
+                setToAge(50)
+                break;
+            case "50+":
+                setFromAgeRange(50)
+                setToAge(99)
+                break;
+            case "Dosen't Matter":
+                setFromAgeRange(16)
+                setToAge(99)
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    const publishPost = async () => {
+
+        let meetingLatitude = postLatitude == undefined ? null : postLatitude;
+        let meetingLongitude = postLongitude == undefined ? null : postLongitude;
+
         let isZoom = locationLabel === 'Zoom Meeting' ? true : false
         let recurring = unixDate == null ? true : false
 
@@ -204,40 +200,49 @@ const PostPublishScreen = () => {
             category: postCategory,
             text: postContent,
             helpType: userType,
-            participantGender,
-            participantAge,
-            latitude: postLatitude,
-            longitude: postLongitude,
+            fromGender: participantGender,
+            fromAge: fromAgeRange,
+            toAge,
+            latitude: meetingLatitude,
+            longitude: meetingLongitude,
             isZoom,
             unixDate,
-            recurring
+            recurring,
+            member_id: userId,
+            timeOFtheDay
         }
-        console.log(postDetails)
 
 
-        if (checkIfFormIsFilled(postDetails) || postDetails.helpType == "Both") {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const body = JSON.stringify(postDetails)
+        console.log("Will publish post with body: " + body);
+
+        try {
+            //if this will fail (status !=200 ) it will catch the error in the error block
+            const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishpost", body, config);
+
+            console.log(res);
+            console.log("res data (payload is:)")
+
+        } catch (err) {
+
             Alert.alert(
-                "",
-                "Please fill the entire form",
+                "OOPS!",
+                "Error occurred, try again.",
                 [
+
                     { text: "OK" }
                 ],
             );
-            return null
+
+
         }
 
-
-    }
-
-    const checkIfFormIsFilled = (obj) => {
-
-        for (const x in obj) {
-
-            if (obj[x] === undefined) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
@@ -268,7 +273,6 @@ const PostPublishScreen = () => {
                         placeholder="Select Category"
                         items={items}
                         containerStyle={styles.dropDownContainer}
-                        // style={{ borderWidth: 1, borderColor: '' }}
                         itemStyle={{
 
                             justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
@@ -299,8 +303,8 @@ const PostPublishScreen = () => {
 
                     <ModalSelector
                         data={activityTypes}
-
-                        style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}
+                        cancelTextStyle={{ textTransform: 'capitalize' }}
+                        animationType='fade'
                         supportedOrientations={['landscape']}
                         accessible={true}
                         scrollViewAccessibilityLabel={'Scrollable options'}
@@ -323,6 +327,8 @@ const PostPublishScreen = () => {
 
                     <ModalSelector
                         data={fromWho}
+                        cancelTextStyle={{ textTransform: 'capitalize' }}
+                        animationType='fade'
                         initValue={participantGender}
                         supportedOrientations={['landscape']}
                         accessible={true}
@@ -345,6 +351,8 @@ const PostPublishScreen = () => {
 
                     <ModalSelector
                         data={fromAge}
+                        cancelTextStyle={{ textTransform: 'capitalize' }}
+                        animationType='fade'
                         initValue={participantAge}
                         supportedOrientations={['landscape']}
                         accessible={true}
@@ -380,8 +388,7 @@ const PostPublishScreen = () => {
                                 style={styles.postBtnText}
                                 editable={false}
                                 value={locationLabel} />
-                            {/* <Text style={{ fontSize: 16, margin: 6, paddingHorizontal: 4 }}>{locationLabel}</Text> */}
-                            {/* <Text style={styles.postBtnText}>{locationLabel}</Text> */}
+
                         </TouchableOpacity>}
 
 
@@ -400,11 +407,11 @@ const PostPublishScreen = () => {
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ marginHorizontal: windowWidth / 9 }}>
-                            <Button title="NO" type='solid' onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "green" } : { fontSize: 10 }} />
+                            <Button title="NO" type='solid' onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "green", borderRadius: 2 } : { fontSize: 10, borderRadius: 2 }} />
 
                         </View>
 
-                        <Button title="YES" type='solid' onPress={() => setIsvisble(true)} />
+                        <Button title="YES" type='solid' onPress={() => setIsvisble(true)} buttonStyle={{ borderRadius: 2 }} />
                     </View>
 
 
@@ -438,13 +445,6 @@ const PostPublishScreen = () => {
                 </View>
 
             </View>
-
-
-
-
-
-
-
         </View >
 
 
@@ -457,37 +457,23 @@ export default PostPublishScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // minHeight: Math.round(windowHeight + 30),
-
-        //justifyContent: 'center',
-        // alignItems: 'center',
         minHeight: Math.round(windowHeight)
     },
     barContainer: {
 
-        // flex: 0.6,
         marginTop: windowHeight / 100,
         justifyContent: 'space-between',
         alignItems: 'center',
-        //  marginLeft: 30,
-        // marginTop: 5,
         flexDirection: 'row',
         paddingLeft: 20,
         paddingRight: 30,
         height: windowHeight / 10,
-
-
-
-
-
     },
     barText: {
         color: 'black',
         fontSize: 22,
         fontWeight: 'bold',
         marginTop: 20,
-
-
     },
     barReset: {
         color: 'red',
@@ -498,8 +484,6 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
     userGreetingContainer: {
-        //  flex: 1,
-        // justifyContent: 'flex-start',
         alignItems: 'center',
         height: windowHeight / 6,
 
@@ -509,9 +493,6 @@ const styles = StyleSheet.create({
     },
     dropDownContainer: {
 
-
-        // marginTop: 5,
-        //  marginBottom: 10,
         width: '98%',
         height: windowHeight / 15,
 
@@ -523,21 +504,14 @@ const styles = StyleSheet.create({
     },
 
     postOptionsContainer: {
-        // flex: 2.5
         height: windowHeight / 2.4,
-
-
     },
     optionContainer: {
         height: windowHeight / 13,
-
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // marginTop: windowHeight / 100,
         paddingHorizontal: windowWidth / 28,
         alignItems: 'center',
-
-        // justifyContent: 'space-between'
     },
     btnContainer: {
         justifyContent: 'center',
@@ -549,17 +523,19 @@ const styles = StyleSheet.create({
 
         borderWidth: 1,
         marginTop: windowHeight / 60,
-        //borderColor: '#ccc',
-        borderColor: '#001433',
+        borderWidth: 1,
+        borderColor: '#ccc',
         height: windowHeight / 25,
         color: '#000000',
         fontSize: 16,
-        width: windowWidth / 3.1
+        width: windowWidth / 3.1,
+        borderRadius: 2
     },
     selectCategoryContainer:
     {
         width: '95%',
-        marginLeft: windowWidth / 50
+        marginLeft: windowWidth / 50,
+        borderRadius: 50
     }
 
 

@@ -5,39 +5,38 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="179582c500574ad1ab60246f23630b96" Name="Diagram1" ZoomLevel="73">
-        <EntityTypeShape EntityType="bgroup14_prodModel.Category" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.ChatHistory" Width="1.5" PointX="10.75" PointY="2.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Comment" Width="1.5" PointX="8.25" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Favorite" Width="1.5" PointX="10.75" PointY="5.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Gender" Width="1.5" PointX="1.5" PointY="11" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Hobby" Width="1.5" PointX="0.75" PointY="13.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Like" Width="1.5" PointX="8.25" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Location" Width="1.5" PointX="3.75" PointY="4.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Meeting" Width="1.5" PointX="6" PointY="1.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Member" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.MembersCategory" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.MembersHobby" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.MembersPost" Width="1.5" PointX="8.25" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Post" Width="1.5" PointX="6" PointY="6.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.Review" Width="1.5" PointX="10.75" PointY="8.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.WhereActivity" Width="1.5" PointX="3.75" PointY="11.125" IsExpanded="true" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__helpType__03F0984C" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Comments__postId__208CD6FA" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Members__genderI__628FA481" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Meetings__locati__151B244E" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersCa__count__75A278F5" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" ManuallyRouted="false" />
-        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__whereId__05D8E0BE" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="bgroup14_prodModel.FeedSetting" Width="1.5" PointX="10.375" PointY="11.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Category" Width="1.5" PointX="3.75" PointY="2.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.ChatHistory" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Comment" Width="1.5" PointX="8.25" PointY="2.875" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Favorite" Width="1.5" PointX="0.75" PointY="9.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.FeedSetting" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Gender" Width="1.5" PointX="3.75" PointY="9.375" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Hobby" Width="1.5" PointX="6" PointY="18.125" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Like" Width="1.5" PointX="8.25" PointY="6" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Location" Width="1.5" PointX="0.75" PointY="5.875" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Meeting" Width="1.5" PointX="3" PointY="5.625" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Member" Width="1.5" PointX="6" PointY="11" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.MembersCategory" Width="1.5" PointX="8.25" PointY="11.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.MembersHobby" Width="1.5" PointX="8.25" PointY="15" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.MembersPost" Width="1.5" PointX="8.25" PointY="9" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Post" Width="1.5" PointX="6" PointY="4.25" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Review" Width="1.5" PointX="10.75" PointY="3.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.WhereActivity" Width="1.5" PointX="10.75" PointY="6.75" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__helpType__03F0984C" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Comments__postId__208CD6FA" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Members__genderI__628FA481" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Meetings__locati__151B244E" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersCa__count__75A278F5" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

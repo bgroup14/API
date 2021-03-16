@@ -26,14 +26,21 @@ namespace DATA
         public string text { get; set; }
         public Nullable<int> categoryId { get; set; }
         public Nullable<int> locationId { get; set; }
-        public Nullable<int> whereId { get; set; }
         public Nullable<int> fromGenderId { get; set; }
-        public Nullable<int> datetime { get; set; }
         public Nullable<int> fromAge { get; set; }
         public Nullable<int> toAge { get; set; }
         public string helpType { get; set; }
+        public bool isZoom { get; set; }
+        public Nullable<int> unixDate { get; set; }
+        public bool recurring { get; set; }
+        public Nullable<int> longitude { get; set; }
+        public Nullable<int> latitude { get; set; }
+        public string fromGender { get; set; }
+        public string timeOfDay { get; set; }
+        public Nullable<int> member_id { get; set; }
+        public string category { get; set; }
     
-        public virtual Category Category { get; set; }
+        public virtual Category Category1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Gender Gender { get; set; }
@@ -42,6 +49,5 @@ namespace DATA
         public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembersPost> MembersPosts { get; set; }
-        public virtual WhereActivity WhereActivity { get; set; }
     }
 }
