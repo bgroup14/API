@@ -17,6 +17,7 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
 import MyLinearGradient from '../components/MyLinearGradient';
+import { RadioButton } from 'react-native-paper';
 
 
 
@@ -31,6 +32,8 @@ const ProfileSetup = (props) => {
   const [gender, setGender] = useState(null);
   const [hobbies, setHobbies] = useState([]);
   const [unixDate, setUnixDate] = useState(null);
+
+  const [checked, setChecked] = useState('first');
 
   const toggleOverlay = () => {
     setVisible(!visible);
@@ -331,16 +334,36 @@ const ProfileSetup = (props) => {
 
 
 
-        <View style={styles.setupParamsContainer}>
+        <View style={styles.genderContainer}>
           <Text style={styles.setupParams}>GENDER</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <RadioButton
+              color="blue"
+              value="first"
+              status={gender === 'Male' ? 'checked' : 'unchecked'}
+              onPress={() => setGender('Male')}
+            />
+            <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
 
-          <DropDownPicker
+
+          </View>
+          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+            <RadioButton
+              color="pink"
+              value="second"
+              status={gender === 'Female' ? 'checked' : 'unchecked'}
+              onPress={() => setGender('Female')}
+            />
+            <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
+
+          </View>
+
+          {/* <DropDownPicker
             placeholder="Select"
             items={[
               { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
               { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
             ]}
-            //defaultValue={null}
             containerStyle={styles.dropDownContainer}
             // style={{ borderWidth: 1, borderColor: '#ccc' }}
             itemStyle={{
@@ -349,7 +372,7 @@ const ProfileSetup = (props) => {
             }}
             onChangeItem={item => setGender(item.value)
             }
-          />
+          /> */}
         </View>
 
         <View style={styles.setupParamsContainer}>
@@ -442,8 +465,11 @@ const styles = StyleSheet.create({
 
     marginTop: 5,
     marginBottom: 10,
-    width: '98%',
+    width: '99%',
     height: windowHeight / 15,
+    borderRadius: 60,
+    borderColor: '#ccc',
+
 
   },
   profileImage: {
@@ -454,7 +480,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: 'italic'
   },
-  setupParamsContainer: {
+  genderContainer: {
+    marginVertical: 5
   },
   headerContainer: {
     alignItems: 'center'

@@ -37,21 +37,7 @@ export const login = (email, password) => async dispatch => {
 
 
     } catch (err) {
-        //  const errors = err.response.data.errors;
-        //  console.log(err.response.data.msg)
-        // if (errors) {
 
-        //     errors.forEach(error => dispatch(setAlert(error.msg, 'danger'))
-
-        //     );
-        // } else {
-        //     dispatch(setAlert(err.response.data.msg, 'danger'))
-        // }
-
-        // dispatch({
-        //     type: LOGIN_FAIL,
-
-        // });
         Alert.alert(
             "OOPS!",
             "Wrong Email Or Password",
@@ -61,55 +47,9 @@ export const login = (email, password) => async dispatch => {
             ],
         );
 
-        // console.log("error" + err.response.data) 
 
     }
 
-
-
-
-
-    // return {
-
-    //     type: "LOGIN_SUCCESS",
-    //     payload: email
-    // }
-
-    //For async to work in dispatch i should add thunk redux
-    // const url = "https://jsonplaceholder.typicode.com/todos/1"
-    // const settings = {
-    //     method: 'GET',
-    //     headers: {
-    //         Accept: 'application/json',
-    //         'Content-Type': 'application/json',
-    //     },
-    //     //body: JSON.stringify(data)
-    // };
-    // try {
-    //     console.log("trying...")
-    //     const fetchResponse = await fetch(url, settings);
-    //     // console.log("tryy")
-    //     console.log(fetchResponse)
-    //     const data = await fetchResponse.json();
-    //     console.log(data)
-    //     console.log("succesful dispaching")
-
-    //     return {
-
-    //         type: "LOGIN_SUCCESS",
-    //         payload: email
-    //     }
-
-    // } catch (e) {
-    //     console.log("err")
-    //     return e;
-    // }
-
-
-
-
-
-    //IF STATUS IS 200 else will be error and go to catch
 
 
 }
@@ -146,21 +86,8 @@ export const register = (fullSignUpDetails) => async dispatch => {
         });
 
     } catch (err) {
-        //  const errors = err.response.data.errors;
-        //  console.log(err.response.data.msg)
-        // if (errors) {
 
-        //     errors.forEach(error => dispatch(setAlert(error.msg, 'danger'))
 
-        //     );
-        // } else {
-        //     dispatch(setAlert(err.response.data.msg, 'danger'))
-        // }
-
-        // dispatch({
-        //     type: LOGIN_FAIL,
-
-        // });
         Alert.alert(
             "OOPS!",
             "An error has occured sending the data",

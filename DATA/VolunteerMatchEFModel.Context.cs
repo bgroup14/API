@@ -29,6 +29,7 @@ namespace DATA
         public virtual DbSet<ChatHistory> ChatHistories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Favorite> Favorites { get; set; }
+        public virtual DbSet<FeedSetting> FeedSettings { get; set; }
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<Hobby> Hobbies { get; set; }
         public virtual DbSet<Like> Likes { get; set; }
@@ -41,6 +42,5 @@ namespace DATA
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<WhereActivity> WhereActivities { get; set; }
-        public virtual DbSet<FeedSetting> FeedSettings { get; set; }
     }
 }

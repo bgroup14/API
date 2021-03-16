@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     height: windowHeight / 15,
     padding: windowWidth / 20,
     flexDirection: 'row',
-    borderRadius: 10,
+    borderRadius: 5,
   },
   iconWrapper: {
     width: 30,
