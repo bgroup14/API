@@ -210,7 +210,8 @@ const PostPublishScreen = (props) => {
             recurring,
             member_id: userId,
             timeOfDay: timeOFtheDay,
-            cityName: locationLabel
+            cityName: locationLabel,
+            dateLabel
         }
 
 
@@ -222,6 +223,7 @@ const PostPublishScreen = (props) => {
 
         const body = JSON.stringify(postDetails)
         console.log("Will publish post with body: " + body);
+
 
         try {
             //if this will fail (status !=200 ) it will catch the error in the error block

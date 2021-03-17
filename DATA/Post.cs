@@ -40,6 +40,7 @@ namespace DATA
         public Nullable<int> member_id { get; set; }
         public string category { get; set; }
         public string cityName { get; set; }
+        public string dateLabel { get; set; }
     
         public virtual Category Category1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

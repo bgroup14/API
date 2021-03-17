@@ -26,6 +26,44 @@ namespace WebApi.Controllers
         {
             return "value";
         }
+        [HttpGet]
+        [Route("getAllPosts")]
+        public List<PostDTO> GetAllPosts()
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            var posts = db.Posts.Select(x => new PostDTO()
+            {
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+               /* postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).Select(y=>y.fullName).ToString(),*/
+              /*  postCreatorImg = db.Members.Where(y => y.id == x.member_id).Select(y => y.pictureUrl).ToString(),*/
+
+            }).ToList();
+            return posts;
+
+
+
+        }
+
+
+
+
 
         // POST api/<controller>
 
@@ -53,11 +91,12 @@ namespace WebApi.Controllers
                     timeOfDay = postDTO.timeOfDay,
                     category = postDTO.category,
                     member_id = postDTO.member_id,
-                    cityName = postDTO.cityName
+                    cityName = postDTO.cityName,
+                    dateLabel = postDTO.dateLabel
                 };
                 db.Posts.Add(newPost);
 
-              /*  return Request.CreateResponse(HttpStatusCode.OK, postDTO.latitude);*/
+                /*  return Request.CreateResponse(HttpStatusCode.OK, postDTO.latitude);*/
 
 
                 MembersPost newMembersPost = new MembersPost()
