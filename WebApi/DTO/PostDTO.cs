@@ -21,6 +21,10 @@ namespace WebApi.DTO
         public int member_id;
         public string category;
         public string cityName;
+        public string postCreatorImg;
+        public string postCreatorName;
+        public int postId;
+        public string dateLabel;
 
     }
 }
