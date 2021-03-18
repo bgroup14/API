@@ -28,11 +28,15 @@ namespace WebApi.Controllers
         }
         [HttpGet]
         [Route("getAllPosts")]
+
+        /*List<PostDTO>*/
         public List<PostDTO> GetAllPosts()
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+          /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
             var posts = db.Posts.Select(x => new PostDTO()
             {
                 text = x.text,
@@ -51,9 +55,8 @@ namespace WebApi.Controllers
                 cityName = x.cityName,
                 dateLabel = x.dateLabel,
                 postId = x.id,
-               /* postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).Select(y=>y.fullName).ToString(),*/
-              /*  postCreatorImg = db.Members.Where(y => y.id == x.member_id).Select(y => y.pictureUrl).ToString(),*/
-
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl
             }).ToList();
             return posts;
 

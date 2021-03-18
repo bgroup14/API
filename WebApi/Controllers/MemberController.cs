@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         // GET api/<controller>
         public string Get()
         {
-            
+
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
             Member member = db.Members.SingleOrDefault(x => x.fullName == "alan skverer");
@@ -68,11 +68,11 @@ namespace WebApi.Controllers
                     helpType = x.memberType,
                     participantAge = x.participantAgeRange,
                     participantGender = x.participantGender,
-
-
+                    meetingLocation = x.postLocation
+                 
                 });
 
-                
+
 
                 return Request.CreateResponse(HttpStatusCode.OK, AuthorizedMemberDetails);
 
@@ -110,11 +110,12 @@ namespace WebApi.Controllers
                         helpType = x.memberType,
                         participantAge = x.participantAgeRange,
                         participantGender = x.participantGender,
+                        meetingLocation = x.postLocation
 
 
                     });
 
-                  
+
                     return Request.CreateResponse(HttpStatusCode.OK, AuthorizedMemberDetails);
                 }
 
@@ -131,7 +132,7 @@ namespace WebApi.Controllers
 
         }
 
-       
+
 
 
         [HttpPost]
@@ -151,7 +152,7 @@ namespace WebApi.Controllers
                 member.gender = memberSignupDTO.gender;
                 member.biography = memberSignupDTO.bio;
                 member.dateOfBirth = memberSignupDTO.dateOfBirth;
-                
+
                 db.Members.Add(member);
                 db.SaveChanges();
                 FeedSetting feedSetting = new FeedSetting
@@ -166,21 +167,21 @@ namespace WebApi.Controllers
                 /* db.SaveChanges();*/
 
 
-               
-                
-                 
 
-                    foreach (HobbiesDTO hobby in memberSignupDTO.hobbies)
-                    {
 
-                        MembersHobby hobbies = new MembersHobby();
-                        hobbies.hobbyId = hobby.id;
-                        hobbies.memberId = member.id;
-                        db.MembersHobbies.Add(hobbies);
 
-                    }
-              
-               
+
+                foreach (HobbiesDTO hobby in memberSignupDTO.hobbies)
+                {
+
+                    MembersHobby hobbies = new MembersHobby();
+                    hobbies.hobbyId = hobby.id;
+                    hobbies.memberId = member.id;
+                    db.MembersHobbies.Add(hobbies);
+
+                }
+
+
                 db.SaveChanges();
 
                 AuthorizedMemberDetailsDTO authorizedMemberDetailsDTO = new AuthorizedMemberDetailsDTO()
@@ -190,9 +191,7 @@ namespace WebApi.Controllers
                     participantAge = memberSignupDTO.feedSettings.participantAgeRange,
                     participantGender = memberSignupDTO.feedSettings.participantGender,
                     helpType = memberSignupDTO.feedSettings.memberType,
-
-
-
+                    meetingLocation = memberSignupDTO.feedSettings.postLocation
                 };
 
                 return Request.CreateResponse(HttpStatusCode.OK, authorizedMemberDetailsDTO);

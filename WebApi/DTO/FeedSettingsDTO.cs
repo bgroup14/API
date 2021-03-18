@@ -12,6 +12,7 @@ namespace WebApi.DTO
         public string postLocation;
         public string participantGender;
         public string participantAgeRange;
+        public string meetingLocation;
         
     }
 

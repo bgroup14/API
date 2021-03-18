@@ -8,7 +8,9 @@ import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import PublishPostTextArea from '../components/PublishPostTextArea';
 import ModalSelector from 'react-native-modal-selector'
@@ -114,12 +116,12 @@ const PostPublishScreen = (props) => {
 
     let userGiveOrGet = setUserGiveOrGetHelp();
     let greeting = createGreeting();
-    let items = [
-        { label: 'Sport', value: 'Sport', icon: () => <Icon name="running" size={22} color="#000000" /> },
+    let categories = [
+        { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
         { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
         { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
-        { label: 'Elder People', value: 'Elder', icon: () => <Icon name="hand-holding-heart" size={24} color="#000000" /> },
-        { label: 'General', value: 'General', icon: () => <Icon name="hands-helping" size={24} color="#000000" /> },
+        { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
+        { label: 'General', value: 'General', icon: () => <MaterialIcons name="volunteer-activism" size={24} color="#000000" /> },
     ]
 
     const resetPost = () => {
@@ -284,7 +286,7 @@ const PostPublishScreen = (props) => {
                 <View style={styles.selectCategoryContainer}>
                     <DropDownPicker
                         placeholder="Select Category"
-                        items={items}
+                        items={categories}
                         containerStyle={styles.dropDownContainer}
                         itemStyle={{
 

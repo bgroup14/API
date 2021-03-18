@@ -8,7 +8,7 @@ import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Post = (props) => {
-    const { id, text, cityName, recurring, dateLabel, timeOfDay } = props.post;
+    const { id, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName } = props.post;
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -22,17 +22,17 @@ const Post = (props) => {
                     rounded
                     source={{
                         uri:
-                            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/kendall-jenner-attends-the-tiffany-co-flagship-store-launch-news-photo-1596195763.jpg',
+                            postCreatorImg,
                     }}
                 />
                 <View style={styles.postDetailsContainer}>
                     <View style={styles.userNameContainer}>
-                        <Text style={styles.userName}>Kendell Jenner</Text>
+                        <Text style={styles.userName}>{postCreatorName}</Text>
 
                     </View>
                     <Text style={styles.postText}>{text}</Text>
                     {!recurring ? <Text style={styles.postDateText}>At {dateLabel + " "}{timeOfDay}</Text> : null}
-                    <Text style={styles.postCityName}>In {cityName}</Text>
+                    <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName}</Text>
 
                 </View>
 
@@ -57,7 +57,7 @@ const Post = (props) => {
                 </TouchableOpacity >
             </View>
 
-            <Divider />
+            <Divider style={{ height: 1.5 }} />
 
 
         </KeyboardAvoidingView>
@@ -120,7 +120,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 10,
         justifyContent: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'flex-end',
+        marginBottom: 5,
+        marginTop: 10
+
     },
     postBtn: {
         //  flex: 1,

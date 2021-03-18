@@ -8,6 +8,8 @@ const initialState = {
     userType: null,
     participantGender: null,
     participantAge: null,
+    meetingLocation: null
+
 
 
 
@@ -18,8 +20,9 @@ const initialState = {
 function userReducer(state = initialState, action) {
     //console.log("in the auth reducer")
     const { type, payload } = action
-    // console.log("the payload in the auth reducer is:")
-    // console.log(payload)
+    // console.log(payload.meetingLocation)
+    console.log("the payload in the auth reducer is:")
+    console.log(payload)
     switch (type) {
         case USER_LOGGED:
             return {
@@ -32,9 +35,8 @@ function userReducer(state = initialState, action) {
                 ///change below to payload.userType
                 userType: payload.helpType,
                 participantGender: payload.participantGender,
-                participantAge: payload.participantAge
-
-
+                participantAge: payload.participantAge,
+                meetingLocation: payload.meetingLocation
             }
         default:
             return state;

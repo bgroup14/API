@@ -4,9 +4,18 @@ import { getIconType } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import { Button } from 'react-native-elements';
 
 import Post from '../components/Post';
+import { useFocusEffect } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import MyOverlay from '../components/MyOverlay';
+
+
+
 
 
 
@@ -20,6 +29,8 @@ import axios from 'axios';
 
 
 import { SafeAreaView } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import FeedFilterScreen from './FeedFilterScreen';
 
 
 
@@ -28,11 +39,19 @@ import { SafeAreaView } from 'react-native';
 const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
+    const [isFilterVisible, setIsFilterVisble] = useState(false);
 
 
-    useEffect(() => {
-        fetchPosts()
-    }, [])
+
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchPosts()
+
+        }, [])
+    )
+
 
     const fetchPosts = async () => {
         console.log("fetching posts data...");
@@ -41,6 +60,25 @@ const HomeScreen = (props) => {
         setPosts(res.data)
 
     };
+
+    const fetchFilteredPosts = async (filteredPostObj) => {
+        console.log(filteredPostObj)
+        setIsFilterVisble(false)
+
+        // console.log("fetching posts data...");
+        // const res = await axios(postsFetchURL);
+        // console.log(res.data)
+        // setPosts(res.data)
+
+    };
+
+    let categories = [
+        { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
+        { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
+        { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
+        { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
+        { label: 'General', value: 'General', icon: () => <MaterialIcons name="volunteer-activism" size={24} color="#000000" /> },
+    ]
 
 
 
@@ -137,6 +175,9 @@ const HomeScreen = (props) => {
 
     return (
         <KeyboardAvoidingView style={styles.container} >
+            <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
+                <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
+            </MyOverlay>
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
@@ -149,10 +190,27 @@ const HomeScreen = (props) => {
                         onPress={() => props.navigation.navigate('Notifications')}
                     />
                 </View>
-                <View style={styles.categoryContainer}>
+                {/* <View style={styles.categoryContainer}>
                     <Text>Category dropdown</Text>
+                </View> */}
+                <View style={styles.selectCategoryContainer}>
+                    <DropDownPicker
+                        placeholder="Select Category"
+                        items={categories}
+                        containerStyle={styles.dropDownContainer}
+                        itemStyle={{
+
+                            justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
+                        }}
+                        onChangeItem={item => alert(item)}
+                    // onChangeItem={item => setPostCategory(item.value)}
+                    />
+                    <TouchableOpacity onPress={() => setIsFilterVisble(true)} style={{ flex: 1 }}>
+
+                        <Icon name='filter' size={26} style={styles.filterICon} />
+                    </TouchableOpacity>
                 </View>
-                <Divider />
+                {/* <Divider /> */}
 
 
                 <ScrollView style={styles.postsContainer}>
@@ -221,7 +279,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 80,
+        marginTop: windowHeight / 40,
         flexDirection: 'row',
         paddingLeft: windowWidth / 100,
         paddingRight: windowWidth / 100,
@@ -237,6 +295,25 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 24
     },
+    selectCategoryContainer:
+    {
+        flex: 1,
+        marginTop: 30,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        marginBottom: 60,
+        width: '100%',
+        // marginLeft: windowWidth / 50,
+        borderRadius: 50
+    }, dropDownContainer: {
+
+        width: '85%',
+        height: windowHeight / 15,
+
+    },
+    filterICon: { marginLeft: 30, marginTop: 15 },
+
     postsContainer: {
         //    / flex: 1,
         //   minHeight: 140

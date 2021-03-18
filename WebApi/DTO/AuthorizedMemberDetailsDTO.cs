@@ -12,5 +12,6 @@ namespace WebApi.DTO
         public string helpType;
         public string participantGender;
         public string participantAge;
+        public string meetingLocation;
     }
 }

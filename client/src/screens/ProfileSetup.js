@@ -321,6 +321,7 @@ const ProfileSetup = (props) => {
               labelValue={occupation}
               placeholderText="Occupation"
               iconType="suitcase"
+              autoCapitalize='words'
               onChangeText={(text) => setOccupation(text)}
             />
           </View>
