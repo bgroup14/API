@@ -6,7 +6,7 @@ import { Avatar, ListItem } from 'react-native-elements';
 import { Divider } from 'react-native-elements';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { windowHeight } from '../../utils/Dimentions';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
 const Comment = (props) => {
     const { id, text, commentingMemberImage, commentingMemberName, } = props.comment;
@@ -17,7 +17,7 @@ const Comment = (props) => {
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.commentContainer}>
                 {/* <View style={styles.userImageContainer}> */}
-                <View style={{ backgroundColor: 'white', padding: 5 }}>
+                <View style={{ backgroundColor: 'white', padding: 5, marginTop: windowHeight / 80 }}>
                     <Avatar
 
                         size='medium'
@@ -31,15 +31,13 @@ const Comment = (props) => {
                         }}
                     />
                 </View>
-                <View style={{ backgroundColor: '#D7D6D6', width: '100%', borderRadius: 5, marginTop: windowHeight / 60, height: '100%', }}>
-                    <View style={styles.postDetailsContainer}>
+                <View style={styles.comment}>
+                    <View >
                         <View style={styles.userNameContainer}>
-                            {/* // <Text style={styles.userName}>{postCreatorName}</Text> */}
                             <Text style={styles.userName}>{commentingMemberName}</Text>
 
                         </View>
-                        <Text style={styles.postText}>{text}</Text>
-                        {/* <Text style={styles.postText}>{text}</Text> */}
+                        <Text style={styles.commentText}>{text}</Text>
 
                     </View>
                 </View>
@@ -50,24 +48,9 @@ const Comment = (props) => {
 
 
 
-                {/* </View> */}
 
             </View>
-            <View style={styles.postBtnContainer}>
-                {/* <TouchableOpacity onPress={() => alert(1)} style={styles.postBtn}>
-                    <FontAwsome name='commenting-o' size={25} color="gray" />
-                    <Text style={styles.btnText}>Comment</Text>
-                </TouchableOpacity >
 
-                <TouchableOpacity style={styles.postBtn}>
-                    <FontAwsome name='heart-o' size={25} color="gray" />
-                    <Text style={styles.btnText}>Like</Text>
-                </TouchableOpacity >
-                <TouchableOpacity style={styles.postBtn}>
-                    <Ionicons name='chatbubbles-outline' size={25} color="gray" />
-                    <Text style={styles.btnText}>Chat</Text>
-                </TouchableOpacity > */}
-            </View>
             {/* <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
                 <Text>{comments.length} Comments</Text>
             </TouchableOpacity> */}
@@ -84,7 +67,7 @@ export default Comment
 const styles = StyleSheet.create({
 
     container: {
-        marginVertical: 10,
+        marginVertical: windowHeight / 50,
         flex: 1,
         //  flexDirection: 'row',
         // justifyContent: 'flex-end',
@@ -96,22 +79,15 @@ const styles = StyleSheet.create({
         //  marginVertical: 1,
         alignItems: 'flex-start',
         // maxHeight: 100,
-        borderRadius: 8
+        borderRadius: 8,
+
 
     },
-    postDetailsContainer: {
-        //  flex: 1,
-        //justifyContent: 'flex-start',
-        //justifyContent: 'space-between',
-        marginLeft: 20,
-        marginTop: 10,
-        maxWidth: 200,
+    comment: { backgroundColor: '#EDEDED', width: '100%', borderRadius: 8, marginTop: windowHeight / 60, height: '100%', },
 
-
-        // alignItems: 'center'
-
-    },
     userNameContainer: {
+        marginTop: windowWidth / 80,
+        marginLeft: windowWidth / 50,
         //margin: 2
     },
     userName:
@@ -119,8 +95,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
     },
-    postText: {
-        // fontSize: 14
+    commentText: {
+        marginTop: windowWidth / 80,
+        marginLeft: windowWidth / 50,
+
     },
     postDateText: {
         // color: 'red'
@@ -149,7 +127,11 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     btnText: { marginLeft: 5 },
-    commentsContainer: { marginTop: 10, marginBottom: 10, alignItems: 'flex-end' },
+    commentsContainer: {
+        marginTop: 10,
+        marginBottom: 10,
+        alignItems: 'flex-end'
+    },
 
     // userImageContainer: {
     //     flex: 1,

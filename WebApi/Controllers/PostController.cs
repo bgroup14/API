@@ -26,17 +26,18 @@ namespace WebApi.Controllers
         {
             return "value";
         }
+
+
         [HttpGet]
         [Route("getAllPosts")]
 
-        /*List<PostDTO>*/
         public List<PostDTO> GetAllPosts()
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-          /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
             var posts = db.Posts.Select(x => new PostDTO()
             {
                 text = x.text,
@@ -56,7 +57,18 @@ namespace WebApi.Controllers
                 dateLabel = x.dateLabel,
                 postId = x.id,
                 postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+
             }).ToList();
             return posts;
 
@@ -124,6 +136,46 @@ namespace WebApi.Controllers
             }
 
         }
+
+
+
+        [HttpPost]
+        [Route("publishcomment")]
+        public HttpResponseMessage PublishComment(CommentDTO commentDTO)
+        {
+            /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Comment comment = new Comment()
+                {
+                    commentingMemberId = commentDTO.commentingMemberId,
+                    postId = commentDTO.postId,
+                    text = commentDTO.text
+                };
+
+
+
+                db.Comments.Add(comment);
+
+                db.SaveChanges();
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
         public void Post([FromBody] string value)
         {
         }
