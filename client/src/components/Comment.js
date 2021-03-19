@@ -6,57 +6,47 @@ import { Avatar, ListItem } from 'react-native-elements';
 import { Divider } from 'react-native-elements';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { windowHeight } from '../../utils/Dimentions';
 
-const Post = (props) => {
-    const { id, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName } = props.post;
+const Comment = (props) => {
+    const { id, text, commentingMemberImage, commentingMemberName, } = props.comment;
 
-    let comments = [
-        {
-            commentingMemberName: 'LeBron James',
-            commentingMemberImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9wl5WIvrkZ-VoZn2HuReBMOYxCCtZxSQTdQ&usqp=CAU',
-            text: 'Had such a great time with you Alan!',
-            id: 1
-        },
-        {
-            commentingMemberName: 'Kendell Jenner',
-            commentingMemberImage: 'http://www.gstatic.com/tv/thumb/persons/532957/532957_v9_bb.jpg',
-            text: 'Alan was so cute and handsome',
-            id: 2
-        },
-        {
-            commentingMemberName: 'Dolev Tamir',
-            commentingMemberImage: 'http://www.gstatic.com/tv/thumb/persons/532957/532957_v9_bb.jpg',
-            text: 'Pleasure to collaborate with you',
-            id: 3
-        }
 
-    ]
 
     return (
         <KeyboardAvoidingView style={styles.container}>
-            <View style={styles.postContainer}>
+            <View style={styles.commentContainer}>
                 {/* <View style={styles.userImageContainer}> */}
-                <Avatar
+                <View style={{ backgroundColor: 'white', padding: 5 }}>
+                    <Avatar
 
-                    size='large'
-                    // avatarStyle={{ height: 59, }}
-                    containerStyle={{ marginTop: 10 }}
-                    rounded
-                    source={{
-                        uri:
-                            postCreatorImg,
-                    }}
-                />
-                <View style={styles.postDetailsContainer}>
-                    <View style={styles.userNameContainer}>
-                        <Text style={styles.userName}>{postCreatorName}</Text>
+                        size='medium'
+                        // avatarStyle={{ height: 59, }}
+                        // containerStyle={{ marginTop: 10 }}
+                        rounded
+                        source={{
+                            uri:
+                                commentingMemberImage,
+                            // postCreatorImg,
+                        }}
+                    />
+                </View>
+                <View style={{ backgroundColor: '#D7D6D6', width: '100%', borderRadius: 5, marginTop: windowHeight / 60, height: '100%', }}>
+                    <View style={styles.postDetailsContainer}>
+                        <View style={styles.userNameContainer}>
+                            {/* // <Text style={styles.userName}>{postCreatorName}</Text> */}
+                            <Text style={styles.userName}>{commentingMemberName}</Text>
+
+                        </View>
+                        <Text style={styles.postText}>{text}</Text>
+                        {/* <Text style={styles.postText}>{text}</Text> */}
 
                     </View>
-                    <Text style={styles.postText}>{text}</Text>
-                    {!recurring ? <Text style={styles.postDateText}>At {dateLabel + " "}{timeOfDay}</Text> : null}
-                    <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName}</Text>
-
                 </View>
+
+
+
+
 
 
 
@@ -64,7 +54,7 @@ const Post = (props) => {
 
             </View>
             <View style={styles.postBtnContainer}>
-                <TouchableOpacity onPress={() => alert(1)} style={styles.postBtn}>
+                {/* <TouchableOpacity onPress={() => alert(1)} style={styles.postBtn}>
                     <FontAwsome name='commenting-o' size={25} color="gray" />
                     <Text style={styles.btnText}>Comment</Text>
                 </TouchableOpacity >
@@ -76,13 +66,12 @@ const Post = (props) => {
                 <TouchableOpacity style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
-                </TouchableOpacity >
+                </TouchableOpacity > */}
             </View>
-            <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
+            {/* <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
                 <Text>{comments.length} Comments</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <Divider style={{ height: 1.5 }} />
 
 
         </KeyboardAvoidingView>
@@ -90,7 +79,7 @@ const Post = (props) => {
     )
 }
 
-export default Post
+export default Comment
 
 const styles = StyleSheet.create({
 
@@ -101,12 +90,13 @@ const styles = StyleSheet.create({
         // justifyContent: 'flex-end',
         //  alignItems: 'flex-start'
     },
-    postContainer: {
+    commentContainer: {
         flex: 1,
         flexDirection: 'row',
         //  marginVertical: 1,
         alignItems: 'flex-start',
-        maxHeight: 100
+        // maxHeight: 100,
+        borderRadius: 8
 
     },
     postDetailsContainer: {
