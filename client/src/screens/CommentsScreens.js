@@ -12,7 +12,7 @@ const CommentsScreens = (props) => {
             <View >
                 <ScrollView style={styles.postsContainer}>
                     {props.comments.map((comment) => {
-                        return <Comment comment={comment} key={comment.id} />
+                        return <Comment comment={comment} key={comment.text} />
                         // return <Comment post={post} key={post.postId} showComments={(comments) => showComments(comments)} />
                     })}
                 </ScrollView>

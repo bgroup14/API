@@ -43,6 +43,7 @@ const HomeScreen = (props) => {
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
+    const [newComment, setNewComment] = useState(false);
 
     useEffect(() => {
         if (commentsToShow.length > 0) {
@@ -58,8 +59,9 @@ const HomeScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             fetchPosts()
+            setNewComment(false)
 
-        }, [])
+        }, [newComment])
     )
 
 
@@ -109,6 +111,11 @@ const HomeScreen = (props) => {
         setCommentsToShow(comments)
 
     }
+    const toggleCommentsScreen = () => {
+        setIsCommentsVisible(false)
+        setCommentsToShow([])
+
+    }
 
 
 
@@ -122,7 +129,7 @@ const HomeScreen = (props) => {
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
-            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => setIsCommentsVisible(false)}  >
+            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} />
             </MyOverlay>
             <View style={styles.inner}>
@@ -167,9 +174,11 @@ const HomeScreen = (props) => {
                         // return <Post text={post.text} cityName={post.cityName} />
                     })} */}
                     {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
+
+
 
                     {/* <FlatList
                         keyExtractor={(item, index) => item.id.toString()}
@@ -184,7 +193,6 @@ const HomeScreen = (props) => {
 
 
                 </ScrollView>
-                <TextInput placeholder='erite' />
 
                 {/* <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}><Text>Heyy</Text>
                         <TextInput placeholder="what"></TextInput>

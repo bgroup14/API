@@ -219,6 +219,7 @@
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\AuthorizedMemberDetailsDTO.cs" />
+    <Compile Include="DTO\CommentDTO.cs" />
     <Compile Include="DTO\FeedSettingsDTO.cs" />
     <Compile Include="DTO\HobbiesDTO.cs" />
     <Compile Include="DTO\MemberDTO.cs" />

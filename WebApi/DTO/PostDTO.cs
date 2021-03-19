@@ -25,6 +25,7 @@ namespace WebApi.DTO
         public string postCreatorName;
         public int postId;
         public string dateLabel;
+        public List<CommentDTO> comments;
 
     }
 }
