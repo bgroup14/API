@@ -31,6 +31,7 @@ import axios from 'axios';
 import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import FeedFilterScreen from './FeedFilterScreen';
+import CommentsScreens from './CommentsScreens';
 
 
 
@@ -40,8 +41,17 @@ const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
+    const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+    const [commentsToShow, setCommentsToShow] = useState([]);
+
+    useEffect(() => {
+        if (commentsToShow.length > 0) {
+            console.log(commentsToShow)
+            setIsCommentsVisible(true)
+        }
 
 
+    }, [commentsToShow])
 
 
 
@@ -95,79 +105,13 @@ const HomeScreen = (props) => {
     }
     userFirstName = capitalizeFirstLetter(userFirstName)
 
-    const createGreeting = () => {
-        const hours = new Date().getHours(); //To get the Current Hours)
-        if (hours > 0 && hours <= 5) {
-            return "Good night"
-        }
-        else if (hours > 5 && hours <= 12) {
-            return "Good morning"
-
-        }
-        else if (hours > 12 && hours <= 18) {
-            return "Good afternoon"
-
-        }
-        return "Good evening"
-
+    const showComments = (comments) => {
+        setCommentsToShow(comments)
 
     }
 
-    let greeting = createGreeting();
-    let postsArray = [
-        {
-            id: 1,
-            text: 'Im offering help in C# and React',
-            cityName: 'Heaven',
-            recurring: false
 
 
-        },
-        {
-            id: 2,
-            text: 'I will help you with your homework',
-            cityName: 'Tel Aviv',
-            recurring: true
-        },
-        {
-            id: 3,
-            text: 'adsfdsfsssdfdsfsdfdadsfdsfsssdfdsfsdfdadsfdsfsssdfdsfsdfdadsfdsfsssdfdsfsdfdadsfdsfsssdfdsfsdfdadsfdsfss',
-            cityName: 'Tel Aviv'
-
-        },
-        {
-            id: 4,
-            text: 'adsfd!!!!!!!sfsdfdsfsdfd',
-            cityName: 'Tel Aviv'
-
-        },
-        {
-            id: 5,
-            text: 'adfsdfd',
-            cityName: 'Tel Aviv'
-
-        },
-        {
-            id: 6,
-            text: 'adsfdsfsdfdsfsdfd',
-            cityName: 'Tel Aviv'
-
-        },
-        {
-            id: 7,
-            text: 'adsfdsfsdfdsfsdfd',
-            cityName: 'Tel Aviv'
-
-        },
-        {
-            id: 8,
-            text: 'adsfdsfsdfdsfsdfd',
-            cityName: 'Tel Aviv',
-
-        },
-
-
-    ]
 
 
 
@@ -177,6 +121,9 @@ const HomeScreen = (props) => {
         <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
+            </MyOverlay>
+            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => setIsCommentsVisible(false)}  >
+                <CommentsScreens comments={commentsToShow} />
             </MyOverlay>
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
@@ -220,13 +167,13 @@ const HomeScreen = (props) => {
                         // return <Post text={post.text} cityName={post.cityName} />
                     })} */}
                     {posts.map((post) => {
-                        return <Post post={post} key={post.postId} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
 
                     {/* <FlatList
                         keyExtractor={(item, index) => item.id.toString()}
-                        data={postsArray}
+                        data={posts}
                         renderItem={({ item }) => (
                             <Post />
                         )}
@@ -234,12 +181,10 @@ const HomeScreen = (props) => {
 
 
                     /> */}
-                    {/* <Post />
-                        <Post />
-                        <Post />
-                        <Post /> */}
+
 
                 </ScrollView>
+                <TextInput placeholder='erite' />
 
                 {/* <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}><Text>Heyy</Text>
                         <TextInput placeholder="what"></TextInput>
