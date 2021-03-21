@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import MyOverlay from '../components/MyOverlay';
@@ -14,13 +14,20 @@ import CommentsScreens from './CommentsScreens';
 import DotsMenu from './DotsMenu';
 import DotsMenuOverlay from '../components/DotsMenuOverlay';
 
-const MyProfileScreen = (props) => {
+
+//
+
+
+const OtherUserProfileScreen = ({ route, navigation }) => {
+    const { userId } = route.params;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [userAge, setUserAge] = useState(null);
     const [userBio, setUserBio] = useState(null);
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
     const [userHobbies, setUserHobbies] = useState("");
+    const [userName, setUserName] = useState(null);
+    const [userImage, setUserImage] = useState(null);
 
 
     const [posts, setPosts] = useState([]);
@@ -62,15 +69,20 @@ const MyProfileScreen = (props) => {
 
     //     }, [])
     // )
-    let userId = useSelector(state => state.auth.userId);
+    let currentMemberId = useSelector(state => state.auth.userId);
     const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
 
     const fetchUserDetails = async () => {
-        console.log("fetching user details...");
+        console.log("fetching user details!!");
+
         const res = await axios(userDetailsFetchURL);
         //console.log(res.data.city + "cityy")
+        console.log(res.data.fullName)
+        console.log(res.data.pictureUrl)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
+        setUserName(res.data.fullName)
+        setUserImage(res.data.pictureUrl)
         let cityName = res.data.city.replace(/,[^,]+$/, "")
         // console.log(str)
         setUserCity(cityName)
@@ -94,8 +106,8 @@ const MyProfileScreen = (props) => {
     }
 
 
-    let userName = useSelector(state => state.user.userName);
-    let userImage = useSelector(state => state.user.userImage);
+    // let userName = userName;
+    // let userImage = useSelector(state => state.user.userImage);
     ///DELETE THIS!
 
 
@@ -123,11 +135,19 @@ const MyProfileScreen = (props) => {
                     <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
                         <DotsMenu />
                     </DotsMenuOverlay>
-                    <Text style={styles.barText}>My Profile</Text>
-                    <Icon
+                    <Text style={styles.barText}></Text>
+                    {/* <Icon
                         style={styles.dotsMenu}
                         name='dots-vertical'
                         onPress={() => setIsMenuVisible(true)}
+                    /> */}
+                </View>
+                <View style={styles.chatIconContainer}>
+                    <Icon
+                        style={styles.chatIcon}
+                        size={32}
+                        name='chatbubbles-outline'
+                    // onPress={() => setIsMenuVisible(true)}
                     />
                 </View>
                 <View style={styles.profileImageContainer}>
@@ -140,7 +160,10 @@ const MyProfileScreen = (props) => {
                                 userImage,
                         }}
                     />
+
                 </View>
+
+
                 <View style={styles.usernameContainer}>
                     <Text style={styles.usernameText}>{userName}</Text>
                 </View>
@@ -169,7 +192,7 @@ const MyProfileScreen = (props) => {
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId} />
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
@@ -181,7 +204,7 @@ const MyProfileScreen = (props) => {
     )
 }
 
-export default MyProfileScreen
+export default OtherUserProfileScreen
 
 const styles = StyleSheet.create({
     container: {
@@ -215,13 +238,25 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
 
     },
-    dotsMenu: {
-        color: '#ffffff',
-        fontSize: 32,
+    chatIconContainer: {
+        //  flexDirection: 'column-reverse',
+        alignItems: 'flex-end',
+        // marginBottom: 0,
+        height: 0
+    },
+
+    chatIcon: {
+        marginTop: windowHeight / 25,
+        marginRight: windowWidth / 5
+        // marginLeft: 10
+        //   color: '#ffffff',
+        //  fontSize: 32,
 
     },
     profileImageContainer: {
         //  flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginTop: windowHeight / 30,
         alignItems: 'center',
         //justifyContent: 'flex-end'

@@ -16,6 +16,7 @@ import axios from 'axios';
 const Post = (props) => {
     const { postId, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName, comments, member_id } = props.post;
     let currentMemberId = props.currentMemberId;
+    console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
@@ -145,11 +146,18 @@ const Post = (props) => {
                 />
                 <View style={styles.postDetailsContainer}>
                     <View style={styles.userNameContainer}>
-                        <Text style={styles.userName}>{postCreatorName}</Text>
-                        {/* {currentMemberId == member_id ? <FontAwsome name='home' /> : null} */}
-                        <TouchableOpacity onPress={() => askIfWantToDelete(postId)}>
-                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 2.5, marginTop: 6 }} />
+                        {/* <TouchableOpacity onPress={() => props.navigation.navigate('OtherUserProfileScreen', {
+                            userId: member_id
+                        })}> */}
+                        <TouchableOpacity onPress={() => props.goToOtherUserProfile(member_id)}>
+                            <Text style={styles.userName}>{postCreatorName}</Text>
+
                         </TouchableOpacity>
+
+                        {currentMemberId == member_id ? <TouchableOpacity onPress={() => askIfWantToDelete(postId)}>
+                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 2.5, marginTop: 6 }} />
+                        </TouchableOpacity> : null}
+
 
                     </View>
                     <Text style={styles.postText}>{text}</Text>

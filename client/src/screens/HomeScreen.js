@@ -126,6 +126,20 @@ const HomeScreen = (props) => {
 
 
 
+    const goToOtherUserProfile = (member_id) => {
+        // alert(member_id)
+        if (userId == member_id) {
+            props.navigation.navigate('MyProfile')
+        }
+        else {
+            props.navigation.navigate('OtherUserProfileScreen', {
+                userId: member_id
+            })
+        }
+
+
+
+    }
 
 
 
@@ -147,6 +161,9 @@ const HomeScreen = (props) => {
                         style={styles.bellIcon}
                         name='bell'
                         onPress={() => props.navigation.navigate('Notifications')}
+
+
+
                     />
                 </View>
                 {/* <View style={styles.categoryContainer}>
@@ -179,7 +196,10 @@ const HomeScreen = (props) => {
                         // return <Post text={post.text} cityName={post.cityName} />
                     })} */}
                     {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
+                            refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
 
