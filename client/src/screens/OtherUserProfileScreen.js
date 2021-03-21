@@ -18,8 +18,8 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 //
 
 
-const OtherUserProfileScreen = ({ route, navigation }) => {
-    const { userId } = route.params;
+const OtherUserProfileScreen = (props) => {
+    const { userId } = props.route.params;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [userAge, setUserAge] = useState(null);
     const [userBio, setUserBio] = useState(null);
@@ -121,20 +121,35 @@ const OtherUserProfileScreen = ({ route, navigation }) => {
         setCommentsToShow([])
 
     }
+    const goToOtherUserProfile = (member_id) => {
+
+        toggleCommentsScreen();
+        // alert(member_id)
+        if (userId == member_id) {
+            props.navigation.navigate('OtherUserProfileScreen', {
+                userId: member_id
+            })
+        }
+        else {
+            props.navigation.navigate('OtherUserProfileScreen', {
+                userId: member_id
+            })
+        }
+    }
 
 
     return (
         <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
-                <CommentsScreens comments={commentsToShow} />
+                <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
 
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <View style={styles.barContainer}>
-                    <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
+                    {/* <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
                         <DotsMenu />
-                    </DotsMenuOverlay>
+                    </DotsMenuOverlay> */}
                     <Text style={styles.barText}></Text>
                     {/* <Icon
                         style={styles.dotsMenu}
@@ -147,7 +162,7 @@ const OtherUserProfileScreen = ({ route, navigation }) => {
                         style={styles.chatIcon}
                         size={32}
                         name='chatbubbles-outline'
-                    // onPress={() => setIsMenuVisible(true)}
+                        onPress={() => alert(2)}
                     />
                 </View>
                 <View style={styles.profileImageContainer}>
@@ -190,9 +205,12 @@ const OtherUserProfileScreen = ({ route, navigation }) => {
 
                 </View>
 
+
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
+                            refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}

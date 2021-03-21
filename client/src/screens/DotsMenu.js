@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { windowHeight } from '../../utils/Dimentions'
 
-const DotsMenu = () => {
+const DotsMenu = (props) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => alert(1)}>
+            <TouchableOpacity onPress={() => props.editProfile()}>
                 <Text style={styles.optionText}>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity>

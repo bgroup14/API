@@ -190,7 +190,7 @@ const Post = (props) => {
             </View>
             {showCommentInput ?
                 <View style={styles.commentContainer}>
-                    <TextInput placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} />
+                    <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} />
                     <TouchableOpacity onPress={() => publishComment()}>
                         <FontAwsome name='send-o' color='#fff' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
                     </TouchableOpacity>
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 
     },
     postDetailsContainer: {
-        //  flex: 1,
+        flex: 1,
         //justifyContent: 'flex-start',
         //justifyContent: 'space-between',
         marginLeft: 20,
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
         // height: 100
 
     }, commentContainer: {
-        // flex: 1,
+        // flex 1,
         backgroundColor: '#D7D6D6',
         flexDirection: 'row',
         justifyContent: 'space-between',

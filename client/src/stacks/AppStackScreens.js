@@ -9,6 +9,8 @@ import MainStackScreens from './MainStackScreens';
 import { useSelector, useDispatch } from 'react-redux';
 import Notifications from '../screens/Notifications';
 import OtherUserProfileScreen from '../screens/OtherUserProfileScreen';
+import MyProfileScreen from '../screens/MyProfileScreen';
+import EditProfile from '../screens/EditProfile';
 import { Fragment } from 'react';
 
 
@@ -33,6 +35,8 @@ const AppStackScreens = () => {
                 <AppStack.Screen name="Main" component={MainStackScreens} />
                 <AppStack.Screen name="Notifications" component={Notifications} />
                 <AppStack.Screen name="OtherUserProfileScreen" component={OtherUserProfileScreen} />
+                <AppStack.Screen name="MyProfileScreen" component={MyProfileScreen} />
+                <AppStack.Screen name="EditProfile" component={EditProfile} />
             </Fragment>
                 :
                 <AppStack.Screen name="Auth" component={AuthStackScreens} />}

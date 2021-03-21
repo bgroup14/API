@@ -110,18 +110,40 @@ const MyProfileScreen = (props) => {
 
     }
 
+    const goToOtherUserProfile = (member_id) => {
+
+        toggleCommentsScreen();
+        // alert(member_id)
+        if (userId == member_id) {
+            props.navigation.navigate('MyProfile')
+        }
+        else {
+            props.navigation.navigate('OtherUserProfileScreen', {
+                userId: member_id
+            })
+        }
+
+    }
+
+    const editProfile = () => {
+
+        props.navigation.navigate('EditProfile')
+
+
+    }
+
 
     return (
         <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
-                <CommentsScreens comments={commentsToShow} />
+                <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
 
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <View style={styles.barContainer}>
                     <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
-                        <DotsMenu />
+                        <DotsMenu editProfile={() => editProfile()} />
                     </DotsMenuOverlay>
                     <Text style={styles.barText}>My Profile</Text>
                     <Icon
@@ -169,7 +191,8 @@ const MyProfileScreen = (props) => {
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}

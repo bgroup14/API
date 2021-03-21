@@ -18,10 +18,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { RadioButton } from 'react-native-paper';
+import GooglePlacesInput from '../components/GooglePlacesInput';
+import { KeyboardAvoidingView } from 'react-native';
 
 
 
-const ProfileSetup = (props) => {
+const EditProfile = (props) => {
   const [city, setCity] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
@@ -170,6 +172,12 @@ const ProfileSetup = (props) => {
     setSelectedImage(imagePath)
   }
 
+  const getCityName = (cityName) => {
+    // console.log("city name is: " + cityName)
+    setCity(cityName)
+
+  }
+
 
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
@@ -231,123 +239,133 @@ const ProfileSetup = (props) => {
 
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
-    <ScrollView >
+    <KeyboardAvoidingView>
+      <View >
 
-      <MyBottomSheet visible={visible} toggle={toggleOverlay} >
-        <View>
-          <View style={styles.btnContainer}>
-            <Button
-              icon={
-                <Icon
-                  name="image"
-                  size={25}
-                  color="blue"
-                  style={{ padding: 10 }}
-                />
-              }
-              title="Choose From Gallery"
-              type='outline'
-              buttonStyle={styles.profilePictureBtn}
-              onPress={() => openImagePickerAsync()}
+        <MyBottomSheet visible={visible} toggle={toggleOverlay} >
+          <View>
+            <View style={styles.btnContainer}>
+              <Button
+                icon={
+                  <Icon
+                    name="image"
+                    size={25}
+                    color="blue"
+                    style={{ padding: 10 }}
+                  />
+                }
+                title="Choose From Gallery"
+                type='outline'
+                buttonStyle={styles.profilePictureBtn}
+                onPress={() => openImagePickerAsync()}
 
-            />
-            <Button
-              icon={
-                <Icon
-                  name="camera"
-                  size={25}
-                  color="blue"
-                  style={{ padding: 10 }}
+              />
+              <Button
+                icon={
+                  <Icon
+                    name="camera"
+                    size={25}
+                    color="blue"
+                    style={{ padding: 10 }}
 
-                />
-              }
-              title="Take Photo"
-              type='outline'
-              buttonStyle={styles.profilePictureBtn}
-              onPress={() => takePhoto()}
+                  />
+                }
+                title="Take Photo"
+                type='outline'
+                buttonStyle={styles.profilePictureBtn}
+                onPress={() => takePhoto()}
 
-            />
+              />
+            </View>
           </View>
-        </View>
-      </MyBottomSheet>
+        </MyBottomSheet>
 
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.text}>Profile Setup</Text>
-          <View style={styles.imageContainer}>
-            {image}
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.text}>Profile Setup</Text>
+            <View style={styles.imageContainer}>
+              {image}
+            </View>
           </View>
-        </View>
 
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>CURRENT CITY</Text>
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>CURRENT CITY</Text>
+            <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)} />
 
 
-          <FormInput
+            {/* <FormInput
             labelValue={city}
             placeholderText="City"
             iconType="home"
             autoCapitalize="none"
             autoCorrect={true}
-            onChangeText={(text) => setCity(text)} />
-        </View>
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>SHORT BIO</Text>
+            onChangeText={(text) => setCity(text)} /> */}
+          </View>
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>SHORT BIO</Text>
 
-          <TextArea
-            labelValue={bio}
-            placeholderText="What do you want people to know about you?"
-            iconType="calendar"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={(text) => setBio(text)}
-
-          />
-        </View >
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>OCCUPATION</Text>
-
-          <FormInput
-            labelValue={occupation}
-            placeholderText="Occupation"
-            iconType="suitcase"
-            onChangeText={(text) => setOccupation(text)}
-          />
-        </View>
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>DATE OF BIRTH</Text>
-          <TouchableOpacity onPress={showDatepicker}>
-            <FormInput
-              onDatePress={showDatepicker}
-              // labelValue={dateLabel}
-              placeholderText={dateLabel}
+            <TextArea
+              labelValue={bio}
+              placeholderText="What do you want people to know about you?"
               iconType="calendar"
-              keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
-              editable={false}
-              onChangeText={(text) => setDateOfBirth(text)}
+              onChangeText={(text) => setBio(text)}
+
             />
+          </View >
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>OCCUPATION</Text>
 
-          </TouchableOpacity>
-        </View>
-
-
-
-        <View style={styles.genderContainer}>
-          <Text style={styles.setupParams}>GENDER</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <RadioButton
-              color="blue"
-              value="first"
-              status={gender === 'Male' ? 'checked' : 'unchecked'}
-              onPress={() => setGender('Male')}
+            <FormInput
+              labelValue={occupation}
+              placeholderText="Occupation"
+              iconType="suitcase"
+              autoCapitalize='words'
+              onChangeText={(text) => setOccupation(text)}
             />
-            <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
-
-
           </View>
-          <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>DATE OF BIRTH</Text>
+            <TouchableOpacity onPress={showDatepicker}>
+              <FormInput
+                onDatePress={showDatepicker}
+                // labelValue={dateLabel}
+                placeholderText={dateLabel}
+                iconType="calendar"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                editable={false}
+                onChangeText={(text) => setDateOfBirth(text)}
+              />
+
+            </TouchableOpacity>
+          </View>
+
+
+
+          <View style={styles.genderContainer}>
+            <Text style={styles.setupParams}>GENDER</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <RadioButton
+                color="blue"
+                value="first"
+                status={gender === 'Male' ? 'checked' : 'unchecked'}
+                onPress={() => setGender('Male')}
+              />
+              <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
+
+              <RadioButton
+                color="pink"
+                value="second"
+                status={gender === 'Female' ? 'checked' : 'unchecked'}
+                onPress={() => setGender('Female')}
+              />
+              <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
+
+            </View>
+            {/* <View style={{ flexDirection: 'row', marginBottom: 10 }}>
             <RadioButton
               color="pink"
               value="second"
@@ -356,9 +374,9 @@ const ProfileSetup = (props) => {
             />
             <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
 
-          </View>
+          </View> */}
 
-          {/* <DropDownPicker
+            {/* <DropDownPicker
             placeholder="Select"
             items={[
               { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
@@ -373,36 +391,37 @@ const ProfileSetup = (props) => {
             onChangeItem={item => setGender(item.value)
             }
           /> */}
-        </View>
-
-        <View style={styles.setupParamsContainer}>
-          <Text style={styles.setupParams}>HOBBIES</Text>
-
-          <TouchableOpacity style={styles.dropDownContainer} >
-            <Button
-              title={hobbisTitleFunc()}
-              type="outline"
-              raised={true}
-              buttonStyle={{ padding: 15 }}
-              onPress={() => props.navigation.navigate('HobbiesScreen')}
-
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View  >
-          <View style={styles.nextBtnContainer}>
-            <FormButton
-              buttonTitle="Next"
-              onPress={() => goToFeedSettings()}
-
-            />
           </View>
+
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>HOBBIES</Text>
+
+            <TouchableOpacity style={styles.dropDownContainer} >
+              <Button
+                title={hobbisTitleFunc()}
+                type="outline"
+                raised={true}
+                buttonStyle={{ padding: 15 }}
+                onPress={() => props.navigation.navigate('HobbiesScreen')}
+
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View  >
+            <View style={styles.nextBtnContainer}>
+              <FormButton
+                buttonTitle="Next"
+                onPress={() => goToFeedSettings()}
+
+              />
+            </View>
+          </View>
+
+
         </View>
-
-
-      </View>
-    </ScrollView >
+      </View >
+    </KeyboardAvoidingView>
 
 
   return (
@@ -417,7 +436,7 @@ const ProfileSetup = (props) => {
   );
 };
 
-export default ProfileSetup;
+export default EditProfile;
 
 const styles = StyleSheet.create({
   container: {
@@ -473,8 +492,8 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    width: windowWidth / 4,
-    height: windowWidth / 4
+    width: windowWidth / 3.2,
+    height: windowWidth / 3.2
   },
   setupParams: {
     fontSize: 14,
