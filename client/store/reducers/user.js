@@ -8,7 +8,8 @@ const initialState = {
     userType: null,
     participantGender: null,
     participantAge: null,
-    meetingLocation: null
+    meetingLocation: null,
+    userImage: null
 
 
 
@@ -36,7 +37,8 @@ function userReducer(state = initialState, action) {
                 userType: payload.helpType,
                 participantGender: payload.participantGender,
                 participantAge: payload.participantAge,
-                meetingLocation: payload.meetingLocation
+                meetingLocation: payload.meetingLocation,
+                userImage: payload.pictureUrl
             }
         default:
             return state;

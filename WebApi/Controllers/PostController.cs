@@ -80,6 +80,68 @@ namespace WebApi.Controllers
 
 
 
+
+
+
+
+
+        [HttpGet]
+        [Route("getuserposts/{id}")]
+
+        public List<PostDTO> GetUserPosts(int id)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+            var posts = db.Posts.Where(p => p.member_id == id).Select(x => new PostDTO()
+            {
+
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+            }).ToList();
+
+            return posts;
+
+
+
+        }
+
+
+
+
+
+
+
+
+
         // POST api/<controller>
 
 
@@ -174,6 +236,46 @@ namespace WebApi.Controllers
             }
 
         }
+
+
+
+        [HttpDelete]
+        [Route("deletepost/{postId}")]
+        public HttpResponseMessage DeletePost(int postId)
+        {
+            /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Post postToDelete = db.Posts.Where(x => x.id == postId).First();
+                db.Posts.Remove(postToDelete);
+                MembersPost membersPostToDelete = db.MembersPosts.Where(x => x.postId == postId).First();
+                db.MembersPosts.Remove(membersPostToDelete);
+               
+
+                foreach (Comment comment in db.Comments)
+                {
+                    if (comment.postId == postId)
+                    {
+                        db.Comments.Remove(comment);
+                    }
+                }
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Post deleted from DB");
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
 
 
         public void Post([FromBody] string value)

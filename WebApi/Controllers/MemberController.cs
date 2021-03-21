@@ -68,8 +68,9 @@ namespace WebApi.Controllers
                     helpType = x.memberType,
                     participantAge = x.participantAgeRange,
                     participantGender = x.participantGender,
-                    meetingLocation = x.postLocation
-                 
+                    meetingLocation = x.postLocation,
+                    pictureUrl = member.pictureUrl
+
                 });
 
 
@@ -110,7 +111,8 @@ namespace WebApi.Controllers
                         helpType = x.memberType,
                         participantAge = x.participantAgeRange,
                         participantGender = x.participantGender,
-                        meetingLocation = x.postLocation
+                        meetingLocation = x.postLocation,
+                        pictureUrl = member.pictureUrl
 
 
                     });
@@ -191,7 +193,8 @@ namespace WebApi.Controllers
                     participantAge = memberSignupDTO.feedSettings.participantAgeRange,
                     participantGender = memberSignupDTO.feedSettings.participantGender,
                     helpType = memberSignupDTO.feedSettings.memberType,
-                    meetingLocation = memberSignupDTO.feedSettings.postLocation
+                    meetingLocation = memberSignupDTO.feedSettings.postLocation,
+                    pictureUrl = member.pictureUrl
                 };
 
                 return Request.CreateResponse(HttpStatusCode.OK, authorizedMemberDetailsDTO);
@@ -204,6 +207,64 @@ namespace WebApi.Controllers
             }
 
         }
+
+
+
+
+
+
+        [HttpGet]
+        [Route("getmyprofile/{id}")]
+        public HttpResponseMessage GetMyProfile(int id)
+        {
+
+   
+
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+                Member member = db.Members.SingleOrDefault(x => x.id == id);
+                int unixDateOfBirth = (int)member.dateOfBirth;
+                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(unixDateOfBirth).ToLocalTime();
+                var today = DateTime.Today;
+                // Calculate the age.
+                int age = today.Year - dtDateTime.Year;
+                // Go back to the year in which the person was born in case of a leap year
+                if (dtDateTime.Date > today.AddYears(-age)) { age--; }
+                ProfileDetailsDTO profileDetailsDTO = new ProfileDetailsDTO()
+                {
+                    age = age,
+                    city = member.city,
+                    occupation = member.occupation,
+                    bio = member.biography,
+                    hobbies = db.MembersHobbies.Where(h => h.memberId == member.id).Select(z => new HobbiesDTO
+                    {
+                        name = z.Hobby.name
+                    }).ToList()
+
+                };
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, profileDetailsDTO);
+
+
+
+            }
+            catch (Exception e)
+            {
+             
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+
+               
+            }
+
+        }
+
+
+
+
 
         // POST api/<controller>
         public void Post([FromBody] string value)

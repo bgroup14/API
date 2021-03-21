@@ -13,5 +13,6 @@ namespace WebApi.DTO
         public string participantGender;
         public string participantAge;
         public string meetingLocation;
+        public string pictureUrl;
     }
 }

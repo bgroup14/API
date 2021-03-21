@@ -2,46 +2,28 @@ import { text } from '@fortawesome/fontawesome-svg-core';
 import React, { useState } from 'react'
 import { KeyboardAvoidingView, Alert } from 'react-native';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import { Avatar, ListItem } from 'react-native-elements';
+import { Avatar } from 'react-native-elements';
 import { Divider } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { windowHeight } from '../../utils/Dimentions';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
 
 
 const Post = (props) => {
-    const { postId, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName, comments } = props.post;
+    const { postId, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName, comments, member_id } = props.post;
+    let currentMemberId = props.currentMemberId;
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
+    let commentsLabel = comments.length > 1 ? 'Comments' : 'Comment';
 
 
 
-    // let comments = [
-    //     {
-    //         commentingMemberName: 'LeBron James',
-    //         commentingMemberImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9wl5WIvrkZ-VoZn2HuReBMOYxCCtZxSQTdQ&usqp=CAU',
-    //         text: 'Had such a great time with you Alan!',
-    //         id: 1
-    //     },
-    //     {
-    //         commentingMemberName: 'Kendell Jenner',
-    //         commentingMemberImage: 'http://www.gstatic.com/tv/thumb/persons/532957/532957_v9_bb.jpg',
-    //         text: 'Alan was so cute and handsome',
-    //         id: 2
-    //     },
-    //     {
-    //         commentingMemberName: 'Dolev Tamir',
-    //         commentingMemberImage: 'http://www.gstatic.com/tv/thumb/persons/532957/532957_v9_bb.jpg',
-    //         text: 'Pleasure to collaborate with you',
-    //         id: 3
-    //     }
 
-    // ]
 
     const publishComment = async () => {
 
@@ -70,13 +52,11 @@ const Post = (props) => {
                 "Comment published successfully. ",
                 [
                     { text: "OK", onPress: () => props.refreshPage() }
-                    // { text: "OK", onPress: () => props.navigation.navigate('Home') }
 
                 ],
                 setShowCommentInput(false)
             );
 
-            // console.log("res data (payload is:)")
 
         } catch (err) {
 
@@ -92,26 +72,70 @@ const Post = (props) => {
 
         }
 
+    }
+    const askIfWantToDelete = (postId) => {
+        Alert.alert(
+            "Delete Post",
+            "Are you sure you want to delete this post?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => { return null },
+                    style: "cancel"
+                },
+                { text: "Delete", onPress: () => deletePost(postId) }
+            ]
+        );
+
+    }
+
+    const deletePost = async (postId) => {
+
+
+        try {
+
+            const res = await axios.delete(`https://proj.ruppin.ac.il/bgroup14/prod/api/post/deletepost/${postId}`)
+            Alert.alert(
+                "Post Deleted!",
+                "Post deleted successfully.",
+                [
+
+                    { text: "OK" }
+                ],
+            );
+            props.refreshPage();
 
 
 
 
+        } catch (error) {
+
+            Alert.alert(
+                "OOPS!",
+                "Error occurred, try again.",
+                [
+
+                    { text: "OK" }
+                ],
+            );
+        }
 
 
 
+        //19
+        // console.log(postId)
 
 
 
+        //AT THE END ACTIVATE PROPS.refreshPage
     }
 
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.postContainer}>
-                {/* <View style={styles.userImageContainer}> */}
                 <Avatar
 
                     size='large'
-                    // avatarStyle={{ height: 59, }}
                     containerStyle={{ marginTop: 10 }}
                     rounded
                     source={{
@@ -122,6 +146,10 @@ const Post = (props) => {
                 <View style={styles.postDetailsContainer}>
                     <View style={styles.userNameContainer}>
                         <Text style={styles.userName}>{postCreatorName}</Text>
+                        {/* {currentMemberId == member_id ? <FontAwsome name='home' /> : null} */}
+                        <TouchableOpacity onPress={() => askIfWantToDelete(postId)}>
+                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 2.5, marginTop: 6 }} />
+                        </TouchableOpacity>
 
                     </View>
                     <Text style={styles.postText}>{text}</Text>
@@ -141,14 +169,16 @@ const Post = (props) => {
                     <Text style={styles.btnText}>Comment</Text>
                 </TouchableOpacity >
 
-                <TouchableOpacity style={styles.postBtn}>
+                {/* <TouchableOpacity style={styles.postBtn}>
                     <FontAwsome name='heart-o' size={25} color="gray" />
                     <Text style={styles.btnText}>Like</Text>
-                </TouchableOpacity >
-                <TouchableOpacity style={styles.postBtn}>
+                </TouchableOpacity > */}
+                { }
+                {currentMemberId == member_id ? null : <TouchableOpacity style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
-                </TouchableOpacity >
+                </TouchableOpacity >}
+
             </View>
             {showCommentInput ?
                 <View style={styles.commentContainer}>
@@ -157,9 +187,10 @@ const Post = (props) => {
                         <FontAwsome name='send-o' color='#fff' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
                     </TouchableOpacity>
                 </View> : null}
-            <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
-                <Text>{comments.length} Comments</Text>
-            </TouchableOpacity>
+            {comments.length > 0 ? <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
+                <Text>{comments.length} {commentsLabel}</Text>
+            </TouchableOpacity> : null}
+
 
 
             <Divider style={{ height: 1.5 }} />
@@ -195,7 +226,7 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-between',
         marginLeft: 20,
         marginTop: 10,
-        maxWidth: 200,
+        maxWidth: windowWidth / 1.8,
 
 
         // alignItems: 'center'
@@ -203,6 +234,8 @@ const styles = StyleSheet.create({
     },
     userNameContainer: {
         //margin: 2
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     userName:
     {
@@ -239,7 +272,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     btnText: { marginLeft: 5 },
-    commentsContainer: { marginTop: 10, marginBottom: 10, alignItems: 'flex-end' },
+    commentsContainer:
+    {
+        //marginTop: 1,
+        marginBottom: 4,
+        alignItems: 'flex-end'
+    },
 
     // userImageContainer: {
     //     flex: 1,
