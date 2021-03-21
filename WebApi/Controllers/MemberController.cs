@@ -218,7 +218,7 @@ namespace WebApi.Controllers
         public HttpResponseMessage GetMyProfile(int id)
         {
 
-   
+
 
             try
             {
@@ -235,6 +235,8 @@ namespace WebApi.Controllers
                 if (dtDateTime.Date > today.AddYears(-age)) { age--; }
                 ProfileDetailsDTO profileDetailsDTO = new ProfileDetailsDTO()
                 {
+                    pictureUrl = member.pictureUrl,
+                    fullName = member.fullName,
                     age = age,
                     city = member.city,
                     occupation = member.occupation,
@@ -254,10 +256,10 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-             
+
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
 
-               
+
             }
 
         }

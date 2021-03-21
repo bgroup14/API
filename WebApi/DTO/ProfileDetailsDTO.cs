@@ -11,6 +11,8 @@ namespace WebApi.DTO
         public string occupation;
         public string city;
         public string bio;
+        public string pictureUrl;
+        public string fullName;
         public List<HobbiesDTO> hobbies;
     }
 }
