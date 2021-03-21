@@ -1,6 +1,7 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { View, Image, StyleSheet } from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen'
 import MyProfileScreen from '../screens/MyProfileScreen'
@@ -8,12 +9,17 @@ import ChatScreen from '../screens/ChatScreen'
 import PostPublishScreen from '../screens/PostPublishScreen'
 import SearchScreen from '../screens/SearchScreen'
 import Notifications from '../screens/Notifications';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+import { useSelector } from 'react-redux';
+
 
 
 
 const MainStackScreens = () => {
 
     const MainStack = createBottomTabNavigator();
+    let userImage = useSelector(state => state.user.userImage);
+
 
     const tabBarOptions = {
         showLabel: false,
@@ -41,9 +47,9 @@ const MainStackScreens = () => {
                 case "Search":
                     iconName = "search"
                     break;
-                case "MyProfile":
-                    iconName = "md-person"
-                    break;
+                // case "MyProfile":
+                //     iconName = "md-person"
+                //     break;
 
                 default:
                     iconName = "ios-home"
@@ -58,6 +64,13 @@ const MainStackScreens = () => {
                         shadowOpacity: 0.3
                     }} />
 
+            } if (route.name == "MyProfile") {
+                return <Image
+                    style={{ height: windowHeight / 28, width: windowHeight / 28, borderRadius: 20, marginTop: windowHeight / 90, marginRight: windowWidth / 40, marginBottom: windowHeight / 160 }}
+                    source={{
+                        uri: userImage,
+                    }}
+                />
             }
 
 

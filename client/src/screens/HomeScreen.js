@@ -84,6 +84,10 @@ const HomeScreen = (props) => {
 
     };
 
+    const filterByCategory = (categoryName) => {
+        /// Filter posts by category name
+    }
+
     let categories = [
         { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
         { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
@@ -96,6 +100,8 @@ const HomeScreen = (props) => {
 
     // let userName = useSelector(state => state.auth.userName);
     let userName = useSelector(state => state.user.userName);
+    const userId = useSelector(state => state.auth.userId);
+
     ///DELETE THIS!
     console.log("user name fromn rerdux is:" + userName)
     if (userName === null || userName === undefined) {
@@ -122,7 +128,6 @@ const HomeScreen = (props) => {
 
 
 
-    // const userId = useSelector(state => state.auth.userId);
 
     return (
         <KeyboardAvoidingView style={styles.container} >
@@ -156,7 +161,7 @@ const HomeScreen = (props) => {
 
                             justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
                         }}
-                        onChangeItem={item => alert(item)}
+                        onChangeItem={item => filterByCategory(item.value)}
                     // onChangeItem={item => setPostCategory(item.value)}
                     />
                     <TouchableOpacity onPress={() => setIsFilterVisble(true)} style={{ flex: 1 }}>
@@ -174,7 +179,7 @@ const HomeScreen = (props) => {
                         // return <Post text={post.text} cityName={post.cityName} />
                     })} */}
                     {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} />
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
 

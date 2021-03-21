@@ -1,0 +1,31 @@
+
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Button, Overlay } from 'react-native-elements';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+
+const DotsMenuOverlay = (props) => {
+
+    return (
+
+        <Overlay isVisible={props.isVisible} onBackdropPress={props.onBackdropPress} overlayStyle={styles.overlay}>
+            {props.children}
+        </Overlay>
+
+    )
+}
+
+export default DotsMenuOverlay
+
+const styles = StyleSheet.create({
+    overlay: {
+        marginBottom: windowHeight / 1.3,
+        padding: windowHeight / 50,
+        marginLeft: windowHeight / 6,
+        borderRadius: 6,
+        alignItems: 'center'
+
+    },
+
+})
+
