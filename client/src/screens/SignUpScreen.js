@@ -194,6 +194,7 @@ const SignupScreenTest = (props) => {
             placeholderText="Confirm Password"
             iconType="lock"
             secureTextEntry={true}
+            autoFocus={true}
           />
         </View>
         <View style={styles.signUpBtnContainer}>

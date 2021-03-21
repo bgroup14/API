@@ -127,6 +127,8 @@ const HomeScreen = (props) => {
 
 
     const goToOtherUserProfile = (member_id) => {
+
+        toggleCommentsScreen();
         // alert(member_id)
         if (userId == member_id) {
             props.navigation.navigate('MyProfile')
@@ -136,20 +138,17 @@ const HomeScreen = (props) => {
                 userId: member_id
             })
         }
-
-
-
     }
 
-
+    //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
     return (
         <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
-            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
-                <CommentsScreens comments={commentsToShow} />
+            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}   >
+                <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />

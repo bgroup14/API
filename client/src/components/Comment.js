@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
 const Comment = (props) => {
-    const { id, text, commentingMemberImage, commentingMemberName, } = props.comment;
+    const { id, text, commentingMemberImage, commentingMemberName, commentingMemberId } = props.comment;
 
 
 
@@ -34,8 +34,9 @@ const Comment = (props) => {
                 <View style={styles.comment}>
                     <View >
                         <View style={styles.userNameContainer}>
-                            <Text style={styles.userName}>{commentingMemberName}</Text>
-
+                            <TouchableOpacity onPress={() => props.goToOtherUserProfile(commentingMemberId)}>
+                                <Text style={styles.userName}>{commentingMemberName}</Text>
+                            </TouchableOpacity>
                         </View>
                         <Text style={styles.commentText}>{text}</Text>
 
@@ -79,11 +80,10 @@ const styles = StyleSheet.create({
         //  marginVertical: 1,
         alignItems: 'flex-start',
         // maxHeight: 100,
-        borderRadius: 8,
-
+        // borderRadius: 40
 
     },
-    comment: { backgroundColor: '#EDEDED', width: '100%', borderRadius: 8, marginTop: windowHeight / 60, height: '100%', },
+    comment: { backgroundColor: '#EDEDED', width: windowWidth / 1.5, borderRadius: 16, marginTop: windowHeight / 60, height: '100%', },
 
     userNameContainer: {
         marginTop: windowWidth / 80,
