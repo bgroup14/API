@@ -16,7 +16,7 @@ import axios from 'axios';
 const Post = (props) => {
     const { postId, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName, comments, member_id } = props.post;
     let currentMemberId = props.currentMemberId;
-    console.log("current member id is: " + currentMemberId)
+    //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);

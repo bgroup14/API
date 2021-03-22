@@ -124,18 +124,17 @@ const OtherUserProfileScreen = (props) => {
     const goToOtherUserProfile = (member_id) => {
 
         toggleCommentsScreen();
-        // alert(member_id)
-        if (userId == member_id) {
-            props.navigation.navigate('OtherUserProfileScreen', {
-                userId: member_id
-            })
+        if (currentMemberId == member_id) {
+            props.navigation.navigate('MyProfile')
         }
         else {
             props.navigation.navigate('OtherUserProfileScreen', {
                 userId: member_id
             })
         }
+
     }
+
 
 
     return (

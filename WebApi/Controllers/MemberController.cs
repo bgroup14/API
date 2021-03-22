@@ -213,6 +213,85 @@ namespace WebApi.Controllers
 
 
 
+
+
+        [HttpPut]
+        [Route("Updateprofile/{userId}")]
+        public HttpResponseMessage UpdateProfile(ProfileDetailsDTO profileDetailsDTO, int userId)
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            Member member = db.Members.Where(x => x.id == userId).FirstOrDefault();
+
+            try
+            {
+
+                if (profileDetailsDTO.unixDate == null)
+                {
+                    member.city = profileDetailsDTO.city;
+                    member.biography = profileDetailsDTO.bio;
+                    member.occupation = profileDetailsDTO.occupation;
+                    member.gender = profileDetailsDTO.gender;
+                    member.pictureUrl = profileDetailsDTO.pictureUrl;
+                }
+                else
+                {
+                    member.city = profileDetailsDTO.city;
+                    member.biography = profileDetailsDTO.bio;
+                    member.occupation = profileDetailsDTO.occupation;
+                    member.gender = profileDetailsDTO.gender;
+                    member.pictureUrl = profileDetailsDTO.pictureUrl;
+                    member.dateOfBirth = profileDetailsDTO.unixDate;
+                }
+
+                if (profileDetailsDTO.hobbies != null)
+                {
+                    foreach (MembersHobby hobby in db.MembersHobbies.Where(x => x.memberId == userId))
+                    {
+                        MembersHobby membersHobby = hobby;
+                        db.MembersHobbies.Remove(membersHobby);
+                    }
+
+                    foreach (HobbiesDTO hobby in profileDetailsDTO.hobbies)
+                    {
+
+                        MembersHobby hobbies = new MembersHobby();
+                        hobbies.hobbyId = hobby.id;
+                        hobbies.memberId = member.id;
+                        db.MembersHobbies.Add(hobbies);
+
+                    }
+                }
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Profile updated successfully");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpGet]
         [Route("getmyprofile/{id}")]
         public HttpResponseMessage GetMyProfile(int id)
@@ -233,6 +312,9 @@ namespace WebApi.Controllers
                 int age = today.Year - dtDateTime.Year;
                 // Go back to the year in which the person was born in case of a leap year
                 if (dtDateTime.Date > today.AddYears(-age)) { age--; }
+                string dateOfBirth = dtDateTime.ToString();
+                string dateOfBirthLabel = dateOfBirth.Substring(0, dateOfBirth.IndexOf(" "));
+
                 ProfileDetailsDTO profileDetailsDTO = new ProfileDetailsDTO()
                 {
                     pictureUrl = member.pictureUrl,
@@ -241,6 +323,9 @@ namespace WebApi.Controllers
                     city = member.city,
                     occupation = member.occupation,
                     bio = member.biography,
+                    gender = member.gender,
+                    dateOfBirth = dateOfBirthLabel,
+
                     hobbies = db.MembersHobbies.Where(h => h.memberId == member.id).Select(z => new HobbiesDTO
                     {
                         name = z.Hobby.name
