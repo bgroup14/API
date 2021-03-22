@@ -17,6 +17,7 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 const MyProfileScreen = (props) => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [userAge, setUserAge] = useState(null);
+    const [userImage, setUserImage] = useState(null);
     const [userBio, setUserBio] = useState(null);
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
@@ -47,6 +48,7 @@ const MyProfileScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             // fetchPosts()
+            fetchUserDetails()
             fetchUserPosts()
             setNewComment(false)
 
@@ -71,6 +73,8 @@ const MyProfileScreen = (props) => {
         //console.log(res.data.city + "cityy")
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
+        console.log("user image is :" + res.data.pictureUrl)
+        setUserImage(res.data.pictureUrl)
         let cityName = res.data.city.replace(/,[^,]+$/, "")
         // console.log(str)
         setUserCity(cityName)
@@ -95,7 +99,7 @@ const MyProfileScreen = (props) => {
 
 
     let userName = useSelector(state => state.user.userName);
-    let userImage = useSelector(state => state.user.userImage);
+    // let userImage = useSelector(state => state.user.userImage);
     ///DELETE THIS!
 
 
@@ -127,6 +131,7 @@ const MyProfileScreen = (props) => {
 
     const editProfile = () => {
 
+        setIsMenuVisible(false)
         props.navigation.navigate('EditProfile')
 
 

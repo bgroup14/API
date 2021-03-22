@@ -14,5 +14,9 @@ namespace WebApi.DTO
         public string pictureUrl;
         public string fullName;
         public List<HobbiesDTO> hobbies;
+        public string gender;
+        public string dateOfBirth;
+        public int? unixDate;
+
     }
 }

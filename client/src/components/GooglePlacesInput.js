@@ -25,7 +25,7 @@ const GooglePlacesInput = (props) => {
 
         <GooglePlacesAutocomplete
             suppressDefaultStyles={true}
-            placeholder='Enter city name'
+            placeholder={props.currentCity != undefined ? props.currentCity : 'Enter city name'}
             minLength={3}
             enablePoweredByContainer={false}
             // numberOfLines={2}
