@@ -28,7 +28,8 @@ const ChatScreen = () => {
                     
                 </View>
             </View>
-            <ScrollView>
+            <ScrollView style={styles.chatContainer}>
+                <ChatContact />
                 <ChatContact />
                 
             </ScrollView>
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
     },
     filterICon: { marginLeft: 30, marginTop: 15 },
 
-    postsContainer: {
+    chatContainer: {
         //    / flex: 1,
         //   minHeight: 140
         // justifyContent: '',
