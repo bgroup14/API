@@ -271,8 +271,29 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
+        }
 
+        [HttpPut]
+        [Route("updatefeedsettings/{userId}")]
+        public HttpResponseMessage UpdateFeedSettings(FeedSettingsDTO feedSettingsDTO, int userId)
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();  
+            FeedSetting feedSetting = db.FeedSettings.Where(x => x.memberId == userId).FirstOrDefault();
+            try
+            {
 
+                feedSetting.memberType = feedSettingsDTO.memberType;
+                feedSetting.participantAgeRange = feedSettingsDTO.participantAgeRange;
+                feedSetting.participantGender = feedSettingsDTO.participantGender;
+                feedSetting.postLocation = feedSettingsDTO.postLocation;
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Feed settings updated successfully");
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
         }
 
 
