@@ -21,14 +21,30 @@ import DatePicker from '../components/DatePicker';
 import { Button } from 'react-native-elements';
 import SetLocationScreen from './SetLocationScreen';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 const PostPublishScreen = (props) => {
     const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
 
+
+
+
     useEffect(() => {
+
         setAgeRange();
+
     }, [participantAge])
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+
+        }, [])
+    )
+
+
 
     let index = 0;
     const activityTypes = [
@@ -189,7 +205,11 @@ const PostPublishScreen = (props) => {
 
     }
 
+
+
     const publishPost = async () => {
+
+
 
         let meetingLatitude = postLatitude == undefined ? null : postLatitude;
         let meetingLongitude = postLongitude == undefined ? null : postLongitude;
@@ -331,6 +351,7 @@ const PostPublishScreen = (props) => {
                             style={styles.postBtnText}
                             editable={false}
                             value={userType == "Both" ? "Select" : userType} />
+
                     </ModalSelector>
                 </View>
 
@@ -457,6 +478,7 @@ const PostPublishScreen = (props) => {
                         buttonTitle="Publish Post"
                         onPress={() => publishPost()}
                     />
+
                 </View>
 
             </View>

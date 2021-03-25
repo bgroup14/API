@@ -1,6 +1,6 @@
 
 import { View, StyleSheet, Button, Alert } from "react-native";
-import { LOGIN_SUCCESS, REGISTER_SUCCESS, USER_LOGGED, IMAGE_UPDATED } from './types';
+import { LOGIN_SUCCESS, REGISTER_SUCCESS, USER_LOGGED } from './types';
 import axios from 'axios';
 
 //Login User

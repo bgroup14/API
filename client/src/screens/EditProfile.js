@@ -20,14 +20,17 @@ import MyLinearGradient from '../components/MyLinearGradient';
 import { RadioButton } from 'react-native-paper';
 import GooglePlacesInput from '../components/GooglePlacesInput';
 import { KeyboardAvoidingView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+
+import { updateImage } from '../../store/actions/user';
 
 
 
 
 
 const EditProfile = (props) => {
+  const dispatch = useDispatch();
   const [userCurrentCity, setUserCurrentCity] = useState();
   const [userCurrentImage, setUserCurrentImage] = useState();
   const [userCurrentBio, setUserCurrentBio] = useState();
@@ -60,13 +63,13 @@ const EditProfile = (props) => {
 
 
     if (!pictureWasUpdated) {
-      console.log("pictrue ws updated? " + pictureWasUpdated)
+      // console.log("pictrue ws updated? " + pictureWasUpdated)
       fetchUserDetails();
     }
 
     else {
-      console.log("pictrue ws updated? " + pictureWasUpdated)
-      console.log("Updating profile...")
+      // console.log("pictrue ws updated? " + pictureWasUpdated)
+      // console.log("Updating profile...")
       updateProfie();
 
 
@@ -78,7 +81,7 @@ const EditProfile = (props) => {
 
     try {
       await AsyncStorage.removeItem(key);
-      console.log("AS Hobbies removed")
+      // console.log("AS Hobbies removed")
       return true;
     }
     catch (exception) {
@@ -91,7 +94,7 @@ const EditProfile = (props) => {
   const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
 
   const fetchUserDetails = async () => {
-    console.log("fetching user details...");
+    //   console.log("fetching user details...");
     const res = await axios(userDetailsFetchURL);
     //console.log(res.data)
     setUserCurrentImage(res.data.pictureUrl)
@@ -151,8 +154,8 @@ const EditProfile = (props) => {
       return;
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log("picker res is:!!!")
-    console.log(pickerResult);
+    //console.log("picker res is:!!!")
+    // console.log(pickerResult);
     if (pickerResult.cancelled === true) {
       return;
     }
@@ -167,10 +170,10 @@ const EditProfile = (props) => {
       let jsonObjHobbies = hobbiesJsonValue != null ? JSON.parse(hobbiesJsonValue) : null;
       if (jsonObjHobbies != null) {
         setHobbies(jsonObjHobbies)
-        console.log("hobbies wwere saved!: ")
+        // console.log("hobbies wwere saved!: ")
       } else {
         setHobbies([])
-        console.log("hobbies AS are null")
+        // console.log("hobbies AS are null")
       }
 
 
@@ -191,11 +194,11 @@ const EditProfile = (props) => {
   const updateProfie = async () => {
     // console.log(userCurrentImage)
     if (uploadedPicture.uri == undefined) {
-      console.log("is undefiend!!")
+      // console.log("is undefiend!!")
       setImage();
       return null;
     }
-    console.log("is defined!!!!!")
+    // console.log("is defined!!!!!")
 
     let profileSetupDetails = {
       city: userCurrentCity,
@@ -223,10 +226,11 @@ const EditProfile = (props) => {
         res.data,
         [
 
-          { text: "OK" }
+          { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
         ],
       );
-      props.navigation.navigate('MyProfile')
+      dispatch(updateImage(uploadedPicture.uri));
+
 
 
     } catch (error) {
@@ -240,7 +244,7 @@ const EditProfile = (props) => {
       );
 
     }
-    console.log(body)
+    // console.log(body)
     //console.log("Profile updated detials are " + userCurrentImage)
     return null;
     // storeData(profileSetupDetails).then(
@@ -249,7 +253,7 @@ const EditProfile = (props) => {
   }
 
   const setImage = () => {
-    console.log("selected image is " + selectedImage)
+    // console.log("selected image is " + selectedImage)
     if (selectedImage != null) {
       let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
       let imgName = "alan93@walla.co.il" + '_imgFromCamera.jpg';
@@ -447,10 +451,18 @@ const EditProfile = (props) => {
 
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text style={styles.text}>Profile Setup</Text>
-            <View style={styles.imageContainer}>
-              {image}
+            <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
+            >
+              <Text style={styles.barReset}>Cancel</Text>
+            </TouchableOpacity>
+            <View style={{ marginRight: 120 }}>
+              <Text style={styles.text}>Profile Setup</Text>
             </View>
+
+
+          </View>
+          <View style={styles.imageContainer}>
+            {image}
           </View>
 
           <View style={styles.setupParamsContainer}>
@@ -596,7 +608,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    margin: windowHeight / 50
+    margin: windowHeight / 50,
+    alignItems: 'center'
+
   },
   overlayStyle: {
     flex: 1,
@@ -637,10 +651,24 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   headerContainer: {
-    alignItems: 'center'
+    flexDirection: 'row-reverse',
+    margin: windowHeight / 160,
+    //marginTop: windowHeight / 100,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // flexDirection: 'row',
+    paddingLeft: 20,
+    paddingRight: 30,
+    // height: windowHeight / 10,
+    //  alignItems: 'center'
   },
   nextBtnContainer: {
 
-  }
+  },
+  barReset: {
+    color: 'red',
+    marginTop: windowHeight / 40,
+    //marginLeft: 200
+  },
 
 });

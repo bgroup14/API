@@ -8,13 +8,14 @@ const DotsMenu = (props) => {
             <TouchableOpacity onPress={() => props.editProfile()}>
                 <Text style={styles.optionText}>Edit Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => props.editFeedSettings()}>
                 <Text style={styles.optionText}>Feed Settings</Text>
             </TouchableOpacity>
             <TouchableOpacity>
                 <Text style={styles.optionText}>Get Certification</Text>
             </TouchableOpacity>
         </View>
+
     )
 }
 
