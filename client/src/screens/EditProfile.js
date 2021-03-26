@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform } from 'react-native';
+import React, { Fragment, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform, Alert } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import TextArea from '../components/TextArea';
@@ -20,10 +20,27 @@ import MyLinearGradient from '../components/MyLinearGradient';
 import { RadioButton } from 'react-native-paper';
 import GooglePlacesInput from '../components/GooglePlacesInput';
 import { KeyboardAvoidingView } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+
+import { updateImage } from '../../store/actions/user';
+
+
 
 
 
 const EditProfile = (props) => {
+  const dispatch = useDispatch();
+  const [userCurrentCity, setUserCurrentCity] = useState();
+  const [userCurrentImage, setUserCurrentImage] = useState();
+  const [userCurrentBio, setUserCurrentBio] = useState();
+  const [userCurrentOccupation, setUserCurrentOccupation] = useState();
+  const [userCurrentDateOfBirth, setUserCurrentDateOfBirth] = useState();
+  const [userCurrentGender, setUserCurrentGender] = useState();
+  const uplodedPicPath = 'http://proj.ruppin.ac.il/bgroup14/prod/Userimage/';
+  const [uploadedPicture, setUploadedPicture] = useState({});
+  const [pictureWasUpdated, setPictureWasUpdated] = useState(false);
+
   const [city, setCity] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
   const [signUpDetails, setSignUpDetails] = useState({});
@@ -41,10 +58,70 @@ const EditProfile = (props) => {
     setVisible(!visible);
   };
 
+  useEffect(() => {
+    clearAsHobbies("hobbies")
+
+
+    if (!pictureWasUpdated) {
+      // console.log("pictrue ws updated? " + pictureWasUpdated)
+      fetchUserDetails();
+    }
+
+    else {
+      // console.log("pictrue ws updated? " + pictureWasUpdated)
+      // console.log("Updating profile...")
+      updateProfie();
+
+
+    }
+
+  }, [uploadedPicture])
+
+  const clearAsHobbies = async (key) => {
+
+    try {
+      await AsyncStorage.removeItem(key);
+      // console.log("AS Hobbies removed")
+      return true;
+    }
+    catch (exception) {
+      return false;
+    }
+  }
+
+
+  let userId = useSelector(state => state.auth.userId);
+  const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
+
+  const fetchUserDetails = async () => {
+    //   console.log("fetching user details...");
+    const res = await axios(userDetailsFetchURL);
+    //console.log(res.data)
+    setUserCurrentImage(res.data.pictureUrl)
+    //console.log(res.data.city + "cityy")
+    //setUserAge(res.data.age)
+
+    setUserCurrentBio(res.data.bio)
+    let cityName = res.data.city.replace(/,[^,]+$/, "")
+    setUserCurrentCity(cityName)
+    setUserCurrentDateOfBirth(res.data.dateOfBirth)
+    setDateLabel(res.data.dateOfBirth)
+    setUserCurrentGender(res.data.gender)
+
+    // console.log(str)
+    setUserCurrentOccupation(res.data.occupation)
+
+
+  }
+
+
+
+
+
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log(windowHeight)
+      //console.log(windowHeight)
 
       getDataFromAS();
 
@@ -77,8 +154,8 @@ const EditProfile = (props) => {
       return;
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log("picker res is:!!!")
-    console.log(pickerResult);
+    //console.log("picker res is:!!!")
+    // console.log(pickerResult);
     if (pickerResult.cancelled === true) {
       return;
     }
@@ -88,20 +165,15 @@ const EditProfile = (props) => {
 
   const getDataFromAS = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('signUpDetails')
-      let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
-      if (jsonObj != null) {
-        setSignUpDetails(jsonObj)
-        console.log("sign up name from previous page: " + jsonObj.fullName)
-      }
+
       const hobbiesJsonValue = await AsyncStorage.getItem('hobbies')
       let jsonObjHobbies = hobbiesJsonValue != null ? JSON.parse(hobbiesJsonValue) : null;
       if (jsonObjHobbies != null) {
         setHobbies(jsonObjHobbies)
-        console.log("hobbies wwere saved!: ")
+        // console.log("hobbies wwere saved!: ")
       } else {
         setHobbies([])
-        console.log("hobbies AS are null")
+        // console.log("hobbies AS are null")
       }
 
 
@@ -119,29 +191,123 @@ const EditProfile = (props) => {
       console.log(e)
     }
   }
-  const goToFeedSettings = () => {
-    let image = setImage();
+  const updateProfie = async () => {
+    // console.log(userCurrentImage)
+    if (uploadedPicture.uri == undefined) {
+      // console.log("is undefiend!!")
+      setImage();
+      return null;
+    }
+    // console.log("is defined!!!!!")
 
     let profileSetupDetails = {
-      city,
-      occupation,
-      bio,
-      gender,
-      date: unixDate,
-      image,
-
+      city: userCurrentCity,
+      occupation: userCurrentOccupation,
+      bio: userCurrentBio,
+      gender: userCurrentGender,
+      unixDate,
+      pictureUrl: uploadedPicture.uri,
+      hobbies: hobbies.length > 0 ? hobbies : null,
 
     }
-    storeData(profileSetupDetails).then(
-      props.navigation.navigate('FeedSettings')
-    );
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+
+    }
+
+    const body = JSON.stringify(profileSetupDetails)
+    try {
+      const res = await axios.put(`https://proj.ruppin.ac.il/bgroup14/prod/api/member/Updateprofile/${userId}`, body, config);
+      Alert.alert(
+        "Profile Updated",
+        res.data,
+        [
+
+          { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
+        ],
+      );
+      dispatch(updateImage(uploadedPicture.uri));
+
+
+
+    } catch (error) {
+      Alert.alert(
+        "OOPS!",
+        "An error has occured sending the data",
+        [
+
+          { text: "OK" }
+        ],
+      );
+
+    }
+    // console.log(body)
+    //console.log("Profile updated detials are " + userCurrentImage)
+    return null;
+    // storeData(profileSetupDetails).then(
+    //   props.navigation.navigate('FeedSettings')
+    // );
   }
 
   const setImage = () => {
+    // console.log("selected image is " + selectedImage)
     if (selectedImage != null) {
-      return selectedImage;
-    } else if (signUpDetails.fbImage != undefined) {
-      return signUpDetails.fbImage;
+      let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
+      let imgName = "alan93@walla.co.il" + '_imgFromCamera.jpg';
+      let imgUri = selectedImage
+      let dataI = new FormData();
+      dataI.append('image', {
+        uri: imgUri,
+        name: imgName,
+        type: 'image/jpg'
+      });
+      const config = {
+        method: 'POST',
+        body: dataI,
+      };
+
+      fetch(urlAPI, config)
+        .then((res) => {
+          //  console.log('res.status=', res.status);
+          if (res.status == 201) {
+            return res.json();
+          }
+          else {
+            console.log('error uploding res is  ...' + res.statusText + res.message);
+            return "err";
+          }
+        })
+        .then((responseData) => {
+          // console.log(responseData);
+          if (responseData != "err") {
+            let picNameWOExt = imgName.substring(0, imgName.indexOf("."));
+            let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
+            let uploadedPicture = ({ uri: uplodedPicPath + imageNameWithGUID })
+            // return uploadedPicture;
+            setPictureWasUpdated(true)
+            setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
+
+
+            console.log("img uploaded successfully!");
+          }
+          else {
+            console.log('error uploding ...');
+            alert('error uploding ...');
+          }
+        })
+        .catch(err => {
+          alert('err upload= ' + err);
+        });
+      // return selectedImage;
+    } else {
+      setPictureWasUpdated(true)
+      setUploadedPicture({ uri: userCurrentImage })
+
+
+      // console.log(userCurrentImage)
     }
 
 
@@ -149,16 +315,19 @@ const EditProfile = (props) => {
 
 
 
-  let image = signUpDetails.fbImage ? <Image
-    source={{ uri: signUpDetails.fbImage }}
-    style={styles.profileImage}
-  /> : <TouchableOpacity onPress={() => toggleOverlay()} >
-    <Image
-      source={require('../../assets/camera.png')}
-      style={styles.camera}
-    />
+  let image = userCurrentImage ?
+    <TouchableOpacity onPress={() => toggleOverlay()}>
+      <Image
+        source={{ uri: userCurrentImage }}
+        style={styles.profileImage}
+      />
+    </TouchableOpacity> : <TouchableOpacity onPress={() => toggleOverlay()} >
+      <Image
+        source={require('../../assets/camera.png')}
+        style={styles.camera}
+      />
 
-  </TouchableOpacity>
+    </TouchableOpacity>
 
   if (selectedImage !== null) {
     image = <TouchableOpacity onPress={() => toggleOverlay()}>
@@ -174,7 +343,7 @@ const EditProfile = (props) => {
 
   const getCityName = (cityName) => {
     // console.log("city name is: " + cityName)
-    setCity(cityName)
+    setUserCurrentCity(cityName)
 
   }
 
@@ -282,35 +451,36 @@ const EditProfile = (props) => {
 
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text style={styles.text}>Profile Setup</Text>
-            <View style={styles.imageContainer}>
-              {image}
+            <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
+            >
+              <Text style={styles.barReset}>Cancel</Text>
+            </TouchableOpacity>
+            <View style={{ marginRight: 120 }}>
+              <Text style={styles.text}>Profile Setup</Text>
             </View>
+
+
+          </View>
+          <View style={styles.imageContainer}>
+            {image}
           </View>
 
           <View style={styles.setupParamsContainer}>
             <Text style={styles.setupParams}>CURRENT CITY</Text>
-            <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)} />
+            <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)} currentCity={userCurrentCity} />
 
 
-            {/* <FormInput
-            labelValue={city}
-            placeholderText="City"
-            iconType="home"
-            autoCapitalize="none"
-            autoCorrect={true}
-            onChangeText={(text) => setCity(text)} /> */}
           </View>
           <View style={styles.setupParamsContainer}>
             <Text style={styles.setupParams}>SHORT BIO</Text>
 
             <TextArea
-              labelValue={bio}
-              placeholderText="What do you want people to know about you?"
+              labelValue={userCurrentBio}
+              placeholderText={userCurrentBio}
               iconType="calendar"
               autoCapitalize="none"
               autoCorrect={false}
-              onChangeText={(text) => setBio(text)}
+              onChangeText={(text) => setUserCurrentBio(text)}
 
             />
           </View >
@@ -318,11 +488,11 @@ const EditProfile = (props) => {
             <Text style={styles.setupParams}>OCCUPATION</Text>
 
             <FormInput
-              labelValue={occupation}
-              placeholderText="Occupation"
+              labelValue={userCurrentOccupation}
+              placeholderText={userCurrentOccupation}
               iconType="suitcase"
               autoCapitalize='words'
-              onChangeText={(text) => setOccupation(text)}
+              onChangeText={(text) => setUserCurrentOccupation(text)}
             />
           </View>
           <View style={styles.setupParamsContainer}>
@@ -330,8 +500,9 @@ const EditProfile = (props) => {
             <TouchableOpacity onPress={showDatepicker}>
               <FormInput
                 onDatePress={showDatepicker}
-                // labelValue={dateLabel}
-                placeholderText={dateLabel}
+                labelValue={dateLabel}
+                // placeholderText={dateLabel}
+                placeholderText={userCurrentDateOfBirth}
                 iconType="calendar"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -351,46 +522,21 @@ const EditProfile = (props) => {
               <RadioButton
                 color="blue"
                 value="first"
-                status={gender === 'Male' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Male')}
+                status={userCurrentGender === 'Male' ? 'checked' : 'unchecked'}
+                onPress={() => setUserCurrentGender('Male')}
               />
               <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
 
               <RadioButton
                 color="pink"
                 value="second"
-                status={gender === 'Female' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Female')}
+                status={userCurrentGender === 'Female' ? 'checked' : 'unchecked'}
+                onPress={() => setUserCurrentGender('Female')}
               />
               <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
 
             </View>
-            {/* <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-            <RadioButton
-              color="pink"
-              value="second"
-              status={gender === 'Female' ? 'checked' : 'unchecked'}
-              onPress={() => setGender('Female')}
-            />
-            <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
 
-          </View> */}
-
-            {/* <DropDownPicker
-            placeholder="Select"
-            items={[
-              { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
-              { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
-            ]}
-            containerStyle={styles.dropDownContainer}
-            // style={{ borderWidth: 1, borderColor: '#ccc' }}
-            itemStyle={{
-
-              justifyContent: 'center', marginTop: 10
-            }}
-            onChangeItem={item => setGender(item.value)
-            }
-          /> */}
           </View>
 
           <View style={styles.setupParamsContainer}>
@@ -402,7 +548,7 @@ const EditProfile = (props) => {
                 type="outline"
                 raised={true}
                 buttonStyle={{ padding: 15 }}
-                onPress={() => props.navigation.navigate('HobbiesScreen')}
+                onPress={() => props.navigation.navigate('EditHobbiesScreen')}
 
               />
             </TouchableOpacity>
@@ -411,8 +557,8 @@ const EditProfile = (props) => {
           <View  >
             <View style={styles.nextBtnContainer}>
               <FormButton
-                buttonTitle="Next"
-                onPress={() => goToFeedSettings()}
+                buttonTitle="Update"
+                onPress={() => updateProfie()}
 
               />
             </View>
@@ -462,7 +608,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    margin: windowHeight / 50
+    margin: windowHeight / 50,
+    alignItems: 'center'
+
   },
   overlayStyle: {
     flex: 1,
@@ -503,10 +651,24 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   headerContainer: {
-    alignItems: 'center'
+    flexDirection: 'row-reverse',
+    margin: windowHeight / 160,
+    //marginTop: windowHeight / 100,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // flexDirection: 'row',
+    paddingLeft: 20,
+    paddingRight: 30,
+    // height: windowHeight / 10,
+    //  alignItems: 'center'
   },
   nextBtnContainer: {
 
-  }
+  },
+  barReset: {
+    color: 'red',
+    marginTop: windowHeight / 40,
+    //marginLeft: 200
+  },
 
 });

@@ -1,4 +1,4 @@
-import { USER_LOGGED } from '../actions/types';
+import { USER_LOGGED, IMAGE_UPDATED, FEED_SETTINGS_UPDATED } from '../actions/types';
 const initialState = {
     // token: localStorage.getItem('token'),
     // isAuthenticated: null,
@@ -9,7 +9,7 @@ const initialState = {
     participantGender: null,
     participantAge: null,
     meetingLocation: null,
-    userImage: null
+    userImage: null,
 
 
 
@@ -22,7 +22,9 @@ function userReducer(state = initialState, action) {
     //console.log("in the auth reducer")
     const { type, payload } = action
     // console.log(payload.meetingLocation)
-    console.log("the payload in the auth reducer is:")
+    // console.log("the payload.pictureuri in the user reducer is:")
+    // console.log(payload.pictureUrl)
+    console.log("the payload in the user reducer issss:")
     console.log(payload)
     switch (type) {
         case USER_LOGGED:
@@ -38,7 +40,27 @@ function userReducer(state = initialState, action) {
                 participantGender: payload.participantGender,
                 participantAge: payload.participantAge,
                 meetingLocation: payload.meetingLocation,
-                userImage: payload.pictureUrl
+                userImage: payload.pictureUrl,
+            }
+        case IMAGE_UPDATED:
+            return {
+                ...state,
+                userImage: payload
+
+            }
+        case FEED_SETTINGS_UPDATED:
+
+            console.log("updating feed settings....!!")
+            // console.log("payload usertype is: " + payload.memberType)
+            // console.log(payload.memberType == "Both")
+            return {
+                ...state,
+                userType: payload.memberType,
+                participantGender: payload.participantGender,
+                participantAge: payload.participantAgeRange,
+                meetingLocation: payload.postLocation
+
+
             }
         default:
             return state;

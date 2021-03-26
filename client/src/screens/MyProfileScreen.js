@@ -17,6 +17,7 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 const MyProfileScreen = (props) => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [userAge, setUserAge] = useState(null);
+    const [userImage, setUserImage] = useState(null);
     const [userBio, setUserBio] = useState(null);
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
@@ -35,7 +36,7 @@ const MyProfileScreen = (props) => {
         fetchUserDetails()
         fetchUserPosts()
         if (commentsToShow.length > 0) {
-            console.log(commentsToShow)
+            //console.log(commentsToShow)
             setIsCommentsVisible(true)
         }
 
@@ -47,6 +48,7 @@ const MyProfileScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             // fetchPosts()
+            fetchUserDetails()
             fetchUserPosts()
             setNewComment(false)
 
@@ -66,11 +68,13 @@ const MyProfileScreen = (props) => {
     const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
 
     const fetchUserDetails = async () => {
-        console.log("fetching user details...");
+        //  console.log("fetching user details...");
         const res = await axios(userDetailsFetchURL);
         //console.log(res.data.city + "cityy")
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
+        //  console.log("user image is :" + res.data.pictureUrl)
+        setUserImage(res.data.pictureUrl)
         let cityName = res.data.city.replace(/,[^,]+$/, "")
         // console.log(str)
         setUserCity(cityName)
@@ -88,14 +92,14 @@ const MyProfileScreen = (props) => {
 
     const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}`
     const fetchUserPosts = async () => {
-        console.log("fetching user posts...")
+        //   console.log("fetching user posts...")
         const res = await axios(userPostsFetchURL);
         setUserPosts(res.data);
     }
 
 
     let userName = useSelector(state => state.user.userName);
-    let userImage = useSelector(state => state.user.userImage);
+    // let userImage = useSelector(state => state.user.userImage);
     ///DELETE THIS!
 
 
@@ -127,7 +131,15 @@ const MyProfileScreen = (props) => {
 
     const editProfile = () => {
 
+        setIsMenuVisible(false)
         props.navigation.navigate('EditProfile')
+
+
+    }
+    const editFeedSettings = () => {
+
+        setIsMenuVisible(false)
+        props.navigation.navigate('EditFeedSettingsScreen')
 
 
     }
@@ -143,7 +155,7 @@ const MyProfileScreen = (props) => {
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <View style={styles.barContainer}>
                     <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
-                        <DotsMenu editProfile={() => editProfile()} />
+                        <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
                     </DotsMenuOverlay>
                     <Text style={styles.barText}>My Profile</Text>
                     <Icon

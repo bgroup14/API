@@ -19,6 +19,7 @@ const MainStackScreens = () => {
 
     const MainStack = createBottomTabNavigator();
     let userImage = useSelector(state => state.user.userImage);
+    // let userImage = useSelector(state => state.user.userImage);
 
 
     const tabBarOptions = {

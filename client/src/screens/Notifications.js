@@ -1,12 +1,11 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const Notifications = ({ route, navigation }) => {
-    const { userId, otherParam } = route.params;
+const Notifications = () => {
+
     return (
         <View style={styles.container}>
             <Text>Notificaions </Text>
-            <Text>{userId} </Text>
         </View>
     )
 }

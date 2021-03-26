@@ -47,7 +47,7 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
         if (commentsToShow.length > 0) {
-            console.log(commentsToShow)
+            // console.log(commentsToShow)
             setIsCommentsVisible(true)
         }
 
@@ -66,15 +66,15 @@ const HomeScreen = (props) => {
 
 
     const fetchPosts = async () => {
-        console.log("fetching posts data...");
+        // console.log("fetching posts data...");
         const res = await axios(postsFetchURL);
-        console.log(res.data)
+        //console.log(res.data)
         setPosts(res.data)
 
     };
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        console.log(filteredPostObj)
+        // console.log(filteredPostObj)
         setIsFilterVisble(false)
 
         // console.log("fetching posts data...");
@@ -103,7 +103,7 @@ const HomeScreen = (props) => {
     const userId = useSelector(state => state.auth.userId);
 
     ///DELETE THIS!
-    console.log("user name fromn rerdux is:" + userName)
+    //   console.log("user name fromn rerdux is:" + userName)
     if (userName === null || userName === undefined) {
         userName = 'Alan skverer'
     }
