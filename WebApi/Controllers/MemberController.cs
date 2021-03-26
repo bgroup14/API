@@ -374,6 +374,77 @@ namespace WebApi.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        [Route("getmembersbysearchword/{searchWord}")]
+        public HttpResponseMessage GetMembersBySearchWord(string searchWord)
+        {
+
+
+
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                var usersWIthSearchWord = db.Members.Where(x => x.fullName.Contains(searchWord)).ToList();
+                List<ProfileDetailsDTO> usersToSend = new List<ProfileDetailsDTO>();
+                foreach (Member m in usersWIthSearchWord)
+                {
+
+                    //calculate age
+                    int unixDateOfBirth = (int)m.dateOfBirth;
+                    DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                    dtDateTime = dtDateTime.AddSeconds(unixDateOfBirth).ToLocalTime();
+                    var today = DateTime.Today;
+                    // Calculate the age.
+                    int age = today.Year - dtDateTime.Year;
+                    // Go back to the year in which the person was born in case of a leap year
+                    if (dtDateTime.Date > today.AddYears(-age)) { age--; }
+
+                    ProfileDetailsDTO profileDTO = new ProfileDetailsDTO()
+                    {
+                        fullName=m.fullName,
+                        age=age,
+                        pictureUrl = m.pictureUrl,
+                        memberId=m.id
+
+                    };
+                    usersToSend.Add(profileDTO);
+
+                };
+
+
+
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, usersToSend);
+
+
+
+            }
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+
+
+            }
+
+        }
+
+
+
+
+
         // POST api/<controller>
         public void Post([FromBody] string value)
         {

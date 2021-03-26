@@ -17,6 +17,7 @@ namespace WebApi.DTO
         public string gender;
         public string dateOfBirth;
         public int? unixDate;
+        public int memberId;
 
     }
 }

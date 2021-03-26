@@ -77,6 +77,74 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("getpostsbysearchword/{searchWord}")]
+
+        public HttpResponseMessage GetPostsBySearchWord(string searchWord)
+        {
+
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var postsWIthSearchWord = db.Posts.Where(x => x.text.Contains(searchWord)).ToList();
+                List<PostDTO> postsToSend = new List<PostDTO>();
+
+                foreach (Post x in postsWIthSearchWord)
+                {
+                    PostDTO postDTO = new PostDTO()
+                    {
+                        text = x.text,
+                        fromAge = (int)x.fromAge,
+                        toAge = (int)x.toAge,
+                        helpType = x.helpType,
+                        isZoom = x.isZoom,
+                        unixDate = (int)x.unixDate,
+                        recurring = x.recurring,
+                        fromGender = x.fromGender,
+                        longitude = (double)x.longitude,
+                        latitude = (double)x.latitude,
+                        timeOfDay = x.timeOfDay,
+                        category = x.category,
+                        member_id = (int)x.member_id,
+                        cityName = x.cityName,
+                        dateLabel = x.dateLabel,
+                        postId = x.id,
+                        postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                        postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                        comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                        {
+                            commentingMemberId = (int)y.commentingMemberId,
+                            commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                            commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                            text = y.text
+                        }).ToList()
+
+
+                    };
+                    postsToSend.Add(postDTO);
+
+                }
+
+
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, postsToSend);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+
+
+        }
+
+
 
 
 
@@ -251,7 +319,7 @@ namespace WebApi.Controllers
                 db.Posts.Remove(postToDelete);
                 MembersPost membersPostToDelete = db.MembersPosts.Where(x => x.postId == postId).First();
                 db.MembersPosts.Remove(membersPostToDelete);
-               
+
 
                 foreach (Comment comment in db.Comments)
                 {
