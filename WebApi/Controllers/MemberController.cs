@@ -372,6 +372,35 @@ namespace WebApi.Controllers
 
 
 
+        [HttpPost]
+        [Route("addreview")]
+        public HttpResponseMessage AddReview(ReviewsDTO reviewsDTO)
+        {
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Review review = new Review();
+                review.fromMemberId = reviewsDTO.fromMemberId;
+                review.toMemberId = reviewsDTO.toMemberId;
+                review.text = reviewsDTO.text;
+                review.url = reviewsDTO.url;
+                review.stars = reviewsDTO.stars;
+
+                db.Reviews.Add(review);
+                db.SaveChanges();
+                
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Review added");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+
+        }
+
 
 
 

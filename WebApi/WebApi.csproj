@@ -216,8 +216,12 @@
     <Compile Include="Controllers\HobbiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\ReviewsDTO.cs" />
+    <Compile Include="DTO\ChatHistoryDTO.cs" />
+    <Compile Include="DTO\LikeDTO.cs" />
     <Compile Include="DTO\AuthorizedMemberDetailsDTO.cs" />
     <Compile Include="DTO\CommentDTO.cs" />
     <Compile Include="DTO\FeedSettingsDTO.cs" />

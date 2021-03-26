@@ -203,6 +203,142 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("getPostsFromCategry/{categoryId}")]
+
+        public List<PostDTO> getPostsFromCategry(string categoryId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+            var posts = db.Posts.Select(x => new PostDTO()
+            {
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+
+            }).Where(y => y.category == categoryId).ToList();
+            return posts;
+        }
+
+        [HttpGet]
+        [Route("getPostsDateAscending")]
+
+        public List<PostDTO> getPostsDateAscending()
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+            var posts = db.Posts.Select(x => new PostDTO()
+            {
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+
+            }).OrderBy(y => y.unixDate).ToList();
+            return posts;
+        }
+
+
+        [HttpGet]
+        [Route("getPostsDateDescending")]
+
+        public List<PostDTO> getPostsDateDescending()
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+            var posts = db.Posts.Select(x => new PostDTO()
+            {
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+
+            }).OrderByDescending(y => y.unixDate).ToList();
+            return posts;
+        }
+
 
 
 
@@ -306,6 +442,30 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpPost]
+        [Route("publishlike")]
+        public HttpResponseMessage PublishLike(LikeDTO likeDTO)
+        {
+            /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Like like = new Like()
+                {
+                    likingMemberId = likeDTO.likingMemberId,
+                    postId = likeDTO.postId
+                };
+
+                db.Likes.Add(like);
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Like saved success");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
 
         [HttpDelete]
         [Route("deletepost/{postId}")]
@@ -345,6 +505,25 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpDelete]
+        [Route("deletelike/{postId}/{memberId}")]
+        public HttpResponseMessage DeleteLike(int postId, int memberId)
+        {
+            /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
+            try
+            {
+                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+                Like likeToDelete = db.Likes.Where(x => x.postId == postId).Where(x => x.likingMemberId == memberId).FirstOrDefault();
+                db.Likes.Remove(likeToDelete);
+
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Like deleted");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
         public void Post([FromBody] string value)
         {
