@@ -15,6 +15,7 @@ import DotsMenu from './DotsMenu';
 import DotsMenuOverlay from '../components/DotsMenuOverlay';
 import { SearchBar } from 'react-native-elements';
 import User from '../components/User';
+import { Fragment } from 'react';
 
 
 const SearchScreen = (props) => {
@@ -31,17 +32,20 @@ const SearchScreen = (props) => {
 
 
     const [posts, setPosts] = useState([]);
-    const [users, setUsers] = useState([
-        { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-        { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-        { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-        { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-        { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-        { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-        { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-        { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-    ]);
+    const [users, setUsers] = useState([])
+    // const [users, setUsers] = useState([
+    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
+    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
+    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
+    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
+    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
+    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
+    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
+    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
+    // ]);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getpostsbysearchword/`
+    const usersFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/GetMembersBySearchWord/`
+
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
@@ -52,14 +56,14 @@ const SearchScreen = (props) => {
         // fetchUserDetails()
         if (searchWord.length > 0) {
             fetchUserPosts()
-            if (posts.length > 1) {
-                setPostContainerHeight(windowHeight / 2.1)
-            }
+            fetchUsers()
+
 
         }
         else {
             setPosts([])
-            setPostContainerHeight(windowHeight / 10)
+            setUsers([])
+            setPostContainerHeight(0)
 
 
         }
@@ -75,17 +79,41 @@ const SearchScreen = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
+            setSearchWord("")
             // fetchPosts()
             // fetchUserDetails()
             // fetchUserPosts()
             setNewComment(false)
 
+
         }, [newComment])
     )
+
     const fetchUserPosts = async () => {
-        console.log("fetching posts...")
-        const res = await axios(`${postsFetchURL}${searchWord}`);
-        setPosts(res.data);
+        //console.log("fetching posts...")
+        try {
+            const res = await axios(`${postsFetchURL}${searchWord}`);
+            setPosts(res.data);
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const fetchUsers = async () => {
+        //  console.log("fetching users...")
+        try {
+            const res = await axios(`${usersFetchURL}${searchWord}`);
+            // const res = await axios(`https://proj.ruppin.ac.il/bgroup14/prod/api/member/GetMembersBySearchWord/messi`);
+            //   console.log(res.data)
+            setUsers(res.data);
+
+        } catch (error) {
+            console.log(error)
+            console.log("error!")
+        }
+
     }
 
 
@@ -96,11 +124,7 @@ const SearchScreen = (props) => {
 
 
     let userName = useSelector(state => state.user.userName);
-    // let userImage = useSelector(state => state.user.userImage);
-    ///DELETE THIS!
 
-
-    // const userId = useSelector(state => state.auth.userId);
     const showComments = (comments) => {
         setCommentsToShow(comments)
 
@@ -126,31 +150,19 @@ const SearchScreen = (props) => {
 
     }
 
-    const editProfile = () => {
-
-        setIsMenuVisible(false)
-        props.navigation.navigate('EditProfile')
 
 
-    }
-    const editFeedSettings = () => {
 
-        setIsMenuVisible(false)
-        props.navigation.navigate('EditFeedSettingsScreen')
-
-
-    }
     const onChangeSearchText = (searchText) => {
         setSearchWord(searchText);
-        // setHobbies(initialHobbies.filter(function (el) { return el.name.includes(searchText); }));
-        // if (hobbies.length <= 0 || searchText.length <= 0) {
-        //   setHobbies(initialHobbies);
-        // }
+
     }
 
 
+    let postsHeader = posts.length > 0 ? <Text style={styles.usersText}>Posts:</Text> : null
+    let usersHeader = users.length > 0 ? <Text style={styles.usersText}>Users:</Text> : null
 
-    // let postContainerHeight = posts.length >= 1 ? minHeight :: minHeight: windowHeight / 2.1
+
 
 
     return (
@@ -182,43 +194,22 @@ const SearchScreen = (props) => {
             />
 
             <View style={styles.inner}>
-                <Text style={styles.usersText}>Posts:</Text>
-
-                {/* <ScrollView style={styles.postsContainer}> */}
-
-
-                <ScrollView style={{ minHeight: postContainerHeight }}>
+                {postsHeader}
+                {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 2.5 : windowHeight / 30 }}>
                     {posts.map((post) => {
                         return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-                        // return <Post post={post} key={post.postId} currentMemberId={userId} />
-                        // return <Post text={post.text} cityName={post.cityName} />
+
                     })}
+                </ScrollView> : null}
 
-                    {/* <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text>
-                    <Text>dd</Text> */}
-                </ScrollView>
 
-                <Text style={styles.usersText}>Users:</Text>
-                <ScrollView style={styles.usersContainer}>
+                {usersHeader}
+                <ScrollView style={{ height: 100 }} >
 
                     {users.map((user) => {
-                        return <User user={user} />
-                        // return <Post post={post} key={post.postId} currentMemberId={userId} />
-                        // return <Post text={post.text} cityName={post.cityName} />
+                        return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
                     })}
                 </ScrollView>
 
@@ -250,6 +241,7 @@ const styles = StyleSheet.create({
     },
     inner: {
         padding: windowHeight / 45,
+        //  minHeight: windowHeight / 1.5,
 
         flex: 1,
         //  justifyContent: "space-around"

@@ -161,7 +161,7 @@ const Post = (props) => {
 
                     </View>
                     <Text style={styles.postText}>{text}</Text>
-                    {!recurring ? <Text style={styles.postDateText}>At {dateLabel + " "}{timeOfDay}</Text> : null}
+                    {!recurring ? <Text style={styles.postDateText}>At {dateLabel + ", "}{timeOfDay}</Text> : null}
                     <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName}</Text>
 
                 </View>

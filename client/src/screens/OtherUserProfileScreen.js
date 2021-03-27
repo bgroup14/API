@@ -203,7 +203,10 @@ const OtherUserProfileScreen = (props) => {
 
 
                 </View>
+                {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
+                    <Text style={{ fontSize: 20 }}>{userName} has no posts yet !</Text>
 
+                </View> : null}
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
