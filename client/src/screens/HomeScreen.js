@@ -68,7 +68,7 @@ const HomeScreen = (props) => {
 
     const fetchPosts = async () => {
         // console.log("fetching posts data...");
-        const res = await axios(postsFetchURL);
+        const res = await axios(postsFetchURL + `/${userId}`);
         //console.log(res.data)
         setPosts(res.data)
 

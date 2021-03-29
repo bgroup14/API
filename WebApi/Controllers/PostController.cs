@@ -29,9 +29,9 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        [Route("getAllPosts")]
+        [Route("getAllPosts/{memberId}")]
 
-        public List<PostDTO> GetAllPosts()
+        public List<PostDTO> GetAllPosts(int memberId)
         {
 
 
@@ -70,6 +70,8 @@ namespace WebApi.Controllers
 
 
             }).ToList();
+
+
             return posts;
 
 
