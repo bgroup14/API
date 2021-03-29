@@ -195,7 +195,7 @@ const SearchScreen = (props) => {
 
             <View style={styles.inner}>
                 {postsHeader}
-                {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 2.5 : windowHeight / 30 }}>
+                {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 1.2 : windowHeight / 30 }}>
                     {posts.map((post) => {
                         return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
@@ -205,7 +205,8 @@ const SearchScreen = (props) => {
 
 
                 {usersHeader}
-                <ScrollView style={{ height: 100 }} >
+                <ScrollView  >
+
 
                     {users.map((user) => {
                         return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
