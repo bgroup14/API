@@ -219,6 +219,7 @@
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTO\FeedFilterDTO.cs" />
     <Compile Include="DTO\ReviewsDTO.cs" />
     <Compile Include="DTO\ChatHistoryDTO.cs" />
     <Compile Include="DTO\LikeDTO.cs" />
