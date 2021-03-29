@@ -382,91 +382,95 @@ namespace WebApi.Controllers
 
             });
 
-            // meetingLocation
-            // STILL NEED TO DO
-            // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-            if (filterDTO.meetingLocation != null)
+
+            if (filterDTO != null)
             {
-                if (filterDTO.meetingLocation.Equals("Zoom Only")) {
-                    filteredPosts = filteredPosts.Where(m => m.isZoom == true);
+                // meetingLocation
+                // STILL NEED TO DO
+                // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                if (filterDTO.meetingLocation != null)
+                {
+                    if (filterDTO.meetingLocation.Equals("Zoom Only"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.isZoom == true);
+                    }
                 }
-            }
 
                 //userType
                 if (filterDTO.userType != null)
-            {
-                if (filterDTO.userType.Equals("Need help"))
                 {
-                    filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give help"));
+                    if (filterDTO.userType.Equals("Need help"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give help"));
+                    }
+                    else if (filterDTO.userType.Equals("Give help"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need help"));
+                    }
                 }
-                else if (filterDTO.userType.Equals("Give help"))
+
+
+                //participantAge
+                if (filterDTO.participantAge != null)
                 {
-                    filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need help"));
+                    switch (filterDTO.participantAge)
+                    {
+                        case "16-30":
+                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
+                            break;
+                        case "30-50":
+                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
+                            break;
+                        case "50+":
+                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+
+
+                //participantGender
+                if (filterDTO.participantGender != null)
+                {
+                    if (filterDTO.participantGender.Equals("Man") || filterDTO.participantGender.Equals("Woman"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
+                    }
+                }
+
+
+                //categoryName
+                if (filterDTO.categoryName != null)
+                {
+                    if (!filterDTO.categoryName.Equals("null"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
+                    }
+                }
+
+                //sortBy
+                if (filterDTO.sortBy != null)
+                {
+                    switch (filterDTO.sortBy)
+                    {
+                        case "Relevance":
+                            //Need to setup smart element
+                            break;
+                        case "Meeting location":
+                            // SAME AS meetingLocation
+                            // STILL NEED TO DO
+                            // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                            break;
+                        case "Meeting date":
+                            filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-            
-
-            //participantAge
-            if (filterDTO.participantAge != null)
-            {
-                switch (filterDTO.participantAge)
-                {
-                    case "16-30":
-                        filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
-                        break;
-                    case "30-50":
-                        filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
-                        break;
-                    case "50+":
-                        filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
-                        break;
-                    default:
-                        break;
-
-                }
-            }
-            
-
-            //participantGender
-            if (filterDTO.participantGender != null)
-            {
-                if (filterDTO.participantGender.Equals("Man") || filterDTO.participantGender.Equals("Woman"))
-                {
-                    filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
-                }
-            }
-            
-
-            //categoryName
-            if (filterDTO.categoryName != null)
-            {
-                if (!filterDTO.categoryName.Equals("null"))
-                {
-                    filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
-                }
-            }
-
-            //sortBy
-            if (filterDTO.sortBy != null)
-            {
-                switch (filterDTO.sortBy)
-                {
-                    case "Relevance":
-                        //Need to setup smart element
-                        break;
-                    case "Meeting location":
-                        // SAME AS meetingLocation
-                        // STILL NEED TO DO
-                        // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-                        break;
-                    case "Meeting date":
-                        filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            
 
             return filteredPosts.ToList();
         }
