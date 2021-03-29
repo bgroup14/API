@@ -44,6 +44,7 @@ const HomeScreen = (props) => {
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
+    const [categoryNameToSend, setCategoryameToSend] = useState(null);
 
     useEffect(() => {
         if (commentsToShow.length > 0) {
@@ -74,7 +75,16 @@ const HomeScreen = (props) => {
     };
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        // console.log(filteredPostObj)
+        console.log(filteredPostObj)
+        let objToSend = {
+            ...filteredPostObj,
+            categoryName: categoryNameToSend
+        }
+        let body = JSON.stringify(objToSend)
+        console.log(body)
+
+        //axios fetch filtered posts
+
         setIsFilterVisble(false)
 
         // console.log("fetching posts data...");
@@ -86,6 +96,17 @@ const HomeScreen = (props) => {
 
     const filterByCategory = (categoryName) => {
         /// Filter posts by category name
+        let category = {
+            categoryName
+        }
+        setCategoryameToSend(categoryName);
+        let body = JSON.stringify(category)
+
+        //axios fetch filtered posts
+        console.log(body)
+
+
+
     }
 
     let categories = [
