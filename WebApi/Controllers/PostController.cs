@@ -418,6 +418,12 @@ namespace WebApi.Controllers
                 filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
             }
 
+            //categoryName
+            if (filterDTO.categoryName != null && !filterDTO.categoryName.Equals("null"))
+            {
+                filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
+            }
+
             //sortBy
             switch (filterDTO.sortBy)
             {

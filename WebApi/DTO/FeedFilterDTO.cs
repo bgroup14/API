@@ -12,6 +12,7 @@ namespace WebApi.DTO
         public string participantAge;
         public string meetingLocation;
         public string sortBy;
+        public string categoryName;
     }
 
 }
