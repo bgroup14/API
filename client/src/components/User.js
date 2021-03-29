@@ -6,7 +6,7 @@ import { windowHeight } from '../../utils/Dimentions';
 
 
 const User = (props) => {
-    const { fullName, memberId, pictureUrl } = props.user;
+    const { fullName, memberId, pictureUrl, chatSentence } = props.user;
     // console.log("user derails are: " + fullName)
 
     return (
