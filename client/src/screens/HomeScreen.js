@@ -74,7 +74,7 @@ const HomeScreen = (props) => {
     };
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        console.log(filteredPostObj)
+        // console.log(filteredPostObj)
         setIsFilterVisble(false)
 
         // console.log("fetching posts data...");
