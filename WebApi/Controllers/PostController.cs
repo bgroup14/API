@@ -340,7 +340,106 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("getFilteredPosts")]
 
+        public List<PostDTO> GetFilteredPostsPosts(FeedFilterDTO filterDTO)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+
+            var filteredPosts = db.Posts.Select(x => new PostDTO()
+            {
+                text = x.text,
+                fromAge = (int)x.fromAge,
+                toAge = (int)x.toAge,
+                helpType = x.helpType,
+                isZoom = x.isZoom,
+                unixDate = (int)x.unixDate,
+                recurring = x.recurring,
+                fromGender = x.fromGender,
+                longitude = (double)x.longitude,
+                latitude = (double)x.latitude,
+                timeOfDay = x.timeOfDay,
+                category = x.category,
+                member_id = (int)x.member_id,
+                cityName = x.cityName,
+                dateLabel = x.dateLabel,
+                postId = x.id,
+                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                {
+                    commentingMemberId = (int)y.commentingMemberId,
+                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                    text = y.text
+                }).ToList()
+
+
+
+            });
+
+            // meetingLocation
+            // STILL NEED TO DO
+            // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+
+            //userType
+            if (filterDTO.userType.Equals("Need help")) {
+                filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give help"));
+            }
+            else if (filterDTO.userType.Equals("Give help"))
+            {
+                filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need help"));
+            }
+
+            //participantAge
+            switch (filterDTO.participantAge)
+            {
+                case "16-30":
+                    filteredPosts = filteredPosts.Where(m => m.fromAge == 16 && m.toAge == 30);
+                    break;
+                case "30-50":
+                    filteredPosts = filteredPosts.Where(m => m.fromAge == 30 && m.toAge == 50);
+                    break;
+                case "50+":
+                    filteredPosts = filteredPosts.Where(m => m.fromAge == 50 && m.toAge == 999);
+                    break;
+                default:
+                    break;
+
+            }
+
+            //participantGender
+            if (filterDTO.participantGender.Equals("Man") || filterDTO.participantGender.Equals("Woman"))
+            {
+                filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
+            }
+
+            //sortBy
+            switch (filterDTO.sortBy)
+            {
+                case "Relevance":
+                    //Need to setup smart element
+                    break;
+                case "Meeting location":
+                    // SAME AS meetingLocation
+                    // STILL NEED TO DO
+                    // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                    break;
+                case "Meeting date":
+                    filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
+                    break;
+                default:
+                    break;
+            }
+
+            return filteredPosts.ToList();
+        }
 
 
 
