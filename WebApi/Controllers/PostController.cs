@@ -385,9 +385,15 @@ namespace WebApi.Controllers
             // meetingLocation
             // STILL NEED TO DO
             // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+            if (filterDTO.meetingLocation != null)
+            {
+                if (filterDTO.meetingLocation.Equals("Zoom Only")) {
+                    filteredPosts = filteredPosts.Where(m => m.isZoom == true);
+                }
+            }
 
-            //userType
-            if (filterDTO.userType != null)
+                //userType
+                if (filterDTO.userType != null)
             {
                 if (filterDTO.userType.Equals("Need help"))
                 {
