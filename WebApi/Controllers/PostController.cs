@@ -349,8 +349,6 @@ namespace WebApi.Controllers
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-
             var filteredPosts = db.Posts.Select(x => new PostDTO()
             {
                 text = x.text,
@@ -401,13 +399,13 @@ namespace WebApi.Controllers
             switch (filterDTO.participantAge)
             {
                 case "16-30":
-                    filteredPosts = filteredPosts.Where(m => m.fromAge == 16 && m.toAge == 30);
+                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
                     break;
                 case "30-50":
-                    filteredPosts = filteredPosts.Where(m => m.fromAge == 30 && m.toAge == 50);
+                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
                     break;
                 case "50+":
-                    filteredPosts = filteredPosts.Where(m => m.fromAge == 50 && m.toAge == 999);
+                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
                     break;
                 default:
                     break;
