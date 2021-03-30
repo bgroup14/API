@@ -372,7 +372,7 @@ namespace WebApi.Controllers
                 participantAgeRange = x.participantAgeRange
             }).FirstOrDefault();
 
-            var filteredPosts = db.Posts.Select(x => new PostDTO()
+            var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
             {
                 text = x.text,
                 fromAge = (int)x.fromAge,
@@ -413,8 +413,11 @@ namespace WebApi.Controllers
 
 
 
+           
 
-            if (filterDTO != null)
+
+
+            if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
             {
                 // meetingLocation
                 // STILL NEED TO DO
@@ -484,6 +487,13 @@ namespace WebApi.Controllers
                         filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
                     }
                 }
+                if (categoryName != null)
+                {
+                    if (!categoryName.Equals("null"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
+                    }
+                }
 
                 //sortBy
                 if (filterDTO.sortBy != null)
@@ -505,13 +515,7 @@ namespace WebApi.Controllers
                             break;
                     }
                 }
-                if (categoryName != null)
-                {
-                    if (!categoryName.Equals("null"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
-                    }
-                }
+               
             }
             else /*if (feedSettings != null)*/
             {
@@ -570,6 +574,11 @@ namespace WebApi.Controllers
                             filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
                         }
                     }
+
+
+              
+                   
+                    
                 }
 
             }
