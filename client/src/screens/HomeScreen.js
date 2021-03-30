@@ -39,12 +39,16 @@ import CommentsScreens from './CommentsScreens';
 
 const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
-    const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
+    // const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
+    const userId = useSelector(state => state.auth.userId);
+    const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
+    // const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/159`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [categoryNameToSend, setCategoryameToSend] = useState(null);
+    const [postsFilteredObj, setPostsFilteredObj] = useState(null);
 
     useEffect(() => {
         if (commentsToShow.length > 0) {
@@ -59,29 +63,93 @@ const HomeScreen = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            fetchPosts()
+
+            fetchPosts(postsFilteredObj)
             setNewComment(false)
 
         }, [newComment])
     )
 
 
-    const fetchPosts = async () => {
-        // console.log("fetching posts data...");
-        const res = await axios(postsFetchURL + `/${userId}`);
-        //console.log(res.data)
-        setPosts(res.data)
+    const fetchPosts = async (filterObj) => {
 
-    };
+
+
+        if (filterObj == null) {
+            try {
+
+                let body = null;
+                //console.log(postsFilteredObj)
+                console.log(userId)
+                const res = await axios.post(postsFetchURL);
+                // console.log("fetching posts data...");
+                // const res = await axios(postsFetchURL);
+                // console.log(res.data)
+                setPosts(res.data)
+
+            } catch (err) {
+                console.log("error in fetching post")
+                console.log(err.message)
+            }
+
+        }
+
+        else {
+            //  setPostsFilteredObj(filterObj)
+            let objectLength = Object.keys(filterObj).length;
+            var filterdObjToSend;
+            if (objectLength == 1) {
+                filterdObjToSend = {
+                    ...filterObj,
+                    ...postsFilteredObj
+                }
+            }
+            else {
+                filterdObjToSend = {
+                    ...filterObj
+                }
+            }
+
+            console.log("not empty")
+            const body = JSON.stringify(filterdObjToSend)
+            //  console.log("body that will be send to filter post is: " + body)
+            // return null;
+            try {
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+                //const body = JSON.stringify(filterObj)
+                // const res = await axios.post(url, body, config);
+                // console.log("fetching posts data...");
+                const res = await axios.post(postsFetchURL, body, config);
+                // const res = await axios(postsFetchURL);
+                //  console.log(res.data)
+                setPosts(res.data)
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+    }
+
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        console.log(filteredPostObj)
+        //   console.log(filteredPostObj)
         let objToSend = {
             ...filteredPostObj,
             categoryName: categoryNameToSend
         }
+        fetchPosts(objToSend)
+
+        //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server
+        setPostsFilteredObj(filteredPostObj);
         let body = JSON.stringify(objToSend)
         console.log(body)
+
 
         //axios fetch filtered posts
 
@@ -100,10 +168,13 @@ const HomeScreen = (props) => {
             categoryName
         }
         setCategoryameToSend(categoryName);
-        let body = JSON.stringify(category)
+        fetchPosts(category)
+        // let body = JSON.stringify(category)
+
+        //fetchPosts(category)
 
         //axios fetch filtered posts
-        console.log(body)
+        //console.log(body)
 
 
 
@@ -121,7 +192,7 @@ const HomeScreen = (props) => {
 
     // let userName = useSelector(state => state.auth.userName);
     let userName = useSelector(state => state.user.userName);
-    const userId = useSelector(state => state.auth.userId);
+
 
     ///DELETE THIS!
     //   console.log("user name fromn rerdux is:" + userName)
@@ -182,8 +253,6 @@ const HomeScreen = (props) => {
                         name='bell'
                         onPress={() => props.navigation.navigate('Notifications')}
 
-
-
                     />
                 </View>
                 {/* <View style={styles.categoryContainer}>
@@ -206,44 +275,33 @@ const HomeScreen = (props) => {
                         <Icon name='filter' size={26} style={styles.filterICon} />
                     </TouchableOpacity>
                 </View>
-                {/* <Divider /> */}
+
+                {posts.length > 0 ?
+                    <ScrollView contentContainerStyle={styles.postsContainer}>
+                        {posts.map((post) => {
+                            return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
+                                refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                        })}
 
 
-                <ScrollView style={styles.postsContainer}>
+                    </ScrollView> :
+                    <View style={{ marginHorizontal: windowWidth / 10, maxWidth: windowWidth / 1.3, marginTop: windowWidth / 10 }}>
+                        <Text style={{ textAlign: 'center', fontSize: 18 }}>We haven't found posts that matches your posts filter request</Text>
+                        {/* <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen') */}
+                        <TouchableOpacity onPress={() => setIsFilterVisble(true)
+                        }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to try again</Text></TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20, marginTop: 20 }}>
+                            <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+                            <View>
+                                <Text style={{ width: 50, textAlign: 'center', fontSize: 16 }}>OR</Text>
+                            </View>
+                            <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+                        </View>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen')
+                        }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to update your feed settings</Text></TouchableOpacity>
+                    </View>}
 
-                    {/* {postsArray.map((post) => {
-                        return <Post post={post} key={post.id} />
-                        // return <Post text={post.text} cityName={post.cityName} />
-                    })} */}
-                    {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
-                            refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-
-                        // return <Post text={post.text} cityName={post.cityName} />
-                    })}
-
-
-
-                    {/* <FlatList
-                        keyExtractor={(item, index) => item.id.toString()}
-                        data={posts}
-                        renderItem={({ item }) => (
-                            <Post />
-                        )}
-
-
-
-                    /> */}
-
-
-                </ScrollView>
-
-                {/* <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}><Text>Heyy</Text>
-                        <TextInput placeholder="what"></TextInput>
-                    </View>
-                    <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}><Text>Heyy</Text>
-                    </View> */}
             </View>
         </KeyboardAvoidingView >
     )
@@ -295,7 +353,7 @@ const styles = StyleSheet.create({
     },
     selectCategoryContainer:
     {
-        flex: 1,
+        //  flex: 1,
         marginTop: 30,
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -313,6 +371,8 @@ const styles = StyleSheet.create({
     filterICon: { marginLeft: 30, marginTop: 15 },
 
     postsContainer: {
+
+        justifyContent: 'flex-start'
         //    / flex: 1,
         //   minHeight: 140
         // justifyContent: '',
