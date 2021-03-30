@@ -29,9 +29,9 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        [Route("getAllPosts/{memberId}")]
+        [Route("getAllPosts")]
 
-        public List<PostDTO> GetAllPosts(int memberId)
+        public List<PostDTO> GetAllPosts()
         {
 
 
@@ -70,6 +70,9 @@ namespace WebApi.Controllers
 
 
             }).ToList();
+
+
+
 
 
             return posts;
@@ -342,14 +345,32 @@ namespace WebApi.Controllers
         }
 
 
-        [HttpGet]
-        [Route("getFilteredPosts")]
+        [HttpPost]
+        [Route("getFilteredPosts/{memberId}")]
 
-        public List<PostDTO> GetFilteredPostsPosts(FeedFilterDTO filterDTO)
+        /*public List<PostDTO> GetFilteredPosts(FeedFilterDTO filterDTO, int memberId)*/
+        public HttpResponseMessage GetFilteredPosts(FeedFilterDTO filterDTO, int memberId)
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            /*  FeedSettingsDTO feedSettings = db.FeedSettings.Select(x => new FeedSettingsDTO()
+              {
+                  memberType = x.memberType,
+                  postLocation = x.postLocation,
+                  participantGender = x.participantGender,
+                  participantAgeRange = x.participantAgeRange
+              }).Where(m => m.memberId == 159).FirstOrDefault();*/
+
+
+            FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
+            {
+                memberType = x.memberType,
+                postLocation = x.postLocation,
+                participantGender = x.participantGender,
+                participantAgeRange = x.participantAgeRange
+            }).FirstOrDefault();
 
             var filteredPosts = db.Posts.Select(x => new PostDTO()
             {
@@ -380,9 +401,17 @@ namespace WebApi.Controllers
                     text = y.text
                 }).ToList()
 
-
-
             });
+
+            string categoryName = null;
+            if (filterDTO != null && filterDTO.categoryName != null)
+            {
+                categoryName = filterDTO.categoryName;
+            }
+
+
+
+
 
 
             if (filterDTO != null)
@@ -401,13 +430,17 @@ namespace WebApi.Controllers
                 //userType
                 if (filterDTO.userType != null)
                 {
-                    if (filterDTO.userType.Equals("Need help"))
+                    /*if (filterDTO.userType.Equals("Need Help"))*/
+                    if (filterDTO.userType == "Need Help")
                     {
-                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give help"));
+                        /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));*/
+                        filteredPosts = filteredPosts.Where(m => m.helpType == "Give Help");
                     }
-                    else if (filterDTO.userType.Equals("Give help"))
+                    /* else if (filterDTO.userType.Equals("Give Help"))*/
+                    else if (filterDTO.userType == "Give Help")
                     {
-                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need help"));
+                        /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));*/
+                        filteredPosts = filteredPosts.Where(m => m.helpType == "Need Help");
                     }
                 }
 
@@ -472,9 +505,76 @@ namespace WebApi.Controllers
                             break;
                     }
                 }
+                if (categoryName != null)
+                {
+                    if (!categoryName.Equals("null"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
+                    }
+                }
             }
+            else /*if (feedSettings != null)*/
+            {
+                if (feedSettings.memberType != null)
+                {
+                    // meetingLocation
+                    // STILL NEED TO DO
+                    // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                    /* return Request.CreateResponse(HttpStatusCode.OK, feedSettings.memberType);*/
+                    //userType
+                    if (feedSettings.memberType == "Need Help")
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));
+                    }
+                    else if (feedSettings.memberType.Equals("Give Help"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));
 
-            return filteredPosts.ToList();
+                    }
+
+                    //participantAge
+                    if (feedSettings.participantAgeRange != null)
+                    {
+                        switch (feedSettings.participantAgeRange)
+                        {
+                            case "16-30":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
+                                break;
+                            case "30-50":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
+                                break;
+                            case "50+":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+
+
+                    //participantGender
+                    if (feedSettings.participantGender != null)
+                    {
+                        if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                        }
+                    }
+
+                    //categoryName
+                    if (categoryName != null)
+                    {
+                        if (!categoryName.Equals("null"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
+                        }
+                    }
+                }
+
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
+            /* return filteredPosts.ToList();*/
         }
 
 
