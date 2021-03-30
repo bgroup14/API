@@ -68,7 +68,7 @@ const EditFeedSettingsScreen = (props) => {
         "Feed Settings Updated",
         res.data,
         [
-          { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
+          { text: 'OK', onPress: () => props.navigation.navigate('Home') },
         ],
       );
 

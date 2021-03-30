@@ -39,30 +39,41 @@ import CommentsScreens from './CommentsScreens';
 
 const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
-    // const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
     const userId = useSelector(state => state.auth.userId);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
-    // const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/159`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [categoryNameToSend, setCategoryameToSend] = useState(null);
     const [postsFilteredObj, setPostsFilteredObj] = useState(null);
+    const [restartComponent, setRestartComponent] = useState(1);
+    const [categoriesToShow, setCategoriesToShow] = useState([]);
+
 
     useEffect(() => {
         if (commentsToShow.length > 0) {
-            // console.log(commentsToShow)
             setIsCommentsVisible(true)
         }
 
 
-    }, [commentsToShow])
+    }, [commentsToShow, posts])
 
 
 
     useFocusEffect(
         React.useCallback(() => {
+
+            setRestartComponent(Date.now)
+            let categories = [
+                { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
+                { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
+                { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
+                { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
+                { label: 'General', value: 'General', icon: () => <MaterialIcons name="volunteer-activism" size={24} color="#000000" /> },
+            ]
+            setCategoriesToShow(categories)
+            setPostsFilteredObj(null)
 
             fetchPosts(postsFilteredObj)
             setNewComment(false)
@@ -78,13 +89,9 @@ const HomeScreen = (props) => {
         if (filterObj == null) {
             try {
 
-                let body = null;
-                //console.log(postsFilteredObj)
                 console.log(userId)
                 const res = await axios.post(postsFetchURL);
-                // console.log("fetching posts data...");
-                // const res = await axios(postsFetchURL);
-                // console.log(res.data)
+
                 setPosts(res.data)
 
             } catch (err) {
@@ -95,7 +102,6 @@ const HomeScreen = (props) => {
         }
 
         else {
-            //  setPostsFilteredObj(filterObj)
             let objectLength = Object.keys(filterObj).length;
             var filterdObjToSend;
             if (objectLength == 1) {
@@ -112,8 +118,7 @@ const HomeScreen = (props) => {
 
             console.log("not empty")
             const body = JSON.stringify(filterdObjToSend)
-            //  console.log("body that will be send to filter post is: " + body)
-            // return null;
+            console.log("body that will be send to filter post is: " + body)
             try {
 
                 const config = {
@@ -121,12 +126,9 @@ const HomeScreen = (props) => {
                         'Content-Type': 'application/json'
                     }
                 }
-                //const body = JSON.stringify(filterObj)
-                // const res = await axios.post(url, body, config);
-                // console.log("fetching posts data...");
+
                 const res = await axios.post(postsFetchURL, body, config);
-                // const res = await axios(postsFetchURL);
-                //  console.log(res.data)
+
                 setPosts(res.data)
 
             } catch (err) {
@@ -138,7 +140,6 @@ const HomeScreen = (props) => {
 
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        //   console.log(filteredPostObj)
         let objToSend = {
             ...filteredPostObj,
             categoryName: categoryNameToSend
@@ -151,36 +152,26 @@ const HomeScreen = (props) => {
         console.log(body)
 
 
-        //axios fetch filtered posts
 
         setIsFilterVisble(false)
 
-        // console.log("fetching posts data...");
-        // const res = await axios(postsFetchURL);
-        // console.log(res.data)
-        // setPosts(res.data)
 
     };
 
     const filterByCategory = (categoryName) => {
-        /// Filter posts by category name
         let category = {
             categoryName
         }
         setCategoryameToSend(categoryName);
         fetchPosts(category)
-        // let body = JSON.stringify(category)
 
-        //fetchPosts(category)
-
-        //axios fetch filtered posts
-        //console.log(body)
 
 
 
     }
 
     let categories = [
+        // { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
         { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
         { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
         { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
@@ -235,7 +226,7 @@ const HomeScreen = (props) => {
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
     return (
-        <KeyboardAvoidingView style={styles.container} >
+        <KeyboardAvoidingView style={styles.container} key={restartComponent}>
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
@@ -258,16 +249,20 @@ const HomeScreen = (props) => {
                 {/* <View style={styles.categoryContainer}>
                     <Text>Category dropdown</Text>
                 </View> */}
-                <View style={styles.selectCategoryContainer}>
+                <View style={styles.selectCategoryContainer} >
                     <DropDownPicker
                         placeholder="Select Category"
-                        items={categories}
+
+                        //defaultValue={restartComponent}
+                        items={categoriesToShow}
+                        // items={categories}
                         containerStyle={styles.dropDownContainer}
                         itemStyle={{
 
                             justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
                         }}
                         onChangeItem={item => filterByCategory(item.value)}
+
                     // onChangeItem={item => setPostCategory(item.value)}
                     />
                     <TouchableOpacity onPress={() => setIsFilterVisble(true)} style={{ flex: 1 }}>
@@ -298,9 +293,20 @@ const HomeScreen = (props) => {
                             </View>
                             <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
                         </View>
-                        <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen')
-                        }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to update your feed settings</Text></TouchableOpacity>
+                        <View style={{ marginHorizontal: windowWidth / 14, maxWidth: windowWidth / 1.2 }}>
+                            <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen')
+                            }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to update your feed settings</Text></TouchableOpacity>
+                        </View>
                     </View>}
+
+                {posts.length <= 2 && posts.length != 0 ? <View style={{ marginHorizontal: windowWidth / 10, maxWidth: windowWidth / 1.2 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 16 }}>Haven't found what you're looking for?</Text>
+
+                    <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen')}>
+                        <Text style={{ textAlign: 'center', fontSize: 16 }}>Click here to update your feed settings</Text>
+                    </TouchableOpacity>
+                </View>
+                    : null}
 
             </View>
         </KeyboardAvoidingView >
