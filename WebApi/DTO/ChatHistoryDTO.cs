@@ -14,5 +14,7 @@ namespace WebApi.DTO
         public string text;
         public int fromMemberId;
         public int toMemberId;
+        public int chatRoomId;
+        public bool mine;
     }
 }
