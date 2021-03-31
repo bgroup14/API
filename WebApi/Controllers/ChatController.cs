@@ -244,7 +244,8 @@ namespace WebApi.Controllers
                     notificationId = notificationId,
                     fromMemberId = message.fromMemberId,
                     toMemberId = message.toMemberId,
-                    text = message.text
+                    text = message.text,
+                    chatRoomId = message.chatRoomId
                 };
                 db.ChatHistories.Add(newMessage);
                 db.SaveChanges();
