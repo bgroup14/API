@@ -46,6 +46,8 @@ import MessageBubble from '../components/MessageBubble';
 
 const ChatWithOtherUser = (props) => {
 
+    const [newMessage, setNewMessage] = useState();
+
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
@@ -85,11 +87,22 @@ const ChatWithOtherUser = (props) => {
     }, [])
 
 
+
+
+
     /* 2. Get the param */
     const { chatRoomId, otherMemberName, otherMemberImage } = route.params;
 
     const [posts, setPosts] = useState([]);
     const userId = useSelector(state => state.auth.userId);
+
+    const sendMessage = () => {
+
+        datetime = message.datetime, // unix date
+            fromMemberId = other
+        toMemberId = message.toMemberId,
+            text = message.text
+    }
 
 
 
@@ -151,12 +164,14 @@ const ChatWithOtherUser = (props) => {
 
                 </ScrollView>
 
-                {/* <TouchableOpacity onPress={() => scrollView.current.scrollToEnd()}> */}
+                {/* <TouchableOpacity onPress={() => console.log(newMessage)}> */}
                 <View style={styles.messageContainer} >
                     {/* <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} /> */}
-                    <TextInput onFocus={() => scrollView.current.scrollToEnd()} autoFocus={false} placeholder="Type a message..." multiline={true} style={styles.commentInput} numberOfLines={3} />
+                    <TextInput onFocus={() => scrollView.current.scrollToEnd()} autoFocus={false} placeholder="Type a message..." multiline={true}
+                        style={styles.commentInput} numberOfLines={3}
+                        onChangeText={(text => setNewMessage(text))} />
                     {/* <TouchableOpacity onPress={() => publishComment()}> */}
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => sendMessage()}>
                         <FontAwsome name='send-o' color='blue' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
                     </TouchableOpacity>
                 </View>
