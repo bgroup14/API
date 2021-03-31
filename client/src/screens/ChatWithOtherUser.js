@@ -22,7 +22,7 @@ import MyOverlay from '../components/MyOverlay';
 
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Divider } from 'react-native-elements';
 import axios from 'axios';
@@ -46,6 +46,25 @@ import MessageBubble from '../components/MessageBubble';
 
 const ChatWithOtherUser = (props) => {
 
+    useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+        scrollView.current.scrollToEnd()
+
+        // cleanup function
+        return () => {
+            Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
+            Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+        };
+    }, [keyboardStatus]);
+
+    const [keyboardStatus, setKeyboardStatus] = useState(undefined);
+    const _keyboardDidShow = () => setKeyboardStatus("Keyboard Shown");
+    const _keyboardDidHide = () => setKeyboardStatus("Keyboard Hidden");
+
+
+
+
     const { route, navigation } = props
     const scrollView = useRef()
     const [keyboadrdOpen, setKeyboadOpen] = useState(false);
@@ -60,14 +79,14 @@ const ChatWithOtherUser = (props) => {
             scrollView.current.scrollToEnd()
 
 
-        }, [keyboadrdOpen])
+        }, [keyboardStatus])
     )
     useEffect(() => {
     }, [])
 
 
     /* 2. Get the param */
-    const { chatRoomId } = route.params;
+    const { chatRoomId, otherMemberName, otherMemberImage } = route.params;
 
     const [posts, setPosts] = useState([]);
     const userId = useSelector(state => state.auth.userId);
@@ -92,11 +111,11 @@ const ChatWithOtherUser = (props) => {
                             rounded
                             source={{
                                 uri:
-                                    "http://proj.ruppin.ac.il/bgroup14/prod/Userimage/elon@gmail.com_imgFromCamera_3_30_2021_3-06-19_PM.jpg",
+                                    otherMemberImage
                                 // postCreatorImg,
                             }}
                         />
-                        <Text style={styles.barText}>Elon Musk</Text>
+                        <Text style={styles.barText}>{otherMemberName}</Text>
                         <View style={styles.IconContainer}>
                             <Icon
                                 style={styles.bellIcon}
@@ -132,16 +151,16 @@ const ChatWithOtherUser = (props) => {
 
                 </ScrollView>
 
-                <TouchableOpacity onPress={() => scrollView.current.scrollToEnd()}>
-                    <View style={styles.messageContainer} >
-                        {/* <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} /> */}
-                        <TextInput onFocus={() => scrollView.current.scrollToEnd()} autoFocus={false} placeholder="Type a message..." multiline={true} style={styles.commentInput} numberOfLines={3} />
-                        {/* <TouchableOpacity onPress={() => publishComment()}> */}
-                        <TouchableOpacity>
-                            <FontAwsome name='send-o' color='blue' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
-                        </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>
+                {/* <TouchableOpacity onPress={() => scrollView.current.scrollToEnd()}> */}
+                <View style={styles.messageContainer} >
+                    {/* <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} /> */}
+                    <TextInput onFocus={() => scrollView.current.scrollToEnd()} autoFocus={false} placeholder="Type a message..." multiline={true} style={styles.commentInput} numberOfLines={3} />
+                    {/* <TouchableOpacity onPress={() => publishComment()}> */}
+                    <TouchableOpacity>
+                        <FontAwsome name='send-o' color='blue' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
+                    </TouchableOpacity>
+                </View>
+                {/* </TouchableOpacity> */}
                 {/* <TextInput placeholder='Message...' /> */}
             </View>
 
