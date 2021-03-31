@@ -10,7 +10,6 @@ namespace WebApi.DTO
         public int id;
         public int messageId;
         public int datetime;
-        public int notificationId;
         public string text;
         public int fromMemberId;
         public int toMemberId;

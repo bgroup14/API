@@ -146,27 +146,7 @@ namespace WebApi.Controllers
 
 
 
-        /*[HttpGet]
-        [Route("getChats/{memberId}")]
-        public List<ChatHistoryDTO> getChats(int memberId)
-        {
 
-
-            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
-            var chats = db.ChatHistories.Where(x => x.toMemberId == memberId || x.fromMemberId == memberId).Select(x => new ChatHistoryDTO()
-            {
-                messageId = x.messageId,
-                datetime = (int)x.datetime,
-                notificationId = (int)x.notificationId,
-                fromMemberId = (int)x.fromMemberId,
-                toMemberId = (int)x.toMemberId,
-
-                //I need to verify this, maybe add another clause to receive both last recived and sent
-                text = db.ChatHistories.Where(c => c.fromMemberId == x.fromMemberId).Where(c => c.toMemberId == x.toMemberId).Last().ToString()
-            }).OrderByDescending(x => x.datetime).ToList();
-            return chats;
-        }*/
 
 
         [HttpGet]
@@ -181,7 +161,6 @@ namespace WebApi.Controllers
             {
                 messageId = x.messageId,
                 datetime = (int)x.datetime,
-                notificationId = (int)x.notificationId,
                 fromMemberId = (int)x.fromMemberId,
                 toMemberId = (int)x.toMemberId,
                 mine = (x.fromMemberId == memberId),
@@ -200,8 +179,8 @@ namespace WebApi.Controllers
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-            
-            var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId) ).Select(x => new ChatRoomDTO()
+
+            var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId)).Select(x => new ChatRoomDTO()
             {
                 chatRoomId = (int)x.chatRoomId,
                 otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
@@ -235,13 +214,12 @@ namespace WebApi.Controllers
                 ///  1. Send push and get notification ID via server   ///
                 //////////////////////////////////////////////////////////
 
-                int notificationId = 0;
+
 
                 VolunteerMatchDbContext db = new VolunteerMatchDbContext();
                 ChatHistory newMessage = new ChatHistory()
                 {
                     datetime = message.datetime,
-                    notificationId = notificationId,
                     fromMemberId = message.fromMemberId,
                     toMemberId = message.toMemberId,
                     text = message.text,

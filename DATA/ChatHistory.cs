@@ -16,7 +16,6 @@ namespace DATA
     {
         public int messageId { get; set; }
         public Nullable<int> datetime { get; set; }
-        public Nullable<int> notificationId { get; set; }
         public string text { get; set; }
         public Nullable<int> fromMemberId { get; set; }
         public Nullable<int> toMemberId { get; set; }

@@ -18,7 +18,6 @@
           </Key>
           <Property Name="messageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="datetime" Type="int" />
-          <Property Name="notificationId" Type="int" />
           <Property Name="text" Type="varchar" MaxLength="255" />
           <Property Name="fromMemberId" Type="int" />
           <Property Name="toMemberId" Type="int" />
@@ -569,7 +568,6 @@
           </Key>
           <Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="datetime" Type="Int32" />
-          <Property Name="notificationId" Type="Int32" />
           <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="fromMemberId" Type="Int32" />
           <Property Name="toMemberId" Type="Int32" />
@@ -992,7 +990,6 @@
                 <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
                 <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
                 <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="notificationId" ColumnName="notificationId" />
                 <ScalarProperty Name="datetime" ColumnName="datetime" />
                 <ScalarProperty Name="messageId" ColumnName="messageId" />
               </MappingFragment>
