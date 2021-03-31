@@ -146,7 +146,7 @@ namespace WebApi.Controllers
 
 
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("getChats/{memberId}")]
         public List<ChatHistoryDTO> getChats(int memberId)
         {
@@ -166,7 +166,7 @@ namespace WebApi.Controllers
                 text = db.ChatHistories.Where(c => c.fromMemberId == x.fromMemberId).Where(c => c.toMemberId == x.toMemberId).Last().ToString()
             }).OrderByDescending(x => x.datetime).ToList();
             return chats;
-        }
+        }*/
 
 
         [HttpGet]
@@ -188,37 +188,14 @@ namespace WebApi.Controllers
 
                 //I need to verify this, maybe add another clause to receive both last recived and sent
                 text = x.text
-            }).OrderByDescending(x => x.datetime).ToList();
+            }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
             return chats;
         }
 
 
 
 
-        /*[Route("getChats/{toMemberId}/{fromMemberId}")]
-        public List<ChatHistoryDTO> getChatHistory(int toMemberId, int fromMemberId)
-        {
-            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
-            var chatMessages = db.ChatHistories.Where(x => (x.toMemberId == toMemberId && x.fromMemberId == fromMemberId) || (x.toMemberId == fromMemberId && x.fromMemberId == toMemberId)).Select(x => new ChatHistoryDTO()
-            {
-                messageId = x.messageId,
-                datetime = (int)x.datetime,
-                notificationId = (int)x.notificationId,
-                fromMemberId = (int)x.fromMemberId,
-                toMemberId = (int)x.toMemberId,
-
-                //I need to verify this, maybe add another clause to receive both last recived and sent
-                text = db.ChatHistories.Where(c => c.fromMemberId == x.fromMemberId).Where(c => c.toMemberId == x.toMemberId).Last().ToString()
-            }).OrderByDescending(x => x.datetime).ToList();
-            return chatMessages;
-        }*/
-
-
-
-
-
-
+      
         // POST api/<controller>
 
 

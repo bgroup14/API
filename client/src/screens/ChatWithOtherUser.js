@@ -46,6 +46,8 @@ import MessageBubble from '../components/MessageBubble';
 
 const ChatWithOtherUser = (props) => {
 
+    const [newMessage, setNewMessage] = useState();
+
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
