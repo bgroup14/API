@@ -193,9 +193,34 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("getChatRoomId/{memberId}/{otherMemberId}")]
+        public ChatRoomDTO getChatRoomId(int memberId, int otherMemberId)
+        {
 
 
-      
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            
+            var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId) ).Select(x => new ChatRoomDTO()
+            {
+                chatRoomId = (int)x.chatRoomId,
+                otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
+                otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault()
+            }).Last();
+
+            if (chats == null)
+            {
+                ChatRoomDTO newChatRoom = new ChatRoomDTO();
+                newChatRoom.otherMemberId = otherMemberId;
+                newChatRoom.otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault();
+                newChatRoom.otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault();
+                newChatRoom.chatRoomId = (int)db.ChatHistories.Max(x => x.chatRoomId) + 1;
+                return newChatRoom;
+            }
+            return chats;
+        }
+
+
         // POST api/<controller>
 
 
