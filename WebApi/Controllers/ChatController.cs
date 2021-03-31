@@ -12,7 +12,7 @@ using WebApi.DTO;
 namespace WebApi.Controllers
 
 {
-    [RoutePrefix("api/post")]
+    [RoutePrefix("api/chat")]
     public class ChatController : ApiController
     {
         // GET api/<controller>
@@ -28,6 +28,125 @@ namespace WebApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("getroomchats/{memberId}")]
+        /* public List<ChatRoomDTO> getRoomChats(int memberId)*/
+        public HttpResponseMessage getRoomChats(int memberId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+                var allChatRoomsId = db.ChatHistories.Where(x => x.fromMemberId == memberId || x.toMemberId == memberId).Select(y => y.chatRoomId).ToList();
+                List<int> relevantChatRoomsId = new List<int>();
+                List<ChatRoomDTO> chatRooms = new List<ChatRoomDTO>();
+
+                foreach (int chatRoomId in allChatRoomsId)
+                {
+                    if (!relevantChatRoomsId.Contains(chatRoomId))
+                    {
+                        relevantChatRoomsId.Add(chatRoomId);
+                    }
+                }
+
+                foreach (var chatRoomId in relevantChatRoomsId)
+                {
+                    int firstMemberId = (int)db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.fromMemberId).FirstOrDefault();
+                    int SecondMemberId = (int)db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.toMemberId).FirstOrDefault();
+                    int otherMemberId;
+                    if (firstMemberId == memberId)
+                    {
+                        otherMemberId = SecondMemberId;
+                    }
+                    else
+                    {
+                        otherMemberId = firstMemberId;
+                    };
+
+                    string otherMemberName = db.Members.Where(x => x.id == otherMemberId).Select(y => y.fullName).FirstOrDefault();
+                    string otherMemberImage = db.Members.Where(x => x.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault();
+                    ChatHistory chatHistory = new ChatHistory();
+
+                    //CHECK IF CAN BE OPTIMIZED
+                    var chat = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.text).ToList();
+                    var chatDate = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.datetime).ToList();
+                    int numOfMassages = chat.Count();
+                    string lastSentence = chat[numOfMassages - 1];
+                    int lastUnixDate = (int)chatDate[numOfMassages - 1];
+
+                    DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                    dtDateTime = dtDateTime.AddSeconds(lastUnixDate).ToLocalTime();
+
+                    //Checking if last massage was sent over the last 24 hrs
+                    string lastDate;
+                    DateTime now = DateTime.Now;
+                    if (dtDateTime > now.AddHours(-24) && dtDateTime <= now)
+                    {
+                        decimal hours = Math.Floor((decimal)(now - dtDateTime).TotalHours);
+                        int hoursDiffInt = (int)hours;
+                        if (hoursDiffInt == 0)
+                        {
+                            lastDate = (now - dtDateTime).Minutes.ToString();
+                            lastDate += " min ago";
+                        }
+                        else
+                        {
+
+                            lastDate = $"{hoursDiffInt} h ago";
+                        }
+
+                    }
+                    else
+                    {
+                        string year = dtDateTime.Year.ToString();
+                        string month = dtDateTime.Month.ToString();
+                        string day = dtDateTime.Day.ToString();
+                        lastDate = $"{day}/{month}/{year}";
+
+                    };
+
+                    ChatRoomDTO chatRoomDTO = new ChatRoomDTO()
+                    {
+                        chatRoomId = chatRoomId,
+                        otherMemberId = otherMemberId,
+                        otherMemberName = otherMemberName,
+                        otherMemberImage = otherMemberImage,
+                        latstSentence = lastSentence,
+                        lastDate = lastDate
+                    };
+                    chatRooms.Add(chatRoomDTO);
+
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, chatRooms);
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
         [Route("getChats/{memberId}")]
         public List<ChatHistoryDTO> getChats(int memberId)
         {
@@ -48,6 +167,8 @@ namespace WebApi.Controllers
             }).OrderByDescending(x => x.datetime).ToList();
             return chats;
         }
+
+
 
 
         [Route("getChats/{toMemberId}/{fromMemberId}")]

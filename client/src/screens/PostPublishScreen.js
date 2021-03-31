@@ -205,6 +205,15 @@ const PostPublishScreen = (props) => {
 
     }
 
+    const checkIfFormFilled = (meetingLocaion) => {
+
+        if (meetingLocaion == null) {
+
+            return false;
+        }
+        return true;
+    }
+
 
 
     const publishPost = async () => {
@@ -242,9 +251,21 @@ const PostPublishScreen = (props) => {
                 'Content-Type': 'application/json'
             }
         }
+        console.log()
+        if (!checkIfFormFilled(postDetails.cityName)) {
 
+            Alert.alert(
+                "",
+                "Please select meeting location",
+                [
+                    { text: "OK" }
+                ],
+            );
+            return null
+        }
         const body = JSON.stringify(postDetails)
-        console.log("Will publish post with body: " + body);
+        // console.log("not null")
+        // console.log("Will publish post with body: " + body);
 
 
         try {
