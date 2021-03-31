@@ -282,7 +282,7 @@ const HomeScreen = (props) => {
 
                     </ScrollView> :
                     <View style={{ marginHorizontal: windowWidth / 10, maxWidth: windowWidth / 1.3, marginTop: windowWidth / 10 }}>
-                        <Text style={{ textAlign: 'center', fontSize: 18 }}>We haven't found posts that matches your posts filter request</Text>
+                        <Text style={{ textAlign: 'center', fontSize: 18 }}>We couldn't find posts that matches your posts filter request</Text>
                         {/* <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen') */}
                         <TouchableOpacity onPress={() => setIsFilterVisble(true)
                         }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to try again</Text></TouchableOpacity>
@@ -300,7 +300,7 @@ const HomeScreen = (props) => {
                     </View>}
 
                 {posts.length <= 2 && posts.length != 0 ? <View style={{ marginHorizontal: windowWidth / 10, maxWidth: windowWidth / 1.2 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 16 }}>Haven't found what you're looking for?</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 16 }}>couldn't find what you're looking for?</Text>
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen')}>
                         <Text style={{ textAlign: 'center', fontSize: 16 }}>Click here to update your feed settings</Text>

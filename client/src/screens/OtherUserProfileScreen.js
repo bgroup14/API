@@ -195,16 +195,16 @@ const OtherUserProfileScreen = (props) => {
                         <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>"{userBio}"</Text>
 
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: windowHeight / 70 }}>
+                    {userHobbies.length > 0 ? <View style={{ flexDirection: 'row', marginTop: windowHeight / 70 }}>
                         <Text style={{ fontWeight: 'bold' }} >Hobbies: </Text><Text>{userHobbies}</Text>
 
-                    </View>
+                    </View> : null}
 
 
 
                 </View>
                 {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
-                    <Text style={{ fontSize: 20 }}>{userName} has no posts yet !</Text>
+                    <Text style={{ fontSize: 22 }}>{userName} has no posts yet </Text>
 
                 </View> : null}
 

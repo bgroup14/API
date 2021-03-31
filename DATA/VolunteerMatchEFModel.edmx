@@ -19,9 +19,10 @@
           <Property Name="messageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="datetime" Type="int" />
           <Property Name="notificationId" Type="int" />
-          <Property Name="text" Type="text" />
+          <Property Name="text" Type="varchar" MaxLength="255" />
           <Property Name="fromMemberId" Type="int" />
           <Property Name="toMemberId" Type="int" />
+          <Property Name="chatRoomId" Type="int" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -569,9 +570,10 @@
           <Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="datetime" Type="Int32" />
           <Property Name="notificationId" Type="Int32" />
-          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="fromMemberId" Type="Int32" />
           <Property Name="toMemberId" Type="Int32" />
+          <Property Name="chatRoomId" Type="Int32" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -986,6 +988,7 @@
           <EntitySetMapping Name="ChatHistories">
             <EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
               <MappingFragment StoreEntitySet="ChatHistory">
+                <ScalarProperty Name="chatRoomId" ColumnName="chatRoomId" />
                 <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
                 <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
                 <ScalarProperty Name="text" ColumnName="text" />
