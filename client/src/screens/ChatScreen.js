@@ -50,10 +50,13 @@ const ChatScreen = (props) => {
         // console.log(res.data)
     }
 
-    const goToOtherUserChat = (chatRoomId) => {
+    const goToOtherUserChat = (chatRoomId, otherMemberName, otherMemberImage) => {
 
         props.navigation.navigate('ChatWithOtherUser', {
-            chatRoomId: chatRoomId
+            chatRoomId: chatRoomId,
+            otherMemberName: otherMemberName,
+            otherMemberImage: otherMemberImage
+
         })
 
     }
@@ -74,7 +77,7 @@ const ChatScreen = (props) => {
                 <ScrollView  >
 
                     {chatRooms.map((chatRoom) => {
-                        return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId} goToOtherUserChat={(chatRoomId) => goToOtherUserChat(chatRoomId)} />
+                        return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId} goToOtherUserChat={(chatRoomId, otherMemberName, otherMemberImage) => goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage)} />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 
                     })}
