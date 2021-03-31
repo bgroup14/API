@@ -12,7 +12,7 @@ const ChatContact = (props) => {
     // console.log("user derails are: " + otherMemberName)
 
     const goToChatRoom = () => {
-        props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage)
+        props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId, otherMemberId)
     }
     return (
         <TouchableOpacity onPress={() => goToChatRoom()}>
