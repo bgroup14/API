@@ -206,7 +206,7 @@ namespace WebApi.Controllers
                 chatRoomId = (int)x.chatRoomId,
                 otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
                 otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault()
-            }).Last();
+            }).FirstOrDefault();
 
             if (chats == null)
             {
