@@ -94,7 +94,7 @@ namespace WebApi.Controllers
                         else
                         {
 
-                            lastDate = $"{hoursDiffInt} h ago";
+                            lastDate = $"{hoursDiffInt}h ago";
                         }
 
                     }

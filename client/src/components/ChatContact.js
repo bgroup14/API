@@ -7,11 +7,15 @@ import { windowHeight } from '../../utils/Dimentions';
 
 
 const ChatContact = (props) => {
-    const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
-    // console.log("user derails are: " + fullName)
+    // const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
+    const { otherMemberName, otherMemberId, otherMemberImage, latstSentence, lastDate, chatRoomId } = props.chatRoom;
+    // console.log("user derails are: " + otherMemberName)
 
+    const goToChatRoom = () => {
+        props.goToOtherUserChat(chatRoomId)
+    }
     return (
-        <TouchableOpacity onPress={() => props.goToOtherUserProfile(memberId)}>
+        <TouchableOpacity onPress={() => goToChatRoom()}>
 
             <View style={styles.userContainer}>
 
@@ -22,12 +26,12 @@ const ChatContact = (props) => {
                     rounded
                     source={{
                         uri:
-                            pictureUrl,
+                            otherMemberImage,
                     }}
                 />
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 80 }}>
-                    <Text onPress={() => alert(1)} style={{ fontSize: 16, fontWeight: 'bold' }}>{fullName}</Text>
-                    <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{chatSentence}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{otherMemberName}</Text>
+                    <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{latstSentence}</Text>
 
 
                 </View>
@@ -37,7 +41,7 @@ const ChatContact = (props) => {
 
             </View>
             <View style={{ alignItems: 'flex-end' }} >
-                <Text style={{ fontStyle: 'italic' }}>{chatDate}</Text>
+                <Text style={{ fontStyle: 'italic' }}>{lastDate}</Text>
 
             </View>
             <Divider />

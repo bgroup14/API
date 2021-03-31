@@ -2,7 +2,7 @@ import { text } from '@fortawesome/fontawesome-svg-core';
 import React from 'react'
 import { KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
-import { Avatar, ListItem } from 'react-native-elements';
+import { Avatar } from 'react-native-elements';
 import { Divider } from 'react-native-elements';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
