@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import MyLinearGradient from '../components/MyLinearGradient';
@@ -13,29 +13,48 @@ import axios from 'axios';
 import Post from '../components/Post';
 import ChatContact from '../components/ChatContact';
 import User from '../components/User';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const ChatScreen = (props) => {
 
+    useFocusEffect(
+        React.useCallback(() => {
+
+            fetchChatRooms()
+
+        }, [])
+    )
+
+    useEffect(() => {
+        // fetchChatRooms()
+        // console.log("user id is :" + userId)
+    }, [])
     let userId = useSelector(state => state.auth.userId);
 
-    let chatUsers = [
-        { fullName: 'Drake', memberId: 1522, pictureUrl: 'https://images.complex.com/complex/images/c_fill,dpr_auto,f_auto,q_90,w_1400/fl_lossy,pg_1/a2eqwqoinqueaayquhir/drake', chatSentence: 'OK, see you later', chatDate: '15/06/2021' },
-        { fullName: 'Kobe', memberId: 159, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/80696/80696_v9_bb.jpg', chatSentence: 'When are you available?', chatDate: '1H' },
-        { fullName: 'Lebron', memberId: 158, pictureUrl: 'https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png', chatSentence: 'Lets meetup!', chatDate: '01/06/2021' },
 
-    ]
-    const goToOtherUserProfile = (member_id) => {
+    // const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
+    const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getroomchats/${userId}`
+    const [chatRooms, setChatRooms] = useState([]);
 
-        // toggleCommentsScreen();
-        // alert(member_id)
-        if (userId == member_id) {
-            props.navigation.navigate('MyProfile')
-        }
-        else {
-            props.navigation.navigate('OtherUserProfileScreen', {
-                userId: member_id
-            })
-        }
+
+
+
+
+
+
+    const fetchChatRooms = async () => {
+        console.log("Fetching chat rooms...")
+        const res = await axios(chatRoomsFetchURL);
+        setChatRooms(res.data)
+        // console.log(res.data)
+    }
+
+    const goToOtherUserChat = (chatRoomId) => {
+
+        props.navigation.navigate('ChatWithOtherUser', {
+            chatRoomId: chatRoomId
+        })
 
     }
     return (
@@ -54,8 +73,8 @@ const ChatScreen = (props) => {
 
                 <ScrollView  >
 
-                    {chatUsers.map((user) => {
-                        return <ChatContact user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                    {chatRooms.map((chatRoom) => {
+                        return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId} goToOtherUserChat={(chatRoomId) => goToOtherUserChat(chatRoomId)} />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 
                     })}

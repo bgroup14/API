@@ -70,7 +70,7 @@ const MyProfileScreen = (props) => {
     const fetchUserDetails = async () => {
         //  console.log("fetching user details...");
         const res = await axios(userDetailsFetchURL);
-        //console.log(res.data.city + "cityy")
+        // console.log(res.data)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
         //  console.log("user image is :" + res.data.pictureUrl)
