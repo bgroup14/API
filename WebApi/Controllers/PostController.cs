@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -31,52 +33,103 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getAllPosts")]
 
-        public List<PostDTO> GetAllPosts()
+        public HttpResponseMessage GetAllPosts()
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-            var posts = db.Posts.Select(x => new PostDTO()
+            try
             {
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var posts = db.Posts.Select(x => new PostDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
 
 
 
-            }).ToList();
+                }).ToList();
 
 
 
 
 
-            return posts;
+                return Request.CreateResponse(HttpStatusCode.OK, posts);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getAllPosts Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
 
 
         }
@@ -88,10 +141,10 @@ namespace WebApi.Controllers
         public HttpResponseMessage GetPostsBySearchWord(string searchWord)
         {
 
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
                 /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
                 var postsWIthSearchWord = db.Posts.Where(x => x.text.Contains(searchWord)).ToList();
                 List<PostDTO> postsToSend = new List<PostDTO>();
@@ -141,8 +194,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getpostsbysearchword Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
 
@@ -161,48 +258,99 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getuserposts/{id}")]
 
-        public List<PostDTO> GetUserPosts(int id)
+        public HttpResponseMessage GetUserPosts(int id)
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-            var posts = db.Posts.Where(p => p.member_id == id).Select(x => new PostDTO()
+            try
             {
-
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var posts = db.Posts.Where(p => p.member_id == id).Select(x => new PostDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
 
 
-            }).ToList();
+                }).ToList();
 
-            return posts;
+                return Request.CreateResponse(HttpStatusCode.OK, posts);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getuserposts Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
 
 
         }
@@ -211,137 +359,293 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getPostsFromCategry/{categoryId}")]
 
-        public List<PostDTO> getPostsFromCategry(string categoryId)
+        public HttpResponseMessage getPostsFromCategry(string categoryId)
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-            var posts = db.Posts.Select(x => new PostDTO()
+            try
             {
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var posts = db.Posts.Select(x => new PostDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
 
 
 
-            }).Where(y => y.category == categoryId).ToList();
-            return posts;
+                }).Where(y => y.category == categoryId).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, posts);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getPostsFromCategry Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
         }
 
         [HttpGet]
         [Route("getPostsDateAscending")]
 
-        public List<PostDTO> getPostsDateAscending()
+        public HttpResponseMessage getPostsDateAscending()
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-            var posts = db.Posts.Select(x => new PostDTO()
+            try
             {
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var posts = db.Posts.Select(x => new PostDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
 
 
 
-            }).OrderBy(y => y.unixDate).ToList();
-            return posts;
+                }).OrderBy(y => y.unixDate).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, posts);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getPostsDateAscending Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
         }
 
 
         [HttpGet]
         [Route("getPostsDateDescending")]
 
-        public List<PostDTO> getPostsDateDescending()
+        public HttpResponseMessage getPostsDateDescending()
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
-            var posts = db.Posts.Select(x => new PostDTO()
+            try
             {
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                var posts = db.Posts.Select(x => new PostDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
 
 
 
-            }).OrderByDescending(y => y.unixDate).ToList();
-            return posts;
+                }).OrderByDescending(y => y.unixDate).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, posts);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getPostsDateDescending Value saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
         }
 
 
@@ -355,191 +659,105 @@ namespace WebApi.Controllers
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            /*  FeedSettingsDTO feedSettings = db.FeedSettings.Select(x => new FeedSettingsDTO()
-              {
-                  memberType = x.memberType,
-                  postLocation = x.postLocation,
-                  participantGender = x.participantGender,
-                  participantAgeRange = x.participantAgeRange
-              }).Where(m => m.memberId == 159).FirstOrDefault();*/
-
-
-            FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
+            try
             {
-                memberType = x.memberType,
-                postLocation = x.postLocation,
-                participantGender = x.participantGender,
-                participantAgeRange = x.participantAgeRange
-            }).FirstOrDefault();
+                /*  FeedSettingsDTO feedSettings = db.FeedSettings.Select(x => new FeedSettingsDTO()
+                  {
+                      memberType = x.memberType,
+                      postLocation = x.postLocation,
+                      participantGender = x.participantGender,
+                      participantAgeRange = x.participantAgeRange
+                  }).Where(m => m.memberId == 159).FirstOrDefault();*/
 
-            var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
-            {
-                text = x.text,
-                fromAge = (int)x.fromAge,
-                toAge = (int)x.toAge,
-                helpType = x.helpType,
-                isZoom = x.isZoom,
-                unixDate = (int)x.unixDate,
-                recurring = x.recurring,
-                fromGender = x.fromGender,
-                longitude = (double)x.longitude,
-                latitude = (double)x.latitude,
-                timeOfDay = x.timeOfDay,
-                category = x.category,
-                member_id = (int)x.member_id,
-                cityName = x.cityName,
-                dateLabel = x.dateLabel,
-                postId = x.id,
-                postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
-                postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
 
-                comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
                 {
-                    commentingMemberId = (int)y.commentingMemberId,
-                    commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
-                    commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
-                    text = y.text
-                }).ToList()
+                    memberType = x.memberType,
+                    postLocation = x.postLocation,
+                    participantGender = x.participantGender,
+                    participantAgeRange = x.participantAgeRange
+                }).FirstOrDefault();
 
-            });
-
-            string categoryName = null;
-            if (filterDTO != null && filterDTO.categoryName != null)
-            {
-                categoryName = filterDTO.categoryName;
-            }
-
-
-
-
-
-           
-
-
-
-            if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
-            {
-                // meetingLocation
-                // STILL NEED TO DO
-                // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-                if (filterDTO.meetingLocation != null)
+                var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
                 {
-                    if (filterDTO.meetingLocation.Equals("Zoom Only"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.isZoom == true);
-                    }
-                }
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
 
-                //userType
-                if (filterDTO.userType != null)
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
+
+                });
+
+                string categoryName = null;
+                if (filterDTO != null && filterDTO.categoryName != null)
                 {
-                    /*if (filterDTO.userType.Equals("Need Help"))*/
-                    if (filterDTO.userType == "Need Help")
-                    {
-                        /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));*/
-                        filteredPosts = filteredPosts.Where(m => m.helpType == "Give Help");
-                    }
-                    /* else if (filterDTO.userType.Equals("Give Help"))*/
-                    else if (filterDTO.userType == "Give Help")
-                    {
-                        /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));*/
-                        filteredPosts = filteredPosts.Where(m => m.helpType == "Need Help");
-                    }
+                    categoryName = filterDTO.categoryName;
                 }
 
 
-                //participantAge
-                if (filterDTO.participantAge != null)
-                {
-                    switch (filterDTO.participantAge)
-                    {
-                        case "16-30":
-                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
-                            break;
-                        case "30-50":
-                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
-                            break;
-                        case "50+":
-                            filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
-                            break;
-                        default:
-                            break;
-
-                    }
-                }
 
 
-                //participantGender
-                if (filterDTO.participantGender != null)
-                {
-                    if (filterDTO.participantGender.Equals("Man") || filterDTO.participantGender.Equals("Woman"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
-                    }
-                }
 
 
-                //categoryName
-                if (filterDTO.categoryName != null)
-                {
-                    if (!filterDTO.categoryName.Equals("null"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
-                    }
-                }
-                if (categoryName != null)
-                {
-                    if (!categoryName.Equals("null"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
-                    }
-                }
 
-                //sortBy
-                if (filterDTO.sortBy != null)
-                {
-                    switch (filterDTO.sortBy)
-                    {
-                        case "Relevance":
-                            //Need to setup smart element
-                            break;
-                        case "Meeting location":
-                            // SAME AS meetingLocation
-                            // STILL NEED TO DO
-                            // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-                            break;
-                        case "Meeting date":
-                            filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-               
-            }
-            else /*if (feedSettings != null)*/
-            {
-                if (feedSettings.memberType != null)
+
+
+                if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
                     // STILL NEED TO DO
                     // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-                    /* return Request.CreateResponse(HttpStatusCode.OK, feedSettings.memberType);*/
-                    //userType
-                    if (feedSettings.memberType == "Need Help")
+                    if (filterDTO.meetingLocation != null)
                     {
-                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));
+                        if (filterDTO.meetingLocation.Equals("Zoom Only"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.isZoom == true);
+                        }
                     }
-                    else if (feedSettings.memberType.Equals("Give Help"))
-                    {
-                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));
 
+                    //userType
+                    if (filterDTO.userType != null)
+                    {
+                        /*if (filterDTO.userType.Equals("Need Help"))*/
+                        if (filterDTO.userType == "Need Help")
+                        {
+                            /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));*/
+                            filteredPosts = filteredPosts.Where(m => m.helpType == "Give Help");
+                        }
+                        /* else if (filterDTO.userType.Equals("Give Help"))*/
+                        else if (filterDTO.userType == "Give Help")
+                        {
+                            /*filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));*/
+                            filteredPosts = filteredPosts.Where(m => m.helpType == "Need Help");
+                        }
                     }
+
 
                     //participantAge
-                    if (feedSettings.participantAgeRange != null)
+                    if (filterDTO.participantAge != null)
                     {
-                        switch (feedSettings.participantAgeRange)
+                        switch (filterDTO.participantAge)
                         {
                             case "16-30":
                                 filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
@@ -558,15 +776,23 @@ namespace WebApi.Controllers
 
 
                     //participantGender
-                    if (feedSettings.participantGender != null)
+                    if (filterDTO.participantGender != null)
                     {
-                        if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
+                        if (filterDTO.participantGender.Equals("Man") || filterDTO.participantGender.Equals("Woman"))
                         {
-                            filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                            filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(filterDTO.participantGender));
                         }
                     }
 
+
                     //categoryName
+                    if (filterDTO.categoryName != null)
+                    {
+                        if (!filterDTO.categoryName.Equals("null"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.category.Equals(filterDTO.categoryName));
+                        }
+                    }
                     if (categoryName != null)
                     {
                         if (!categoryName.Equals("null"))
@@ -575,15 +801,145 @@ namespace WebApi.Controllers
                         }
                     }
 
+                    //sortBy
+                    if (filterDTO.sortBy != null)
+                    {
+                        switch (filterDTO.sortBy)
+                        {
+                            case "Relevance":
+                                //Need to setup smart element
+                                break;
+                            case "Meeting location":
+                                // SAME AS meetingLocation
+                                // STILL NEED TO DO
+                                // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                                break;
+                            case "Meeting date":
+                                filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
 
-              
-                   
-                    
+                }
+                else /*if (feedSettings != null)*/
+                {
+                    if (feedSettings.memberType != null)
+                    {
+                        // meetingLocation
+                        // STILL NEED TO DO
+                        // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                        /* return Request.CreateResponse(HttpStatusCode.OK, feedSettings.memberType);*/
+                        //userType
+                        if (feedSettings.memberType == "Need Help")
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));
+                        }
+                        else if (feedSettings.memberType.Equals("Give Help"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));
+
+                        }
+
+                        //participantAge
+                        if (feedSettings.participantAgeRange != null)
+                        {
+                            switch (feedSettings.participantAgeRange)
+                            {
+                                case "16-30":
+                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
+                                    break;
+                                case "30-50":
+                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
+                                    break;
+                                case "50+":
+                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
+                                    break;
+                                default:
+                                    break;
+
+                            }
+                        }
+
+
+                        //participantGender
+                        if (feedSettings.participantGender != null)
+                        {
+                            if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
+                            {
+                                filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                            }
+                        }
+
+                        //categoryName
+                        if (categoryName != null)
+                        {
+                            if (!categoryName.Equals("null"))
+                            {
+                                filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
+                            }
+                        }
+
+
+
+
+
+                    }
+
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
+                /* return filteredPosts.ToList();*/
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getFilteredPosts Value saved in DB");
+
                 }
 
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
-            return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
-            /* return filteredPosts.ToList();*/
         }
 
 
@@ -597,9 +953,8 @@ namespace WebApi.Controllers
         [Route("publishpost")]
         public HttpResponseMessage PublishPost(PostDTO postDTO)
         {
-            try
-            {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try {
 
                 Post newPost = new Post()
                 {
@@ -641,8 +996,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Post saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }
@@ -654,9 +1053,9 @@ namespace WebApi.Controllers
         public HttpResponseMessage PublishComment(CommentDTO commentDTO)
         {
             /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
-            try
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try 
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
                 Comment comment = new Comment()
                 {
                     commentingMemberId = commentDTO.commentingMemberId,
@@ -679,8 +1078,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }
@@ -691,10 +1134,9 @@ namespace WebApi.Controllers
         public HttpResponseMessage PublishLike(LikeDTO likeDTO)
         {
             /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
-            try
-            {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-                Like like = new Like()
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try { 
+            Like like = new Like()
                 {
                     likingMemberId = likeDTO.likingMemberId,
                     postId = likeDTO.postId
@@ -706,7 +1148,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Like saved success");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
         }
 
@@ -716,9 +1203,8 @@ namespace WebApi.Controllers
         public HttpResponseMessage DeletePost(int postId)
         {
             /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
-            try
-            {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try {
                 Post postToDelete = db.Posts.Where(x => x.id == postId).First();
                 db.Posts.Remove(postToDelete);
                 MembersPost membersPostToDelete = db.MembersPosts.Where(x => x.postId == postId).First();
@@ -742,8 +1228,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Post deleted from DB");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }
@@ -754,9 +1284,8 @@ namespace WebApi.Controllers
         public HttpResponseMessage DeleteLike(int postId, int memberId)
         {
             /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
-            try
-            {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try {
                 Like likeToDelete = db.Likes.Where(x => x.postId == postId).Where(x => x.likingMemberId == memberId).FirstOrDefault();
                 db.Likes.Remove(likeToDelete);
 
@@ -765,7 +1294,52 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Like deleted");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
         }
 
