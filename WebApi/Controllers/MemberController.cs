@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,10 +38,11 @@ namespace WebApi.Controllers
         [Route("login")]
         public HttpResponseMessage Login(MemberLoginDTO memberLogin)
         {
+            
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
                 Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
                 if (member == null)
                 {
@@ -78,8 +81,52 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, AuthorizedMemberDetails);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Login success");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -94,10 +141,11 @@ namespace WebApi.Controllers
 
         public HttpResponseMessage CheckIfMemberExists(MemberLoginDTO memberLogin)
         {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
                 Member member = db.Members.SingleOrDefault(x => x.email == memberLogin.email);
                 if (member != null)
                 {
@@ -126,8 +174,52 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "User dosent exists");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "checkifmemberexists Value saved in DB");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -141,9 +233,9 @@ namespace WebApi.Controllers
         [Route("register")]
         public HttpResponseMessage Register(MemberSignupDTO memberSignupDTO)
         {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
                 Member member = new Member();
                 member.email = memberSignupDTO.email;
                 member.city = memberSignupDTO.city;
@@ -200,8 +292,52 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, authorizedMemberDetailsDTO);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Value saved in DB");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -265,8 +401,52 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, "Profile updated successfully");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Profile updated successfully");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -289,8 +469,52 @@ namespace WebApi.Controllers
                 db.SaveChanges();
                 return Request.CreateResponse(HttpStatusCode.OK, "Feed settings updated successfully");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Feed settings updated successfully");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -320,10 +544,10 @@ namespace WebApi.Controllers
 
 
 
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
                 Member member = db.Members.SingleOrDefault(x => x.id == id);
                 int unixDateOfBirth = (int)member.dateOfBirth;
                 DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -360,12 +584,54 @@ namespace WebApi.Controllers
 
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
 
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getmyprofile Value saved in DB");
 
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }
@@ -376,9 +642,9 @@ namespace WebApi.Controllers
         [Route("addreview")]
         public HttpResponseMessage AddReview(ReviewsDTO reviewsDTO)
         {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
             try
             {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
                 Review review = new Review();
                 review.fromMemberId = reviewsDTO.fromMemberId;
                 review.toMemberId = reviewsDTO.toMemberId;
@@ -393,8 +659,52 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, "Review added");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Review added");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
@@ -421,9 +731,8 @@ namespace WebApi.Controllers
 
 
 
-            try
-            {
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try {
                 var usersWIthSearchWord = db.Members.Where(x => x.fullName.Contains(searchWord)).ToList();
                 List<ProfileDetailsDTO> usersToSend = new List<ProfileDetailsDTO>();
                 foreach (Member m in usersWIthSearchWord)
@@ -460,12 +769,54 @@ namespace WebApi.Controllers
 
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.Message);
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
 
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "getmembersbysearchword Value saved in DB");
 
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
         }

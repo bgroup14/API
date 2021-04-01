@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -125,6 +127,50 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
@@ -151,52 +197,157 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("getChatHistory/{chatRoomId}/{memberId}")]
-        public List<ChatHistoryDTO> getChatHistory(int chatRoomId, int memberId)
+        public HttpResponseMessage getChatHistory(int chatRoomId, int memberId)
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
-            var chats = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(x => new ChatHistoryDTO()
+            try
             {
-                messageId = x.messageId,
-                datetime = (int)x.datetime,
-                fromMemberId = (int)x.fromMemberId,
-                toMemberId = (int)x.toMemberId,
-                mine = (x.fromMemberId == memberId),
+                var chats = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(x => new ChatHistoryDTO()
+                {
+                    messageId = x.messageId,
+                    datetime = (int)x.datetime,
+                    fromMemberId = (int)x.fromMemberId,
+                    toMemberId = (int)x.toMemberId,
+                    mine = (x.fromMemberId == memberId),
 
-                //I need to verify this, maybe add another clause to receive both last recived and sent
-                text = x.text
-            }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
-            return chats;
+                    //I need to verify this, maybe add another clause to receive both last recived and sent
+                    text = x.text
+                }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
+                return Request.CreateResponse(HttpStatusCode.OK, chats);
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+            
         }
 
 
         [HttpGet]
         [Route("getChatRoomId/{memberId}/{otherMemberId}")]
-        public ChatRoomDTO getChatRoomId(int memberId, int otherMemberId)
+        public HttpResponseMessage getChatRoomId(int memberId, int otherMemberId)
         {
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-
-            var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId)).Select(x => new ChatRoomDTO()
+            try
             {
-                chatRoomId = (int)x.chatRoomId,
-                otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
-                otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault()
-            }).FirstOrDefault();
+                var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId)).Select(x => new ChatRoomDTO()
+                {
+                    chatRoomId = (int)x.chatRoomId,
+                    otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
+                    otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault()
+                }).FirstOrDefault();
 
-            if (chats == null)
-            {
-                ChatRoomDTO newChatRoom = new ChatRoomDTO();
-                newChatRoom.otherMemberId = otherMemberId;
-                newChatRoom.otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault();
-                newChatRoom.otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault();
-                newChatRoom.chatRoomId = (int)db.ChatHistories.Max(x => x.chatRoomId) + 1;
-                return newChatRoom;
+                if (chats == null)
+                {
+                    ChatRoomDTO newChatRoom = new ChatRoomDTO();
+                    newChatRoom.otherMemberId = otherMemberId;
+                    newChatRoom.otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault();
+                    newChatRoom.otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault();
+                    newChatRoom.chatRoomId = (int)db.ChatHistories.Max(x => x.chatRoomId) + 1;
+                    return Request.CreateResponse(HttpStatusCode.OK, newChatRoom);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, chats);
             }
-            return chats;
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
         }
 
 
@@ -207,6 +358,8 @@ namespace WebApi.Controllers
         [Route("sendChatMessage")]
         public HttpResponseMessage SaveChatMessage(ChatHistoryDTO message)
         {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
             try
             {
                 //////////////////////////////////////////////////////////
@@ -216,7 +369,6 @@ namespace WebApi.Controllers
 
 
 
-                VolunteerMatchDbContext db = new VolunteerMatchDbContext();
                 ChatHistory newMessage = new ChatHistory()
                 {
                     datetime = message.datetime,
@@ -232,6 +384,50 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Message saved in DB");
+
+                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
