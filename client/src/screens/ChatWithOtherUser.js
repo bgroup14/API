@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { getIconType } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -22,7 +22,6 @@ import MyOverlay from '../components/MyOverlay';
 
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Divider } from 'react-native-elements';
 import axios from 'axios';
@@ -77,58 +76,108 @@ const ChatWithOtherUser = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-
+            // console.log('ss')
             scrollView.current.scrollToEnd()
-
+            fetchChatHistory()
 
         }, [keyboardStatus])
     )
-    useEffect(() => {
-    }, [])
+
 
 
 
 
 
     /* 2. Get the param */
-    const { chatRoomId, otherMemberName, otherMemberImage } = route.params;
+    const { chatRoomId, otherMemberName, otherMemberImage, otherMemberId } = route.params;
+    let userId = useSelector(state => state.auth.userId);
+    const [chatHistory, setChatHistory] = useState([]);
+    const [restartComponent, setRestartComponent] = useState(1);
 
-    const [posts, setPosts] = useState([]);
-    const userId = useSelector(state => state.auth.userId);
 
-    const sendMessage = () => {
 
-        datetime = message.datetime, // unix date
-            fromMemberId = other
-        toMemberId = message.toMemberId,
-            text = message.text
+    const fetchChatHistoryUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatHistory/${chatRoomId}/${userId}`
+
+
+    const scrollDown = () => {
+        setTimeout(() => {
+            scrollView.current.scrollToEnd()
+        }, 300);
+
+
+    }
+    const fetchChatHistory = async () => {
+        console.log("Fetching chat history...")
+        const res = await axios(fetchChatHistoryUrl);
+        setChatHistory(res.data)
+        scrollDown();
+        // console.log(res.data)
+    }
+
+
+    const sendMessage = async () => {
+
+
+        let newMessageToSend = {
+
+            datetime: Math.round((new Date()).getTime() / 1000),
+            fromMemberId: userId,
+            toMemberId: otherMemberId,
+            text: newMessage,
+            chatRoomId
+        }
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            }
+            let body = JSON.stringify(newMessageToSend);
+
+            const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
+
+            const res = await axios.post(sendChatMessageUrl, body, config);
+            setRestartComponent(Date.now)
+
+
+
+        }
+        catch (error) {
+
+        }
+
+
     }
 
 
 
-    //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} key={restartComponent}>
+
 
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
                 <View >
-                    <View style={styles.barContainer} >
+                    <View>
+                        <View style={styles.barContainer} >
 
-                        <Avatar
-                            size='small'
-                            // avatarStyle={{ height: 59, }}
-                            // containerStyle={{ marginTop: 10 }}
-                            rounded
-                            source={{
-                                uri:
-                                    otherMemberImage
-                                // postCreatorImg,
-                            }}
-                        />
-                        <Text style={styles.barText}>{otherMemberName}</Text>
+                            <Avatar
+                                size='small'
+                                // avatarStyle={{ height: 59, }}
+                                // containerStyle={{ marginTop: 10 }}
+                                rounded
+                                source={{
+                                    uri:
+                                        otherMemberImage
+                                    // postCreatorImg,
+                                }}
+                            />
+                            <Text style={styles.barText}>{otherMemberName}</Text>
+                        </View>
                         <View style={styles.IconContainer}>
                             <Icon
                                 style={styles.bellIcon}
@@ -141,25 +190,14 @@ const ChatWithOtherUser = (props) => {
                 </View>
 
 
-                <ScrollView style={{ marginTop: 20 }} ref={scrollView}>
-                    <MessageBubble mine={false} text='You want to meetup ?' />
-                    <MessageBubble mine={true} text='Yes for sure' />
-                    <MessageBubble mine={false} text='Cool, when are you free?' />
-                    <MessageBubble mine={true} text='I dont know yet' />
-                    <MessageBubble mine={false} text='OK, let me know' />
-                    <MessageBubble mine={true} text='No problem' />
-                    <MessageBubble mine={false} text='You want to meetup ?' />
-                    <MessageBubble mine={true} text='Yes for sure' />
-                    <MessageBubble mine={false} text='Cool, when are you free?' />
-                    <MessageBubble mine={true} text='I dont know yet' />
-                    <MessageBubble mine={false} text='OK, let me know' />
-                    <MessageBubble mine={true} text='No problem' />
-                    <MessageBubble mine={false} text='You want to meetup ?' />
-                    <MessageBubble mine={true} text='Yes for sure' />
-                    <MessageBubble mine={false} text='Cool, when are you free?' />
-                    <MessageBubble mine={true} text='I dont know yet' />
-                    <MessageBubble mine={false} text='OK, let me know' />
-                    <MessageBubble mine={true} text='No problem last message' />
+                <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
+
+                    {chatHistory.map((message) => {
+                        return <MessageBubble mine={!message.mine} text={message.text} key={message.messageId}
+                        />
+                        // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
+                    })}
 
 
                 </ScrollView>
@@ -217,8 +255,9 @@ const styles = StyleSheet.create({
         // alignItems: 'flex-end',
 
         // justifyContent: 'flex-end'
-        marginLeft: windowWidth / 2.5,
-        // marginTop: windowHeight / 40,
+        position: 'absolute',
+        marginLeft: windowWidth / 1.3,
+        marginTop: windowHeight / 30,
         // flexDirection: 'row',
         // paddingLeft: windowWidth / 100,
         // paddingRight: windowWidth / 100,

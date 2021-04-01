@@ -182,7 +182,7 @@ const Post = (props) => {
                     <Text style={styles.btnText}>Like</Text>
                 </TouchableOpacity > */}
                 { }
-                {currentMemberId == member_id ? null : <TouchableOpacity style={styles.postBtn}>
+                {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => props.goToChatWithUser(currentMemberId, member_id)} style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
                 </TouchableOpacity >}

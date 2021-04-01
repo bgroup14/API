@@ -205,7 +205,7 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("sendChatMessage")]
-        public HttpResponseMessage PublishPost(ChatHistoryDTO message)
+        public HttpResponseMessage SaveChatMessage(ChatHistoryDTO message)
         {
             try
             {

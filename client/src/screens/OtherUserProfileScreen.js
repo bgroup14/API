@@ -135,6 +135,35 @@ const OtherUserProfileScreen = (props) => {
 
     }
 
+    const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${userId}`
+
+    const goToChatWithUser = async () => {
+        console.log(userId)// this is gal id
+        console.log(currentMemberId)
+        try {
+
+            console.log("Checking Room Id...")
+            const res = await axios(getChatRoomIdUrl);
+            // console.log(res.data);
+            const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
+
+            props.navigation.navigate('ChatWithOtherUser', {
+                chatRoomId: chatRoomId,
+                otherMemberName: otherMemberName,
+                otherMemberImage: otherMemberImage,
+                otherMemberId: otherMemberId
+
+            })
+
+        } catch (error) {
+            console.log(error)
+
+        }
+
+
+
+    }
+
 
 
     return (
@@ -146,28 +175,21 @@ const OtherUserProfileScreen = (props) => {
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <View style={styles.barContainer}>
-                    {/* <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
-                        <DotsMenu />
-                    </DotsMenuOverlay> */}
+
                     <Text style={styles.barText}></Text>
-                    {/* <Icon
-                        style={styles.dotsMenu}
-                        name='dots-vertical'
-                        onPress={() => setIsMenuVisible(true)}
-                    /> */}
                 </View>
                 <View style={styles.chatIconContainer}>
                     <Icon
                         style={styles.chatIcon}
                         size={32}
                         name='chatbubbles-outline'
-                        onPress={() => alert(2)}
+                        onPress={() => goToChatWithUser()}
                     />
                 </View>
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
-                        containerStyle={{ marginTop: 10 }}
+                        containerStyle={{ marginTop: windowHeight / 100 }}
                         rounded
                         source={{
                             uri:

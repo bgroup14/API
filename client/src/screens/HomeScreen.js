@@ -223,6 +223,34 @@ const HomeScreen = (props) => {
         }
     }
 
+    const goToChatWithUser = async (currentMemberId, member_id) => {
+        console.log(currentMemberId)
+        console.log(member_id)
+        const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${member_id}`
+
+
+        try {
+
+            console.log("Checking Room Id...")
+            const res = await axios(getChatRoomIdUrl);
+            // console.log(res.data);
+            const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
+
+            props.navigation.navigate('ChatWithOtherUser', {
+                chatRoomId: chatRoomId,
+                otherMemberName: otherMemberName,
+                otherMemberImage: otherMemberImage,
+                otherMemberId: otherMemberId
+
+            })
+
+        } catch (error) {
+            console.log(error)
+
+        }
+
+    }
+
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
     return (
@@ -276,7 +304,8 @@ const HomeScreen = (props) => {
                         {posts.map((post) => {
                             return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
                                 refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                                goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
                         })}
 
 

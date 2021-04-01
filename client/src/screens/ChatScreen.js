@@ -50,7 +50,7 @@ const ChatScreen = (props) => {
         // console.log(res.data)
     }
 
-    const goToOtherUserChat = (chatRoomId, otherMemberName, otherMemberImage) => {
+    const goToOtherUserChat = (chatRoomId, otherMemberName, otherMemberImage, otherMemberId) => {
 
         props.navigation.navigate('ChatWithOtherUser', {
             chatRoomId: chatRoomId,
