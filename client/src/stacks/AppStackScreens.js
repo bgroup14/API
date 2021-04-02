@@ -18,10 +18,12 @@ import { Fragment } from 'react';
 
 
 
+
 //here we will have to chech from redux if user is logged in - if he is logged in we well show the mainStackScreens - else we show the auth screens
 
-// const user = 'logged1';
+//
 const AppStackScreens = () => {
+
     const AppStack = createStackNavigator();
     const isLogged = useSelector(state => state.auth.isLogged)
     // const isLogged = true;
