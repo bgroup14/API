@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { getIconType } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,6 +13,10 @@ import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyOverlay from '../components/MyOverlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
+import * as Notifications from 'expo-notifications'
+
 
 
 
@@ -37,6 +41,10 @@ import CommentsScreens from './CommentsScreens';
 
 
 
+
+
+
+
 const HomeScreen = (props) => {
     const [posts, setPosts] = useState([]);
     const userId = useSelector(state => state.auth.userId);
@@ -49,21 +57,131 @@ const HomeScreen = (props) => {
     const [postsFilteredObj, setPostsFilteredObj] = useState(null);
     const [restartComponent, setRestartComponent] = useState(1);
     const [categoriesToShow, setCategoriesToShow] = useState([]);
+    const [pushNotificationToken, setPushNotificationToken] = useState(null);
+
+
+
+
+
+    const notificationListener = useRef();
+    const responseListener = useRef();
+    const [notification, setNotification] = useState(false);
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: false,
+            shouldSetBadge: false,
+        }),
+    });
+
+
+
+
+    //notfications useefect
+    useEffect(() => {
+        // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+        //when user in app will preform this
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+            console.log("Push data screen open:")
+            let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
+            console.log(notificationBody)
+        });
+
+        //When user not in the app will preform this
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log("Push data screen close:")
+            console.log(response.notification.request.trigger.remoteMessage.data.body);
+            let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
+            console.log(notificationBody)
+
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener);
+            Notifications.removeNotificationSubscription(responseListener);
+        };
+    }, []);
+
 
 
     useEffect(() => {
+        if (pushNotificationToken == null) {
+            checkPushNotifications();
+        }
+
         if (commentsToShow.length > 0) {
             setIsCommentsVisible(true)
         }
 
 
-    }, [commentsToShow, posts])
+    }, [commentsToShow])
+
+
+    useEffect(() => {
+        if (pushNotificationToken != null) {
+            //SEND NOTIFICATION TO SERVER
+
+            sendPushTokenToServer();
+
+        }
+
+    }, [pushNotificationToken])
+
+    const sendPushTokenToServer = async () => {
+        const fetchNotificationIdURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/setnotificationid/${userId}/${pushNotificationToken}`
+        try {
+            console.log("sending push token to server...")
+            const res = await axios.post(fetchNotificationIdURL);
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
+
+    const checkPushNotifications = async () => {
+
+        try {
+            var today = new Date().toDateString();
+            const lastTimeTokenTaken = await AsyncStorage.getItem('lastTimeTokenTaken')
+            if (lastTimeTokenTaken == null || lastTimeTokenTaken != today) {
+                //GET TOKEN FROM EXPO
+                registerForPushNotificationsAsync()
+                    .then((token) => {
+                        //console.log('token from app.js=', token);
+                        // this.setState({ token });
+                        setPushNotificationToken(token)
+                        //console.log('state.token from app.js=', this.state.token);
+                    });
+
+                await AsyncStorage.setItem('lastTimeTokenTaken', today)
+
+
+
+
+            }
+            else {
+                console.log("Push token is update to : " + lastTimeTokenTaken)
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
 
 
 
     useFocusEffect(
         React.useCallback(() => {
-
+            console.log("token is " + pushNotificationToken)
             setRestartComponent(Date.now)
             let categories = [
                 { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
@@ -146,7 +264,7 @@ const HomeScreen = (props) => {
         }
         fetchPosts(objToSend)
 
-        //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server
+        //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server 
         setPostsFilteredObj(filteredPostObj);
         let body = JSON.stringify(objToSend)
         console.log(body)

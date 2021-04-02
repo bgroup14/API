@@ -119,6 +119,7 @@
           <Property Name="systemScore" Type="int" />
           <Property Name="gender" Type="varchar" MaxLength="255" />
           <Property Name="city" Type="varchar" MaxLength="255" />
+          <Property Name="notificationId" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="MembersCategories">
           <Key>
@@ -685,6 +686,7 @@
           <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="Member" ToRole="MembersCategory" />
           <NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="Member" ToRole="MembersHobby" />
           <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="Member" ToRole="MembersPost" />
+          <Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MembersCategory">
           <Key>
@@ -1079,6 +1081,7 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Member">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="notificationId" ColumnName="notificationId" />
                 <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
                 <ScalarProperty Name="systemScore" ColumnName="systemScore" />

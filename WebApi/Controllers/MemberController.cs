@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [Route("login")]
         public HttpResponseMessage Login(MemberLoginDTO memberLogin)
         {
-            
+
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
             try
@@ -457,7 +457,7 @@ namespace WebApi.Controllers
         [Route("updatefeedsettings/{userId}")]
         public HttpResponseMessage UpdateFeedSettings(FeedSettingsDTO feedSettingsDTO, int userId)
         {
-            VolunteerMatchDbContext db = new VolunteerMatchDbContext();  
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
             FeedSetting feedSetting = db.FeedSettings.Where(x => x.memberId == userId).FirstOrDefault();
             try
             {
@@ -654,7 +654,7 @@ namespace WebApi.Controllers
 
                 db.Reviews.Add(review);
                 db.SaveChanges();
-                
+
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Review added");
 
@@ -732,7 +732,8 @@ namespace WebApi.Controllers
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-            try {
+            try
+            {
                 var usersWIthSearchWord = db.Members.Where(x => x.fullName.Contains(searchWord)).ToList();
                 List<ProfileDetailsDTO> usersToSend = new List<ProfileDetailsDTO>();
                 foreach (Member m in usersWIthSearchWord)
@@ -750,10 +751,10 @@ namespace WebApi.Controllers
 
                     ProfileDetailsDTO profileDTO = new ProfileDetailsDTO()
                     {
-                        fullName=m.fullName,
+                        fullName = m.fullName,
                         /*age = age,*/
                         pictureUrl = m.pictureUrl,
-                        memberId=m.id
+                        memberId = m.id
 
                     };
                     usersToSend.Add(profileDTO);
@@ -819,6 +820,32 @@ namespace WebApi.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
 
+        }
+
+
+
+        [HttpPost]
+        [Route("setnotificationid/{memberId}/{notificationId}")]
+
+
+        public HttpResponseMessage SetNotificationId(int memberId, string notificationId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+                Member member = db.Members.Where(x => x.id == memberId).FirstOrDefault();
+                member.notificationId = notificationId;
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Notification ID Saved In DB");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
         }
 
 
