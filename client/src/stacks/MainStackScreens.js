@@ -12,6 +12,8 @@ import Notifications from '../screens/Notifications';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector } from 'react-redux';
 
+import { Avatar, Badge, Icon, withBadge } from 'react-native-elements'
+
 
 
 
@@ -19,6 +21,7 @@ const MainStackScreens = () => {
 
     const MainStack = createBottomTabNavigator();
     let userImage = useSelector(state => state.user.userImage);
+    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
     // let userImage = useSelector(state => state.user.userImage);
 
 
@@ -73,6 +76,23 @@ const MainStackScreens = () => {
                     }}
                 />
             }
+            //CHECK IN REDUX IF USER RECIEVED A MESSAGE
+            if (route.name == "Chat" && newMessageFromRedux) {
+                return <View >
+
+                    <Badge
+                        status="error"
+                        containerStyle={{ position: 'absolute', top: -4, right: -4 }}
+                    />
+
+
+                    <Ionicons name={iconName} size={24} color={focused ? "black" : "#666666"} />
+
+
+
+                </View>
+            }
+
 
 
 

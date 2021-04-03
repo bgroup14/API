@@ -851,6 +851,35 @@ namespace WebApi.Controllers
 
 
 
+        [HttpGet]
+        [Route("getnotificationid/{memberId}/")]
+
+
+        public HttpResponseMessage GetNotificationId(int memberId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+                Member member = db.Members.Where(x => x.id == memberId).FirstOrDefault();
+                string pushNotificationId = member.notificationId;
+              
+                return Request.CreateResponse(HttpStatusCode.OK, pushNotificationId);
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
+
+
+
+
+
+
 
         // POST api/<controller>
         public void Post([FromBody] string value)
