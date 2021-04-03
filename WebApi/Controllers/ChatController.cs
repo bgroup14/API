@@ -32,7 +32,7 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("getroomchats/{memberId}")]
-        /* public List<ChatRoomDTO> getRoomChats(int memberId)*/
+
         public HttpResponseMessage getRoomChats(int memberId)
         {
 
@@ -124,11 +124,16 @@ namespace WebApi.Controllers
                         latstSentence = lastSentence,
                         lastDate = lastDate,
                         lastMessageSenderId = lastMessageSenderId,
-                        lastMessageMarkedAsRead = lastMessageMarkedAsRead
+                        lastMessageMarkedAsRead = lastMessageMarkedAsRead,
+                        lastUnixDate = lastUnixDate
                     };
                     chatRooms.Add(chatRoomDTO);
 
+
                 }
+                //WHY THIS ORDERING DOSENT WORK??
+                chatRooms.OrderByDescending(c => c.lastUnixDate);
+
                 return Request.CreateResponse(HttpStatusCode.OK, chatRooms);
 
 
@@ -186,19 +191,6 @@ namespace WebApi.Controllers
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -446,10 +438,6 @@ namespace WebApi.Controllers
 
 
 
-
-
-
-
         [HttpPost]
         [Route("markLastMassageRead/{chatRoomId}/{memberId}")]
         public HttpResponseMessage markLastMassageRead(int chatRoomId, int memberId)
@@ -472,17 +460,7 @@ namespace WebApi.Controllers
 
                 }
 
-                /* var chats = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(x => new ChatHistoryDTO()
-                 {
-                     messageId = x.messageId,
-                     datetime = (int)x.datetime,
-                     fromMemberId = (int)x.fromMemberId,
-                     toMemberId = (int)x.toMemberId,
-                     mine = (x.fromMemberId == memberId),
 
-                     //I need to verify this, maybe add another clause to receive both last recived and sent
-                     text = x.text
-                 }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();*/
                 return Request.CreateResponse(HttpStatusCode.OK, $"Last message is  of user {memberId} or message was read already");
 
             }

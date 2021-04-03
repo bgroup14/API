@@ -41,7 +41,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+                
                 var posts = db.Posts.Select(x => new PostDTO()
                 {
                     text = x.text,
@@ -145,7 +145,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+               
                 var postsWIthSearchWord = db.Posts.Where(x => x.text.Contains(searchWord)).ToList();
                 List<PostDTO> postsToSend = new List<PostDTO>();
 
@@ -266,7 +266,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+       
                 var posts = db.Posts.Where(p => p.member_id == id).Select(x => new PostDTO()
                 {
 
@@ -367,7 +367,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+              
                 var posts = db.Posts.Select(x => new PostDTO()
                 {
                     text = x.text,
@@ -464,7 +464,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  string list = db.Members.Where(y => y.id == 157).First().fullName;*/
+           
                 var posts = db.Posts.Select(x => new PostDTO()
                 {
                     text = x.text,
@@ -661,13 +661,7 @@ namespace WebApi.Controllers
 
             try
             {
-                /*  FeedSettingsDTO feedSettings = db.FeedSettings.Select(x => new FeedSettingsDTO()
-                  {
-                      memberType = x.memberType,
-                      postLocation = x.postLocation,
-                      participantGender = x.participantGender,
-                      participantAgeRange = x.participantAgeRange
-                  }).Where(m => m.memberId == 159).FirstOrDefault();*/
+                
 
 
                 FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
