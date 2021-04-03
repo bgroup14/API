@@ -18,37 +18,51 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const ChatScreen = (props) => {
 
-    useFocusEffect(
-        React.useCallback(() => {
-
-            fetchChatRooms()
-
-        }, [])
-    )
-
-    useEffect(() => {
-        // fetchChatRooms()
-        // console.log("user id is :" + userId)
-    }, [])
-    let userId = useSelector(state => state.auth.userId);
-
-
-    // const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
-    const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getroomchats/${userId}`
     const [chatRooms, setChatRooms] = useState([]);
 
 
+    useFocusEffect(
+        React.useCallback(() => {
+
+            let isActive = true;
+            setChatRooms([])
+
+            const fetchChatRooms = async () => {
+                console.log("Fetching chat rooms...")
+                try {
+
+                    const res = await axios(chatRoomsFetchURL);
+                    if (isActive) {
+                        setChatRooms(res.data);
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+            }
+            fetchChatRooms()
+            return () => {
+                isActive = false;
+            };
+        }, [])
+    )
+
+
+    let userId = useSelector(state => state.auth.userId);
+    const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getroomchats/${userId}`
+
+
+
+    // const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
 
 
 
 
 
-    const fetchChatRooms = async () => {
-        console.log("Fetching chat rooms...")
-        const res = await axios(chatRoomsFetchURL);
-        setChatRooms(res.data)
-        // console.log(res.data)
-    }
+
+
+
 
     const goToOtherUserChat = (chatRoomId, otherMemberName, otherMemberImage, otherMemberId) => {
 
@@ -65,7 +79,7 @@ const ChatScreen = (props) => {
         // <View style={styles.container}>
         //     <Text>ChatScreen </Text>
         // </View>
-        <KeyboardAvoidingView style={styles.container} >
+        <KeyboardAvoidingView style={styles.container}  >
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
 
@@ -76,7 +90,7 @@ const ChatScreen = (props) => {
 
 
                 <ScrollView  >
-
+                    {/* {console.log(chatRooms)} */}
                     {chatRooms.map((chatRoom) => {
                         return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId} goToOtherUserChat={(chatRoomId, otherMemberName, otherMemberImage, otherMemberId) => goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)} />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />

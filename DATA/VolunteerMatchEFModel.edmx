@@ -22,6 +22,7 @@
           <Property Name="fromMemberId" Type="int" />
           <Property Name="toMemberId" Type="int" />
           <Property Name="chatRoomId" Type="int" />
+          <Property Name="markAsRead" Type="bit" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -573,6 +574,7 @@
           <Property Name="fromMemberId" Type="Int32" />
           <Property Name="toMemberId" Type="Int32" />
           <Property Name="chatRoomId" Type="Int32" />
+          <Property Name="markAsRead" Type="Boolean" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -988,6 +990,7 @@
           <EntitySetMapping Name="ChatHistories">
             <EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
               <MappingFragment StoreEntitySet="ChatHistory">
+                <ScalarProperty Name="markAsRead" ColumnName="markAsRead" />
                 <ScalarProperty Name="chatRoomId" ColumnName="chatRoomId" />
                 <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
                 <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />

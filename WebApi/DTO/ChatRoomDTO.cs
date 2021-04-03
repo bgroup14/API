@@ -13,6 +13,9 @@ namespace WebApi.DTO
         public string otherMemberImage;
         public string latstSentence;
         public string lastDate;
+        /*public string lastMessageIsMine;*/
+        public int lastMessageSenderId;
+        public bool lastMessageMarkedAsRead;
         /*public int toMemberId;*/
     }
 
