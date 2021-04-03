@@ -73,9 +73,15 @@ namespace WebApi.Controllers
 
                     //CHECK IF CAN BE OPTIMIZED
                     var chat = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.text).ToList();
+
                     var chatDate = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.datetime).ToList();
                     int numOfMassages = chat.Count();
                     string lastSentence = chat[numOfMassages - 1];
+                    var chatIds = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.fromMemberId).ToList();
+                    int lastMessageSenderId = (int)chatIds[numOfMassages - 1];
+                    var messageMarkAsReadList = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.markAsRead).ToList();
+                    bool lastMessageMarkedAsRead = (bool)messageMarkAsReadList[numOfMassages - 1];
+
                     int lastUnixDate = (int)chatDate[numOfMassages - 1];
 
                     DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -116,7 +122,9 @@ namespace WebApi.Controllers
                         otherMemberName = otherMemberName,
                         otherMemberImage = otherMemberImage,
                         latstSentence = lastSentence,
-                        lastDate = lastDate
+                        lastDate = lastDate,
+                        lastMessageSenderId = lastMessageSenderId,
+                        lastMessageMarkedAsRead = lastMessageMarkedAsRead
                     };
                     chatRooms.Add(chatRoomDTO);
 
@@ -267,7 +275,7 @@ namespace WebApi.Controllers
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
-            
+
         }
 
 
@@ -377,6 +385,7 @@ namespace WebApi.Controllers
                     text = message.text,
                     chatRoomId = message.chatRoomId
                 };
+                newMessage.markAsRead = false;
                 db.ChatHistories.Add(newMessage);
                 db.SaveChanges();
 
@@ -433,6 +442,107 @@ namespace WebApi.Controllers
             }
 
         }
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [Route("markLastMassageRead/{chatRoomId}/{memberId}")]
+        public HttpResponseMessage markLastMassageRead(int chatRoomId, int memberId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+
+                var messagesIds = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(y => y.messageId).ToList();
+                int lastMessageInRoomId = messagesIds.Last();
+                ChatHistory lastMessageInRoom = db.ChatHistories.Where(x => x.messageId == lastMessageInRoomId).FirstOrDefault();
+                if (lastMessageInRoom.fromMemberId != memberId && lastMessageInRoom.markAsRead == false)
+                {
+                    lastMessageInRoom.markAsRead = true;
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Message marked as read");
+
+                }
+
+                /* var chats = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).Select(x => new ChatHistoryDTO()
+                 {
+                     messageId = x.messageId,
+                     datetime = (int)x.datetime,
+                     fromMemberId = (int)x.fromMemberId,
+                     toMemberId = (int)x.toMemberId,
+                     mine = (x.fromMemberId == memberId),
+
+                     //I need to verify this, maybe add another clause to receive both last recived and sent
+                     text = x.text
+                 }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();*/
+                return Request.CreateResponse(HttpStatusCode.OK, $"Last message is  of user {memberId} or message was read already");
+
+            }
+            catch (Exception ex)
+            {
+                if (ex is DbEntityValidationException)
+                {
+                    DbEntityValidationException e = (DbEntityValidationException)ex;
+                    string errors = "";
+                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
+                    {
+                        foreach (DbValidationError er in vr.ValidationErrors)
+                        {
+                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                        }
+                    }
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+                }
+                else if (ex is DbUpdateException)
+                {
+                    DbUpdateException e = (DbUpdateException)ex;
+                    string errors = "";
+                    foreach (DbEntityEntry entry in e.Entries)
+                    {
+                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                        foreach (string prop in entry.CurrentValues.PropertyNames)
+                        {
+                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                        }
+                        errors += "---------------";
+                    }
+                }
+                else if (ex is DbUpdateConcurrencyException)
+                {
+                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
+                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
+                    foreach (var et in e.Entries)
+                    {
+                        //client win
+                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
+
+                        //store win
+                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
+                    }
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+
+
 
         public void Post([FromBody] string value)
         {

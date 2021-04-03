@@ -1,19 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Divider from 'react-native-btr/src/Components/Separator';
 import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { windowHeight } from '../../utils/Dimentions';
+import { useSelector, useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 const ChatContact = (props) => {
     // const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
-    const { otherMemberName, otherMemberId, otherMemberImage, latstSentence, lastDate, chatRoomId } = props.chatRoom;
+    let userId = useSelector(state => state.auth.userId);
+    const [bold, setBold] = useState(false);
+
+
+    const { otherMemberName, otherMemberId, otherMemberImage, latstSentence,
+        lastDate, chatRoomId, lastMessageSenderId, lastMessageMarkedAsRead } = props.chatRoom;
     // console.log("user derails are: " + otherMemberName)
+
+    useFocusEffect(
+        React.useCallback(() => {
+
+            console.log("last messenger id:" + lastMessageSenderId)
+            console.log("mark as read: " + lastMessageMarkedAsRead)
+            if (lastMessageSenderId != userId && !lastMessageMarkedAsRead) {
+
+                console.log("setting to bold...")
+                setBold(true)
+            }
+
+        }, [])
+    )
+
 
     const goToChatRoom = () => {
         props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId, otherMemberId)
     }
+
+
     return (
         <TouchableOpacity onPress={() => goToChatRoom()}>
 
@@ -31,7 +56,7 @@ const ChatContact = (props) => {
                 />
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 80 }}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{otherMemberName}</Text>
-                    <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{latstSentence}</Text>
+                    <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic', fontWeight: bold ? 'bold' : 'normal' }}>{latstSentence}</Text>
 
 
                 </View>

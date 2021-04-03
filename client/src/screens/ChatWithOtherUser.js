@@ -36,6 +36,9 @@ import { TouchableOpacity } from 'react-native';
 import FeedFilterScreen from './FeedFilterScreen';
 import CommentsScreens from './CommentsScreens';
 import MessageBubble from '../components/MessageBubble';
+
+import { NO_NEW_MESSAGE } from '../../store/actions/types';
+
 // import MessageBubble from;
 
 
@@ -46,6 +49,8 @@ import MessageBubble from '../components/MessageBubble';
 const ChatWithOtherUser = (props) => {
 
     const [newMessage, setNewMessage] = useState();
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
@@ -79,6 +84,7 @@ const ChatWithOtherUser = (props) => {
             // console.log('ss')
             scrollView.current.scrollToEnd()
             fetchChatHistory()
+            markLastMassageRead()
 
         }, [keyboardStatus])
     )
@@ -113,6 +119,25 @@ const ChatWithOtherUser = (props) => {
         setChatHistory(res.data)
         scrollDown();
         // console.log(res.data)
+    }
+
+    // const https://localhost:44303/api/chat/markLastMassageRead/4/157
+
+    const markLastMassageRead = async () => {
+        console.log("marking last msg as read...")
+        const markLastMassageReadUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/markLastMassageRead/${chatRoomId}/${userId}`
+        const res = await axios.post(markLastMassageReadUrl);
+        console.log(res.data)
+        if (res.data == "Message marked as read") {
+
+            //DISPATCH MESSAGE WAS READ
+            dispatch({
+                type: NO_NEW_MESSAGE,
+                //payload will be the what we recieve from the server
+                payload: null
+            });
+
+        }
     }
 
 

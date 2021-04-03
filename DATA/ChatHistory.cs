@@ -20,5 +20,6 @@ namespace DATA
         public Nullable<int> fromMemberId { get; set; }
         public Nullable<int> toMemberId { get; set; }
         public Nullable<int> chatRoomId { get; set; }
+        public Nullable<bool> markAsRead { get; set; }
     }
 }
