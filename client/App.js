@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 
 import authReducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
+import chatReducer from './store/reducers/chat';
 
 import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreens from './src/stacks/AppStackScreens';
@@ -15,7 +16,8 @@ import AppStackScreens from './src/stacks/AppStackScreens';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  user: userReducer
+  user: userReducer,
+  chat: chatReducer
 });
 
 

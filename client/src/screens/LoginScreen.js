@@ -98,6 +98,8 @@ const LoginScreen = (props) => {
           });
 
 
+
+
         } catch (error) {
           // if error code is 400 - user email not in db so redirect to profie setup 
           if (error.response.status == 400) {

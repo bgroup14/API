@@ -17,6 +17,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
 import * as Notifications from 'expo-notifications'
 
+import { NEW_MESSAGE } from '../../store/actions/types';
+
+
+
+
 
 
 
@@ -36,6 +41,7 @@ import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import FeedFilterScreen from './FeedFilterScreen';
 import CommentsScreens from './CommentsScreens';
+import { Alert } from 'react-native';
 
 
 
@@ -46,6 +52,7 @@ import CommentsScreens from './CommentsScreens';
 
 
 const HomeScreen = (props) => {
+    const dispatch = useDispatch();
     const [posts, setPosts] = useState([]);
     const userId = useSelector(state => state.auth.userId);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
@@ -76,7 +83,13 @@ const HomeScreen = (props) => {
     });
 
 
-
+    const receivedNewMessage = async () => {
+        dispatch({
+            type: NEW_MESSAGE,
+            //payload will be the what we recieve from the server
+            payload: null
+        });
+    }
 
     //notfications useefect
     useEffect(() => {
@@ -88,6 +101,15 @@ const HomeScreen = (props) => {
             console.log("Push data screen open:")
             let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
             console.log(notificationBody)
+            if (notificationBody.functionToRun == "receivedNewMessage") {
+                console.log("received a new meassage trying to change redux state...")
+
+                // dispatch(newMessage);
+                receivedNewMessage()
+
+                //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO BOTTOM NAVIGAOR THAT RECIEVED A MESSAGE 
+
+            }
         });
 
         //When user not in the app will preform this
@@ -96,6 +118,11 @@ const HomeScreen = (props) => {
             console.log(response.notification.request.trigger.remoteMessage.data.body);
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
             console.log(notificationBody)
+            if (notificationBody.functionToRun == "receivedNewMessage") {
+
+                //ADD GO TO ROOM CHAT WHIT ROOM CHAT ID
+
+            }
 
         });
 
@@ -166,7 +193,7 @@ const HomeScreen = (props) => {
 
             }
             else {
-                console.log("Push token is update to : " + lastTimeTokenTaken)
+                console.log("Push token is updated to : " + lastTimeTokenTaken)
             }
         }
         catch (error) {
@@ -182,6 +209,7 @@ const HomeScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             console.log("token is " + pushNotificationToken)
+            // console.log("redux newMessage is: " + newMessage)
             setRestartComponent(Date.now)
             let categories = [
                 { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
@@ -303,6 +331,7 @@ const HomeScreen = (props) => {
     let userName = useSelector(state => state.user.userName);
 
 
+
     ///DELETE THIS!
     //   console.log("user name fromn rerdux is:" + userName)
     if (userName === null || userName === undefined) {
@@ -351,14 +380,14 @@ const HomeScreen = (props) => {
 
             console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
-            // console.log(res.data);
+            console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
 
             props.navigation.navigate('ChatWithOtherUser', {
                 chatRoomId: chatRoomId,
                 otherMemberName: otherMemberName,
                 otherMemberImage: otherMemberImage,
-                otherMemberId: otherMemberId
+                otherMemberId: member_id
 
             })
 
@@ -388,7 +417,8 @@ const HomeScreen = (props) => {
                     <Icon
                         style={styles.bellIcon}
                         name='bell'
-                        onPress={() => props.navigation.navigate('Notifications')}
+                        // onPress={() => props.navigation.navigate('Notifications')}
+                        onPress={() => console.log(newMessageFromRedux)}
 
                     />
                 </View>

@@ -99,6 +99,7 @@ const ChatWithOtherUser = (props) => {
     const fetchChatHistoryUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatHistory/${chatRoomId}/${userId}`
 
 
+
     const scrollDown = () => {
         setTimeout(() => {
             scrollView.current.scrollToEnd()
@@ -116,7 +117,6 @@ const ChatWithOtherUser = (props) => {
 
 
     const sendMessage = async () => {
-
 
         let newMessageToSend = {
 
@@ -139,6 +139,7 @@ const ChatWithOtherUser = (props) => {
             const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
 
             const res = await axios.post(sendChatMessageUrl, body, config);
+            PushFromClient()
             setRestartComponent(Date.now)
 
 
@@ -152,7 +153,54 @@ const ChatWithOtherUser = (props) => {
     }
 
 
+    const PushFromClient = async () => {
 
+        //GET OTHER USER TOKEN ID FROM SERVER
+        const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
+        try {
+            console.log("getting other memner push id with id: " + otherMemberId)
+            const res = await axios(fetchOtherUserPushNotificationID);
+
+            var otherUserNotificationId = res.data;
+
+
+
+        } catch (error) {
+
+            console.log(error)
+            return null
+        }
+
+        let push = {
+            to: otherUserNotificationId,
+            // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
+            title: otherMemberName,
+            body: newMessage,
+            badge: 3,
+            data: { functionToRun: "receivedNewMessage", chatRoomId: chatRoomId },
+
+        };
+
+        // POST adds a random id to the object sent
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            body: JSON.stringify(push),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json != null) {
+                    console.log(`
+                  returned from server\n
+                  json.data= ${JSON.stringify(json.data)}`);
+
+                } else {
+                    alert('err json');
+                }
+            });
+    }
 
     return (
         <KeyboardAvoidingView style={styles.container} key={restartComponent}>

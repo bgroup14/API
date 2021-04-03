@@ -162,7 +162,7 @@ const Post = (props) => {
                     </View>
                     <Text style={styles.postText}>{text}</Text>
                     {!recurring ? <Text style={styles.postDateText}>At {dateLabel + ", "}{timeOfDay}</Text> : null}
-                    <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName}</Text>
+                    <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "Location: " : null}{cityName}</Text>
 
                 </View>
 
@@ -201,7 +201,7 @@ const Post = (props) => {
 
 
 
-            <Divider style={{ height: 1.5 }} />
+            <Divider style={{ height: 3, marginTop: windowHeight / 80, marginBottom: windowHeight / 100 }} />
 
 
         </KeyboardAvoidingView>
@@ -214,7 +214,7 @@ export default Post
 const styles = StyleSheet.create({
 
     container: {
-        marginVertical: 10,
+        // marginVertical: 10,
         flex: 1,
         //  flexDirection: 'row',
         // justifyContent: 'flex-end',
@@ -225,15 +225,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         //  marginVertical: 1,
         alignItems: 'flex-start',
-        maxHeight: 100
+        // maxHeight: 100
+        maxHeight: windowHeight / 4,
+        marginVertical: 10
+
 
     },
     postDetailsContainer: {
         flex: 1,
         //justifyContent: 'flex-start',
         //justifyContent: 'space-between',
-        marginLeft: 20,
-        marginTop: 10,
+        marginLeft: windowWidth / 20,
+        marginTop: windowHeight / 80,
         maxWidth: windowWidth / 1.8,
 
 
@@ -252,13 +255,15 @@ const styles = StyleSheet.create({
     },
     postText: {
         // fontSize: 14
+        marginVertical: 5
     },
     postDateText: {
         // color: 'red'
+        marginVertical: windowHeight / 100,
         color: 'black'
     },
     postCityName: {
-        color: 'blue'
+        color: 'black'
 
     },
     postBtnContainer: {
