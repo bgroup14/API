@@ -739,20 +739,12 @@ namespace WebApi.Controllers
                 foreach (Member m in usersWIthSearchWord)
                 {
 
-                    //calculate age
-                    /*int unixDateOfBirth = (int)m.dateOfBirth;
-                    DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                    dtDateTime = dtDateTime.AddSeconds(unixDateOfBirth).ToLocalTime();
-                    var today = DateTime.Today;
-                    // Calculate the age.
-                    int age = today.Year - dtDateTime.Year;
-                    // Go back to the year in which the person was born in case of a leap year
-                    if (dtDateTime.Date > today.AddYears(-age)) { age--; }*/
+                    
 
                     ProfileDetailsDTO profileDTO = new ProfileDetailsDTO()
                     {
                         fullName = m.fullName,
-                        /*age = age,*/
+                        
                         pictureUrl = m.pictureUrl,
                         memberId = m.id
 
