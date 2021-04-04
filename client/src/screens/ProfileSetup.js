@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform, Alert } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import TextArea from '../components/TextArea';
@@ -119,6 +119,23 @@ const ProfileSetup = (props) => {
       console.log(e)
     }
   }
+
+
+  const checkIfFormIsFilled = (obj) => {
+
+
+    for (const x in obj) {
+
+      if (obj[x] === null || obj[x] === undefined) {
+        return true;
+      }
+    }
+    return false;
+
+
+  }
+
+
   const goToFeedSettings = () => {
     let image = setImage();
 
@@ -132,6 +149,17 @@ const ProfileSetup = (props) => {
 
 
     }
+    if (checkIfFormIsFilled(profileSetupDetails)) {
+      Alert.alert(
+        "",
+        "Please fill the entire form",
+        [
+          { text: "OK" }
+        ],
+      );
+      return null
+    }
+
     storeData(profileSetupDetails).then(
       props.navigation.navigate('FeedSettings')
     );

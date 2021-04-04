@@ -84,7 +84,7 @@ const ChatWithOtherUser = (props) => {
             // console.log('ss')
             scrollView.current.scrollToEnd()
             fetchChatHistory()
-            markLastMassageRead()
+
 
         }, [keyboardStatus])
     )
@@ -117,6 +117,9 @@ const ChatWithOtherUser = (props) => {
         console.log("Fetching chat history...")
         const res = await axios(fetchChatHistoryUrl);
         setChatHistory(res.data)
+        if (res.data.length > 0) {
+            markLastMassageRead()
+        }
         scrollDown();
         // console.log(res.data)
     }
@@ -124,20 +127,26 @@ const ChatWithOtherUser = (props) => {
     // const https://localhost:44303/api/chat/markLastMassageRead/4/157
 
     const markLastMassageRead = async () => {
+        console.log(chatHistory.length)
         console.log("marking last msg as read...")
         const markLastMassageReadUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/markLastMassageRead/${chatRoomId}/${userId}`
-        const res = await axios.post(markLastMassageReadUrl);
-        console.log(res.data)
-        if (res.data == "Message marked as read") {
+        try {
+            const res = await axios.post(markLastMassageReadUrl);
+            console.log(res.data)
+            if (res.data == "Message marked as read") {
 
-            //DISPATCH MESSAGE WAS READ
-            dispatch({
-                type: NO_NEW_MESSAGE,
-                //payload will be the what we recieve from the server
-                payload: null
-            });
+                //DISPATCH MESSAGE WAS READ
+                dispatch({
+                    type: NO_NEW_MESSAGE,
+                    //payload will be the what we recieve from the server
+                    payload: null
+                });
 
+            }
+        } catch (error) {
+            console.log(error)
         }
+
     }
 
 
