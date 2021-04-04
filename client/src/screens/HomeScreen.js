@@ -104,6 +104,7 @@ const HomeScreen = (props) => {
             if (notificationBody.functionToRun == "receivedNewMessage") {
                 console.log("received a new meassage trying to change redux state...")
 
+
                 // dispatch(newMessage);
                 receivedNewMessage()
 

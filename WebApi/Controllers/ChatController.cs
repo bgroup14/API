@@ -132,7 +132,8 @@ namespace WebApi.Controllers
 
                 }
                 //WHY THIS ORDERING DOSENT WORK??
-                chatRooms.OrderByDescending(c => c.lastUnixDate);
+                chatRooms.OrderBy(c => c.otherMemberId).ToList();
+                /*chatRooms.Sort(x=>x.)*/
 
                 return Request.CreateResponse(HttpStatusCode.OK, chatRooms);
 

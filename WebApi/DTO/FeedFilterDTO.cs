@@ -13,6 +13,8 @@ namespace WebApi.DTO
         public string meetingLocation;
         public string sortBy;
         public string categoryName;
+        public double meetingLocationLong;
+        public double meetingLocationLat;
     }
 
 }
