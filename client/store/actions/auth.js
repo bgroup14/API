@@ -7,6 +7,7 @@ import axios from 'axios';
 
 export const login = (email, password) => async dispatch => {
 
+
     const config = {
         headers: {
             'Content-Type': 'application/json'
@@ -20,7 +21,7 @@ export const login = (email, password) => async dispatch => {
         const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/login", body, config);
 
         console.log(res);
-        console.log("res data (payload is:)")
+        console.log("res data of login (payload is:)")
         console.log(res.data[0]);
 
         dispatch({
