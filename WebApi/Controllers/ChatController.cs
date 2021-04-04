@@ -138,54 +138,39 @@ namespace WebApi.Controllers
 
 
             }
+            catch (DbEntityValidationException ex)
+            {
+                string errors = "";
+                foreach (DbEntityValidationResult vr in ex.EntityValidationErrors)
+                {
+                    foreach (DbValidationError er in vr.ValidationErrors)
+                    {
+                        errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+
+            }
+            catch (DbUpdateException ex)
+            {
+                DbUpdateException e = (DbUpdateException)ex;
+                string errors = "";
+                foreach (DbEntityEntry entry in e.Entries)
+                {
+                    errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                    foreach (string prop in entry.CurrentValues.PropertyNames)
+                    {
+                        errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                    }
+                    errors += "---------------";
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+            }
             catch (Exception ex)
             {
-                if (ex is DbEntityValidationException)
-                {
-                    DbEntityValidationException e = (DbEntityValidationException)ex;
-                    string errors = "";
-                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
-                    {
-                        foreach (DbValidationError er in vr.ValidationErrors)
-                        {
-                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
-                        }
-                    }
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-                }
-                else if (ex is DbUpdateException)
-                {
-                    DbUpdateException e = (DbUpdateException)ex;
-                    string errors = "";
-                    foreach (DbEntityEntry entry in e.Entries)
-                    {
-                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
-
-                        foreach (string prop in entry.CurrentValues.PropertyNames)
-                        {
-                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
-                        }
-                        errors += "---------------";
-                    }
-                }
-                else if (ex is DbUpdateConcurrencyException)
-                {
-                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
-                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
-                    foreach (var et in e.Entries)
-                    {
-                        //client win
-                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
-
-                        //store win
-                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
-                    }
-                    db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
-
-                }
-
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
 
 
@@ -218,54 +203,39 @@ namespace WebApi.Controllers
                 }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, chats);
             }
+            catch (DbEntityValidationException ex)
+            {
+                string errors = "";
+                foreach (DbEntityValidationResult vr in ex.EntityValidationErrors)
+                {
+                    foreach (DbValidationError er in vr.ValidationErrors)
+                    {
+                        errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+
+            }
+            catch (DbUpdateException ex)
+            {
+                DbUpdateException e = (DbUpdateException)ex;
+                string errors = "";
+                foreach (DbEntityEntry entry in e.Entries)
+                {
+                    errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                    foreach (string prop in entry.CurrentValues.PropertyNames)
+                    {
+                        errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                    }
+                    errors += "---------------";
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+            }
             catch (Exception ex)
             {
-                if (ex is DbEntityValidationException)
-                {
-                    DbEntityValidationException e = (DbEntityValidationException)ex;
-                    string errors = "";
-                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
-                    {
-                        foreach (DbValidationError er in vr.ValidationErrors)
-                        {
-                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
-                        }
-                    }
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-                }
-                else if (ex is DbUpdateException)
-                {
-                    DbUpdateException e = (DbUpdateException)ex;
-                    string errors = "";
-                    foreach (DbEntityEntry entry in e.Entries)
-                    {
-                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
-
-                        foreach (string prop in entry.CurrentValues.PropertyNames)
-                        {
-                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
-                        }
-                        errors += "---------------";
-                    }
-                }
-                else if (ex is DbUpdateConcurrencyException)
-                {
-                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
-                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
-                    foreach (var et in e.Entries)
-                    {
-                        //client win
-                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
-
-                        //store win
-                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
-                    }
-                    db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
-
-                }
-
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
 
         }
@@ -300,50 +270,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                if (ex is DbEntityValidationException)
-                {
-                    DbEntityValidationException e = (DbEntityValidationException)ex;
-                    string errors = "";
-                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
-                    {
-                        foreach (DbValidationError er in vr.ValidationErrors)
-                        {
-                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
-                        }
-                    }
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-                }
-                else if (ex is DbUpdateException)
-                {
-                    DbUpdateException e = (DbUpdateException)ex;
-                    string errors = "";
-                    foreach (DbEntityEntry entry in e.Entries)
-                    {
-                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
 
-                        foreach (string prop in entry.CurrentValues.PropertyNames)
-                        {
-                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
-                        }
-                        errors += "---------------";
-                    }
-                }
-                else if (ex is DbUpdateConcurrencyException)
-                {
-                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
-                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
-                    foreach (var et in e.Entries)
-                    {
-                        //client win
-                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
-
-                        //store win
-                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
-                    }
-                    db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
-
-                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
@@ -383,54 +310,39 @@ namespace WebApi.Controllers
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Message saved in DB");
             }
+            catch (DbEntityValidationException ex)
+            {
+                string errors = "";
+                foreach (DbEntityValidationResult vr in ex.EntityValidationErrors)
+                {
+                    foreach (DbValidationError er in vr.ValidationErrors)
+                    {
+                        errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+
+            }
+            catch (DbUpdateException ex)
+            {
+                DbUpdateException e = (DbUpdateException)ex;
+                string errors = "";
+                foreach (DbEntityEntry entry in e.Entries)
+                {
+                    errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                    foreach (string prop in entry.CurrentValues.PropertyNames)
+                    {
+                        errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                    }
+                    errors += "---------------";
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+            }
             catch (Exception ex)
             {
-                if (ex is DbEntityValidationException)
-                {
-                    DbEntityValidationException e = (DbEntityValidationException)ex;
-                    string errors = "";
-                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
-                    {
-                        foreach (DbValidationError er in vr.ValidationErrors)
-                        {
-                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
-                        }
-                    }
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-                }
-                else if (ex is DbUpdateException)
-                {
-                    DbUpdateException e = (DbUpdateException)ex;
-                    string errors = "";
-                    foreach (DbEntityEntry entry in e.Entries)
-                    {
-                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
-
-                        foreach (string prop in entry.CurrentValues.PropertyNames)
-                        {
-                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
-                        }
-                        errors += "---------------";
-                    }
-                }
-                else if (ex is DbUpdateConcurrencyException)
-                {
-                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
-                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
-                    foreach (var et in e.Entries)
-                    {
-                        //client win
-                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
-
-                        //store win
-                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
-                    }
-                    db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "Message saved in DB");
-
-                }
-
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
 
         }
@@ -461,55 +373,11 @@ namespace WebApi.Controllers
                 }
 
 
-                return Request.CreateResponse(HttpStatusCode.OK, $"Last message is  of user {memberId} or message was read already");
+                return Request.CreateResponse(HttpStatusCode.OK, $"Last message is of user {memberId} or message was read already");
 
             }
             catch (Exception ex)
             {
-                if (ex is DbEntityValidationException)
-                {
-                    DbEntityValidationException e = (DbEntityValidationException)ex;
-                    string errors = "";
-                    foreach (DbEntityValidationResult vr in e.EntityValidationErrors)
-                    {
-                        foreach (DbValidationError er in vr.ValidationErrors)
-                        {
-                            errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
-                        }
-                    }
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-                }
-                else if (ex is DbUpdateException)
-                {
-                    DbUpdateException e = (DbUpdateException)ex;
-                    string errors = "";
-                    foreach (DbEntityEntry entry in e.Entries)
-                    {
-                        errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
-
-                        foreach (string prop in entry.CurrentValues.PropertyNames)
-                        {
-                            errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
-                        }
-                        errors += "---------------";
-                    }
-                }
-                else if (ex is DbUpdateConcurrencyException)
-                {
-                    DbUpdateConcurrencyException e = (DbUpdateConcurrencyException)ex;
-                    var ctx = ((IObjectContextAdapter)db).ObjectContext;
-                    foreach (var et in e.Entries)
-                    {
-                        //client win
-                        ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.ClientWins, et.Entity);
-
-                        //store win
-                        //ctx.Refresh(System.Data.Entity.Core.Objects.RefreshMode.StoreWins, et.Entity);
-                    }
-                    db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "פרטים עודכנו");
-
-                }
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
             }

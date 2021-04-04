@@ -139,6 +139,17 @@ const SignupScreenTest = (props) => {
         ],
       );
       return false;
+
+    }
+    else if (password.length < 6) {
+      Alert.alert(
+        "OOPS!",
+        "Password must contian at leats 6 characters",
+        [
+          { text: "OK" }
+        ],
+      );
+      return false;
     }
     return true;
 

@@ -59,6 +59,10 @@
     <Compile Include="Comment.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Extention\ChatHistory.cs" />
+    <Compile Include="Extention\Comment.cs" />
+    <Compile Include="Extention\Member.cs" />
+    <Compile Include="Extention\Post.cs" />
     <Compile Include="Favorite.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
