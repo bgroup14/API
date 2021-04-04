@@ -252,11 +252,11 @@ const PostPublishScreen = (props) => {
             }
         }
         console.log()
-        if (!checkIfFormFilled(postDetails.cityName)) {
+        if (!checkIfFormFilled(postDetails.cityName) || postCategory == undefined || postContent == undefined) {
 
             Alert.alert(
                 "",
-                "Please select meeting location",
+                "Please fill the entire form",
                 [
                     { text: "OK" }
                 ],
