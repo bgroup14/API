@@ -39,6 +39,9 @@ import MessageBubble from '../components/MessageBubble';
 
 import { NO_NEW_MESSAGE } from '../../store/actions/types';
 
+import ScheduleMeeting from '../components/ScheduleMeeting';
+
+
 // import MessageBubble from;
 
 
@@ -48,8 +51,13 @@ import { NO_NEW_MESSAGE } from '../../store/actions/types';
 
 const ChatWithOtherUser = (props) => {
 
+
+    let userName = useSelector(state => state.user.userName);
+    let userImage = useSelector(state => state.user.userImage);
     const [newMessage, setNewMessage] = useState();
     const dispatch = useDispatch();
+    const [isVisible, setIsvisble] = useState(false);
+
 
 
     useEffect(() => {
@@ -99,6 +107,7 @@ const ChatWithOtherUser = (props) => {
     let userId = useSelector(state => state.auth.userId);
     const [chatHistory, setChatHistory] = useState([]);
     const [restartComponent, setRestartComponent] = useState(1);
+
 
 
 
@@ -211,7 +220,16 @@ const ChatWithOtherUser = (props) => {
             title: otherMemberName,
             body: newMessage,
             badge: 3,
-            data: { functionToRun: "receivedNewMessage", chatRoomId: chatRoomId },
+            data: {
+                functionToRun: "receivedNewMessage",
+                chatRoomId: chatRoomId,
+                otherMemberName: userName,
+                otherMemberId: userId,
+                otherMemberImage: userImage
+
+            },
+
+
 
         };
 
@@ -236,12 +254,32 @@ const ChatWithOtherUser = (props) => {
             });
     }
 
+    const inviteMeeting = (dateObj) => {
+        // setIsvisble(false)
+        // setHaveDateFromPicker(true)
+        // setDateLabel(dateObj.dateLabel)
+        // setTimeOFtheDay(dateObj.timeOFtheDay)
+        // setUnixDate(dateObj.unixDate)
+        setIsvisble(false)
+        console.log(dateObj)
+
+        //HERE I SHOULD SEND A SPECIAL CHAT MSG TO THE SERVER WITH THE MEETING INFO
+        //IN C# MAYBE ADD TO CHAT HISTORY DTO ANOTHER DTO OF MEETINGiNFO SO OBJECT INSIDE AN OBJECT
+        //THEN I SHOULD RE RENDER THE COMPENENT AND WHEN READING ALL THE CHAT HISTORY I SHOULD RENDER A SPECIAL BUBBLE FOR MEETING MSGS
+        //IN MSG BUBBLE I SHOULD CHECK IF THE MEETING INFO OBJ !+ NULL - IF IT DOES SHOW A DIFFERENT MSG WITH TWO BUTTONS
+
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container} key={restartComponent}>
 
 
             <View style={styles.inner}>
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
+                    <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
+
+                </MyOverlay>
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
                 <View >
                     <View>
@@ -264,7 +302,7 @@ const ChatWithOtherUser = (props) => {
                             <Icon
                                 style={styles.bellIcon}
                                 name='calendar'
-                                onPress={() => props.navigation.navigate('Notifications')}
+                                onPress={() => setIsvisble(true)}
                             />
                         </View>
                     </View>
@@ -324,7 +362,7 @@ const styles = StyleSheet.create({
         // justifyContent: 'flex-',
         alignItems: 'center',
         //  marginLeft: 30,
-        marginTop: windowHeight / 40,
+        marginTop: windowHeight / 32,
         flexDirection: 'row',
         paddingLeft: windowWidth / 100,
         paddingRight: windowWidth / 100,
@@ -339,7 +377,7 @@ const styles = StyleSheet.create({
         // justifyContent: 'flex-end'
         position: 'absolute',
         marginLeft: windowWidth / 1.3,
-        marginTop: windowHeight / 30,
+        marginTop: windowHeight / 26,
         // flexDirection: 'row',
         // paddingLeft: windowWidth / 100,
         // paddingRight: windowWidth / 100,

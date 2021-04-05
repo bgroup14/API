@@ -86,7 +86,6 @@ const HomeScreen = (props) => {
     const receivedNewMessage = async () => {
         dispatch({
             type: NEW_MESSAGE,
-            //payload will be the what we recieve from the server
             payload: null
         });
     }
@@ -104,7 +103,13 @@ const HomeScreen = (props) => {
             if (notificationBody.functionToRun == "receivedNewMessage") {
                 console.log("received a new meassage trying to change redux state...")
 
+                props.navigation.navigate('ChatWithOtherUser', {
+                    chatRoomId: chatRoomId,
+                    otherMemberName: otherMemberName,
+                    otherMemberImage: otherMemberImage,
+                    otherMemberId: otherMemberId
 
+                })
                 // dispatch(newMessage);
                 receivedNewMessage()
 
@@ -118,10 +123,21 @@ const HomeScreen = (props) => {
             console.log("Push data screen close:")
             console.log(response.notification.request.trigger.remoteMessage.data.body);
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
-            console.log(notificationBody)
+            // console.log(notificationBody)
             if (notificationBody.functionToRun == "receivedNewMessage") {
 
                 //ADD GO TO ROOM CHAT WHIT ROOM CHAT ID
+
+
+                console.log("entering chat with other user...")
+
+                props.navigation.navigate('ChatWithOtherUser', {
+                    chatRoomId: notificationBody.chatRoomId,
+                    otherMemberName: notificationBody.otherMemberName,
+                    otherMemberImage: notificationBody.otherMemberImage,
+                    otherMemberId: notificationBody.otherMemberId
+
+                })
 
             }
 
