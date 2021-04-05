@@ -26,6 +26,7 @@ namespace WebApi.DTO
         public int postId;
         public string dateLabel;
         public List<CommentDTO> comments;
-
+        public string authorGender;
+        public double distanceFromMe;
     }
 }

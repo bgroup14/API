@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Device.Location;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -619,6 +620,7 @@ namespace WebApi.Controllers
                     postId = x.id,
                     postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
                     postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+                    authorGender = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().gender,
 
                     comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
                     {
@@ -626,7 +628,9 @@ namespace WebApi.Controllers
                         commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
                         commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
                         text = y.text
-                    }).ToList()
+                    }).ToList(),
+
+                    distanceFromMe = CalculateDistance(filterDTO.meetingLocationLong, filterDTO.meetingLocationLat, (double)x.longitude, (double)x.latitude),
 
                 });
 
@@ -647,13 +651,19 @@ namespace WebApi.Controllers
                 if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
-                    // STILL NEED TO DO
-                    // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
                     if (filterDTO.meetingLocation != null)
                     {
                         if (filterDTO.meetingLocation.Equals("Zoom Only"))
                         {
                             filteredPosts = filteredPosts.Where(m => m.isZoom == true);
+                        }
+                        else if (filterDTO.meetingLocation.Equals("My Area"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 5);
+                        }
+                        else if (filterDTO.meetingLocation.Equals("30KM"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
                         }
                     }
 
@@ -731,9 +741,7 @@ namespace WebApi.Controllers
                                 //Need to setup smart element
                                 break;
                             case "Meeting location":
-                                // SAME AS meetingLocation
-                                // STILL NEED TO DO
-                                // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
+                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);
                                 break;
                             case "Meeting date":
                                 filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
@@ -749,9 +757,9 @@ namespace WebApi.Controllers
                     if (feedSettings.memberType != null)
                     {
                         // meetingLocation
-                        // STILL NEED TO DO
-                        // FIGURE OUT HOW TO COMPARE LOCATIONS IN MICROSOFT DB (radius using long/lat)
-                        /* return Request.CreateResponse(HttpStatusCode.OK, feedSettings.memberType);*/
+                        // Show 30KM radius by default
+                        filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
+
                         //userType
                         if (feedSettings.memberType == "Need Help")
                         {
@@ -789,7 +797,15 @@ namespace WebApi.Controllers
                         {
                             if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
                             {
-                                filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                                //Offek: Alan please check this
+                                if (feedSettings.memberType == "Need Help")
+                                {
+                                    filteredPosts = filteredPosts.Where(m => m.authorGender.Equals(feedSettings.participantGender));
+                                }
+                                else
+                                {
+                                    filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                                }
                             }
                         }
 
@@ -890,12 +906,8 @@ namespace WebApi.Controllers
                 };
                 db.MembersPosts.Add(newMembersPost);
                 db.SaveChanges();
-
-
-              
-
-
             }
+
             catch (DbEntityValidationException ex)
             {
                 string errors = "";
@@ -1186,6 +1198,14 @@ namespace WebApi.Controllers
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
+        }
+
+        public double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
+        {
+            var sCoord = new GeoCoordinate(longitudeA, latitudeA);
+            var eCoord = new GeoCoordinate(longitudeB, latitudeB);
+
+            return sCoord.GetDistanceTo(eCoord)/1000;
         }
     }
 }
