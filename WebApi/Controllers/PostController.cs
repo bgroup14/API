@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Spatial;
 using System.Data.Entity.Validation;
 using System.Device.Location;
 using System.Linq;
@@ -590,7 +591,7 @@ namespace WebApi.Controllers
             try
             {
 
-
+                GeoCoordinate userLocation = new GeoCoordinate(filterDTO.meetingLocationLat, filterDTO.meetingLocationLong);
 
                 FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
                 {
@@ -599,6 +600,7 @@ namespace WebApi.Controllers
                     participantGender = x.participantGender,
                     participantAgeRange = x.participantAgeRange
                 }).FirstOrDefault();
+
 
                 var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
                 {
@@ -630,9 +632,19 @@ namespace WebApi.Controllers
                         text = y.text
                     }).ToList(),
 
-                  /*  distanceFromMe = CalculateDistance(filterDTO.meetingLocationLong, filterDTO.meetingLocationLat, (double)x.longitude, (double)x.latitude),*/
+                    distanceFromMe = (double)(12742 * System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((filterDTO.meetingLocationLat - x.latitude) * 0.017453292519943295) / 2 +
+          System.Data.Entity.SqlServer.SqlFunctions.Cos(x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos(filterDTO.meetingLocationLat * 0.017453292519943295) *
+          (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((filterDTO.meetingLocationLong - x.longitude) * 0.017453292519943295)) / 2    )))) // 2 * R; R = 6371 km
+                //distanceFromMe = (double)System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)9)
+                //distanceFromMe = (double)((x.latitude - filterDTO.meetingLocationLat) * (x.latitude - filterDTO.meetingLocationLat) + (x.longitude - filterDTO.meetingLocationLong) * (x.longitude - filterDTO.meetingLocationLong))
+                /*Coordinates = db.Posts.Where(z => z.id == x.id).Select(z => new GeoCoordinate(){
+                    Latitude = (double)z.latitude,
+                    Longitude = (double)z.longitude
+                }).ToList()*/
 
-                });
+            });
+
+                //return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
 
                 string categoryName = null;
                 if (filterDTO != null && filterDTO.categoryName != null)
@@ -651,7 +663,7 @@ namespace WebApi.Controllers
                 if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
-                  /*  if (filterDTO.meetingLocation != null)
+                    if (filterDTO.meetingLocation != null)
                     {
                         if (filterDTO.meetingLocation.Equals("Zoom Only"))
                         {
@@ -660,12 +672,14 @@ namespace WebApi.Controllers
                         else if (filterDTO.meetingLocation.Equals("My Area"))
                         {
                             filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 5);
+                            //filteredPosts = filteredPosts.Where(x => new GeoCoordinate(x.latitude, x.longitude).GetDistanceTo(userLocation) <= 5);
                         }
                         else if (filterDTO.meetingLocation.Equals("30KM"))
                         {
                             filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
+                            //filteredPosts = filteredPosts.Where(x => new GeoCoordinate(x.latitude, x.longitude).GetDistanceTo(userLocation) <= 30);
                         }
-                    }*/
+                    }
 
                     //userType
                     if (filterDTO.userType != null)
@@ -740,9 +754,9 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 break;
-                           /* case "Meeting location":
-                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);*//*
-                                break;*/
+                            case "Location":
+                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);
+                                break;
                             case "Meeting date":
                                 filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
                                 break;
@@ -758,7 +772,7 @@ namespace WebApi.Controllers
                     {
                         // meetingLocation
                         // Show 30KM radius by default
-                       /* filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);*/
+                        filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
 
                         //userType
                         if (feedSettings.memberType == "Need Help")
@@ -1200,12 +1214,18 @@ namespace WebApi.Controllers
         {
         }
 
-        /*public double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
+        double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
         {
-            var sCoord = new GeoCoordinate(longitudeA, latitudeA);
-            var eCoord = new GeoCoordinate(longitudeB, latitudeB);
+            if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
+            {
+                var sCoord = new GeoCoordinate(longitudeA, latitudeA);
+                var eCoord = new GeoCoordinate(longitudeB, latitudeB);
 
-            return sCoord.GetDistanceTo(eCoord) / 1000;
-        }*/
+                return sCoord.GetDistanceTo(eCoord) / 1000;
+            }
+
+            return 0;
+
+        }
     }
 }
