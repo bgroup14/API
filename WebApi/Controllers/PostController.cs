@@ -591,7 +591,6 @@ namespace WebApi.Controllers
             try
             {
 
-                GeoCoordinate userLocation = new GeoCoordinate(filterDTO.meetingLocationLat, filterDTO.meetingLocationLong);
 
                 FeedSettingsDTO feedSettings = db.FeedSettings.Where(m => m.memberId == memberId).Select(x => new FeedSettingsDTO()
                 {
@@ -1214,7 +1213,7 @@ namespace WebApi.Controllers
         {
         }
 
-        double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
+        /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
         {
             if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
             {
@@ -1226,6 +1225,6 @@ namespace WebApi.Controllers
 
             return 0;
 
-        }
+        }*/
     }
 }

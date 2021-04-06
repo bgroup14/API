@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Device.Location;
 using System.Linq;
 using System.Web;
 
@@ -29,6 +28,5 @@ namespace WebApi.DTO
         public List<CommentDTO> comments;
         public string authorGender;
         public double distanceFromMe;
-        public IEnumerable<GeoCoordinate> Coordinates;
     }
 }
