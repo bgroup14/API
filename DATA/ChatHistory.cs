@@ -21,5 +21,10 @@ namespace DATA
         public Nullable<int> toMemberId { get; set; }
         public Nullable<int> chatRoomId { get; set; }
         public Nullable<bool> markAsRead { get; set; }
+        public Nullable<bool> meetingMsg { get; set; }
+        public string meetingDateLabel { get; set; }
+        public string meetingEventTitle { get; set; }
+        public string meetingTimeLabel { get; set; }
+        public Nullable<int> meetingUnixDate { get; set; }
     }
 }
