@@ -35,6 +35,7 @@ import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import FeedFilterScreen from './FeedFilterScreen';
 import CommentsScreens from './CommentsScreens';
+// import MessageBubble from '../components/MessageBubble';
 import MessageBubble from '../components/MessageBubble';
 
 import { NO_NEW_MESSAGE } from '../../store/actions/types';
@@ -178,6 +179,8 @@ const ChatWithOtherUser = (props) => {
 
             }
             let body = JSON.stringify(newMessageToSend);
+            console.log(body)
+
 
             const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
 
@@ -260,8 +263,25 @@ const ChatWithOtherUser = (props) => {
         // setDateLabel(dateObj.dateLabel)
         // setTimeOFtheDay(dateObj.timeOFtheDay)
         // setUnixDate(dateObj.unixDate)
+        let now = Math.floor(Date.now() / 1000)
         setIsvisble(false)
-        console.log(dateObj)
+        let fromMemberId = userId;
+        let toMemberId = otherMemberId;
+        const meetingMsg = true;
+        let meetingMsgDetails = {
+
+            ...dateObj,
+            chatRoomId,
+            datetime: now,
+            fromMemberId,
+            toMemberId,
+            meetingMsg
+        }
+        // console.log(meetingMsgDetails)
+        let body = JSON.stringify(meetingMsgDetails);
+        console.log(body)
+        // console.log(otherMemberId)
+        // console.log(userId)
 
         //HERE I SHOULD SEND A SPECIAL CHAT MSG TO THE SERVER WITH THE MEETING INFO
         //IN C# MAYBE ADD TO CHAT HISTORY DTO ANOTHER DTO OF MEETINGiNFO SO OBJECT INSIDE AN OBJECT
@@ -313,7 +333,8 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        return <MessageBubble mine={!message.mine} text={message.text} key={message.messageId}
+                        console.log(message)
+                        return <MessageBubble message={message} mine={!message.mine} text={message.text} key={message.messageId}
                         />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 

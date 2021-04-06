@@ -15,5 +15,13 @@ namespace WebApi.DTO
         public int toMemberId;
         public int chatRoomId;
         public bool mine;
+        public string meetingDateLabel;
+        public string meetingEventTitle;
+        public string meetingTimeLabel;
+        public int meetingUnixDate;
+        public bool meetingMsg;
+
+
+
     }
 }

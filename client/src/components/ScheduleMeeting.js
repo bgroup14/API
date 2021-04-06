@@ -154,10 +154,10 @@ const ScheduleMeeting = (props) => {
             return null;
         }
         let dateObj = {
-            dateLabel,
-            timeLabel,
-            unixDate,
-            eventTitle
+            meetingDateLabel: dateLabel,
+            meetingTimeLabel: timeLabel,
+            meetingUnixDate: unixDate,
+            meetingEventTitle: eventTitle
         }
         if (eventTitle == null) {
             Alert.alert(
@@ -189,7 +189,6 @@ const ScheduleMeeting = (props) => {
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={styles.header} >Schedule Meeting</Text>
                 <TextInput onChangeText={(text) => changeEventTilteHandler(text)} maxLength={30} placeholder='Enter event title' style={{
-
 
                     padding: windowWidth / 50,
                     // marginLeft: 50,

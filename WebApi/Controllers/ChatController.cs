@@ -131,8 +131,8 @@ namespace WebApi.Controllers
 
 
                 }
-                //WHY THIS ORDERING DOSENT WORK??
-               
+
+
                 List<ChatRoomDTO> SortedList = chatRooms.OrderByDescending(o => o.lastUnixDate).ToList();
 
 
@@ -201,7 +201,13 @@ namespace WebApi.Controllers
                     mine = (x.fromMemberId == memberId),
 
                     //I need to verify this, maybe add another clause to receive both last recived and sent
-                    text = x.text
+                    text = x.text,
+                    //This applies only if its a neeting msg
+                    meetingMsg = (bool)x.meetingMsg,
+                    meetingDateLabel = x.meetingDateLabel,
+                    meetingEventTitle = x.meetingEventTitle,
+                    meetingUnixDate = (int)x.meetingUnixDate,
+                    meetingTimeLabel = x.meetingTimeLabel
                 }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, chats);
             }
@@ -307,6 +313,20 @@ namespace WebApi.Controllers
                     chatRoomId = message.chatRoomId
                 };
                 newMessage.markAsRead = false;
+                newMessage.meetingMsg = false;
+                newMessage.meetingUnixDate = 0;
+                if (message.meetingMsg)
+                {
+                    newMessage.meetingMsg = true;
+                    newMessage.meetingDateLabel = message.meetingDateLabel;
+                    newMessage.meetingEventTitle = message.meetingEventTitle;
+                    newMessage.meetingTimeLabel = message.meetingTimeLabel;
+                    newMessage.meetingUnixDate = message.meetingUnixDate;
+                    newMessage.text = "Meeting MSG";
+
+
+
+                }
                 db.ChatHistories.Add(newMessage);
                 db.SaveChanges();
 

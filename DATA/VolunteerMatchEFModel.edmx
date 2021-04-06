@@ -23,6 +23,11 @@
           <Property Name="toMemberId" Type="int" />
           <Property Name="chatRoomId" Type="int" />
           <Property Name="markAsRead" Type="bit" />
+          <Property Name="meetingMsg" Type="bit" />
+          <Property Name="meetingDateLabel" Type="varchar" MaxLength="255" />
+          <Property Name="meetingEventTitle" Type="varchar" MaxLength="255" />
+          <Property Name="meetingTimeLabel" Type="varchar" MaxLength="255" />
+          <Property Name="meetingUnixDate" Type="int" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -575,6 +580,11 @@
           <Property Name="toMemberId" Type="Int32" />
           <Property Name="chatRoomId" Type="Int32" />
           <Property Name="markAsRead" Type="Boolean" />
+          <Property Name="meetingMsg" Type="Boolean" />
+          <Property Name="meetingDateLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="meetingEventTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="meetingTimeLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="meetingUnixDate" Type="Int32" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -990,6 +1000,11 @@
           <EntitySetMapping Name="ChatHistories">
             <EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
               <MappingFragment StoreEntitySet="ChatHistory">
+                <ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
+                <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
+                <ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
+                <ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
+                <ScalarProperty Name="meetingMsg" ColumnName="meetingMsg" />
                 <ScalarProperty Name="markAsRead" ColumnName="markAsRead" />
                 <ScalarProperty Name="chatRoomId" ColumnName="chatRoomId" />
                 <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />

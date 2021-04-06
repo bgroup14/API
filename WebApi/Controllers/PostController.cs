@@ -630,7 +630,7 @@ namespace WebApi.Controllers
                         text = y.text
                     }).ToList(),
 
-                    distanceFromMe = CalculateDistance(filterDTO.meetingLocationLong, filterDTO.meetingLocationLat, (double)x.longitude, (double)x.latitude),
+                  /*  distanceFromMe = CalculateDistance(filterDTO.meetingLocationLong, filterDTO.meetingLocationLat, (double)x.longitude, (double)x.latitude),*/
 
                 });
 
@@ -651,7 +651,7 @@ namespace WebApi.Controllers
                 if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
-                    if (filterDTO.meetingLocation != null)
+                  /*  if (filterDTO.meetingLocation != null)
                     {
                         if (filterDTO.meetingLocation.Equals("Zoom Only"))
                         {
@@ -665,7 +665,7 @@ namespace WebApi.Controllers
                         {
                             filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
                         }
-                    }
+                    }*/
 
                     //userType
                     if (filterDTO.userType != null)
@@ -740,9 +740,9 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 break;
-                            case "Meeting location":
-                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);
-                                break;
+                           /* case "Meeting location":
+                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);*//*
+                                break;*/
                             case "Meeting date":
                                 filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
                                 break;
@@ -758,7 +758,7 @@ namespace WebApi.Controllers
                     {
                         // meetingLocation
                         // Show 30KM radius by default
-                        filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
+                       /* filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);*/
 
                         //userType
                         if (feedSettings.memberType == "Need Help")
@@ -1200,12 +1200,12 @@ namespace WebApi.Controllers
         {
         }
 
-        public double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
+        /*public double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
         {
             var sCoord = new GeoCoordinate(longitudeA, latitudeA);
             var eCoord = new GeoCoordinate(longitudeB, latitudeB);
 
-            return sCoord.GetDistanceTo(eCoord)/1000;
-        }
+            return sCoord.GetDistanceTo(eCoord) / 1000;
+        }*/
     }
 }
