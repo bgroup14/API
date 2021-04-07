@@ -84,13 +84,13 @@ const HomeScreen = (props) => {
 
 
     const receivedNewMessage = async () => {
+        console.log("trying to change redux msg recieved state...")
         dispatch({
             type: NEW_MESSAGE,
             payload: null
         });
     }
 
-    //notfications useefect
     useEffect(() => {
         // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
@@ -98,22 +98,13 @@ const HomeScreen = (props) => {
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
             setNotification(notification);
             console.log("Push data screen open:")
+            // console.log(notification)
             let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
+            // let notificationBody = JSON.parse(notification.request)
             console.log(notificationBody)
             if (notificationBody.functionToRun == "receivedNewMessage") {
-                console.log("received a new meassage trying to change redux state...")
-
-                props.navigation.navigate('ChatWithOtherUser', {
-                    chatRoomId: chatRoomId,
-                    otherMemberName: otherMemberName,
-                    otherMemberImage: otherMemberImage,
-                    otherMemberId: otherMemberId
-
-                })
-                // dispatch(newMessage);
                 receivedNewMessage()
-
-                //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO BOTTOM NAVIGAOR THAT RECIEVED A MESSAGE 
+                //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO RECIEVED A MESSAGE 
 
             }
         });
@@ -125,8 +116,6 @@ const HomeScreen = (props) => {
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
             // console.log(notificationBody)
             if (notificationBody.functionToRun == "receivedNewMessage") {
-
-                //ADD GO TO ROOM CHAT WHIT ROOM CHAT ID
 
 
                 console.log("entering chat with other user...")
