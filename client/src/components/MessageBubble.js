@@ -19,68 +19,134 @@ import { Alert } from 'react-native';
 
 const MessageBubble = (props) => {
     const { meetingMsg } = props.message;
+    // const { firstName } = props.firstName
     console.log(meetingMsg)
+    // console.log(props.message)
     return (
         <View>
-            <View style={[
-                styles.message,
-                props.mine ? styles.mine : styles.not_mine
-            ]}
-            >
-                <View
-                    style={[
-                        styles.cloud,
-                        {
-                            backgroundColor: props.mine ? '#dddddd' : '#007aff'
-                        }
-                    ]}
+            {!meetingMsg ?
+                <View style={[
+                    styles.message,
+                    props.mine ? styles.mine : styles.not_mine
+                ]}
                 >
-
-
-                    {
-                        props.text
-                            ?
-                            <Text
-                                style={[
-                                    styles.text,
-                                    {
-                                        color: props.mine ? 'black' : 'white'
-                                    }
-                                ]}
-                            >
-                                {props.text}
-                            </Text>
-                            :
-                            null
-                    }
                     <View
                         style={[
-                            styles.arrow_container,
-                            props.mine ? styles.arrow_left_container : styles.arrow_right_container
+                            styles.cloud,
+                            {
+                                backgroundColor: props.mine ? '#dddddd' : '#007aff'
+                            }
                         ]}
                     >
-                        <Svg
-                            style={props.mine ? styles.arrow_left : styles.arrow_right}
-                            width={moderateScale(15.5, 0.6)}
-                            height={moderateScale(17.5, 0.6)}
-                            viewBox="32.484 17.5 15.515 17.5"
-                            enable-background="new 32.485 17.5 15.515 17.5"
+
+
+                        {
+                            props.text
+                                ?
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            color: props.mine ? 'black' : 'white'
+                                        }
+                                    ]}
+                                >
+                                    {props.text}
+                                </Text>
+                                :
+                                null
+                        }
+                        <View
+                            style={[
+                                styles.arrow_container,
+                                props.mine ? styles.arrow_left_container : styles.arrow_right_container
+                            ]}
                         >
-                            <Path
-                                d={props.mine
-                                    ?
-                                    "M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z"
-                                    :
-                                    "M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
-                                }
-                                fill={props.mine ? '#dddddd' : '#007AFF'}
-                                x="0"
-                                y="0"
-                            />
-                        </Svg>
+                            <Svg
+                                style={props.mine ? styles.arrow_left : styles.arrow_right}
+                                width={moderateScale(15.5, 0.6)}
+                                height={moderateScale(17.5, 0.6)}
+                                viewBox="32.484 17.5 15.515 17.5"
+                                enable-background="new 32.485 17.5 15.515 17.5"
+                            >
+                                <Path
+                                    d={props.mine
+                                        ?
+                                        "M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z"
+                                        :
+                                        "M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
+                                    }
+                                    fill={props.mine ? '#dddddd' : '#007AFF'}
+                                    x="0"
+                                    y="0"
+                                />
+                            </Svg>
+                        </View>
                     </View>
                 </View>
-            </View>
+                :
+
+                //MEETING MSG BUBBLE
+                <View style={[
+                    styles.message,
+                    props.mine ? styles.mine : styles.not_mine
+                ]}
+                >
+                    <View
+                        style={[
+                            styles.cloud,
+                            {
+                                backgroundColor: props.mine ? '#dddddd' : '#007aff'
+                            }
+                        ]}
+                    >
+
+
+                        {
+                            props.text
+                                ?
+                                <Text
+                                    style={[
+                                        styles.text,
+                                        {
+                                            color: props.mine ? 'black' : 'white'
+                                        }
+                                    ]}
+                                >
+                                    {props.text}
+                                </Text>
+                                :
+                                null
+                        }
+                        <View
+                            style={[
+                                styles.arrow_container,
+                                props.mine ? styles.arrow_left_container : styles.arrow_right_container
+                            ]}
+                        >
+                            <Svg
+                                style={props.mine ? styles.arrow_left : styles.arrow_right}
+                                width={moderateScale(15.5, 0.6)}
+                                height={moderateScale(17.5, 0.6)}
+                                viewBox="32.484 17.5 15.515 17.5"
+                                enable-background="new 32.485 17.5 15.515 17.5"
+                            >
+                                <Path
+                                    d={props.mine
+                                        ?
+                                        "M38.484,17.5c0,8.75,1,13.5-6,17.5C51.484,35,52.484,17.5,38.484,17.5z"
+                                        :
+                                        "M48,35c-7-4-6-8.75-6-17.5C28,17.5,29,35,48,35z"
+                                    }
+                                    fill={props.mine ? '#dddddd' : '#007AFF'}
+                                    x="0"
+                                    y="0"
+                                />
+                            </Svg>
+                        </View>
+                    </View>
+                </View>
+            }
 
         </View>
     )

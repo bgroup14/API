@@ -55,6 +55,7 @@ const ChatWithOtherUser = (props) => {
 
     let userName = useSelector(state => state.user.userName);
     let userImage = useSelector(state => state.user.userImage);
+    let firstName = userName.split(" ")[0]
     const [newMessage, setNewMessage] = useState();
     const dispatch = useDispatch();
     const [isVisible, setIsvisble] = useState(false);
@@ -65,6 +66,7 @@ const ChatWithOtherUser = (props) => {
         Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
         scrollView.current.scrollToEnd()
+
 
         // cleanup function
         return () => {
@@ -283,6 +285,7 @@ const ChatWithOtherUser = (props) => {
         // console.log(otherMemberId)
         // console.log(userId)
 
+        //ADD SERVER AXIOS MEETINGMSG
         //HERE I SHOULD SEND A SPECIAL CHAT MSG TO THE SERVER WITH THE MEETING INFO
         //IN C# MAYBE ADD TO CHAT HISTORY DTO ANOTHER DTO OF MEETINGiNFO SO OBJECT INSIDE AN OBJECT
         //THEN I SHOULD RE RENDER THE COMPENENT AND WHEN READING ALL THE CHAT HISTORY I SHOULD RENDER A SPECIAL BUBBLE FOR MEETING MSGS
@@ -334,7 +337,8 @@ const ChatWithOtherUser = (props) => {
 
                     {chatHistory.map((message) => {
                         console.log(message)
-                        return <MessageBubble message={message} mine={!message.mine} text={message.text} key={message.messageId}
+                        return <MessageBubble message={message} mine={!message.mine} text={message.text}
+                            key={message.messageId}
                         />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 

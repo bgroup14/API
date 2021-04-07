@@ -20,7 +20,7 @@ namespace WebApi.DTO
         public string meetingTimeLabel;
         public int meetingUnixDate;
         public bool meetingMsg;
-
+        public string meetingLocationLabel;
 
 
     }
