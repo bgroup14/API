@@ -341,3 +341,4 @@ healthchecksdb
 
 /client/.expo/web/cache/
 /client/.expo/
+client/.expo/packager-info.json

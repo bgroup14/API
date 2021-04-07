@@ -59,6 +59,8 @@ const ChatWithOtherUser = (props) => {
     const [newMessage, setNewMessage] = useState();
     const dispatch = useDispatch();
     const [isVisible, setIsvisble] = useState(false);
+    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+
 
 
 
@@ -97,7 +99,7 @@ const ChatWithOtherUser = (props) => {
             fetchChatHistory()
 
 
-        }, [keyboardStatus])
+        }, [keyboardStatus, newMessageFromRedux])
     )
 
 
@@ -126,7 +128,7 @@ const ChatWithOtherUser = (props) => {
 
     }
     const fetchChatHistory = async () => {
-        console.log("Fetching chat history...")
+        // console.log("Fetching chat history...")
         const res = await axios(fetchChatHistoryUrl);
         setChatHistory(res.data)
         if (res.data.length > 0) {
@@ -139,12 +141,12 @@ const ChatWithOtherUser = (props) => {
     // const https://localhost:44303/api/chat/markLastMassageRead/4/157
 
     const markLastMassageRead = async () => {
-        console.log(chatHistory.length)
-        console.log("marking last msg as read...")
+        // console.log(chatHistory.length)
+        // console.log("marking last msg as read...")
         const markLastMassageReadUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/markLastMassageRead/${chatRoomId}/${userId}`
         try {
             const res = await axios.post(markLastMassageReadUrl);
-            console.log(res.data)
+            // console.log(res.data)
             if (res.data == "Message marked as read") {
 
                 //DISPATCH MESSAGE WAS READ
@@ -184,6 +186,7 @@ const ChatWithOtherUser = (props) => {
             console.log(body)
 
 
+
             const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
 
             const res = await axios.post(sendChatMessageUrl, body, config);
@@ -206,7 +209,7 @@ const ChatWithOtherUser = (props) => {
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
         try {
-            console.log("getting other memner push id with id: " + otherMemberId)
+            // console.log("getting other memner push id with id: " + otherMemberId)
             const res = await axios(fetchOtherUserPushNotificationID);
 
             var otherUserNotificationId = res.data;
@@ -281,7 +284,7 @@ const ChatWithOtherUser = (props) => {
         }
         // console.log(meetingMsgDetails)
         let body = JSON.stringify(meetingMsgDetails);
-        console.log(body)
+        //  console.log(body)
         // console.log(otherMemberId)
         // console.log(userId)
 
@@ -336,7 +339,7 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        console.log(message)
+                        //   console.log(message)
                         return <MessageBubble message={message} mine={!message.mine} text={message.text}
                             key={message.messageId}
                         />
