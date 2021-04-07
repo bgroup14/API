@@ -1,12 +1,16 @@
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState, useEffect } from 'react';
-import { View, Platform, Text, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Platform, Text, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Button } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
 import { faChessKing } from '@fortawesome/free-solid-svg-icons';
+import SetLocationScreen from '../screens/SetLocationScreen';
+import MyOverlay from '../components/MyOverlay';
+
+
 
 
 
@@ -25,7 +29,30 @@ const ScheduleMeeting = (props) => {
     const [choseDate, setChoseDate] = useState(false);
     const [choseHour, setChoseHour] = useState(false);
     const [eventTitle, setEventTitle] = useState(null);
+    const [isVisibleLocation, setIsVisibleLocation] = useState(false);
+    const [locationLabel, setLocationLabel] = useState(null);
 
+
+
+
+
+    const setLocation = (locationObj) => {
+        console.log(locationObj)
+        // console.log(locationObj.)
+        setLocationLabel(locationObj.locationLabel);
+        // if (locationObj.latitude != undefined) {
+        //     setPostLatitude(locationObj.latitude);
+        //     setPostLongitude(locationObj.longitude);
+        // }
+        // else {
+        //     setPostLatitude(null);
+        //     setPostLongitude(null);
+
+        // }
+
+
+
+    }
 
     const showTimepicker = () => {
         showMode('time');
@@ -187,6 +214,9 @@ const ScheduleMeeting = (props) => {
     return (
         <View >
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
+                    <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
+                </MyOverlay>
                 <Text style={styles.header} >Schedule Meeting</Text>
                 <TextInput onChangeText={(text) => changeEventTilteHandler(text)} maxLength={30} placeholder='Enter event title' style={{
 
@@ -212,46 +242,37 @@ const ScheduleMeeting = (props) => {
                 {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
             </View>
 
+            <View style={styles.dateContainer}>
+                {locationLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={() => setIsVisibleLocation(true)} title="Select location" /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Location: {locationLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change location" onPress={() => setIsVisibleLocation(true)} /></View>}
+                {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
+            </View>
+
+
+
+            {/* <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
+            {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
+                <TextInput
+                    textAlign="center"
+                    style={styles.postBtnText}
+                    editable={false}
+                    value='Select' />
+            </TouchableOpacity> :
+                <TouchableOpacity onPress={() => setIsVisibleLocation(true)}>
+                    <TextInput
+                        textAlign="center"
+                        style={styles.postBtnText}
+                        editable={false}
+                        value={locationLabel} />
+
+                </TouchableOpacity>} */}
+
             <View>
-                {/* <View style={styles.selectCategoryContainer}>
-                    <DropDownPicker
 
-                        placeholder="Time of the day"
-                        items={timesOfTheDay}
-                        containerStyle={styles.dropDownContainer}
-                        // style={{ borderWidth: 1, borderColor: '' }}
-                        itemStyle={{
-
-                            justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
-                        }}
-                        onChangeItem={item => setTimeOFtheDay(item.value)}
-
-
-                    />
-                </View> */}
-                {/* <Button onPress={showTimepicker} title="Choose Time" />
-                <Button onPress={() => checkDate()} title="CHECK Time" /> */}
 
             </View>
 
 
-            {/* {show ?
-                <DatePicker
-                    defaultDate={new Date()}
-                    minimumDate={new Date(2018, 1, 1)}
-                    maximumDate={new Date(2099, 12, 31)}
-                    //  chosenDate={date}
-                    locale={"en"}
-                    modalTransparent={true}
-                    animationType={"fade"}
-                    androidMode={"default"}
-                    placeHolderText={(new Date()).toLocaleDateString()}
-                    textStyle={{ color: "grey" }}
-                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                    onChange={onChange}
-                    disabled={false}
-                    value={date}
-                /> : <View />} */}
+
 
             {show ? <DateTimePicker
                 defaultDate={new Date()}

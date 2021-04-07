@@ -28,6 +28,7 @@
           <Property Name="meetingEventTitle" Type="varchar" MaxLength="255" />
           <Property Name="meetingTimeLabel" Type="varchar" MaxLength="255" />
           <Property Name="meetingUnixDate" Type="int" />
+          <Property Name="meetingLocationLabel" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Comments">
           <Key>
@@ -585,6 +586,7 @@
           <Property Name="meetingEventTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="meetingTimeLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="meetingUnixDate" Type="Int32" />
+          <Property Name="meetingLocationLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -1000,6 +1002,7 @@
           <EntitySetMapping Name="ChatHistories">
             <EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
               <MappingFragment StoreEntitySet="ChatHistory">
+                <ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
                 <ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
                 <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
                 <ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />

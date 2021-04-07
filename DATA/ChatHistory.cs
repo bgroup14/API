@@ -26,5 +26,6 @@ namespace DATA
         public string meetingEventTitle { get; set; }
         public string meetingTimeLabel { get; set; }
         public Nullable<int> meetingUnixDate { get; set; }
+        public string meetingLocationLabel { get; set; }
     }
 }
