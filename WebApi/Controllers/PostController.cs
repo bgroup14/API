@@ -600,7 +600,7 @@ namespace WebApi.Controllers
                     participantAgeRange = x.participantAgeRange
                 }).FirstOrDefault();
 
-                double myLong = 0;
+                double myLong =0;
                 double myLat = 0;
                 if (filterDTO != null)
                 {
@@ -639,9 +639,9 @@ namespace WebApi.Controllers
                         text = y.text
                     }).ToList(),
 
-                    distanceFromMe = (double)(12742 * System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLat - x.latitude) * 0.017453292519943295) / 2 +
-          System.Data.Entity.SqlServer.SqlFunctions.Cos(x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos(myLat * 0.017453292519943295) *
-          (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLong - x.longitude) * 0.017453292519943295)) / 2    )))) // 2 * R; R = 6371 km
+                    distanceFromMe = (double)(12742 * System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLat - (double)x.latitude) * 0.017453292519943295) / 2 +
+          System.Data.Entity.SqlServer.SqlFunctions.Cos((double)x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos(myLat * 0.017453292519943295) *
+          (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLong - (double)x.longitude) * 0.017453292519943295)) / 2    )))) // 2 * R; R = 6371 km
                 //distanceFromMe = (double)System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)9)
                 //distanceFromMe = (double)((x.latitude - filterDTO.meetingLocationLat) * (x.latitude - filterDTO.meetingLocationLat) + (x.longitude - filterDTO.meetingLocationLong) * (x.longitude - filterDTO.meetingLocationLong))
                 /*Coordinates = db.Posts.Where(z => z.id == x.id).Select(z => new GeoCoordinate(){

@@ -299,14 +299,14 @@ namespace WebApi.Controllers
             {
                 //////////////////////////////////////////////////////////
                 ///                        TODO:                       ///
-                ///  1. Send push and get notification ID via server   ///
+                ///  1. CALCULATE DATETIME HERE                        ///
                 //////////////////////////////////////////////////////////
 
 
-
+                int datetime = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
                 ChatHistory newMessage = new ChatHistory()
                 {
-                    datetime = message.datetime,
+                    datetime = datetime,
                     fromMemberId = message.fromMemberId,
                     toMemberId = message.toMemberId,
                     text = message.text,
