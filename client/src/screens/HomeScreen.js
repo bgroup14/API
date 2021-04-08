@@ -243,6 +243,8 @@ const HomeScreen = (props) => {
 
                 console.log(userId)
 
+                ///HERE WILL IMPLEMENT SMART ELEMNT
+
                 const res = await axios.post(postsFetchURL);
                 // const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/161");
                 console.log(res);
@@ -262,11 +264,13 @@ const HomeScreen = (props) => {
             var filterdObjToSend;
             if (objectLength == 1) {
                 filterdObjToSend = {
+
                     ...filterObj,
                     ...postsFilteredObj
                 }
             }
             else {
+                console.log(object)
                 filterdObjToSend = {
                     ...filterObj
                 }
