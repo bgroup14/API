@@ -171,6 +171,18 @@ const Post = (props) => {
                 {/* </View> */}
 
             </View>
+            {comments.length > 0 ? <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
+                <Text>{comments.length} {commentsLabel}</Text>
+            </TouchableOpacity> : null}
+            <Divider style={{ height: 0.8 }} />
+            {showCommentInput ?
+                <View style={styles.commentContainer}>
+                    <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} />
+                    <TouchableOpacity onPress={() => publishComment()}>
+                        <FontAwsome name='send-o' color='#fff' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
+                    </TouchableOpacity>
+                </View> : null}
+
             <View style={styles.postBtnContainer}>
                 <TouchableOpacity onPress={() => setShowCommentInput(!showCommentInput)} style={styles.postBtn}>
                     <FontAwsome name='commenting-o' size={25} color="gray" />
@@ -181,27 +193,19 @@ const Post = (props) => {
                     <FontAwsome name='heart-o' size={25} color="gray" />
                     <Text style={styles.btnText}>Like</Text>
                 </TouchableOpacity > */}
-                { }
+
                 {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => props.goToChatWithUser(currentMemberId, member_id)} style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
                 </TouchableOpacity >}
 
             </View>
-            {showCommentInput ?
-                <View style={styles.commentContainer}>
-                    <TextInput autoFocus={true} placeholder="Enter your comment here" multiline={true} style={styles.commentInput} numberOfLines={3} onChangeText={(text) => setComment(text)} />
-                    <TouchableOpacity onPress={() => publishComment()}>
-                        <FontAwsome name='send-o' color='#fff' style={{ marginTop: windowHeight / 50, marginRight: windowHeight / 50 }} size={22} />
-                    </TouchableOpacity>
-                </View> : null}
-            {comments.length > 0 ? <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
-                <Text>{comments.length} {commentsLabel}</Text>
-            </TouchableOpacity> : null}
 
 
 
-            <Divider style={{ height: 3, marginTop: windowHeight / 80, marginBottom: windowHeight / 100 }} />
+
+
+            {/* <Divider style={{ height: 3, marginTop: windowHeight / 80, marginBottom: windowHeight / 100 }} /> */}
 
 
         </KeyboardAvoidingView>
@@ -219,6 +223,9 @@ const styles = StyleSheet.create({
         //  flexDirection: 'row',
         // justifyContent: 'flex-end',
         //  alignItems: 'flex-start'
+        backgroundColor: '#fff',
+
+
     },
     postContainer: {
         flex: 1,
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         // maxHeight: 100
         maxHeight: windowHeight / 4,
-        marginVertical: 10
+        marginVertical: 10,
 
 
     },
@@ -238,6 +245,7 @@ const styles = StyleSheet.create({
         marginLeft: windowWidth / 20,
         marginTop: windowHeight / 80,
         maxWidth: windowWidth / 1.8,
+        marginBottom: windowHeight / 20
 
 
         // alignItems: 'center'
@@ -270,10 +278,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginVertical: 10,
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
         marginBottom: 5,
-        marginTop: 10
+        marginTop: 2
 
     },
     postBtn: {
@@ -288,7 +296,8 @@ const styles = StyleSheet.create({
     commentsContainer:
     {
         //marginTop: 1,
-        marginBottom: 4,
+        marginBottom: windowHeight / 100,
+        marginRight: windowHeight / 100,
         alignItems: 'flex-end'
     },
 

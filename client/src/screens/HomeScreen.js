@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'reac
 import { getIconType } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -218,11 +218,11 @@ const HomeScreen = (props) => {
             // console.log("redux newMessage is: " + newMessage)
             setRestartComponent(Date.now)
             let categories = [
-                { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
+                { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
                 { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
                 { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
                 { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
-                { label: 'General', value: 'General', icon: () => <MaterialIcons name="volunteer-activism" size={24} color="#000000" /> },
+                { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
             ]
             setCategoriesToShow(categories)
             setPostsFilteredObj(null)
@@ -426,7 +426,7 @@ const HomeScreen = (props) => {
                 <View style={styles.barContainer}><Text style={styles.barText}>Feed</Text>
                     <Icon
                         style={styles.bellIcon}
-                        name='bell'
+                        name='bells'
                         // onPress={() => props.navigation.navigate('Notifications')}
                         onPress={() => console.log(newMessageFromRedux)}
 
@@ -435,16 +435,18 @@ const HomeScreen = (props) => {
                 {/* <View style={styles.categoryContainer}>
                     <Text>Category dropdown</Text>
                 </View> */}
+
+
                 <View style={styles.selectCategoryContainer} >
                     <DropDownPicker
                         placeholder="Select Category"
-
+                        style={{ backgroundColor: '#fff' }}
+                        // dropDownStyle={{ backgroundColor: 'red' }}
                         //defaultValue={restartComponent}
                         items={categoriesToShow}
                         // items={categories}
                         containerStyle={styles.dropDownContainer}
                         itemStyle={{
-
                             justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 20
                         }}
                         onChangeItem={item => filterByCategory(item.value)}
@@ -453,17 +455,23 @@ const HomeScreen = (props) => {
                     />
                     <TouchableOpacity onPress={() => setIsFilterVisble(true)} style={{ flex: 1 }}>
 
-                        <Icon name='filter' size={26} style={styles.filterICon} />
+                        <Icon name='filter' size={32} style={styles.filterICon} />
                     </TouchableOpacity>
                 </View>
 
                 {posts.length > 0 ?
                     <ScrollView contentContainerStyle={styles.postsContainer}>
                         {posts.map((post) => {
-                            return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
-                                refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
-                                goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
+                            return <View key={post.postId}>
+                                <View><Post post={post} showComments={(comments) => showComments(comments)}
+                                    refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                                    goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                                    goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
+                                </View>
+                                <View style={{ margin: windowWidth / 70 }}>
+
+                                </View>
+                            </View>
                         })}
 
 
@@ -505,12 +513,13 @@ export default HomeScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
+        backgroundColor: '#d9d9d9',
         // justifyContent: 'center',
         // alignItems: 'center'
     },
     inner: {
-        padding: windowHeight / 45,
+        padding: windowWidth / 90,
 
         flex: 1,
         //  justifyContent: "space-around"
@@ -528,10 +537,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 40,
+        marginTop: windowHeight / 25,
         flexDirection: 'row',
-        paddingLeft: windowWidth / 100,
-        paddingRight: windowWidth / 100,
+        marginHorizontal: windowHeight / 40
+        // paddingLeft: windowWidth / 100,
+        // paddingRight: windowWidth / 100,
 
     },
     barText: {
@@ -547,25 +557,28 @@ const styles = StyleSheet.create({
     selectCategoryContainer:
     {
         //  flex: 1,
-        marginTop: 30,
+        // position: 'relative',
+        // backgroundColor: 'red',
+        marginTop: windowHeight / 20,
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'space-around',
-        marginBottom: 60,
-        width: '100%',
+        //alignItems: 'flex-start',
+        //  justifyContent: 'space-around',
+        marginBottom: windowHeight / 70,
+        // width: '100%',
         // marginLeft: windowWidth / 50,
-        borderRadius: 50
+        //borderRadius: 50
     }, dropDownContainer: {
 
         width: '85%',
         height: windowHeight / 15,
 
     },
-    filterICon: { marginLeft: 30, marginTop: 15 },
+    filterICon: { marginLeft: windowWidth / 25, marginTop: windowHeight / 100 },
 
     postsContainer: {
 
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        // backgroundColor: '#ffffff'
         //    / flex: 1,
         //   minHeight: 140
         // justifyContent: '',
