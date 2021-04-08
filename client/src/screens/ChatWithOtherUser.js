@@ -138,7 +138,7 @@ const ChatWithOtherUser = (props) => {
         // console.log(res.data)
     }
 
-    // const https://localhost:44303/api/chat/markLastMassageRead/4/157
+    // const https://lhost:44303/api/chat/markLastMassageRead/4/157
 
     const markLastMassageRead = async () => {
         // console.log(chatHistory.length)
@@ -262,6 +262,35 @@ const ChatWithOtherUser = (props) => {
             });
     }
 
+    const meetingAnswer = (answer) => {
+
+        ///HERE IF ANSWER == Accept I SHOULD SET A MEETING AND GET MEETINGS DETAILS (UNIXDATE, MEETING TITLE) CHECK WHICH VALUES SHOULD BE STORED IN DB TOO 
+        ///FROM C# CHEKING THOSE DEAILS WITH THE CHATROOMID WHEN MEETINGMSG==TRUE(SINCE WE SHOULD HAVE ONLY 1 MEETINGMSG PER ROOM AT ANY TIME)
+        ///THEN TAKE THOSE VALUES AND SAVE IN DB AS A MEETING
+        ///THEN DELETING THIS MSG FROM SERVER AND ALERT THIS USER THAT MEETING WAS ACCEPTED AND THAT MEETING WILL SHOW IN NOTIFICATIONS SCREEN
+        //THEN SENDING PUSH NOTIFICATION WITH "FUNCTIONTORUN == MEETING ACCEPTED"
+        //IN HOME SCREEN ADD LISTNER AND DECIDE WHAT TO DO WITH "FUNCTIONTORUN == MEETING ACCEPTED" IN SCREEN CLOSE & OPEN
+        ///IN SCREEN OPEN SET REDUX NEWMEETING TO TRUE AND FORCE THIS CHANGE TO MAKE RED DOT ON THE BELL IN HOME SCREEN
+        ///IN SCREEN CLOSE NAVIGATE TO NOTIFICATION SCREEN THAT WILL SHOW UPCOMING MEETINGS
+        //WHEN ENTERING THE NOTIFICATION SCREEN  SET REDUX NEWMEETING TO FALSE AND FORCE THIS CHANGE TO REMOVE RED DOT ON THE BELL IN HOME SCREEN
+
+        console.log(answer)
+    }
+
+    const goToOtherUserProfile = (member_id) => {
+
+        // toggleCommentsScreen();
+        // alert(member_id)
+        if (userId == member_id) {
+            props.navigation.navigate('MyProfile')
+        }
+        else {
+            props.navigation.navigate('OtherUserProfileScreen', {
+                userId: member_id
+            })
+        }
+    }
+
     const inviteMeeting = (dateObj) => {
         // setIsvisble(false)
         // setHaveDateFromPicker(true)
@@ -282,13 +311,13 @@ const ChatWithOtherUser = (props) => {
             toMemberId,
             meetingMsg
         }
-        // console.log(meetingMsgDetails)
+        console.log("meetingMsgDetails.......")
         let body = JSON.stringify(meetingMsgDetails);
-        //  console.log(body)
+        console.log(body)
         // console.log(otherMemberId)
         // console.log(userId)
 
-        //ADD SERVER AXIOS MEETINGMSG
+        //ADD SERVER AXIOS MEETINGMSG AND SEND MSG TO SERVER
         //HERE I SHOULD SEND A SPECIAL CHAT MSG TO THE SERVER WITH THE MEETING INFO
         //IN C# MAYBE ADD TO CHAT HISTORY DTO ANOTHER DTO OF MEETINGiNFO SO OBJECT INSIDE AN OBJECT
         //THEN I SHOULD RE RENDER THE COMPENENT AND WHEN READING ALL THE CHAT HISTORY I SHOULD RENDER A SPECIAL BUBBLE FOR MEETING MSGS
@@ -322,7 +351,9 @@ const ChatWithOtherUser = (props) => {
                                     // postCreatorImg,
                                 }}
                             />
-                            <Text style={styles.barText}>{otherMemberName}</Text>
+                            <TouchableOpacity onPress={() => goToOtherUserProfile(otherMemberId)}>
+                                <Text style={styles.barText}>{otherMemberName}</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.IconContainer}>
                             <Icon
@@ -339,9 +370,10 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        //   console.log(message)
+                        //  console.log(message)
+                        //console.log(otherMemberName)
                         return <MessageBubble message={message} mine={!message.mine} text={message.text}
-                            key={message.messageId}
+                            key={message.messageId} otherMemberName={otherMemberName} meetingAnswer={(answer) => meetingAnswer(answer)}
                         />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 
