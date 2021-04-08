@@ -1,4 +1,5 @@
-import { USER_LOGGED, IMAGE_UPDATED, FEED_SETTINGS_UPDATED } from '../actions/types';
+import { State } from 'react-native-gesture-handler';
+import { USER_LOGGED, IMAGE_UPDATED, FEED_SETTINGS_UPDATED, RECEIVED_USER_COORDINATES } from '../actions/types';
 const initialState = {
     // token: localStorage.getItem('token'),
     // isAuthenticated: null,
@@ -10,6 +11,8 @@ const initialState = {
     participantAge: null,
     meetingLocation: null,
     userImage: null,
+    userLong: null,
+    userLat: null
 
 
 
@@ -41,6 +44,9 @@ function userReducer(state = initialState, action) {
                 participantAge: payload.participantAge,
                 meetingLocation: payload.meetingLocation,
                 userImage: payload.pictureUrl,
+                userLong: null,
+                userLat: null
+
             }
         case IMAGE_UPDATED:
             return {
@@ -61,6 +67,13 @@ function userReducer(state = initialState, action) {
                 meetingLocation: payload.postLocation
 
 
+            }
+        case RECEIVED_USER_COORDINATES:
+            console.log("received user coordinates and changing redux state...")
+            return {
+                ...state,
+                userLong: payload.userLong,
+                userLat: payload.userLat
             }
         default:
             return state;

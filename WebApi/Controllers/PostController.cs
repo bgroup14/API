@@ -199,10 +199,14 @@ namespace WebApi.Controllers
 
 
         [HttpGet]
-        [Route("getuserposts/{id}")]
+        [Route("getuserposts/{id}/{mylong}/{mylat}")]
 
-        public HttpResponseMessage GetUserPosts(int id)
+        public HttpResponseMessage GetUserPosts(int id, double mylong, double mylat)
         {
+
+
+            double myLong = mylong;
+            double myLat = mylat;
 
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
@@ -231,6 +235,7 @@ namespace WebApi.Controllers
                     postId = x.id,
                     postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
                     postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+                   
 
                     comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
                     {
@@ -238,7 +243,15 @@ namespace WebApi.Controllers
                         commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
                         commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
                         text = y.text
-                    }).ToList()
+                    }).ToList(),
+
+
+                    distanceFromMe = (double)(12742 * (double)System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((double)(myLat - (double)x.latitude) * 0.017453292519943295) / 2 + System.Data.Entity.SqlServer.SqlFunctions.Cos((double)x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos((double)myLat * 0.017453292519943295) * (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLong - (double)x.longitude) * 0.017453292519943295)) / 2)))) // 2 * R; R = 6371 km
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      //distanceFromMe = (double)System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)9)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      //distanceFromMe = (double)((x.latitude - filterDTO.meetingLocationLat) * (x.latitude - filterDTO.meetingLocationLat) + (x.longitude - filterDTO.meetingLocationLong) * (x.longitude - filterDTO.meetingLocationLong))
+
+
+
 
 
                 }).ToList();
@@ -600,13 +613,19 @@ namespace WebApi.Controllers
                     participantAgeRange = x.participantAgeRange
                 }).FirstOrDefault();
 
-                double myLong = 0;
-                double myLat = 0;
-                if (filterDTO != null)
+                double myLong = filterDTO.meetingLocationLong;
+                double myLat = filterDTO.meetingLocationLat;
+
+                string categoryName = null;
+                if (filterDTO.categoryName != null)
                 {
-                    myLong = filterDTO.meetingLocationLong;
-                    myLat = filterDTO.meetingLocationLat;
+                    categoryName = filterDTO.categoryName;
                 }
+                /* if (filterDTO != null)
+                 {
+                     myLong = filterDTO.meetingLocationLong;
+                     myLat = filterDTO.meetingLocationLat;
+                 }*/
 
 
                 var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
@@ -639,23 +658,18 @@ namespace WebApi.Controllers
                         text = y.text
                     }).ToList(),
 
-                    distanceFromMe = (double)(12742 * (double)System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((double)(myLat - (double)x.latitude) * 0.017453292519943295) / 2 + System.Data.Entity.SqlServer.SqlFunctions.Cos((double)x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos((double)myLat * 0.017453292519943295) * (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLong - (double)x.longitude) * 0.017453292519943295)) / 2    )))) // 2 * R; R = 6371 km
-                //distanceFromMe = (double)System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)9)
-                //distanceFromMe = (double)((x.latitude - filterDTO.meetingLocationLat) * (x.latitude - filterDTO.meetingLocationLat) + (x.longitude - filterDTO.meetingLocationLong) * (x.longitude - filterDTO.meetingLocationLong))
-                /*Coordinates = db.Posts.Where(z => z.id == x.id).Select(z => new GeoCoordinate(){
-                    Latitude = (double)z.latitude,
-                    Longitude = (double)z.longitude
-                }).ToList()*/
+                    distanceFromMe = (double)(12742 * (double)System.Data.Entity.SqlServer.SqlFunctions.Asin(System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)(0.5 - System.Data.Entity.SqlServer.SqlFunctions.Cos((double)(myLat - (double)x.latitude) * 0.017453292519943295) / 2 + System.Data.Entity.SqlServer.SqlFunctions.Cos((double)x.latitude * 0.017453292519943295) * System.Data.Entity.SqlServer.SqlFunctions.Cos((double)myLat * 0.017453292519943295) * (1 - System.Data.Entity.SqlServer.SqlFunctions.Cos((myLong - (double)x.longitude) * 0.017453292519943295)) / 2)))) // 2 * R; R = 6371 km
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      //distanceFromMe = (double)System.Data.Entity.SqlServer.SqlFunctions.SquareRoot((double)9)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      //distanceFromMe = (double)((x.latitude - filterDTO.meetingLocationLat) * (x.latitude - filterDTO.meetingLocationLat) + (x.longitude - filterDTO.meetingLocationLong) * (x.longitude - filterDTO.meetingLocationLong))
+                    /*Coordinates = db.Posts.Where(z => z.id == x.id).Select(z => new GeoCoordinate(){
+                        Latitude = (double)z.latitude,
+                        Longitude = (double)z.longitude
+                    }).ToList()*/
 
-            });
+                });
 
                 //return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
 
-                string categoryName = null;
-                if (filterDTO != null && filterDTO.categoryName != null)
-                {
-                    categoryName = filterDTO.categoryName;
-                }
 
 
 
@@ -665,7 +679,7 @@ namespace WebApi.Controllers
 
 
 
-                if (filterDTO != null && filterDTO.userType != null) // IT MEANS WE HAVE FILTER ACTIVATED
+                if (filterDTO.filterActivated) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
                     if (filterDTO.meetingLocation != null)
@@ -771,77 +785,95 @@ namespace WebApi.Controllers
                     }
 
                 }
-                else /*if (feedSettings != null)*/
+                else ///This run if filter is not activated - then we send posts by feedSettings
                 {
-                    if (feedSettings.memberType != null)
+
+                    // meetingLocation
+                    // Show 30KM radius by default
+                    //filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
+
+                    if (feedSettings.postLocation != null)
                     {
-                        // meetingLocation
-                        // Show 30KM radius by default
-                        //filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
-
-                        //userType
-                        if (feedSettings.memberType == "Need Help")
+                        if (feedSettings.postLocation.Equals("Zoom Only"))
                         {
-                            filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));
+                            filteredPosts = filteredPosts.Where(m => m.isZoom == true);
                         }
-                        else if (feedSettings.memberType.Equals("Give Help"))
+                        else if (feedSettings.postLocation.Equals("My Area"))
                         {
-                            filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));
-
+                            filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 5);
+                            //filteredPosts = filteredPosts.Where(x => new GeoCoordinate(x.latitude, x.longitude).GetDistanceTo(userLocation) <= 5);
                         }
-
-                        //participantAge
-                        if (feedSettings.participantAgeRange != null)
+                        else if (feedSettings.postLocation.Equals("30KM"))
                         {
-                            switch (feedSettings.participantAgeRange)
-                            {
-                                case "16-30":
-                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
-                                    break;
-                                case "30-50":
-                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
-                                    break;
-                                case "50+":
-                                    filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
-                                    break;
-                                default:
-                                    break;
-
-                            }
+                            filteredPosts = filteredPosts.Where(m => m.distanceFromMe <= 30);
+                            //filteredPosts = filteredPosts.Where(x => new GeoCoordinate(x.latitude, x.longitude).GetDistanceTo(userLocation) <= 30);
                         }
+                    }
 
 
-                        //participantGender
-                        if (feedSettings.participantGender != null)
-                        {
-                            if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
-                            {
-                                //Offek: Alan please check this
-                                if (feedSettings.memberType == "Need Help")
-                                {
-                                    filteredPosts = filteredPosts.Where(m => m.authorGender.Equals(feedSettings.participantGender));
-                                }
-                                else 
-                                {
-                                    filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
-                                }
-                            }
-                        }
-
-                        //categoryName
-                        if (categoryName != null)
-                        {
-                            if (!categoryName.Equals("null"))
-                            {
-                                filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
-                            }
-                        }
-
-
-
-
+                    //userType
+                    if (feedSettings.memberType == "Need Help")
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Give Help"));
+                    }
+                    else if (feedSettings.memberType.Equals("Give Help"))
+                    {
+                        filteredPosts = filteredPosts.Where(m => m.helpType.Equals("Need Help"));
 
                     }
+
+                    //participantAge
+                    if (feedSettings.participantAgeRange != null)
+                    {
+                        switch (feedSettings.participantAgeRange)
+                        {
+                            case "16-30":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 16 && m.toAge <= 30);
+                                break;
+                            case "30-50":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 30 && m.toAge <= 50);
+                                break;
+                            case "50+":
+                                filteredPosts = filteredPosts.Where(m => m.fromAge >= 50 && m.toAge <= 999);
+                                break;
+                            default:
+                                break;
+
+                        }
+                    }
+
+
+                    //participantGender
+                    if (feedSettings.participantGender != null)
+                    {
+                        if (feedSettings.participantGender.Equals("Man") || feedSettings.participantGender.Equals("Woman"))
+                        {
+                            //Offek: Alan please check this
+                            if (feedSettings.memberType == "Need Help")
+                            {
+                                filteredPosts = filteredPosts.Where(m => m.authorGender.Equals(feedSettings.participantGender));
+                            }
+                            else
+                            {
+                                filteredPosts = filteredPosts.Where(m => m.fromGender.Equals(feedSettings.participantGender));
+                            }
+                        }
+                    }
+
+                    //categoryName
+                    if (categoryName != null)
+                    {
+                        if (!categoryName.Equals("null"))
+                        {
+                            filteredPosts = filteredPosts.Where(m => m.category.Equals(categoryName));
+                        }
+                    }
+
+
+
+
+
+
 
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
@@ -1132,7 +1164,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-             
+
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }

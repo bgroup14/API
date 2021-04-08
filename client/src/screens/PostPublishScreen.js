@@ -8,7 +8,7 @@ import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
@@ -133,11 +133,11 @@ const PostPublishScreen = (props) => {
     let userGiveOrGet = setUserGiveOrGetHelp();
     let greeting = createGreeting();
     let categories = [
-        { label: 'Sport', value: 'Sport', icon: () => <FontAwsome5 name="running" size={22} color="#000000" /> },
+        { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
         { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
         { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
         { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
-        { label: 'General', value: 'General', icon: () => <MaterialIcons name="volunteer-activism" size={24} color="#000000" /> },
+        { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
     ]
 
     const resetPost = () => {
