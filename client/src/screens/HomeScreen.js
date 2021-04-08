@@ -242,7 +242,11 @@ const HomeScreen = (props) => {
             try {
 
                 console.log(userId)
+
                 const res = await axios.post(postsFetchURL);
+                // const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/161");
+                console.log(res);
+
 
                 setPosts(res.data)
 

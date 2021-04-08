@@ -184,7 +184,8 @@ const ScheduleMeeting = (props) => {
             meetingDateLabel: dateLabel,
             meetingTimeLabel: timeLabel,
             meetingUnixDate: unixDate,
-            meetingEventTitle: eventTitle
+            meetingEventTitle: eventTitle,
+            locationLabel
         }
         if (eventTitle == null) {
             Alert.alert(

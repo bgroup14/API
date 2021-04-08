@@ -138,14 +138,16 @@ const OtherUserProfileScreen = (props) => {
     const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${userId}`
 
     const goToChatWithUser = async () => {
+
         console.log(userId)// this is gal id
         console.log(currentMemberId)
         try {
 
             console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
-            // console.log(res.data);
+            console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
+
 
             props.navigation.navigate('ChatWithOtherUser', {
                 chatRoomId: chatRoomId,
@@ -154,6 +156,7 @@ const OtherUserProfileScreen = (props) => {
                 otherMemberId: otherMemberId
 
             })
+
 
         } catch (error) {
             console.log(error)
@@ -176,7 +179,7 @@ const OtherUserProfileScreen = (props) => {
                 <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <View style={styles.barContainer}>
 
-                    <Text style={styles.barText}></Text>
+                    <Text style={styles.barText}>{userName}</Text>
                 </View>
                 <View style={styles.chatIconContainer}>
                     <Icon
@@ -234,7 +237,8 @@ const OtherUserProfileScreen = (props) => {
                     {userPosts.map((post) => {
                         return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
                             refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                            goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}

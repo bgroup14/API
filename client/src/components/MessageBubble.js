@@ -3,13 +3,16 @@ import {
     StyleSheet,
     View,
     Text,
-    Image
+    Image,
+
 } from 'react-native'
 import Svg, { Path } from 'react-native-svg'
 
 import { moderateScale } from 'react-native-size-matters'
 import { Avatar } from 'react-native-elements';
 import { Alert } from 'react-native';
+import { windowHeight, windowWidth } from '../../utils/Dimentions';
+import { Button } from 'react-native-elements';
 
 
 // Props info list
@@ -18,8 +21,19 @@ import { Alert } from 'react-native';
 // 3. image (image file) => renders image inside bubble
 
 const MessageBubble = (props) => {
-    const { meetingMsg } = props.message;
-    // const { firstName } = props.firstName
+    const { meetingMsg, meetingEventTitle, meetingDateLabel, meetingTimeLabel } = props.message;
+
+    const otherMemberName = props.otherMemberName
+    // const { otherMemberName } = props.otherMemberName
+
+    const fullName = otherMemberName.split(' ');
+
+    // console.log(fullName)
+
+
+    const otherMemberFirstName = fullName[0];
+    console.log(otherMemberFirstName)
+    // // const { firstName } = props.firstName
     console.log(meetingMsg)
     // console.log(props.message)
     return (
@@ -96,7 +110,9 @@ const MessageBubble = (props) => {
                         style={[
                             styles.cloud,
                             {
-                                backgroundColor: props.mine ? '#dddddd' : '#007aff'
+                                backgroundColor: props.mine ? '#dddddd' : '#007aff',
+                                height: props.mine ? windowHeight / 5 : windowHeight / 7,
+                                width: windowWidth / 1.7
                             }
                         ]}
                     >
@@ -105,16 +121,63 @@ const MessageBubble = (props) => {
                         {
                             props.text
                                 ?
-                                <Text
-                                    style={[
-                                        styles.text,
-                                        {
-                                            color: props.mine ? 'black' : 'white'
-                                        }
-                                    ]}
-                                >
-                                    {props.text}
-                                </Text>
+                                <View>
+                                    {props.mine ?
+                                        <Text
+                                            style={[
+                                                styles.text,
+                                                {
+                                                    color: props.mine ? 'black' : 'white'
+                                                }
+                                            ]}>
+
+                                            {`Alan sent you invitation to:  ${meetingEventTitle}`}
+                                            {'\n'}
+
+                                            {`At: ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {'\n'}
+                                            {"In: Tel Aviv"}
+
+                                        </Text> :
+                                        <Text
+                                            style={[
+                                                styles.text,
+                                                {
+                                                    color: props.mine ? 'black' : 'white'
+                                                }
+                                            ]}>
+
+                                            {`You sent ${otherMemberFirstName} invitation to:  ${meetingEventTitle}`}
+                                            {'\n'}
+
+                                            {`At: ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {'\n'}
+                                            {"In: Tel Aviv"}
+
+                                        </Text>}
+                                    {props.mine ? <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-around',
+                                        marginTop: windowHeight / 40
+                                    }}>
+                                        <Button
+                                            title="Accept"
+                                            type="outline"
+                                            raised={true}
+                                            buttonStyle={{ width: windowWidth / 5 }}
+                                            onPress={() => { props.meetingAnswer('Accept') }}
+                                        />
+                                        <Button
+                                            title="Reject"
+                                            type="outline"
+                                            raised={true}
+                                            buttonStyle={{ width: windowWidth / 5 }}
+                                            onPress={() => { props.meetingAnswer('Reject') }}
+
+                                        />
+                                    </View> : null}
+
+                                </View>
                                 :
                                 null
                         }
