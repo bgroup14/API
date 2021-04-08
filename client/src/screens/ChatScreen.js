@@ -19,6 +19,8 @@ import { useFocusEffect } from '@react-navigation/native';
 const ChatScreen = (props) => {
 
     const [chatRooms, setChatRooms] = useState([]);
+    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+
 
 
     useFocusEffect(
@@ -45,7 +47,7 @@ const ChatScreen = (props) => {
             return () => {
                 isActive = false;
             };
-        }, [])
+        }, [newMessageFromRedux])
     )
 
 

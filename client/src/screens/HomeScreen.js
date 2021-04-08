@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
 import * as Notifications from 'expo-notifications'
 
-import { NEW_MESSAGE } from '../../store/actions/types';
+import { NEW_MESSAGE, RECEIVED_USER_COORDINATES } from '../../store/actions/types';
 
 
 
@@ -42,6 +42,9 @@ import { TouchableOpacity } from 'react-native';
 import FeedFilterScreen from './FeedFilterScreen';
 import CommentsScreens from './CommentsScreens';
 import { Alert } from 'react-native';
+import * as Location from 'expo-location';
+import { set } from 'react-native-reanimated';
+
 
 
 
@@ -65,6 +68,9 @@ const HomeScreen = (props) => {
     const [restartComponent, setRestartComponent] = useState(1);
     const [categoriesToShow, setCategoriesToShow] = useState([]);
     const [pushNotificationToken, setPushNotificationToken] = useState(null);
+    const [myLong, setMyLong] = useState(null);
+    const [myLat, setMyLat] = useState(null);
+    const [filterActivated, setFilterACtivated] = useState(false);
 
 
 
@@ -91,7 +97,120 @@ const HomeScreen = (props) => {
         });
     }
 
+
+
+
+    const getUserCurrentLocationAndFecthPosts = async () => {
+
+        var obj;
+        if (myLat == null) {
+            console.log("getting user location....")
+
+
+            let { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
+                // setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            //setLocation(location);
+
+
+            let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
+            console.log(regionName[0].city)
+            obj = {
+                filterActivated: false,
+                meetingLocationLong: location.coords.longitude,
+                meetingLocationLat: location.coords.latitude
+            }
+            fetchPosts(obj)
+            setMyLat(location.coords.latitude);
+            setMyLong(location.coords.longitude);
+
+            dispatch({
+                type: RECEIVED_USER_COORDINATES,
+                payload: {
+                    userLong: location.coords.longitude,
+                    userLat: location.coords.latitude
+                }
+            });
+
+
+        }
+        else {
+            console.log("not getting user location....")
+
+            obj = {
+                filterActivated: false,
+                meetingLocationLong: myLong,
+                meetingLocationLat: myLat
+            }
+            fetchPosts(obj)
+
+        }
+
+
+
+
+
+
+
+
+    }
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setCategoryameToSend(null)
+            getUserCurrentLocationAndFecthPosts();
+            console.log("token is " + pushNotificationToken)
+            // console.log("redux newMessage is: " + newMessage)
+            setRestartComponent(Date.now)
+            let categories = [
+                { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
+                { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
+                { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
+                { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
+                { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
+            ]
+            setCategoriesToShow(categories)
+            setPostsFilteredObj(null)
+
+
+
+            //  fetchPosts(postsFilteredObj)
+            setNewComment(false)
+
+        }, [newComment])
+    )
+
+
+
+
+
+
+
     useEffect(() => {
+
+        //GET USER CURRENT LCOATION
+        // getUserCurrentLocationAndFecthPosts();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         //when user in app will preform this
@@ -212,104 +331,143 @@ const HomeScreen = (props) => {
 
 
 
-    useFocusEffect(
-        React.useCallback(() => {
-            console.log("token is " + pushNotificationToken)
-            // console.log("redux newMessage is: " + newMessage)
-            setRestartComponent(Date.now)
-            let categories = [
-                { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
-                { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
-                { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
-                { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
-                { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
-            ]
-            setCategoriesToShow(categories)
-            setPostsFilteredObj(null)
-
-            fetchPosts(postsFilteredObj)
-            setNewComment(false)
-
-        }, [newComment])
-    )
 
 
-    const fetchPosts = async (filterObj) => {
+    const fetchPosts = async (obj) => {
 
 
-
-        if (filterObj == null) {
-            try {
-
-                console.log(userId)
-
-                ///HERE WILL IMPLEMENT SMART ELEMNT
-
-                const res = await axios.post(postsFetchURL);
-                // const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/161");
-                console.log(res);
+        //console.log(obj)
 
 
-                setPosts(res.data)
+        const body = JSON.stringify(obj)
+        console.log("body that will be send to filter post is: " + body)
 
-            } catch (err) {
-                console.log("error in fetching post")
-                console.log(err.message)
+        try {
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             }
 
+            const res = await axios.post(postsFetchURL, body, config);
+
+            setPosts(res.data)
+
+        } catch (err) {
+            console.log(err)
         }
+        // }
 
-        else {
-            let objectLength = Object.keys(filterObj).length;
-            var filterdObjToSend;
-            if (objectLength == 1) {
-                filterdObjToSend = {
+        //     // try {
 
-                    ...filterObj,
-                    ...postsFilteredObj
-                }
-            }
-            else {
-                console.log(object)
-                filterdObjToSend = {
-                    ...filterObj
-                }
-            }
+        //     //     const config = {
+        //     //         headers: {
+        //     //             'Content-Type': 'application/json'
+        //     //         }
+        //     //     }
 
-            console.log("not empty")
-            const body = JSON.stringify(filterdObjToSend)
-            console.log("body that will be send to filter post is: " + body)
-            try {
+        //     //     const res = await axios.post(postsFetchURL, body, config);
 
-                const config = {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
+        //     //     setPosts(res.data)
 
-                const res = await axios.post(postsFetchURL, body, config);
+        //     // } catch (err) {
+        //     //     console.log(err)
+        //     // }
 
-                setPosts(res.data)
 
-            } catch (err) {
-                console.log(err)
-            }
-        }
+        //     // if (filterObj == null) {
+        //     //     try {
+
+        //     //         console.log(userId)
+
+        //     //         ///HERE WILL IMPLEMENT SMART ELEMNT
+
+        //     //         const res = await axios.post(postsFetchURL);
+        //     //         // const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/161");
+        //     //         console.log(res.data);
+
+
+        //     //         setPosts(res.data)
+
+        //     //     } catch (err) {
+        //     //         console.log("error in fetching post")
+        //     //         console.log(err.message)
+        //     //     }
+
+        //     // }
+
+        //     // else {
+
+
+
+
+        //     let objectLength = Object.keys(obj).length;
+
+
+        //     var filterdObjToSend;
+        //     if (objectLength == 1) {
+        //         filterdObjToSend = {
+
+        //             ...filterObj,
+        //             ...postsFilteredObj
+        //         }
+        //     }
+        //     else {
+        //         console.log(object)
+        //         filterdObjToSend = {
+        //             ...filterObj
+        //         }
+        //     }
+
+        //     console.log("not empty")
+        //     const body = JSON.stringify(filterdObjToSend)
+        //     console.log("body that will be send to filter post is: " + body)
+        //     try {
+
+        //         const config = {
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             }
+        //         }
+
+        //         const res = await axios.post(postsFetchURL, body, config);
+
+        //         setPosts(res.data)
+
+        //     } catch (err) {
+        //         console.log(err)
+        //     }
+        //     // }
+
+
+        // }
 
     }
 
 
     const fetchFilteredPosts = async (filteredPostObj) => {
-        let objToSend = {
-            ...filteredPostObj,
-            categoryName: categoryNameToSend
-        }
-        fetchPosts(objToSend)
 
-        //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server 
+        //console.log(filteredPostObj)
+        let obj = {
+            filterActivated: true,
+            meetingLocationLong: myLong,
+            meetingLocationLat: myLat,
+            categoryName: categoryNameToSend,
+            ...filteredPostObj
+        }
+        fetchPosts(obj)
+
+        // let objToSend = {
+        //     ...filteredPostObj,
+        //     categoryName: categoryNameToSend
+        // }
+        // fetchPosts(objToSend)
+
+        // //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server 
         setPostsFilteredObj(filteredPostObj);
-        let body = JSON.stringify(objToSend)
-        console.log(body)
+        // let body = JSON.stringify(objToSend)
+        // console.log(body)
 
 
 
@@ -322,7 +480,33 @@ const HomeScreen = (props) => {
         let category = {
             categoryName
         }
+        var obj;
+        //NOW WE CHECK IF POSTS WERE ALREADY FILTERED
+        if (postsFilteredObj != null) {
+            obj = {
+                ...postsFilteredObj,
+                categoryName,
+                filterActivated: true,
+                meetingLocationLong: myLong,
+                meetingLocationLat: myLat
+
+            }
+            fetchPosts(obj)
+
+        } else {
+            obj = {
+                categoryName,
+                filterActivated: false,
+                meetingLocationLong: myLong,
+                meetingLocationLat: myLat
+            }
+        }
+
         setCategoryameToSend(categoryName);
+        fetchPosts(obj)
+        // console.log("obj after changing category is:")
+        // console.log(obj)
+        return null;
         fetchPosts(category)
 
 
@@ -394,7 +578,7 @@ const HomeScreen = (props) => {
 
             console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
-            console.log(res.data);
+            // console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
 
             props.navigation.navigate('ChatWithOtherUser', {
@@ -415,7 +599,7 @@ const HomeScreen = (props) => {
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
     return (
-        <KeyboardAvoidingView style={styles.container} key={restartComponent}>
+        <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
@@ -441,7 +625,7 @@ const HomeScreen = (props) => {
                 </View> */}
 
 
-                <View style={styles.selectCategoryContainer} >
+                <View style={styles.selectCategoryContainer} key={restartComponent} >
                     <DropDownPicker
                         placeholder="Select Category"
                         style={{ backgroundColor: '#fff' }}
@@ -541,7 +725,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 25,
+        marginTop: windowHeight / 22,
         flexDirection: 'row',
         marginHorizontal: windowHeight / 40
         // paddingLeft: windowWidth / 100,

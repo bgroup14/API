@@ -15,6 +15,7 @@ namespace WebApi.DTO
         public string categoryName;
         public double meetingLocationLong;
         public double meetingLocationLat;
+        public bool filterActivated;
     }
 
 }

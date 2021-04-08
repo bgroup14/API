@@ -90,7 +90,7 @@ const MyProfileScreen = (props) => {
 
     }
 
-    const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}`
+    const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/0/0/`
     const fetchUserPosts = async () => {
         //   console.log("fetching user posts...")
         const res = await axios(userPostsFetchURL);

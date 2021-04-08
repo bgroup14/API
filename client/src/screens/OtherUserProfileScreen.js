@@ -37,6 +37,10 @@ const OtherUserProfileScreen = (props) => {
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [userPosts, setUserPosts] = useState([]);
+    let userLong = useSelector(state => state.user.userLong);
+    let userLat = useSelector(state => state.user.userLat);
+
+
 
     useEffect(() => {
         fetchUserDetails()
@@ -98,11 +102,14 @@ const OtherUserProfileScreen = (props) => {
 
     }
 
-    const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}`
+    const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
+    console.log("userLat is " + userLat)
+    console.log("userLong is " + userLong)
     const fetchUserPosts = async () => {
         console.log("fetching user posts...")
         const res = await axios(userPostsFetchURL);
         setUserPosts(res.data);
+
     }
 
 
@@ -235,6 +242,7 @@ const OtherUserProfileScreen = (props) => {
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
+                        console.log(post)
                         return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
                             refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}

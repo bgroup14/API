@@ -14,13 +14,20 @@ import axios from 'axios';
 
 
 const Post = (props) => {
-    const { postId, text, cityName, recurring, dateLabel, timeOfDay, postCreatorImg, postCreatorName, comments, member_id } = props.post;
+    const { postId, text, cityName, recurring, dateLabel, timeOfDay,
+        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe } = props.post;
     let currentMemberId = props.currentMemberId;
     //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
     let commentsLabel = comments.length > 1 ? 'Comments' : 'Comment';
+
+    var postDistance = Math.round(distanceFromMe * 10) / 10
+    let postDistanceKM = cityName != "Zoom Meeting" ? `(${postDistance} km)` : '';
+
+
+
 
 
 
@@ -47,7 +54,7 @@ const Post = (props) => {
         try {
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishcomment", body, config);
-            console.log(res);
+            //    console.log(res);
             Alert.alert(
                 "Comment Publish",
                 "Comment published successfully. ",
@@ -137,7 +144,7 @@ const Post = (props) => {
                 <Avatar
 
                     size='large'
-                    containerStyle={{ marginTop: 10 }}
+                    containerStyle={{ marginTop: windowHeight / 80, marginLeft: windowWidth / 60 }}
                     rounded
                     source={{
                         uri:
@@ -155,14 +162,17 @@ const Post = (props) => {
                         </TouchableOpacity>
 
                         {currentMemberId == member_id ? <TouchableOpacity onPress={() => askIfWantToDelete(postId)}>
-                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 2.5, marginTop: 6 }} />
+                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 3, marginTop: 6 }} />
                         </TouchableOpacity> : null}
 
 
                     </View>
                     <Text style={styles.postText}>{text}</Text>
                     {!recurring ? <Text style={styles.postDateText}>At {dateLabel + ", "}{timeOfDay}</Text> : null}
-                    <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "Location: " : null}{cityName}</Text>
+                    {currentMemberId != member_id ? <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName} {postDistanceKM} </Text>
+
+                        : <Text style={styles.postCityName}>{cityName != "Zoom Meeting" ? "In " : null}{cityName} </Text>
+                    }
 
                 </View>
 
@@ -271,17 +281,18 @@ const styles = StyleSheet.create({
         color: 'black'
     },
     postCityName: {
-        color: 'black'
+        color: 'blue'
 
     },
     postBtnContainer: {
         flex: 1,
         flexDirection: 'row',
-        marginVertical: 10,
+        marginVertical: windowWidth / 100,
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        marginBottom: 5,
-        marginTop: 2
+        marginBottom: windowHeight / 100,
+        // marginTop: 2
+
 
     },
     postBtn: {
