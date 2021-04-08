@@ -754,7 +754,7 @@ namespace WebApi.Controllers
                                 //Need to setup smart element
                                 break;
                             case "Location":
-                                filteredPosts = filteredPosts.OrderByDescending(y => y.distanceFromMe);
+                                filteredPosts = filteredPosts.OrderBy(y => y.distanceFromMe);
                                 break;
                             case "Meeting date":
                                 filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
