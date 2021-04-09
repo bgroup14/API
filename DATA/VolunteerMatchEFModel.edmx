@@ -85,7 +85,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="x_coordinate" Type="float" Nullable="false" />
           <Property Name="y_coordinate" Type="float" Nullable="false" />
@@ -95,13 +95,16 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="invitingMemberId" Type="int" />
-          <Property Name="invitationText" Type="text" />
-          <Property Name="acceptingMemberId" Type="int" />
-          <Property Name="datetime" Type="int" />
+          <Property Name="firstMemberId" Type="int" />
+          <Property Name="meetingEventTitle" Type="varchar" MaxLength="50" />
+          <Property Name="secondMemberId" Type="int" />
+          <Property Name="meetingUnixDate" Type="int" />
           <Property Name="locationId" Type="int" />
           <Property Name="didAccept" Type="bit" />
           <Property Name="didHappen" Type="bit" />
+          <Property Name="meetingDateLabel" Type="varchar" MaxLength="50" />
+          <Property Name="meetingTimeLabel" Type="varchar" MaxLength="50" />
+          <Property Name="meetingLocationLabel" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Members">
           <Key>
@@ -662,14 +665,17 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="invitingMemberId" Type="Int32" />
-          <Property Name="invitationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="acceptingMemberId" Type="Int32" />
-          <Property Name="datetime" Type="Int32" />
           <Property Name="locationId" Type="Int32" />
           <Property Name="didAccept" Type="Boolean" />
           <Property Name="didHappen" Type="Boolean" />
           <NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Meetings__locati__151B244E" FromRole="Meeting" ToRole="Location" />
+          <Property Name="firstMemberId" Type="Int32" />
+          <Property Name="meetingEventTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="secondMemberId" Type="Int32" />
+          <Property Name="meetingUnixDate" Type="Int32" />
+          <Property Name="meetingDateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="meetingTimeLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="meetingLocationLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Member">
           <Key>
@@ -1088,13 +1094,16 @@
           <EntitySetMapping Name="Meetings">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Meeting">
               <MappingFragment StoreEntitySet="Meetings">
+                <ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
+                <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
+                <ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
+                <ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
+                <ScalarProperty Name="secondMemberId" ColumnName="secondMemberId" />
+                <ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
+                <ScalarProperty Name="firstMemberId" ColumnName="firstMemberId" />
                 <ScalarProperty Name="didHappen" ColumnName="didHappen" />
                 <ScalarProperty Name="didAccept" ColumnName="didAccept" />
                 <ScalarProperty Name="locationId" ColumnName="locationId" />
-                <ScalarProperty Name="datetime" ColumnName="datetime" />
-                <ScalarProperty Name="acceptingMemberId" ColumnName="acceptingMemberId" />
-                <ScalarProperty Name="invitationText" ColumnName="invitationText" />
-                <ScalarProperty Name="invitingMemberId" ColumnName="invitingMemberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

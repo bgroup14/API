@@ -19,22 +19,25 @@ import { useFocusEffect } from '@react-navigation/native';
 const ChatScreen = (props) => {
 
     const [chatRooms, setChatRooms] = useState([]);
+    const [restartScreen, setRestartScreen] = useState(false);
     let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
 
 
 
     useFocusEffect(
         React.useCallback(() => {
-
             let isActive = true;
-            setChatRooms([])
+            // setChatRooms([])
 
             const fetchChatRooms = async () => {
-                console.log("Fetching chat rooms...")
+                console.log("Fetching chat rooms.!..")
                 try {
 
                     const res = await axios(chatRoomsFetchURL);
                     if (isActive) {
+                        console.log("setting chat rooms...")
+                        console.log(res.data)
+                        setRestartScreen(!restartScreen)
                         setChatRooms(res.data);
                     }
 
@@ -91,9 +94,10 @@ const ChatScreen = (props) => {
                 </View>
 
 
-                <ScrollView  >
+                <ScrollView key={restartScreen} >
                     {/* {console.log(chatRooms)} */}
                     {chatRooms.map((chatRoom) => {
+                        // console.log("chat room is: " + chatRoom)
                         return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId} goToOtherUserChat={(chatRoomId, otherMemberName, otherMemberImage, otherMemberId) => goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)} />
                         // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 

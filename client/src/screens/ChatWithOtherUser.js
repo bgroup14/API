@@ -13,6 +13,8 @@ import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyOverlay from '../components/MyOverlay';
+import { Alert } from 'react-native';
+
 
 
 
@@ -57,9 +59,11 @@ const ChatWithOtherUser = (props) => {
     let userImage = useSelector(state => state.user.userImage);
     let firstName = userName.split(" ")[0]
     const [newMessage, setNewMessage] = useState();
+    const [sentNewMessage, setSentNewMessage] = useState(false);
     const dispatch = useDispatch();
     const [isVisible, setIsvisble] = useState(false);
     let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+
 
 
 
@@ -99,7 +103,7 @@ const ChatWithOtherUser = (props) => {
             fetchChatHistory()
 
 
-        }, [keyboardStatus, newMessageFromRedux])
+        }, [keyboardStatus, newMessageFromRedux, sentNewMessage])
     )
 
 
@@ -198,7 +202,7 @@ const ChatWithOtherUser = (props) => {
 
         }
         catch (error) {
-
+            console.log(error)
         }
 
 
@@ -263,11 +267,43 @@ const ChatWithOtherUser = (props) => {
             });
     }
 
-    const meetingAnswer = (answer) => {
+    const meetingAnswer = async (answer) => {
 
         ///HERE IF ANSWER == Accept I SHOULD SET A MEETING AND GET MEETINGS DETAILS (UNIXDATE, MEETING TITLE) CHECK WHICH VALUES SHOULD BE STORED IN DB TOO 
         ///FROM C# CHEKING THOSE DEAILS WITH THE CHATROOMID WHEN MEETINGMSG==TRUE(SINCE WE SHOULD HAVE ONLY 1 MEETINGMSG PER ROOM AT ANY TIME)
         ///THEN TAKE THOSE VALUES AND SAVE IN DB AS A MEETING
+        if (answer == "Accept") {
+
+            console.log("meeting accepted...")
+            try {
+                const createMeetingUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/createMeeting/${chatRoomId}`
+                const res = await axios.post(createMeetingUrl);
+                console.log(res.data)
+                console.log(res.status)
+                console.log(res.status == 200)
+
+                if (res.status == 200) {
+                    //This will rerender component
+                    setSentNewMessage(!sentNewMessage)
+                    Alert.alert(
+                        "",
+                        "Meeting created. You can watch your upcoming meeting in the notifications screen",
+                        [
+                            {
+                                text: "OK",
+                            }
+                        ],
+                    );
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+
+
         ///THEN DELETING THIS MSG FROM SERVER AND ALERT THIS USER THAT MEETING WAS ACCEPTED AND THAT MEETING WILL SHOW IN NOTIFICATIONS SCREEN
         //THEN SENDING PUSH NOTIFICATION WITH "FUNCTIONTORUN == MEETING ACCEPTED"
         //IN HOME SCREEN ADD LISTNER AND DECIDE WHAT TO DO WITH "FUNCTIONTORUN == MEETING ACCEPTED" IN SCREEN CLOSE & OPEN
@@ -276,6 +312,7 @@ const ChatWithOtherUser = (props) => {
         //WHEN ENTERING THE NOTIFICATION SCREEN  SET REDUX NEWMEETING TO FALSE AND FORCE THIS CHANGE TO REMOVE RED DOT ON THE BELL IN HOME SCREEN
 
         console.log(answer)
+
     }
 
     const goToOtherUserProfile = (member_id) => {
@@ -292,7 +329,7 @@ const ChatWithOtherUser = (props) => {
         }
     }
 
-    const inviteMeeting = (dateObj) => {
+    const inviteMeeting = async (dateObj) => {
         // setIsvisble(false)
         // setHaveDateFromPicker(true)
         // setDateLabel(dateObj.dateLabel)
@@ -315,6 +352,34 @@ const ChatWithOtherUser = (props) => {
         console.log("meetingMsgDetails.......")
         let body = JSON.stringify(meetingMsgDetails);
         console.log(body)
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            }
+
+
+
+
+            const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
+
+            console.log("sending to server meetingMsgDetails....")
+
+            const res = await axios.post(sendChatMessageUrl, body, config);
+            console.log(res.data)
+            PushFromClient()
+            setSentNewMessage(!sentNewMessage)
+            setRestartComponent(Date.now)
+
+
+
+        }
+        catch (error) {
+            console.log(error)
+        }
         // console.log(otherMemberId)
         // console.log(userId)
 

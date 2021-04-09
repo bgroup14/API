@@ -322,6 +322,7 @@ namespace WebApi.Controllers
                     newMessage.meetingEventTitle = message.meetingEventTitle;
                     newMessage.meetingTimeLabel = message.meetingTimeLabel;
                     newMessage.meetingUnixDate = message.meetingUnixDate;
+                    newMessage.meetingLocationLabel = message.meetingLocationLabel;
                     newMessage.text = "Meeting MSG";
 
 
@@ -396,6 +397,55 @@ namespace WebApi.Controllers
 
 
                 return Request.CreateResponse(HttpStatusCode.OK, $"Last message is of user {memberId} or message was read already");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [Route("createMeeting/{chatRoomId}")]
+        public HttpResponseMessage createMeeting(int chatRoomId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+                var chatMassages = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId).ToList();
+                ChatHistory meetingMsg = chatMassages.Where(x => x.meetingMsg == true).FirstOrDefault();
+                Meeting meeting = new Meeting()
+                {
+                    firstMemberId = (int)meetingMsg.fromMemberId,
+                    secondMemberId = (int)meetingMsg.toMemberId,
+                    meetingEventTitle = meetingMsg.meetingEventTitle,
+                    meetingUnixDate = meetingMsg.meetingUnixDate,
+                    didHappen = false,
+                    meetingDateLabel = meetingMsg.meetingDateLabel,
+                    meetingTimeLabel = meetingMsg.meetingTimeLabel,
+                    meetingLocationLabel = meetingMsg.meetingLocationLabel
+                };
+                db.Meetings.Add(meeting);
+                db.ChatHistories.Remove(meetingMsg);
+                db.SaveChanges();
+
+
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Meeting saved in DB!");
 
             }
             catch (Exception ex)

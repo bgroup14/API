@@ -15,13 +15,16 @@ namespace DATA
     public partial class Meeting
     {
         public int id { get; set; }
-        public Nullable<int> invitingMemberId { get; set; }
-        public string invitationText { get; set; }
-        public Nullable<int> acceptingMemberId { get; set; }
-        public Nullable<int> datetime { get; set; }
         public Nullable<int> locationId { get; set; }
         public Nullable<bool> didAccept { get; set; }
         public Nullable<bool> didHappen { get; set; }
+        public Nullable<int> firstMemberId { get; set; }
+        public string meetingEventTitle { get; set; }
+        public Nullable<int> secondMemberId { get; set; }
+        public Nullable<int> meetingUnixDate { get; set; }
+        public string meetingDateLabel { get; set; }
+        public string meetingTimeLabel { get; set; }
+        public string meetingLocationLabel { get; set; }
     
         public virtual Location Location { get; set; }
     }

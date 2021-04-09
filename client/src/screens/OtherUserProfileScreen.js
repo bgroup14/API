@@ -13,6 +13,11 @@ import axios from 'axios';
 import CommentsScreens from './CommentsScreens';
 import DotsMenu from './DotsMenu';
 import DotsMenuOverlay from '../components/DotsMenuOverlay';
+import AppLoading from 'expo-app-loading';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { Divider } from 'react-native-elements';
+
+
 
 
 //
@@ -28,6 +33,8 @@ const OtherUserProfileScreen = (props) => {
     const [userHobbies, setUserHobbies] = useState("");
     const [userName, setUserName] = useState(null);
     const [userImage, setUserImage] = useState(null);
+    const [isReady, setIsReady] = useState(false);
+
 
 
     const [posts, setPosts] = useState([]);
@@ -44,7 +51,7 @@ const OtherUserProfileScreen = (props) => {
 
     useEffect(() => {
         fetchUserDetails()
-        fetchUserPosts()
+
         if (commentsToShow.length > 0) {
             console.log(commentsToShow)
             setIsCommentsVisible(true)
@@ -81,8 +88,8 @@ const OtherUserProfileScreen = (props) => {
 
         const res = await axios(userDetailsFetchURL);
         //console.log(res.data.city + "cityy")
-        console.log(res.data.fullName)
-        console.log(res.data.pictureUrl)
+        // console.log(res.data.fullName)
+        // console.log(res.data.pictureUrl)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
         setUserName(res.data.fullName)
@@ -99,16 +106,19 @@ const OtherUserProfileScreen = (props) => {
 
         hobbiesString = hobbiesString.replace(/,\s*$/, "");
         setUserHobbies(hobbiesString)
+        fetchUserPosts()
 
     }
 
     const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
     console.log("userLat is " + userLat)
     console.log("userLong is " + userLong)
+
     const fetchUserPosts = async () => {
         console.log("fetching user posts...")
         const res = await axios(userPostsFetchURL);
         setUserPosts(res.data);
+
 
     }
 
@@ -172,6 +182,18 @@ const OtherUserProfileScreen = (props) => {
 
 
 
+    }
+    if (!isReady) {
+        return (
+            <View>
+
+                <AppLoading
+                    startAsync={fetchUserDetails}
+                    onFinish={() => setIsReady(true)}
+                    onError={console.warn}
+                />
+            </View>
+        );
     }
 
 
@@ -242,13 +264,18 @@ const OtherUserProfileScreen = (props) => {
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
-                        console.log(post)
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)}
-                            refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
-                            goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
+                        // console.log(post)
+                        return <View key={post.postId}>
+                            <Post post={post} showComments={(comments) => showComments(comments)}
+                                refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
+                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                                goToChatWithUser={(currentMemberId, member_id) => goToChatWithUser(currentMemberId, member_id)} />
+                            <Divider style={{ height: 6, marginTop: windowHeight / 80, marginBottom: windowHeight / 100, backgroundColor: '#d9d9d9' }} />
+
+                        </View>
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
+
                     })}
                 </ScrollView>
 
@@ -268,7 +295,8 @@ const styles = StyleSheet.create({
         // alignItems: 'center'
     },
     inner: {
-        padding: windowHeight / 45,
+        // padding: windowHeight / 45,
+        padding: windowWidth / 90,
 
         flex: 1,
         //  justifyContent: "space-around"
@@ -280,10 +308,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 40,
+        marginTop: windowHeight / 22,
         flexDirection: 'row',
-        paddingLeft: windowWidth / 100,
-        paddingRight: windowWidth / 100,
+        marginHorizontal: windowHeight / 40
 
     },
     barText: {
