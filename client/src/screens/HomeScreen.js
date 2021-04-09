@@ -18,6 +18,9 @@ import registerForPushNotificationsAsync from '../../registerForPushNotification
 import * as Notifications from 'expo-notifications'
 
 import { NEW_MESSAGE, RECEIVED_USER_COORDINATES } from '../../store/actions/types';
+import AppLoading from 'expo-app-loading';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 
@@ -53,10 +56,11 @@ import { set } from 'react-native-reanimated';
 
 
 
-
 const HomeScreen = (props) => {
     const dispatch = useDispatch();
     const [posts, setPosts] = useState([]);
+    const [isReady, setIsReady] = useState(false);
+    const [spinner, setSpinner] = useState(true);
     const userId = useSelector(state => state.auth.userId);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
@@ -598,6 +602,28 @@ const HomeScreen = (props) => {
 
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
 
+
+    if (!isReady) {
+        return (
+            // <View>
+
+            <AppLoading
+                startAsync={getUserCurrentLocationAndFecthPosts}
+                onFinish={() => setTimeout(() => {
+                    setIsReady(true);
+                    setSpinner(false)
+                }, 500)}
+                onError={console.warn}
+            />
+            //     {/* <Spinner
+            //         visible={spinner}
+            //         textContent={'Loading...'}
+            //         textStyle={styles.spinnerTextStyle}
+            //     />
+            // </View> */}
+        );
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container} >
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
@@ -621,8 +647,8 @@ const HomeScreen = (props) => {
                     />
                 </View>
                 {/* <View style={styles.categoryContainer}>
-                    <Text>Category dropdown</Text>
-                </View> */}
+                        <Text>Category dropdown</Text>
+                    </View> */}
 
 
                 <View style={styles.selectCategoryContainer} key={restartComponent} >
@@ -694,6 +720,8 @@ const HomeScreen = (props) => {
             </View>
         </KeyboardAvoidingView >
     )
+
+
 }
 
 export default HomeScreen
@@ -774,7 +802,10 @@ const styles = StyleSheet.create({
     },
     userGreetingText: {
         fontSize: 18
-    }
+    },
+    spinnerTextStyle: {
+        color: '#FFF'
+    },
 
 
 })

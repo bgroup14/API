@@ -13,6 +13,10 @@ import axios from 'axios';
 import CommentsScreens from './CommentsScreens';
 import DotsMenu from './DotsMenu';
 import DotsMenuOverlay from '../components/DotsMenuOverlay';
+import AppLoading from 'expo-app-loading';
+import { Divider } from 'react-native-elements';
+
+
 
 const MyProfileScreen = (props) => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -31,6 +35,8 @@ const MyProfileScreen = (props) => {
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [userPosts, setUserPosts] = useState([]);
+    const [isReady, setIsReady] = useState(false);
+
 
     useEffect(() => {
         fetchUserDetails()
@@ -144,6 +150,19 @@ const MyProfileScreen = (props) => {
 
     }
 
+    if (!isReady) {
+        return (
+            <View>
+
+                <AppLoading
+                    startAsync={fetchUserDetails}
+                    onFinish={() => setIsReady(true)}
+                    onError={console.warn}
+                />
+            </View>
+        );
+    }
+
 
     return (
         <KeyboardAvoidingView style={styles.container} >
@@ -210,8 +229,11 @@ const MyProfileScreen = (props) => {
 
                 <ScrollView contentContainerStyle={styles.userPostsContainer}>
                     {userPosts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                        return <View key={post.postId}><Post post={post} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                            <Divider style={{ height: 6, marginTop: windowHeight / 80, marginBottom: windowHeight / 100, backgroundColor: '#d9d9d9' }} />
+
+                        </View>
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
@@ -233,7 +255,9 @@ const styles = StyleSheet.create({
         // alignItems: 'center'
     },
     inner: {
-        padding: windowHeight / 45,
+        padding: windowWidth / 90,
+
+        // padding: windowHeight / 45,
 
         flex: 1,
         //  justifyContent: "space-around"
@@ -245,10 +269,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 40,
+        marginTop: windowHeight / 22,
         flexDirection: 'row',
-        paddingLeft: windowWidth / 100,
-        paddingRight: windowWidth / 100,
+        marginHorizontal: windowHeight / 40
+
+
 
     },
     barText: {

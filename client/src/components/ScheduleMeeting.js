@@ -30,7 +30,7 @@ const ScheduleMeeting = (props) => {
     const [choseHour, setChoseHour] = useState(false);
     const [eventTitle, setEventTitle] = useState(null);
     const [isVisibleLocation, setIsVisibleLocation] = useState(false);
-    const [locationLabel, setLocationLabel] = useState(null);
+    const [meetingLocationLabel, setMeetingLocationLabel] = useState(null);
 
 
 
@@ -39,7 +39,7 @@ const ScheduleMeeting = (props) => {
     const setLocation = (locationObj) => {
         console.log(locationObj)
         // console.log(locationObj.)
-        setLocationLabel(locationObj.locationLabel);
+        setMeetingLocationLabel(locationObj.locationLabel);
         // if (locationObj.latitude != undefined) {
         //     setPostLatitude(locationObj.latitude);
         //     setPostLongitude(locationObj.longitude);
@@ -185,7 +185,7 @@ const ScheduleMeeting = (props) => {
             meetingTimeLabel: timeLabel,
             meetingUnixDate: unixDate,
             meetingEventTitle: eventTitle,
-            locationLabel
+            meetingLocationLabel
         }
         if (eventTitle == null) {
             Alert.alert(
@@ -244,7 +244,7 @@ const ScheduleMeeting = (props) => {
             </View>
 
             <View style={styles.dateContainer}>
-                {locationLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={() => setIsVisibleLocation(true)} title="Select location" /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Location: {locationLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change location" onPress={() => setIsVisibleLocation(true)} /></View>}
+                {meetingLocationLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={() => setIsVisibleLocation(true)} title="Select location" /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Location: {meetingLocationLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change location" onPress={() => setIsVisibleLocation(true)} /></View>}
                 {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
             </View>
 

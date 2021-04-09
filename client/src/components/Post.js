@@ -162,7 +162,7 @@ const Post = (props) => {
                         </TouchableOpacity>
 
                         {currentMemberId == member_id ? <TouchableOpacity onPress={() => askIfWantToDelete(postId)}>
-                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 3, marginTop: 6 }} />
+                            <FontAwsome name='trash' size={16} style={{ marginLeft: windowWidth / 2.5, marginTop: 6 }} />
                         </TouchableOpacity> : null}
 
 

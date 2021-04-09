@@ -32,9 +32,9 @@ const MessageBubble = (props) => {
 
 
     const otherMemberFirstName = fullName[0];
-    console.log(otherMemberFirstName)
+    // console.log(otherMemberFirstName)
     // // const { firstName } = props.firstName
-    console.log(meetingMsg)
+    // console.log(meetingMsg)
     // console.log(props.message)
     return (
         <View>
@@ -131,12 +131,12 @@ const MessageBubble = (props) => {
                                                 }
                                             ]}>
 
-                                            {`Alan sent you invitation to:  ${meetingEventTitle}`}
+                                            {`${otherMemberFirstName} sent you invitation ${meetingEventTitle}`}
                                             {'\n'}
 
-                                            {`At: ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {`At ${meetingDateLabel}, ${meetingTimeLabel}`}
                                             {'\n'}
-                                            {"In: Tel Aviv"}
+                                            {"In Tel Aviv"}
 
                                         </Text> :
                                         <Text
@@ -147,12 +147,12 @@ const MessageBubble = (props) => {
                                                 }
                                             ]}>
 
-                                            {`You sent ${otherMemberFirstName} invitation to:  ${meetingEventTitle}`}
+                                            {`You sent ${otherMemberFirstName} invitation ${meetingEventTitle}`}
                                             {'\n'}
 
-                                            {`At: ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {`At ${meetingDateLabel}, ${meetingTimeLabel}`}
                                             {'\n'}
-                                            {"In: Tel Aviv"}
+                                            {"In Tel Aviv"}
 
                                         </Text>}
                                     {props.mine ? <View style={{
