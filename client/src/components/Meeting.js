@@ -9,7 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 
-const ChatContact = (props) => {
+const Meeting = (props) => {
     // const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
     let userId = useSelector(state => state.auth.userId);
     // const [bold, setBold] = useState(false);
@@ -79,7 +79,7 @@ const ChatContact = (props) => {
     )
 }
 
-export default ChatContact
+export default Meeting
 
 const styles = StyleSheet.create({
 

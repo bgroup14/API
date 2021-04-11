@@ -97,7 +97,15 @@ namespace WebApi.Controllers
                         if (hoursDiffInt == 0)
                         {
                             lastDate = (now - dtDateTime).Minutes.ToString();
-                            lastDate += " min ago";
+                            if (lastDate == "0")
+                            {
+                                lastDate = "Now";
+                            }
+                            else
+                            {
+                                lastDate += " min ago";
+                            }
+
                         }
                         else
                         {
@@ -207,7 +215,8 @@ namespace WebApi.Controllers
                     meetingDateLabel = x.meetingDateLabel,
                     meetingEventTitle = x.meetingEventTitle,
                     meetingUnixDate = (int)x.meetingUnixDate,
-                    meetingTimeLabel = x.meetingTimeLabel
+                    meetingTimeLabel = x.meetingTimeLabel,
+                    meetingLocationLabel = x.meetingLocationLabel
                 }).OrderBy(x => x.datetime).ThenBy(z => z.messageId).ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, chats);
             }
