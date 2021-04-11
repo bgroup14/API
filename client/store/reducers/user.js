@@ -69,7 +69,7 @@ function userReducer(state = initialState, action) {
 
             }
         case RECEIVED_USER_COORDINATES:
-            console.log("received user coordinates and changing redux state...")
+            console.log("received user coordinates")
             return {
                 ...state,
                 userLong: payload.userLong,

@@ -194,8 +194,17 @@ const ChatWithOtherUser = (props) => {
 
             const sendChatMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/sendChatMessage`
 
+            let pushObj = {
+                functionToRun: "receivedNewMessage",
+                chatRoomId: chatRoomId,
+                otherMemberName: userName,
+                otherMemberId: userId,
+                otherMemberImage: userImage
+
+            }
+
             const res = await axios.post(sendChatMessageUrl, body, config);
-            PushFromClient()
+            PushFromClient(pushObj)
             setRestartComponent(Date.now)
 
 
@@ -209,7 +218,7 @@ const ChatWithOtherUser = (props) => {
     }
 
 
-    const PushFromClient = async () => {
+    const PushFromClient = async (pushObj) => {
 
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
@@ -233,14 +242,7 @@ const ChatWithOtherUser = (props) => {
             title: otherMemberName,
             body: newMessage,
             badge: 3,
-            data: {
-                functionToRun: "receivedNewMessage",
-                chatRoomId: chatRoomId,
-                otherMemberName: userName,
-                otherMemberId: userId,
-                otherMemberImage: userImage
-
-            },
+            data: pushObj,
 
 
 
@@ -369,8 +371,16 @@ const ChatWithOtherUser = (props) => {
             console.log("sending to server meetingMsgDetails....")
 
             const res = await axios.post(sendChatMessageUrl, body, config);
-            console.log(res.data)
-            PushFromClient()
+            // console.log(res.data)
+            let pushObj = {
+                functionToRun: "receivedNewMeetingInvitation",
+                chatRoomId: chatRoomId,
+                otherMemberName: userName,
+                otherMemberId: userId,
+                otherMemberImage: userImage
+
+            }
+            PushFromClient(pushObj)
             setSentNewMessage(!sentNewMessage)
             setRestartComponent(Date.now)
 
@@ -436,7 +446,7 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        //  console.log(message)
+                        console.log(message)
                         //console.log(otherMemberName)
                         return <MessageBubble message={message} mine={!message.mine} text={message.text}
                             key={message.messageId} otherMemberName={otherMemberName} meetingAnswer={(answer) => meetingAnswer(answer)}

@@ -21,7 +21,7 @@ import { Button } from 'react-native-elements';
 // 3. image (image file) => renders image inside bubble
 
 const MessageBubble = (props) => {
-    const { meetingMsg, meetingEventTitle, meetingDateLabel, meetingTimeLabel } = props.message;
+    const { meetingMsg, meetingEventTitle, meetingDateLabel, meetingTimeLabel, meetingLocationLabel } = props.message;
 
     const otherMemberName = props.otherMemberName
     // const { otherMemberName } = props.otherMemberName
@@ -134,9 +134,10 @@ const MessageBubble = (props) => {
                                             {`${otherMemberFirstName} sent you invitation ${meetingEventTitle}`}
                                             {'\n'}
 
-                                            {`At ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {`${meetingDateLabel} at ${meetingTimeLabel}`}
                                             {'\n'}
-                                            {"In Tel Aviv"}
+                                            {meetingLocationLabel == "Zoom Meeting" ? meetingLocationLabel : "In " + meetingLocationLabel}
+                                            {/* {"In Tel Aviv"} */}
 
                                         </Text> :
                                         <Text
@@ -150,9 +151,11 @@ const MessageBubble = (props) => {
                                             {`You sent ${otherMemberFirstName} invitation ${meetingEventTitle}`}
                                             {'\n'}
 
-                                            {`At ${meetingDateLabel}, ${meetingTimeLabel}`}
+                                            {`${meetingDateLabel} at ${meetingTimeLabel}`}
                                             {'\n'}
-                                            {"In Tel Aviv"}
+                                            {meetingLocationLabel == "Zoom Meeting" ? meetingLocationLabel : "In " + meetingLocationLabel}
+
+                                            {/* {"In Tel Aviv"} */}
 
                                         </Text>}
                                     {props.mine ? <View style={{

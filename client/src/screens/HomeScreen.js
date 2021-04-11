@@ -62,6 +62,9 @@ const HomeScreen = (props) => {
     const [isReady, setIsReady] = useState(false);
     const [spinner, setSpinner] = useState(true);
     const userId = useSelector(state => state.auth.userId);
+    const userLong = useSelector(state => state.user.userLong);
+    // let userLong = null;
+    let userLat = useSelector(state => state.user.userLat);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
@@ -104,65 +107,6 @@ const HomeScreen = (props) => {
 
 
 
-    const getUserCurrentLocationAndFecthPosts = async () => {
-
-        var obj;
-        if (myLat == null) {
-            console.log("getting user location....")
-
-
-            let { status } = await Location.requestPermissionsAsync();
-            if (status !== 'granted') {
-                // setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            //setLocation(location);
-
-
-            let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
-            console.log(regionName[0].city)
-            obj = {
-                filterActivated: false,
-                meetingLocationLong: location.coords.longitude,
-                meetingLocationLat: location.coords.latitude
-            }
-            fetchPosts(obj)
-            setMyLat(location.coords.latitude);
-            setMyLong(location.coords.longitude);
-
-            dispatch({
-                type: RECEIVED_USER_COORDINATES,
-                payload: {
-                    userLong: location.coords.longitude,
-                    userLat: location.coords.latitude
-                }
-            });
-
-
-        }
-        else {
-            console.log("not getting user location....")
-
-            obj = {
-                filterActivated: false,
-                meetingLocationLong: myLong,
-                meetingLocationLat: myLat
-            }
-            fetchPosts(obj)
-
-        }
-
-
-
-
-
-
-
-
-    }
-
 
     useFocusEffect(
         React.useCallback(() => {
@@ -185,6 +129,7 @@ const HomeScreen = (props) => {
 
             //  fetchPosts(postsFilteredObj)
             setNewComment(false)
+            // console.log("nenenrewnfewnfwnfwn" + userLong)
 
         }, [newComment])
     )
@@ -601,31 +546,112 @@ const HomeScreen = (props) => {
     }
 
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+    const getUserCurrentLocationAndFecthPosts = async () => {
 
+        // return null;
+        var obj;
+        // console.log("user long is :" + userlong)
+        if (userLong == null) {
+            console.log("getting user location.........")
+            console.log("user long is null!!!!")
+            console.log(userLong)
+
+
+            let { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
+                // setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            //setLocation(location);
+
+
+            let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
+            console.log(regionName[0].city)
+            obj = {
+                filterActivated: false,
+                meetingLocationLong: location.coords.longitude,
+                meetingLocationLat: location.coords.latitude
+            }
+            fetchPosts(obj)
+            setMyLat(location.coords.latitude);
+            setMyLong(location.coords.longitude);
+
+            dispatch({
+                type: RECEIVED_USER_COORDINATES,
+                payload: {
+                    userLong: location.coords.longitude,
+                    userLat: location.coords.latitude
+                }
+            });
+            console.log("setting is ready == true")
+            setTimeout(() => {
+                setIsReady(true)
+                setSpinner(false)
+            }, 800);
+
+
+
+        }
+        else {
+            console.log("not getting user location....")
+            console.log("user long is not null!!!!")
+            console.log(userLong)
+
+
+            obj = {
+                filterActivated: false,
+                meetingLocationLong: userLong,
+                meetingLocationLat: userLat
+            }
+            fetchPosts(obj)
+
+            console.log("setting is ready == true")
+            setTimeout(() => {
+                setIsReady(true)
+                setSpinner(false)
+            }, 800);
+
+        }
+
+
+
+
+
+
+
+
+    }
 
     if (!isReady) {
         return (
-            // <View>
+            <View>
 
-            <AppLoading
-                startAsync={getUserCurrentLocationAndFecthPosts}
-                onFinish={() => setTimeout(() => {
-                    setIsReady(true);
-                    setSpinner(false)
-                }, 500)}
-                onError={console.warn}
-            />
-            //     {/* <Spinner
-            //         visible={spinner}
-            //         textContent={'Loading...'}
-            //         textStyle={styles.spinnerTextStyle}
-            //     />
-            // </View> */}
+                <AppLoading
+                    startAsync={getUserCurrentLocationAndFecthPosts}
+                    onFinish={() => console.log("finished app loading")}
+                    // onFinish={() => setIsReady(true)}
+                    // onFinish={() => setTimeout(() => {
+                    //     setIsReady(true);
+                    //     setSpinner(false)
+                    // }, 500)}
+                    onError={console.warn}
+                />
+                <Spinner
+                    visible={spinner}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
+            </View>
         );
     }
 
+
+
+
     return (
-        <KeyboardAvoidingView style={styles.container} >
+        <KeyboardAvoidingView style={styles.container}  >
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
@@ -637,12 +663,11 @@ const HomeScreen = (props) => {
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
 
 
-                <View style={styles.barContainer}><Text style={styles.barText}>Feed</Text>
+                <View style={styles.barContainer}><Text style={styles.barText} >Feed</Text>
                     <Icon
                         style={styles.bellIcon}
                         name='bells'
-                        // onPress={() => props.navigation.navigate('Notifications')}
-                        onPress={() => console.log(newMessageFromRedux)}
+                        onPress={() => props.navigation.navigate('Notifications')}
 
                     />
                 </View>
