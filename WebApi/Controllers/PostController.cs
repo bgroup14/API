@@ -616,6 +616,12 @@ namespace WebApi.Controllers
                 double myLong = filterDTO.meetingLocationLong;
                 double myLat = filterDTO.meetingLocationLat;
 
+                //Save location to DB
+                Member member = (from m in db.Members where m.id == memberId select m).SingleOrDefault();
+                member.lastLocationLat = myLat;
+                member.lastLocationLong = myLong;
+                db.SaveChanges();
+
                 string categoryName = null;
                 if (filterDTO.categoryName != null)
                 {
@@ -1249,6 +1255,35 @@ namespace WebApi.Controllers
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
+        }
+
+
+        //SMART ELEMENT
+        public List<Member> findSimilarMembers(int memberId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            int datetimenow = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
+            try
+            {
+                //Get my age
+                var myDateOfBirth = db.Members.Select(x => x.dateOfBirth).FirstOrDefault();
+                float age = (datetimenow - (int)myDateOfBirth) / 60 / 60 / 24 / 365;
+
+                //Get my Hobbies
+                var hobbies = db.MembersHobbies.Where(h => h.memberId == memberId).Select(z => new HobbiesDTO
+                {
+                    name = z.Hobby.name
+                }).ToList();
+
+                //Location
+
+            }
+            catch (Exception e)
+            {
+                
+            }
+            return null;
         }
 
         /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)

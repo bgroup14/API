@@ -73,6 +73,19 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
+        <EntityType Name="Interactions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="memberId" Type="int" />
+          <Property Name="categoryId" Type="int" />
+          <Property Name="postId" Type="int" />
+          <Property Name="otherMemberId" Type="int" />
+          <Property Name="interactionType" Type="varchar" MaxLength="1" />
+          <Property Name="strength" Type="int" />
+          <Property Name="unixdate" Type="int" />
+        </EntityType>
         <EntityType Name="Likes">
           <Key>
             <PropertyRef Name="id" />
@@ -130,6 +143,8 @@
           <Property Name="gender" Type="varchar" MaxLength="255" />
           <Property Name="city" Type="varchar" MaxLength="255" />
           <Property Name="notificationId" Type="varchar" MaxLength="255" />
+          <Property Name="lastLocationLat" Type="float" />
+          <Property Name="lastLocationLong" Type="float" />
         </EntityType>
         <EntityType Name="MembersCategories">
           <Key>
@@ -220,6 +235,42 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Comments">
+              <PropertyRef Name="postId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__categ__5AB9788F">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="0..1" />
+          <End Role="Interactions" Type="Self.Interactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interactions">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__membe__59C55456">
+          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+          <End Role="Interactions" Type="Self.Interactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interactions">
+              <PropertyRef Name="memberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__postI__5BAD9CC8">
+          <End Role="Posts" Type="Self.Posts" Multiplicity="0..1" />
+          <End Role="Interactions" Type="Self.Interactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Posts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interactions">
               <PropertyRef Name="postId" />
             </Dependent>
           </ReferentialConstraint>
@@ -410,6 +461,7 @@
           <EntitySet Name="FeedSettings" EntityType="Self.FeedSettings" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Gender" EntityType="Self.Gender" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hobbies" EntityType="Self.Hobbies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Interactions" EntityType="Self.Interactions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Likes" EntityType="Self.Likes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Meetings" EntityType="Self.Meetings" Schema="dbo" store:Type="Tables" />
@@ -427,6 +479,18 @@
           <AssociationSet Name="FK__Comments__postId__208CD6FA" Association="Self.FK__Comments__postId__208CD6FA">
             <End Role="Posts" EntitySet="Posts" />
             <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="Self.FK__Interacti__categ__5AB9788F">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Interactions" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__membe__59C55456" Association="Self.FK__Interacti__membe__59C55456">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Interactions" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="Self.FK__Interacti__postI__5BAD9CC8">
+            <End Role="Posts" EntitySet="Posts" />
+            <End Role="Interactions" EntitySet="Interactions" />
           </AssociationSet>
           <AssociationSet Name="FK__Likes__likingMem__19DFD96B" Association="Self.FK__Likes__likingMem__19DFD96B">
             <End Role="Members" EntitySet="Members" />
@@ -563,6 +627,19 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="MembersPost" EntitySet="MembersPosts" />
           </AssociationSet>
+          <EntitySet Name="Interactions" EntityType="bgroup14_prodModel.Interaction" />
+          <AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__membe__59C55456" Association="bgroup14_prodModel.FK__Interacti__membe__59C55456">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -572,6 +649,7 @@
           <Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="Category" ToRole="MembersCategory" />
           <NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Category" ToRole="Post" />
+          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
         </EntityType>
         <EntityType Name="ChatHistory">
           <Key>
@@ -707,6 +785,9 @@
           <NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="Member" ToRole="MembersHobby" />
           <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="Member" ToRole="MembersPost" />
           <Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
+          <Property Name="lastLocationLat" Type="Double" />
+          <Property Name="lastLocationLong" Type="Double" />
         </EntityType>
         <EntityType Name="MembersCategory">
           <Key>
@@ -768,6 +849,7 @@
           <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="Post" ToRole="MembersPost" />
           <Property Name="cityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="dateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Post" ToRole="Interaction" />
         </EntityType>
         <EntityType Name="Review">
           <Key>
@@ -991,6 +1073,58 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Interaction">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="memberId" Type="Int32" />
+          <Property Name="categoryId" Type="Int32" />
+          <Property Name="postId" Type="Int32" />
+          <Property Name="otherMemberId" Type="Int32" />
+          <Property Name="interactionType" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="strength" Type="Int32" />
+          <Property Name="unixdate" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Interaction" ToRole="Category" />
+          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Interaction" ToRole="Member" />
+          <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Interaction" ToRole="Post" />
+        </EntityType>
+        <Association Name="FK__Interacti__categ__5AB9788F">
+          <End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interaction">
+              <PropertyRef Name="categoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__membe__59C55456">
+          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
+          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interaction">
+              <PropertyRef Name="memberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__postI__5BAD9CC8">
+          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
+          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Interaction">
+              <PropertyRef Name="postId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1111,6 +1245,8 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Member">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="lastLocationLong" ColumnName="lastLocationLong" />
+                <ScalarProperty Name="lastLocationLat" ColumnName="lastLocationLat" />
                 <ScalarProperty Name="notificationId" ColumnName="notificationId" />
                 <ScalarProperty Name="city" ColumnName="city" />
                 <ScalarProperty Name="gender" ColumnName="gender" />
@@ -1203,6 +1339,20 @@
             <EntityTypeMapping TypeName="bgroup14_prodModel.WhereActivity">
               <MappingFragment StoreEntitySet="WhereActivity">
                 <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Interactions">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
+              <MappingFragment StoreEntitySet="Interactions">
+                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
+                <ScalarProperty Name="strength" ColumnName="strength" />
+                <ScalarProperty Name="interactionType" ColumnName="interactionType" />
+                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+                <ScalarProperty Name="postId" ColumnName="postId" />
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
