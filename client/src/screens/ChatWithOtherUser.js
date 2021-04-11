@@ -236,6 +236,7 @@ const ChatWithOtherUser = (props) => {
             return null
         }
 
+        console.log("new message hopefully null " + newMessage)
         let push = {
             to: otherUserNotificationId,
             // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
@@ -332,6 +333,7 @@ const ChatWithOtherUser = (props) => {
     }
 
     const inviteMeeting = async (dateObj) => {
+        setNewMessage(null)
         // setIsvisble(false)
         // setHaveDateFromPicker(true)
         // setDateLabel(dateObj.dateLabel)
@@ -372,6 +374,7 @@ const ChatWithOtherUser = (props) => {
 
             const res = await axios.post(sendChatMessageUrl, body, config);
             // console.log(res.data)
+
             let pushObj = {
                 functionToRun: "receivedNewMeetingInvitation",
                 chatRoomId: chatRoomId,
