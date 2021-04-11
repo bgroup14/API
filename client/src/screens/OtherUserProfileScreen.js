@@ -203,13 +203,14 @@ const OtherUserProfileScreen = (props) => {
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
+            <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+            <View style={styles.barContainer}>
 
-            <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
-                <View style={styles.barContainer}>
+                <Text style={styles.barText}>{userName}</Text>
+            </View>
 
-                    <Text style={styles.barText}>{userName}</Text>
-                </View>
+            <ScrollView style={styles.inner}>
+
                 <View style={styles.chatIconContainer}>
                     <Icon
                         style={styles.chatIcon}
@@ -280,7 +281,7 @@ const OtherUserProfileScreen = (props) => {
                 </ScrollView>
 
 
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView >
     )
 }
@@ -304,6 +305,7 @@ const styles = StyleSheet.create({
 
     barContainer: {
         // flex: 1,
+        marginBottom: windowHeight / 401,
 
         justifyContent: 'space-between',
         alignItems: 'flex-end',

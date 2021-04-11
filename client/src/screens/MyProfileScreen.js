@@ -169,20 +169,20 @@ const MyProfileScreen = (props) => {
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
+            <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+            <View style={styles.barContainer}>
+                <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
+                    <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
+                </DotsMenuOverlay>
+                <Text style={styles.barText}>My Profile</Text>
+                <Icon
+                    style={styles.dotsMenu}
+                    name='dots-vertical'
+                    onPress={() => setIsMenuVisible(true)}
+                />
+            </View>
+            <ScrollView style={styles.inner}>
 
-            <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
-                <View style={styles.barContainer}>
-                    <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
-                        <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
-                    </DotsMenuOverlay>
-                    <Text style={styles.barText}>My Profile</Text>
-                    <Icon
-                        style={styles.dotsMenu}
-                        name='dots-vertical'
-                        onPress={() => setIsMenuVisible(true)}
-                    />
-                </View>
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
@@ -240,7 +240,7 @@ const MyProfileScreen = (props) => {
                 </ScrollView>
 
 
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView >
     )
 }
@@ -265,15 +265,13 @@ const styles = StyleSheet.create({
 
     barContainer: {
         // flex: 1,
-
+        marginBottom: windowHeight / 35,
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
         marginTop: windowHeight / 22,
         flexDirection: 'row',
         marginHorizontal: windowHeight / 40
-
-
 
     },
     barText: {

@@ -111,7 +111,7 @@ const MessageBubble = (props) => {
                             styles.cloud,
                             {
                                 backgroundColor: props.mine ? '#dddddd' : '#007aff',
-                                height: props.mine ? windowHeight / 5 : windowHeight / 7,
+                                // height: props.mine ? windowHeight / 5 : windowHeight / 7,
                                 width: windowWidth / 1.7
                             }
                         ]}
@@ -167,14 +167,14 @@ const MessageBubble = (props) => {
                                             title="Accept"
                                             type="outline"
                                             raised={true}
-                                            buttonStyle={{ width: windowWidth / 5 }}
+                                            buttonStyle={{ width: windowWidth / 5, maxHeight: 40 }}
                                             onPress={() => { props.meetingAnswer('Accept') }}
                                         />
                                         <Button
                                             title="Reject"
                                             type="outline"
                                             raised={true}
-                                            buttonStyle={{ width: windowWidth / 5 }}
+                                            buttonStyle={{ width: windowWidth / 5, maxHeight: 40 }}
                                             onPress={() => { props.meetingAnswer('Reject') }}
 
                                         />
