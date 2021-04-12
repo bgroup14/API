@@ -171,7 +171,9 @@ const SearchScreen = (props) => {
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
             <View style={{ padding: windowHeight / 45 }}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+
                 <View style={styles.barContainer}>
 
                     <Text style={styles.barText}>Search</Text>
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
         // alignItems: 'center'
     },
     inner: {
-        padding: windowHeight / 45,
+        padding: windowHeight / 90,
         //  minHeight: windowHeight / 1.5,
 
         flex: 1,
@@ -263,6 +265,10 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        // marginTop: windowHeight / 120
+
+        // marginTop: windowHeight / 120
+
 
     },
     dotsMenu: {

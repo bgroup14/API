@@ -12,6 +12,7 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import axios from 'axios';
 import Post from '../components/Post';
 import Meeting from '../components/Meeting';
+import Notification from '../components/Notification';
 import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -19,10 +20,12 @@ import { useFocusEffect } from '@react-navigation/native';
 const Notifications = (props) => {
 
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [restartScreen, setRestartScreen] = useState(false);
     let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
     let userId = useSelector(state => state.auth.userId);
     const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/meeting/getUpcomingMeetings/${userId}`
+    const notificationsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getNotifications/${userId}`
 
 
 
@@ -38,7 +41,7 @@ const Notifications = (props) => {
                     const res = await axios(upcomingMeetingsFetchURL);
                     if (isActive) {
                         console.log("setting upcoming meetings ...")
-                        console.log(res.data)
+                        //console.log(res.data)
                         setRestartScreen(!restartScreen)
                         setUpcomingMeetings(res.data);
                     }
@@ -48,7 +51,31 @@ const Notifications = (props) => {
                 }
 
             }
+
+            const fetchNotifications = async () => {
+                console.log("Fetching notificions....")
+                try {
+
+                    const res = await axios.post(notificationsFetchURL);
+                    if (isActive) {
+                        console.log("setting notifications...")
+                        console.log(res.data)
+                        setNotifications(res.data)
+                        //setRestartScreen(!restartScreen)
+                        // setUpcomingMeetings(res.data);
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+            }
+
+
+
+            fetchNotifications();
             fetchUpcomingMeetings()
+
             return () => {
                 isActive = false;
             };
@@ -82,7 +109,8 @@ const Notifications = (props) => {
 
         <KeyboardAvoidingView style={styles.container}  >
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={85} />
 
 
                 <View style={styles.barContainer}><Text style={styles.barText}>Notifications</Text>
@@ -90,22 +118,27 @@ const Notifications = (props) => {
                 </View>
 
                 <View style={styles.upcomingMeetingsHeader}><Text>Upcoming Meetings</Text></View>
-                <ScrollView key={restartScreen} >
+                <View style={styles.upcomingMeetingsContainer} key={restartScreen} >
                     {/* {console.log(chatRooms)} */}
                     {upcomingMeetings.map((meeting) => {
                         // console.log("upcoming meeting is: " + meeting)
                         return <Meeting meeting={meeting} key={meeting.otherMemberId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                         />
-                        // return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId}
-                        //     goToOtherUserChat={(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)
-                        //         => goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)} />
-                        // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
 
                     })}
-                </ScrollView>
-                {/* <ChatContact />
-                <ChatContact /> */}
+
+                </View>
+                <View style={styles.notificationsHeader}><Text>Notifications</Text></View>
+                <View style={styles.notificationContainer}>
+                    {notifications.map((notification) => {
+                        // console.log("notification is: " + notification)
+                        return <Notification notification={notification} key={notification.notificationId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                        />
+                    })}
+                </View>
             </View>
 
         </KeyboardAvoidingView>
@@ -117,12 +150,13 @@ export default Notifications
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        //backgroundColor: '#fff',
         // justifyContent: 'center',
         // alignItems: 'center'
     },
     inner: {
-        padding: windowHeight / 45,
+        //padding: windowHeight / 90,
+        backgroundColor: '#f2f2f2',
 
         flex: 1,
         //  justifyContent: "space-around"
@@ -140,11 +174,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         //  marginLeft: 30,
-        marginTop: windowHeight / 40,
-        marginBottom: windowHeight / 30,
+        marginTop: windowHeight / 22,
         flexDirection: 'row',
-        paddingLeft: windowWidth / 100,
-        paddingRight: windowWidth / 100,
+        marginHorizontal: windowHeight / 40
 
     },
     barText: {
@@ -186,7 +218,22 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     upcomingMeetingsHeader: {
-        marginTop: windowHeight / 100,
+        marginTop: windowHeight / 20,
+        marginBottom: windowHeight / 40,
+
         alignItems: 'center'
-    }
+    },
+    upcomingMeetingsContainer: {
+        // marginBottom: windowHeight / 10,
+        backgroundColor: '#fff'
+    },
+    notificationContainer: {
+        backgroundColor: '#fff'
+    },
+    notificationsHeader: {
+        marginTop: windowHeight / 35,
+        marginBottom: windowHeight / 40,
+
+        alignItems: 'center',
+    },
 })

@@ -86,7 +86,9 @@ const ChatScreen = (props) => {
         // </View>
         <KeyboardAvoidingView style={styles.container}  >
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+
 
 
                 <View style={styles.barContainer}><Text style={styles.barText}>Chat</Text>
@@ -150,6 +152,7 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        // marginTop: windowHeight / 120
 
     },
     bellIcon: {

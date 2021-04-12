@@ -672,6 +672,95 @@ namespace WebApi.Controllers
 
 
 
+        [HttpPost]
+        [Route("addNotification")]
+
+
+        public HttpResponseMessage addNotification(NotificationDTO notificationDTO)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+
+            try
+            {
+                Notification notification = new Notification()
+                {
+                    memberId = notificationDTO.memberId,
+                    otherMemberId = notificationDTO.otherMemberId,
+                    notificationText = notificationDTO.notificationText,
+                    notificationType = notificationDTO.notificationType,
+                    unixdate = notificationDTO.unixdate
+
+                };
+                db.Notifications.Add(notification);
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Notification Saved In DB");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
+
+
+
+
+        [HttpPost]
+        [Route("getNotifications/{memberId}")]
+
+
+        public HttpResponseMessage getNotifications(int memberId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+
+            try
+            {
+                List<NotificationDTO> notifications = db.Notifications.Where(x => x.memberId == memberId).Select(y => new NotificationDTO()
+                {
+                    memberId = memberId,
+                    otherMemberId = (int)y.otherMemberId,
+                    notificationText = y.notificationText,
+                    notificationType = y.notificationType,
+                    notificationId = y.id,
+                    unixdate = (int)y.unixdate
+
+
+                }).ToList();
+
+                foreach (NotificationDTO notification in notifications)
+                {
+                    string memberImage = db.Members.Where(x => x.id == notification.otherMemberId).Select(y => y.pictureUrl).FirstOrDefault();
+                    string memberName = db.Members.Where(x => x.id == notification.otherMemberId).Select(y => y.fullName).FirstOrDefault();
+
+                    notification.otherMemberName = memberName;
+                    notification.otherMemberImage = memberImage;
+
+
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, notifications);
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
+
+
+
+
+
+
 
 
         // POST api/<controller>
