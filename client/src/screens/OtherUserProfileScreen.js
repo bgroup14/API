@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
 
     barContainer: {
         // flex: 1,
-        marginBottom: windowHeight / 401,
+        marginBottom: windowHeight / 40,
 
         justifyContent: 'space-between',
         alignItems: 'flex-end',

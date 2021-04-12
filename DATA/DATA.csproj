@@ -75,6 +75,9 @@
     <Compile Include="Hobby.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interaction.cs">
+      <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Like.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
@@ -94,6 +97,9 @@
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="MembersPost.cs">
+      <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Notification.cs">
       <DependentUpon>VolunteerMatchEFModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Post.cs">

@@ -236,12 +236,18 @@ const ChatWithOtherUser = (props) => {
             return null
         }
 
-        console.log("new message hopefully null " + newMessage)
+        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
+        var body = newMessage;
+        if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
+            body = `${userName} sent you a meeting invitation`
+        }
+
+
         let push = {
             to: otherUserNotificationId,
             // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
             title: otherMemberName,
-            body: newMessage,
+            body: body,
             badge: 3,
             data: pushObj,
 
@@ -281,16 +287,16 @@ const ChatWithOtherUser = (props) => {
             try {
                 const createMeetingUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/createMeeting/${chatRoomId}`
                 const res = await axios.post(createMeetingUrl);
-                console.log(res.data)
-                console.log(res.status)
-                console.log(res.status == 200)
+                // console.log(res.data)
+                // console.log(res.status)
+                // console.log(res.status == 200)
 
                 if (res.status == 200) {
                     //This will rerender component
                     setSentNewMessage(!sentNewMessage)
                     Alert.alert(
                         "",
-                        "Meeting created. You can watch your upcoming meeting in the notifications screen",
+                        "Meeting created. You can watch your upcoming meetings in the notifications screen",
                         [
                             {
                                 text: "OK",
@@ -355,7 +361,7 @@ const ChatWithOtherUser = (props) => {
         }
         console.log("meetingMsgDetails.......")
         let body = JSON.stringify(meetingMsgDetails);
-        console.log(body)
+        // console.log(body)
 
         try {
             const config = {
@@ -449,7 +455,7 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        console.log(message)
+                        // console.log(message)
                         //console.log(otherMemberName)
                         return <MessageBubble message={message} mine={!message.mine} text={message.text}
                             key={message.messageId} otherMemberName={otherMemberName} meetingAnswer={(answer) => meetingAnswer(answer)}

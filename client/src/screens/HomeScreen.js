@@ -170,11 +170,21 @@ const HomeScreen = (props) => {
             let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
             // let notificationBody = JSON.parse(notification.request)
             console.log(notificationBody)
-            if (notificationBody.functionToRun == "receivedNewMessage") {
-                receivedNewMessage()
-                //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO RECIEVED A MESSAGE 
+            switch (notificationBody.functionToRun) {
+                case "receivedNewMessage":
+                    receivedNewMessage()
+                    break;
+                case "receivedNewMeetingInvitation":
+                    receivedNewMessage()
 
+                default:
+                    break;
             }
+            // if (notificationBody.functionToRun == "receivedNewMessage" || notificationBody.functionToRun == "receivedNewMeetingInvitation") {
+            //     receivedNewMessage()
+            //     //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO RECIEVED A MESSAGE 
+            // }
+
         });
 
         //When user not in the app will preform this
@@ -183,20 +193,32 @@ const HomeScreen = (props) => {
             console.log(response.notification.request.trigger.remoteMessage.data.body);
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
             // console.log(notificationBody)
-            if (notificationBody.functionToRun == "receivedNewMessage") {
+            switch (notificationBody.functionToRun) {
+                case "receivedNewMessage":
+                    console.log("entering chat with other user...")
+                    props.navigation.navigate('ChatWithOtherUser', {
+                        chatRoomId: notificationBody.chatRoomId,
+                        otherMemberName: notificationBody.otherMemberName,
+                        otherMemberImage: notificationBody.otherMemberImage,
+                        otherMemberId: notificationBody.otherMemberId
+                    })
 
+                    break;
+                case "receivedNewMeetingInvitation":
+                    console.log("entering chat with other user...")
+                    props.navigation.navigate('ChatWithOtherUser', {
+                        chatRoomId: notificationBody.chatRoomId,
+                        otherMemberName: notificationBody.otherMemberName,
+                        otherMemberImage: notificationBody.otherMemberImage,
+                        otherMemberId: notificationBody.otherMemberId
+                    })
 
-                console.log("entering chat with other user...")
-
-                props.navigation.navigate('ChatWithOtherUser', {
-                    chatRoomId: notificationBody.chatRoomId,
-                    otherMemberName: notificationBody.otherMemberName,
-                    otherMemberImage: notificationBody.otherMemberImage,
-                    otherMemberId: notificationBody.otherMemberId
-
-                })
-
+                default:
+                    break;
             }
+
+
+
 
         });
 
