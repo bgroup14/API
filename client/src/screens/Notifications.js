@@ -64,7 +64,13 @@ const Notifications = (props) => {
     // const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
 
 
+    const goToOtherUserProfile = (member_id) => {
 
+        props.navigation.navigate('OtherUserProfileScreen', {
+            userId: member_id
+        })
+
+    }
 
 
 
@@ -87,8 +93,10 @@ const Notifications = (props) => {
                 <ScrollView key={restartScreen} >
                     {/* {console.log(chatRooms)} */}
                     {upcomingMeetings.map((meeting) => {
-                        console.log("upcoming meeting is: " + meeting)
-                        // return <Meeting />
+                        // console.log("upcoming meeting is: " + meeting)
+                        return <Meeting meeting={meeting} key={meeting.otherMemberId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                        />
                         // return <ChatContact chatRoom={chatRoom} key={chatRoom.otherMemberId}
                         //     goToOtherUserChat={(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)
                         //         => goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId)} />

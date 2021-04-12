@@ -10,14 +10,23 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 const Meeting = (props) => {
+
+
+    // meetingDateLabel": "Apr/12/2021",
+    // "meetingEventTitle": "Help in react native",
+    // "meetingLocationLabel": "Zoom Meeting",
+    // "meetingTimeLabel": "02:15",
+    // "otherMemberId": 158,
+    // "otherMemberImage": "https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png",
+    // "otherMemberName": "LeBron James ",
     // const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
     let userId = useSelector(state => state.auth.userId);
     // const [bold, setBold] = useState(false);
 
 
-    const { otherMemberName, otherMemberId, otherMemberImage, latstSentence,
-        lastDate, chatRoomId, lastMessageSenderId, lastMessageMarkedAsRead } = props.chatRoom;
-    console.log("read??: " + lastMessageMarkedAsRead)
+    const { otherMemberName, otherMemberId, otherMemberImage, meetingEventTitle,
+        meetingLocationLabel, meetingDateLabel, meetingTimeLabel } = props.meeting;
+    console.log("event title??: " + meetingEventTitle)
     // setBold(false)
     // console.log("bold is set to: " + bold)
 
@@ -25,8 +34,8 @@ const Meeting = (props) => {
         React.useCallback(() => {
             // setBold(false)
             // console.log(bold)
-            console.log("last messenger id:" + lastMessageSenderId)
-            console.log("mark as read: " + lastMessageMarkedAsRead)
+            // console.log("last messenger id:" + lastMessageSenderId)
+            // console.log("mark as read: " + lastMessageMarkedAsRead)
             // if (lastMessageSenderId != userId && !lastMessageMarkedAsRead) {
 
             //     console.log("setting to bold...")
@@ -37,20 +46,20 @@ const Meeting = (props) => {
     )
 
 
-    const goToChatRoom = () => {
+    const goTo = () => {
         // setBold(false);
-        props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId, otherMemberId)
+        // props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId, otherMemberId)
     }
 
 
     return (
-        <TouchableOpacity onPress={() => goToChatRoom()}>
+        <View>
 
             <View style={styles.userContainer}>
 
                 <Avatar
 
-                    size='large'
+                    size='small'
                     containerStyle={{ marginTop: 10 }}
                     rounded
                     source={{
@@ -58,9 +67,20 @@ const Meeting = (props) => {
                             otherMemberImage,
                     }}
                 />
+
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 80 }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{otherMemberName}</Text>
-                    <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic', fontWeight: lastMessageSenderId != userId && !lastMessageMarkedAsRead ? 'bold' : 'normal' }}>{latstSentence}</Text>
+                    <TouchableOpacity onPress={() => props.goToOtherUserProfile(otherMemberId)} >
+
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{otherMemberName}</Text>
+                    </TouchableOpacity>
+
+                    <View >
+                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{meetingEventTitle}</Text>
+                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>In {meetingLocationLabel}</Text>
+                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{meetingDateLabel} at {meetingTimeLabel}</Text>
+
+                    </View>
+                    {/* <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic', fontWeight: lastMessageSenderId != userId && !lastMessageMarkedAsRead ? 'bold' : 'normal' }}>{latstSentence}</Text> */}
 
 
                 </View>
@@ -69,12 +89,12 @@ const Meeting = (props) => {
 
 
             </View>
-            <View style={{ alignItems: 'flex-end' }} >
-                <Text style={{ fontStyle: 'italic' }}>{lastDate}</Text>
+            <View  >
+                {/* <Text style={{ fontStyle: 'italic' }}>{meetingDateLabel} at {meetingTimeLabel}</Text> */}
 
             </View>
             <Divider />
-        </TouchableOpacity>
+        </View>
 
     )
 }
@@ -90,6 +110,7 @@ const styles = StyleSheet.create({
         // alignItems: 'flex-start',
         // justifyContent: 'flex-start',
         maxHeight: windowHeight / 10,
-        marginVertical: windowHeight / 30
+        marginVertical: windowHeight / 70,
+        marginBottom: windowHeight / 20
     }
 })

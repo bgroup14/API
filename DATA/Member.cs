@@ -22,6 +22,8 @@ namespace DATA
             this.MembersCategories = new HashSet<MembersCategory>();
             this.MembersHobbies = new HashSet<MembersHobby>();
             this.MembersPosts = new HashSet<MembersPost>();
+            this.Interactions = new HashSet<Interaction>();
+            this.Notifications = new HashSet<Notification>();
         }
     
         public int id { get; set; }
@@ -44,6 +46,8 @@ namespace DATA
         public string gender { get; set; }
         public string city { get; set; }
         public string notificationId { get; set; }
+        public Nullable<double> lastLocationLat { get; set; }
+        public Nullable<double> lastLocationLong { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
@@ -56,5 +60,9 @@ namespace DATA
         public virtual ICollection<MembersHobby> MembersHobbies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembersPost> MembersPosts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Interaction> Interactions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }
