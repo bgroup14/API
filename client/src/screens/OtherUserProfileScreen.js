@@ -203,7 +203,9 @@ const OtherUserProfileScreen = (props) => {
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
-            <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+            <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+
             <View style={styles.barContainer}>
 
                 <Text style={styles.barText}>{userName}</Text>
