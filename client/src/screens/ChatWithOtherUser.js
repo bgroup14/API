@@ -62,7 +62,7 @@ const ChatWithOtherUser = (props) => {
     const [sentNewMessage, setSentNewMessage] = useState(false);
     const dispatch = useDispatch();
     const [isVisible, setIsvisble] = useState(false);
-    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
 
 
 
@@ -238,9 +238,21 @@ const ChatWithOtherUser = (props) => {
 
         console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
         var body = newMessage;
-        if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
-            body = `${userName} sent you a meeting invitation`
+
+        switch (pushObj.functionToRun) {
+            case "receivedNewMeetingInvitation":
+                body = `${userName} sent you a meeting invitation`
+                break;
+            case "meetingApproved":
+                body = `${userName} accepted your meeting invitation`
+                break;
+
+            default:
+                break;
         }
+        // if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
+        //     body = `${userName} sent you a meeting invitation`
+        // }
 
 
         let push = {
@@ -308,6 +320,16 @@ const ChatWithOtherUser = (props) => {
             } catch (error) {
                 console.log(error)
             }
+
+            let pushObj = {
+                functionToRun: "meetingApproved",
+                // chatRoomId: chatRoomId,
+                // otherMemberName: userName,
+                // otherMemberId: userId,
+                // otherMemberImage: userImage
+
+            }
+            PushFromClient(pushObj)
         }
 
 
@@ -415,7 +437,9 @@ const ChatWithOtherUser = (props) => {
 
 
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+
                 <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
                     <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
 

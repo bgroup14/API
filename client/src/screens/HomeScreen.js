@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { getIconType } from 'react-native-elements';
+import { Badge } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -17,9 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
 import * as Notifications from 'expo-notifications'
 
-import { NEW_MESSAGE, RECEIVED_USER_COORDINATES } from '../../store/actions/types';
+import { NEW_MESSAGE, RECEIVED_USER_COORDINATES, NEW_MEETING } from '../../store/actions/types';
 import AppLoading from 'expo-app-loading';
 import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 
@@ -79,6 +80,9 @@ const HomeScreen = (props) => {
     const [myLat, setMyLat] = useState(null);
     const [filterActivated, setFilterACtivated] = useState(false);
 
+    let newMeetingFromRedux = useSelector(state => state.notification.newMeeting);
+
+
 
 
 
@@ -97,9 +101,18 @@ const HomeScreen = (props) => {
 
 
     const receivedNewMessage = async () => {
-        console.log("trying to change redux msg recieved state...")
+        //  console.log("trying to change redux msg recieved state...")
         dispatch({
             type: NEW_MESSAGE,
+            payload: null
+        });
+    }
+
+
+    const newMeetingApproved = async () => {
+        //  console.log("trying to change redux msg recieved state...")
+        dispatch({
+            type: NEW_MEETING,
             payload: null
         });
     }
@@ -111,8 +124,10 @@ const HomeScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             setCategoryameToSend(null)
+            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newMeetingFromRedux)
+            // newMeetingApproved();
             getUserCurrentLocationAndFecthPosts();
-            console.log("token is " + pushNotificationToken)
+            // console.log("token is " + pushNotificationToken)
             // console.log("redux newMessage is: " + newMessage)
             setRestartComponent(Date.now)
             let categories = [
@@ -145,21 +160,6 @@ const HomeScreen = (props) => {
         //GET USER CURRENT LCOATION
         // getUserCurrentLocationAndFecthPosts();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         //when user in app will preform this
@@ -176,7 +176,10 @@ const HomeScreen = (props) => {
                     break;
                 case "receivedNewMeetingInvitation":
                     receivedNewMessage()
-
+                case "meetingApproved":
+                    newMeetingApproved();
+                    //FUNCTION THAT WILL MAKE THE BELL RED
+                    break;
                 default:
                     break;
             }
@@ -212,6 +215,8 @@ const HomeScreen = (props) => {
                         otherMemberImage: notificationBody.otherMemberImage,
                         otherMemberId: notificationBody.otherMemberId
                     })
+                case "meetingApproved":
+                    props.navigation.navigate("Notifications")
 
                 default:
                     break;
@@ -256,9 +261,9 @@ const HomeScreen = (props) => {
     const sendPushTokenToServer = async () => {
         const fetchNotificationIdURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/setnotificationid/${userId}/${pushNotificationToken}`
         try {
-            console.log("sending push token to server...")
+            // console.log("sending push token to server...")
             const res = await axios.post(fetchNotificationIdURL);
-            console.log(res.data)
+            // console.log(res.data)
         } catch (error) {
             console.log(error)
         }
@@ -289,7 +294,7 @@ const HomeScreen = (props) => {
 
             }
             else {
-                console.log("Push token is updated to : " + lastTimeTokenTaken)
+                // console.log("Push token is updated to : " + lastTimeTokenTaken)
             }
         }
         catch (error) {
@@ -311,7 +316,7 @@ const HomeScreen = (props) => {
 
 
         const body = JSON.stringify(obj)
-        console.log("body that will be send to filter post is: " + body)
+        // console.log("body that will be send to filter post is: " + body)
 
         try {
 
@@ -540,14 +545,14 @@ const HomeScreen = (props) => {
     }
 
     const goToChatWithUser = async (currentMemberId, member_id) => {
-        console.log(currentMemberId)
-        console.log(member_id)
+        // console.log(currentMemberId)
+        // console.log(member_id)
         const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${member_id}`
 
 
         try {
 
-            console.log("Checking Room Id...")
+            // console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
             // console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
@@ -574,9 +579,9 @@ const HomeScreen = (props) => {
         var obj;
         // console.log("user long is :" + userlong)
         if (userLong == null) {
-            console.log("getting user location.........")
-            console.log("user long is null!!!!")
-            console.log(userLong)
+            // console.log("getting user location.........")
+            // console.log("user long is null!!!!")
+            // console.log(userLong)
 
 
             let { status } = await Location.requestPermissionsAsync();
@@ -590,7 +595,7 @@ const HomeScreen = (props) => {
 
 
             let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
-            console.log(regionName[0].city)
+            // console.log(regionName[0].city)
             obj = {
                 filterActivated: false,
                 meetingLocationLong: location.coords.longitude,
@@ -607,7 +612,7 @@ const HomeScreen = (props) => {
                     userLat: location.coords.latitude
                 }
             });
-            console.log("setting is ready == true")
+            // console.log("setting is ready == true")
             setTimeout(() => {
                 setIsReady(true)
                 setSpinner(false)
@@ -617,9 +622,9 @@ const HomeScreen = (props) => {
 
         }
         else {
-            console.log("not getting user location....")
-            console.log("user long is not null!!!!")
-            console.log(userLong)
+            // console.log("not getting user location....")
+            // console.log("user long is not null!!!!")
+            // console.log(userLong)
 
 
             obj = {
@@ -688,6 +693,11 @@ const HomeScreen = (props) => {
 
 
                 <View style={styles.barContainer}><Text style={styles.barText} >Feed</Text>
+                    {/* {console.log("redux is :::::::::: " + newMeetingFromRedux)} */}
+                    {newMeetingFromRedux ? < Badge
+                        status="error"
+                        containerStyle={{ position: 'absolute', top: 0, right: -3 }}
+                    /> : null}
                     <Icon
                         style={styles.bellIcon}
                         name='bells'
@@ -817,7 +827,7 @@ const styles = StyleSheet.create({
     },
     bellIcon: {
         color: '#ffffff',
-        fontSize: 24
+        fontSize: 28
     },
     selectCategoryContainer:
     {

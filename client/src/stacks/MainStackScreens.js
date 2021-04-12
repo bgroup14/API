@@ -21,7 +21,7 @@ const MainStackScreens = () => {
 
     const MainStack = createBottomTabNavigator();
     let userImage = useSelector(state => state.user.userImage);
-    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
     // let userImage = useSelector(state => state.user.userImage);
 
 

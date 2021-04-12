@@ -20,7 +20,7 @@ const ChatScreen = (props) => {
 
     const [chatRooms, setChatRooms] = useState([]);
     const [restartScreen, setRestartScreen] = useState(false);
-    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
 
 
 

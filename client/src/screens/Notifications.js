@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { useSelector, useDispatch } from 'react-redux';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { KeyboardAvoidingView } from 'react-native';
@@ -15,22 +14,35 @@ import Meeting from '../components/Meeting';
 import Notification from '../components/Notification';
 import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
+import { NO_NEW_MEETING } from '../../store/actions/types';
+import { useSelector, useDispatch } from 'react-redux';
+
+
 
 
 const Notifications = (props) => {
 
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
+    const dispatch = useDispatch();
     const [notifications, setNotifications] = useState([]);
     const [restartScreen, setRestartScreen] = useState(false);
-    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
     let userId = useSelector(state => state.auth.userId);
     const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/meeting/getUpcomingMeetings/${userId}`
     const notificationsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getNotifications/${userId}`
 
-
+    const noNewNotifications = async () => {
+        //  console.log("trying to change redux msg recieved state...")
+        // alert(3)
+        dispatch({
+            type: NO_NEW_MEETING,
+            payload: null
+        });
+    }
 
     useFocusEffect(
         React.useCallback(() => {
+            noNewNotifications();
             let isActive = true;
             // setChatRooms([])
 
