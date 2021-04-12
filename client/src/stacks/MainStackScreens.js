@@ -60,7 +60,8 @@ const MainStackScreens = () => {
                     break;
             }
             if (route.name == "PostPublish") {
-                return <Ionicons name='add-circle' size={42} color="#2948ff"
+                // return <Ionicons name='add-circle' size={42} color="#2948ff"
+                return <Ionicons name='add-circle' size={42} color="#3b5998"
                     style={{
                         shadowColor: '#23a8d9',
                         shadowOffset: { width: 0, height: 10 },

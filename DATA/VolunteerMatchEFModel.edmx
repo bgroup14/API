@@ -177,8 +177,8 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="memberId" Type="int" />
-          <Property Name="notificationType" Type="varchar" MaxLength="1" />
-          <Property Name="notificationText" Type="varchar" MaxLength="1" />
+          <Property Name="notificationType" Type="varchar" MaxLength="255" />
+          <Property Name="notificationText" Type="varchar" MaxLength="255" />
           <Property Name="otherMemberId" Type="int" />
           <Property Name="unixdate" Type="int" />
         </EntityType>
@@ -1129,8 +1129,8 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="memberId" Type="Int32" />
-          <Property Name="notificationType" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="notificationText" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="notificationType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="notificationText" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="otherMemberId" Type="Int32" />
           <Property Name="unixdate" Type="Int32" />
           <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Notification" ToRole="Member" />

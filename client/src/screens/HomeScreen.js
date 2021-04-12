@@ -681,7 +681,9 @@ const HomeScreen = (props) => {
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
 
 

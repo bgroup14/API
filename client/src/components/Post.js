@@ -78,7 +78,39 @@ const Post = (props) => {
             );
 
 
+
         }
+
+        let now = Math.floor(Date.now() / 1000)
+        let obj = {
+            memberId: member_id,
+            notificationType: 'Comment',
+            notificationText: comment,
+            otherMemberId: userId,
+            unixdate: now
+        }
+
+        const notificationBody = JSON.stringify(obj)
+
+        console.log("Will add notification with body: " + notificationBody);
+        const addNotificationUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addNotification';
+        // const config = {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }
+        try {
+
+            const res = await axios.post(addNotificationUrl, notificationBody, config);
+            console.log(res.data)
+
+
+        } catch (error) {
+            console.log("error in adding notification to db")
+        }
+
+
+
 
     }
     const askIfWantToDelete = (postId) => {

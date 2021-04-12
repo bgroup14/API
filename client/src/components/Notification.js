@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 
 
-const Meeting = (props) => {
+const Notification = (props) => {
 
 
     // meetingDateLabel": "Apr/12/2021",
@@ -26,9 +26,10 @@ const Meeting = (props) => {
     // const [bold, setBold] = useState(false);
 
 
-    const { otherMemberName, otherMemberId, otherMemberImage, meetingEventTitle,
-        meetingLocationLabel, meetingDateLabel, meetingTimeLabel } = props.meeting;
-    console.log("event title??: " + meetingEventTitle)
+    const { notificationText, notificationType, otherMemberImage, unixdate,
+        otherMemberId, otherMemberName } = props.notification;
+    console.log("notification type?: " + notificationType)
+    console.log("otherMemberName: " + otherMemberName)
     // setBold(false)
     // console.log("bold is set to: " + bold)
 
@@ -69,7 +70,8 @@ const Meeting = (props) => {
                             otherMemberImage,
                     }}
                 />
-                <Icon name="calendar" size={22} color="#000000" style={{ position: 'absolute', marginLeft: windowWidth / 10, marginTop: windowHeight / 16 }} />
+                <Icon name="message1" size={22} color="#000000" style={{ position: 'absolute', marginLeft: windowWidth / 10, marginTop: windowHeight / 16 }} />
+
 
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 60 }}>
                     <TouchableOpacity onPress={() => props.goToOtherUserProfile(otherMemberId)} >
@@ -77,10 +79,14 @@ const Meeting = (props) => {
                         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{otherMemberName}</Text>
                     </TouchableOpacity>
 
+                    {/* Noification type : Comment */}
+
                     <View >
-                        <Text style={{ marginTop: windowHeight / 100 }}>{meetingEventTitle}</Text>
-                        <Text style={{ marginTop: windowHeight / 100 }}>In {meetingLocationLabel}</Text>
-                        <Text style={{ marginTop: windowHeight / 100 }}>{meetingDateLabel} at {meetingTimeLabel}</Text>
+                        <View style={{ flexDirection: 'row' }}>
+
+                            <Text style={{ marginTop: windowHeight / 100, fontWeight: 'bold' }}>Commented on your post: </Text>
+                            <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>"Great idea!" </Text>
+                        </View>
 
                     </View>
                     {/* <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic', fontWeight: lastMessageSenderId != userId && !lastMessageMarkedAsRead ? 'bold' : 'normal' }}>{latstSentence}</Text> */}
@@ -102,18 +108,18 @@ const Meeting = (props) => {
     )
 }
 
-export default Meeting
+export default Notification
 
 const styles = StyleSheet.create({
 
     userContainer: {
-        //flex: 1,
+        // flex: 1,
         flexDirection: 'row',
         //  marginVertical: 1,
         // alignItems: 'flex-start',
         // justifyContent: 'flex-start',
         maxHeight: windowHeight / 10,
         marginVertical: windowHeight / 70,
-        marginBottom: windowHeight / 20,
+        marginBottom: windowHeight / 20
     }
 })
