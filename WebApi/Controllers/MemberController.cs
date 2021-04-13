@@ -745,8 +745,11 @@ namespace WebApi.Controllers
 
 
                 }
+               
 
-                return Request.CreateResponse(HttpStatusCode.OK, notifications);
+                List<NotificationDTO> sortedNotificationList = notifications.OrderByDescending(o => o.unixdate).ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, sortedNotificationList);
 
             }
             catch (Exception)

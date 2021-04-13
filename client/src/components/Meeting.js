@@ -96,7 +96,11 @@ const Meeting = (props) => {
                 {/* <Text style={{ fontStyle: 'italic' }}>{meetingDateLabel} at {meetingTimeLabel}</Text> */}
 
             </View>
-            <Divider color='#e6e6e6' />
+
+            {/* <Divider color='#e6e6e6' /> */}
+            <View style={{ height: windowHeight / 100, backgroundColor: '#f2f2f2' }}>
+
+            </View>
         </View>
 
     )

@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyOverlay from '../components/MyOverlay';
 import { Alert } from 'react-native';
+import AddNotificationToDb from '../components/AddNotificationToDb';
 
 
 
@@ -244,9 +245,11 @@ const ChatWithOtherUser = (props) => {
                 body = `${userName} sent you a meeting invitation`
                 break;
             case "meetingApproved":
-                body = `${userName} accepted your meeting invitation`
+                body = `Accepted your meeting invitation`
                 break;
-
+            case "meetingRejected":
+                body = `Rejected your meeting invitation`
+                break;
             default:
                 break;
         }
@@ -330,6 +333,87 @@ const ChatWithOtherUser = (props) => {
 
             }
             PushFromClient(pushObj)
+
+            let now = Math.floor(Date.now() / 1000)
+            let notificationText = `Accepted your meeting invitation`
+            let obj = {
+                memberId: otherMemberId,
+                notificationType: 'MeetingAnswer',
+                notificationText: notificationText,
+                otherMemberId: userId,
+                unixdate: now
+            }
+
+            AddNotificationToDb(obj)
+
+
+
+        }
+        else if (answer == "Reject") {
+
+
+
+
+            try {
+                const deleteMeetingMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/deleteMeetingMessage/${chatRoomId}`
+                const res = await axios.delete(deleteMeetingMessageUrl);
+
+
+                if (res.status == 200) {
+                    //This will rerender component
+                    setSentNewMessage(!sentNewMessage)
+                    Alert.alert(
+                        "",
+                        "Meeting rejected",
+                        [
+                            {
+                                text: "OK",
+                            }
+                        ],
+                    );
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+
+
+            let pushObj = {
+                functionToRun: "meetingRejected",
+                // chatRoomId: chatRoomId,
+                // otherMemberName: userName,
+                // otherMemberId: userId,
+                // otherMemberImage: userImage
+
+            }
+            PushFromClient(pushObj)
+
+            let now = Math.floor(Date.now() / 1000)
+            let notificationText = `Rejected your meeting invitation`
+            let obj = {
+                memberId: otherMemberId,
+                notificationType: 'MeetingAnswer',
+                notificationText: notificationText,
+                otherMemberId: userId,
+                unixdate: now
+            }
+
+            AddNotificationToDb(obj)
+
+
+
+
+
+
+
+            //DELETE MEETING MSG FROM DB
+
+
+
+
+
+
         }
 
 

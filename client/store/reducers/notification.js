@@ -1,6 +1,6 @@
-import { NEW_MESSAGE, NO_NEW_MESSAGE, NEW_MEETING, NO_NEW_MEETING } from '../actions/types';
+import { NEW_MESSAGE, NO_NEW_MESSAGE, NEW_NOTIFICATION, NO_NEW_NOTIFICATION } from '../actions/types';
 const initialState = {
-    newMeeting: false,
+    newNotification: false,
     receivedMessage: false
 };
 
@@ -22,16 +22,16 @@ function notification(state = initialState, action) {
 
             }
 
-        case NEW_MEETING:
+        case NEW_NOTIFICATION:
             return {
                 ...state,
-                newMeeting: true,
+                newNotification: true,
 
             }
-        case NO_NEW_MEETING:
+        case NO_NEW_NOTIFICATION:
             return {
                 ...state,
-                newMeeting: false,
+                newNotification: false,
 
             }
 

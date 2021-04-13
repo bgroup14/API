@@ -36,6 +36,7 @@ namespace WebApi.Controllers
                         meetingLocationLabel = m.meetingLocationLabel,
                         meetingTimeLabel = m.meetingTimeLabel,
                         otherMemberId = m.secondMemberId == memberId ? m.firstMemberId : m.secondMemberId,
+                        meetingUnixDate = (int)m.meetingUnixDate
 
 
                     }).ToList();
@@ -48,7 +49,9 @@ namespace WebApi.Controllers
                     meetingDetails.otherMemberName = otherMemberName;
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, upcomingMeetings);
+                List<MeetingDTO> sortedMeetingsList = upcomingMeetings.OrderBy(o => o.meetingUnixDate).ToList();
+
+                return Request.CreateResponse(HttpStatusCode.OK, sortedMeetingsList);
             }
             catch (Exception ex)
             {

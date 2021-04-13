@@ -14,7 +14,7 @@ import Meeting from '../components/Meeting';
 import Notification from '../components/Notification';
 import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
-import { NO_NEW_MEETING } from '../../store/actions/types';
+import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
 
 
@@ -26,7 +26,7 @@ const Notifications = (props) => {
     const dispatch = useDispatch();
     const [notifications, setNotifications] = useState([]);
     const [restartScreen, setRestartScreen] = useState(false);
-    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
+    let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
     const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/meeting/getUpcomingMeetings/${userId}`
     const notificationsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getNotifications/${userId}`
@@ -35,7 +35,7 @@ const Notifications = (props) => {
         //  console.log("trying to change redux msg recieved state...")
         // alert(3)
         dispatch({
-            type: NO_NEW_MEETING,
+            type: NO_NEW_NOTIFICATION,
             payload: null
         });
     }
@@ -70,7 +70,7 @@ const Notifications = (props) => {
 
                     const res = await axios.post(notificationsFetchURL);
                     if (isActive) {
-                        console.log("setting notifications...")
+                        console.log("setting notifications......")
                         console.log(res.data)
                         setNotifications(res.data)
                         //setRestartScreen(!restartScreen)
@@ -115,12 +115,12 @@ const Notifications = (props) => {
 
 
 
-
+    let notificationsHeader = notifications.length > 0 ? 'Notifications' : 'You are up to date !'
 
     return (
 
         <KeyboardAvoidingView style={styles.container}  >
-            <View style={styles.inner}>
+            <ScrollView style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
                 <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={85} />
 
@@ -129,7 +129,7 @@ const Notifications = (props) => {
 
                 </View>
 
-                <View style={styles.upcomingMeetingsHeader}><Text>Upcoming Meetings</Text></View>
+                {upcomingMeetings.length > 0 ? <View style={styles.upcomingMeetingsHeader}><Text style={{ fontSize: 16 }}>Upcoming Meetings</Text></View> : null}
                 <View style={styles.upcomingMeetingsContainer} key={restartScreen} >
                     {/* {console.log(chatRooms)} */}
                     {upcomingMeetings.map((meeting) => {
@@ -142,7 +142,7 @@ const Notifications = (props) => {
                     })}
 
                 </View>
-                <View style={styles.notificationsHeader}><Text>Notifications</Text></View>
+                <View style={styles.notificationsHeader}><Text style={{ fontSize: 16 }}>{notificationsHeader}</Text></View>
                 <View style={styles.notificationContainer}>
                     {notifications.map((notification) => {
                         // console.log("notification is: " + notification)
@@ -151,7 +151,7 @@ const Notifications = (props) => {
                         />
                     })}
                 </View>
-            </View>
+            </ScrollView>
 
         </KeyboardAvoidingView>
     )
@@ -243,8 +243,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     notificationsHeader: {
-        marginTop: windowHeight / 35,
-        marginBottom: windowHeight / 40,
+        marginTop: windowHeight / 40,
+        marginBottom: windowHeight / 35,
 
         alignItems: 'center',
     },
