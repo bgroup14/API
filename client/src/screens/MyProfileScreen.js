@@ -188,7 +188,7 @@ const MyProfileScreen = (props) => {
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
-                        containerStyle={{ marginTop: 10 }}
+                        //   containerStyle={{ marginTop: 10 }}
                         rounded
                         source={{
                             uri:
@@ -280,6 +280,8 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 150
+
 
     },
     dotsMenu: {

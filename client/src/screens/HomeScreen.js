@@ -178,6 +178,7 @@ const HomeScreen = (props) => {
                     receivedNewMessage()
                 case "meetingApproved":
                 case "meetingRejected":
+                case "receivedNewComment":
                     newNotification();
                     //FUNCTION THAT WILL MAKE THE BELL RED
                     break;
@@ -827,6 +828,7 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 200
 
     },
     bellIcon: {
@@ -838,7 +840,7 @@ const styles = StyleSheet.create({
         //  flex: 1,
         // position: 'relative',
         // backgroundColor: 'red',
-        marginTop: windowHeight / 20,
+        marginTop: windowHeight / 30,
         flexDirection: 'row',
         //alignItems: 'flex-start',
         //  justifyContent: 'space-around',

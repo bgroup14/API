@@ -122,7 +122,7 @@ const Notifications = (props) => {
         <KeyboardAvoidingView style={styles.container}  >
             <ScrollView style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={85} />
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
 
                 <View style={styles.barContainer}><Text style={styles.barText}>Notifications</Text>
@@ -195,6 +195,8 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 150
+
 
     },
     bellIcon: {
@@ -230,7 +232,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     upcomingMeetingsHeader: {
-        marginTop: windowHeight / 20,
+        marginTop: windowHeight / 25,
         marginBottom: windowHeight / 40,
 
         alignItems: 'center'

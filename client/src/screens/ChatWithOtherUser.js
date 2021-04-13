@@ -523,11 +523,13 @@ const ChatWithOtherUser = (props) => {
             <View style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
                 <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+                <KeyboardAvoidingView>
+                    <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
+                        <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
 
-                <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
-                    <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
+                    </MyOverlay>
+                </KeyboardAvoidingView>
 
-                </MyOverlay>
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
                 <View >
                     <View>
