@@ -469,6 +469,37 @@ namespace WebApi.Controllers
 
 
 
+        [HttpDelete]
+        [Route("deleteMeetingMessage/{chatRoomId}")]
+        public HttpResponseMessage DeleteMeetingMessage(int chatRoomId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+
+                ChatHistory meetingMsgToDelete = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId && x.meetingMsg == true).FirstOrDefault();
+                db.ChatHistories.Remove(meetingMsgToDelete);
+                db.SaveChanges();
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Meeting msg deleted from DB");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+
 
 
         public void Post([FromBody] string value)

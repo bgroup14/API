@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
 import * as Notifications from 'expo-notifications'
 
-import { NEW_MESSAGE, RECEIVED_USER_COORDINATES, NEW_MEETING } from '../../store/actions/types';
+import { NEW_MESSAGE, RECEIVED_USER_COORDINATES, NEW_NOTIFICATION } from '../../store/actions/types';
 import AppLoading from 'expo-app-loading';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -80,7 +80,7 @@ const HomeScreen = (props) => {
     const [myLat, setMyLat] = useState(null);
     const [filterActivated, setFilterACtivated] = useState(false);
 
-    let newMeetingFromRedux = useSelector(state => state.notification.newMeeting);
+    let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
 
 
 
@@ -109,10 +109,10 @@ const HomeScreen = (props) => {
     }
 
 
-    const newMeetingApproved = async () => {
+    const newNotification = async () => {
         //  console.log("trying to change redux msg recieved state...")
         dispatch({
-            type: NEW_MEETING,
+            type: NEW_NOTIFICATION,
             payload: null
         });
     }
@@ -124,7 +124,7 @@ const HomeScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             setCategoryameToSend(null)
-            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newMeetingFromRedux)
+            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newNotificationFromRedux)
             // newMeetingApproved();
             getUserCurrentLocationAndFecthPosts();
             // console.log("token is " + pushNotificationToken)
@@ -177,9 +177,13 @@ const HomeScreen = (props) => {
                 case "receivedNewMeetingInvitation":
                     receivedNewMessage()
                 case "meetingApproved":
-                    newMeetingApproved();
+                case "meetingRejected":
+                    newNotification();
                     //FUNCTION THAT WILL MAKE THE BELL RED
                     break;
+                // case "meetingRejected":
+
+                // break;
                 default:
                     break;
             }
@@ -694,7 +698,7 @@ const HomeScreen = (props) => {
 
                 <View style={styles.barContainer}><Text style={styles.barText} >Feed</Text>
                     {/* {console.log("redux is :::::::::: " + newMeetingFromRedux)} */}
-                    {newMeetingFromRedux ? < Badge
+                    {newNotificationFromRedux ? < Badge
                         status="error"
                         containerStyle={{ position: 'absolute', top: 0, right: -3 }}
                     /> : null}
