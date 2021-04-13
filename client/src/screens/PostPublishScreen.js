@@ -312,15 +312,17 @@ const PostPublishScreen = (props) => {
             </MyOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
-            <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} />
+            {/* <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} /> */}
+            <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
 
-            <View style={styles.barContainer}><Text style={styles.barText}>Publish Post</Text>
+
+            <View style={styles.barContainer}><Text style={styles.barText}>Create Post</Text>
                 <TouchableOpacity onPress={() => resetPost()}>
-                    <Text style={styles.barReset}>Reset</Text>
+                    <Text style={styles.barReset}>POST</Text>
                 </TouchableOpacity>
             </View>
-            <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting} {userFirstName}</Text>
+            <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting}, {userFirstName}</Text>
                 <Text style={{ padding: windowWidth / 30, fontSize: 16 }}>{userGiveOrGet}</Text>
 
 
@@ -528,13 +530,13 @@ const styles = StyleSheet.create({
         height: windowHeight / 10,
     },
     barText: {
-        color: 'black',
+        color: '#fff',
         fontSize: 22,
         fontWeight: 'bold',
         marginTop: 20,
     },
     barReset: {
-        color: 'red',
+        color: '#fff',
         marginTop: windowHeight / 40
     },
     bellIcon: {
@@ -543,7 +545,8 @@ const styles = StyleSheet.create({
     },
     userGreetingContainer: {
         alignItems: 'center',
-        height: windowHeight / 6,
+        marginTop: windowHeight / 50
+        //  height: windowHeight / 6,
 
     },
     userGreetingText: {

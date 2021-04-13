@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 150
         // marginTop: windowHeight / 120
 
     },

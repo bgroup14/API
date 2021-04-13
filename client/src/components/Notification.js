@@ -75,7 +75,7 @@ const Notification = (props) => {
                 setNotificationContent(
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ marginTop: windowHeight / 100, fontWeight: 'bold' }}>Commented on your post: </Text>
-                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>"Great idea!" </Text>
+                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{notificationText} </Text>
                     </View>
 
                 )

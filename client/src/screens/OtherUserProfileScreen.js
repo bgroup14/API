@@ -224,8 +224,8 @@ const OtherUserProfileScreen = (props) => {
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
-                        containerStyle={{ marginTop: windowHeight / 100 }}
-                        rounded
+                        // containerStyle={{ marginTop: windowHeight / 100 }}
+                        // rounded
                         source={{
                             uri:
                                 userImage,
@@ -321,6 +321,8 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 150
+
 
     },
     chatIconContainer: {

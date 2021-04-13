@@ -21,6 +21,7 @@ const Post = (props) => {
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
+    let userName = useSelector(state => state.user.userName);
     let commentsLabel = comments.length > 1 ? 'Comments' : 'Comment';
 
     var postDistance = Math.round(distanceFromMe * 10) / 10
@@ -108,11 +109,95 @@ const Post = (props) => {
         } catch (error) {
             console.log("error in adding notification to db")
         }
+        let pushObj = {
+            functionToRun: "receivedNewComment",
+            // chatRoomId: chatRoomId,
+            // otherMemberName: userName,
+            // otherMemberId: userId,
+            // otherMemberImage: userImage
+
+        }
+        PushFromClient(pushObj)
+
 
 
 
 
     }
+
+
+    const PushFromClient = async (pushObj) => {
+
+        //GET OTHER USER TOKEN ID FROM SERVER
+        const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${member_id}`
+        try {
+            // console.log("getting other memner push id with id: " + otherMemberId)
+            const res = await axios(fetchOtherUserPushNotificationID);
+
+            var otherUserNotificationId = res.data;
+
+
+
+        } catch (error) {
+
+            console.log(error)
+            return null
+        }
+
+        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
+        // var body = comment;
+
+        // switch (pushObj.functionToRun) {
+        //     case "receivedNewComment":
+        //         body = `${userName} sent you a meeting invitation`
+        //         break;
+        //     // case "meetingApproved":
+        //     //     body = `Accepted your meeting invitation`
+        //     //     break;
+        //     // case "meetingRejected":
+        //     //     body = `Rejected your meeting invitation`
+        //     //     break;
+        //     default:
+        //         break;
+        // }
+        // if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
+        //     body = `${userName} sent you a meeting invitation`
+        // }
+
+
+        let push = {
+            to: otherUserNotificationId,
+            // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
+            title: `${userName} commented on your post`,
+            body: comment,
+            badge: 3,
+            data: pushObj,
+
+
+
+        };
+
+        // POST adds a random id to the object sent
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            body: JSON.stringify(push),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json != null) {
+                    console.log(`
+                  returned from server\n
+                  json.data= ${JSON.stringify(json.data)}`);
+
+                } else {
+                    alert('err json');
+                }
+            });
+    }
+
     const askIfWantToDelete = (postId) => {
         Alert.alert(
             "Delete Post",

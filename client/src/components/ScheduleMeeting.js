@@ -4,11 +4,16 @@ import { View, Platform, Text, StyleSheet, TextInput, Alert, TouchableOpacity } 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
 import { faChessKing } from '@fortawesome/free-solid-svg-icons';
 import SetLocationScreen from '../screens/SetLocationScreen';
 import MyOverlay from '../components/MyOverlay';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { KeyboardAvoidingView } from 'react-native';
 
 
 
@@ -214,64 +219,87 @@ const ScheduleMeeting = (props) => {
 
     return (
         <View >
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <View >
                 <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
                     <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
                 </MyOverlay>
                 <Text style={styles.header} >Schedule Meeting</Text>
-                <TextInput onChangeText={(text) => changeEventTilteHandler(text)} maxLength={30} placeholder='Enter event title' style={{
 
-                    padding: windowWidth / 50,
-                    // marginLeft: 50,
-                    borderBottomColor: '#000',
-                    margin: windowWidth / 10,
-                    //  marginRight: 50,
+                <View style={{ alignItems: 'flex-start', marginTop: windowHeight / 20 }}>
+                    <Input
+                        onChangeText={(text) => changeEventTilteHandler(text)}
+                        placeholder='Event title'
 
-                    borderBottomColor: '#000', // Add this to specify bottom border color
-                    borderBottomWidth: 1,
-                    fontSize: 16
+                        containerStyle={{ width: windowWidth / 1.2 }}
 
-                }} />
+                    />
+                    <TouchableOpacity onPress={showDatepicker}   >
+                        <Input
+                            placeholder='Select date'
+                            containerStyle={{ width: windowWidth / 1.1 }}
+                            value={dateLabel}
+                            disabled={true}
+
+                            rightIcon={
+
+                                <Icon
+                                    name='calendar'
+                                    size={24}
+                                    color='black'
+                                />
+                            }
+                            containerStyle={{ width: windowWidth / 1.2 }}
+
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={showTimepicker}   >
+                        <Input
+                            placeholder='Select time'
+                            containerStyle={{ width: windowWidth / 1.1 }}
+                            value={timeLabel}
+                            disabled={true}
+                            // disabledInputStyle={{ color: '#000000' }}
+
+                            rightIcon={
+
+                                <AntDesign
+                                    name='clockcircleo'
+                                    size={24}
+                                    color='black'
+                                />
+                            }
+                            containerStyle={{ width: windowWidth / 1.2 }}
+
+                        />
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity onPress={showTimepicker} onPress={() => setIsVisibleLocation(true)}  >
+                        <Input
+                            placeholder='Select location'
+                            containerStyle={{ width: windowWidth / 1.1 }}
+                            value={meetingLocationLabel}
+                            disabled={true}
+                            // disabledInputStyle={{ color: '#000000' }}
+
+                            rightIcon={
+
+                                <Entypo
+                                    name='location'
+                                    size={26}
+                                    color='black'
+                                />
+                            }
+                            containerStyle={{ width: windowWidth / 1.2 }}
+
+                        />
+                    </TouchableOpacity>
+
+                </View>
+
 
             </View>
-            <View style={styles.dateContainer}>
-                {dateLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={showDatepicker} title="Select date" style={{ justifyContent: 'center' }} /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Date: {dateLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change Date" onPress={showDatepicker} /></View>}
-                {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
-            </View>
-            <View style={styles.dateContainer}>
-                {timeLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={showTimepicker} title="Select hour" /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Hour: {timeLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change Hour" onPress={showTimepicker} /></View>}
-                {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
-            </View>
-
-            <View style={styles.dateContainer}>
-                {meetingLocationLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={() => setIsVisibleLocation(true)} title="Select location" /> : <View><Text style={{ fontSize: 16, marginBottom: 10 }} >Selected Location: {meetingLocationLabel}</Text><Button buttonStyle={styles.selectDateBtn} title="Change location" onPress={() => setIsVisibleLocation(true)} /></View>}
-                {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
-            </View>
-
-
-
-            {/* <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
-            {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
-                <TextInput
-                    textAlign="center"
-                    style={styles.postBtnText}
-                    editable={false}
-                    value='Select' />
-            </TouchableOpacity> :
-                <TouchableOpacity onPress={() => setIsVisibleLocation(true)}>
-                    <TextInput
-                        textAlign="center"
-                        style={styles.postBtnText}
-                        editable={false}
-                        value={locationLabel} />
-
-                </TouchableOpacity>} */}
-
-            <View>
-
-
-            </View>
-
 
 
 
@@ -339,10 +367,11 @@ const styles = StyleSheet.create({
 
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 8
+        marginTop: windowHeight / 30
     },
     header: {
-        fontSize: 18
+        fontSize: 18,
+        marginTop: windowHeight / 50
     }
 
 

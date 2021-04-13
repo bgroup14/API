@@ -159,8 +159,8 @@ const SearchScreen = (props) => {
     }
 
 
-    let postsHeader = posts.length > 0 ? <Text style={styles.usersText}>Posts:</Text> : null
-    let usersHeader = users.length > 0 ? <Text style={styles.usersText}>Users:</Text> : null
+    let postsHeader = posts.length > 0 && users.length > 0 ? <Text style={styles.usersText}>Posts:</Text> : null
+    let usersHeader = users.length > 0 && posts.length > 0 ? <Text style={styles.usersText}>Users:</Text> : null
 
 
 
@@ -186,35 +186,50 @@ const SearchScreen = (props) => {
 
             <SearchBar
 
-                placeholder="Search posts and users..."
+                placeholder="Search users and posts..."
                 onChangeText={(text) => onChangeSearchText(text)}
                 value={searchWord}
                 containerStyle={{ backgroundColor: '#fff' }}
-                //  style={{ backgroundColor: '#fff' }}
+                // style={{ backgroundColor: 'red' }}
                 inputContainerStyle={{ backgroundColor: '#fff' }}
 
             />
 
             <View style={styles.inner}>
-                {postsHeader}
-                {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 1.2 : windowHeight / 30 }}>
-                    {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-
-                    })}
-                </ScrollView> : null}
 
 
-                {usersHeader}
                 <ScrollView  >
-
+                    {usersHeader}
 
                     {users.map((user) => {
                         return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 
                     })}
+                    {
+                        users.length > 0 ?
+                            <View style={{ marginTop: 40 }}>
+
+                            </View> : null
+                    }
+                    {postsHeader}
+
+
+                    {posts.map((post) => {
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
+                    })}
                 </ScrollView>
+                {/* {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 1.2 : windowHeight / 30 }}>
+                    {posts.map((post) => {
+                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+
+                    })}
+                </ScrollView> : null} */}
+
+
+
 
 
 
@@ -260,6 +275,7 @@ const styles = StyleSheet.create({
         paddingLeft: windowWidth / 100,
         paddingRight: windowWidth / 100,
 
+
     },
     barText: {
         color: "#ffffff",
@@ -267,7 +283,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         // marginTop: windowHeight / 120
 
-        // marginTop: windowHeight / 120
+        marginTop: windowHeight / 150
+
 
 
     },
@@ -294,7 +311,12 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         //  padding: 10
     },
-    usersText: { textDecorationLine: 'underline', marginTop: windowHeight / 70, marginBottom: windowHeight / 100 },
+    usersText: {
+        textDecorationLine: 'underline',
+        marginTop: windowHeight / 70,
+        marginBottom: windowHeight / 100,
+        fontSize: 18
+    },
     usernameText: {
         fontSize: 24
     },
