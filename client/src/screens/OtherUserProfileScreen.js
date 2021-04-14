@@ -225,7 +225,7 @@ const OtherUserProfileScreen = (props) => {
                     <Avatar
                         size='xlarge'
                         // containerStyle={{ marginTop: windowHeight / 100 }}
-                        // rounded
+                        rounded
                         source={{
                             uri:
                                 userImage,

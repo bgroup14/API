@@ -332,7 +332,7 @@ namespace WebApi.Controllers
                     newMessage.meetingTimeLabel = message.meetingTimeLabel;
                     newMessage.meetingUnixDate = message.meetingUnixDate;
                     newMessage.meetingLocationLabel = message.meetingLocationLabel;
-                    newMessage.text = "Meeting MSG";
+                    newMessage.text = "Meeting invitation";
 
 
 

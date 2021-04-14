@@ -305,7 +305,8 @@ const PostPublishScreen = (props) => {
     return (
         <View style={styles.container}>
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
-                <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
+                <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)}
+                    closeDatePicker={() => setIsvisble(false)} />
             </MyOverlay>
             <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
                 <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
@@ -318,7 +319,7 @@ const PostPublishScreen = (props) => {
 
 
             <View style={styles.barContainer}><Text style={styles.barText}>Create Post</Text>
-                <TouchableOpacity onPress={() => resetPost()}>
+                <TouchableOpacity onPress={() => publishPost()}>
                     <Text style={styles.barReset}>POST</Text>
                 </TouchableOpacity>
             </View>
@@ -466,11 +467,11 @@ const PostPublishScreen = (props) => {
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ marginHorizontal: windowWidth / 9 }}>
-                            <Button title="NO" type='solid' onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "green", borderRadius: 2 } : { fontSize: 10, borderRadius: 2 }} />
+                            <Button title="NO" type={specificDate ? 'clear' : 'solid'} onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "red", borderRadius: 2 } : { fontSize: 10, borderRadius: 2 }} />
 
                         </View>
 
-                        <Button title="YES" type='solid' onPress={() => setIsvisble(true)} buttonStyle={{ borderRadius: 2 }} />
+                        <Button title="YES" type='clear' onPress={() => setIsvisble(true)} buttonStyle={{ borderRadius: 2 }} />
                     </View>
 
 
@@ -494,7 +495,7 @@ const PostPublishScreen = (props) => {
                 }
 
 
-                <View style={styles.btnContainer}>
+                {/* <View style={styles.btnContainer}>
 
 
                     <FormButton
@@ -502,7 +503,7 @@ const PostPublishScreen = (props) => {
                         onPress={() => publishPost()}
                     />
 
-                </View>
+                </View> */}
 
             </View>
         </View >
@@ -561,11 +562,13 @@ const styles = StyleSheet.create({
     txtAreaContainer:
     {
         alignItems: 'center',
-        height: windowHeight / 5,
+        // height: windowHeight / 5,
+        marginTop: windowHeight / 100
     },
 
     postOptionsContainer: {
-        height: windowHeight / 2.4,
+        // height: windowHeight / 2.4,
+        marginTop: windowHeight / 20
     },
     optionContainer: {
         height: windowHeight / 13,

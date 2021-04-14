@@ -15,6 +15,7 @@ namespace WebApi.DTO
         public int unixdate;
         public string otherMemberImage;
         public string otherMemberName;
+        public string notificationDate;
 
 
     }

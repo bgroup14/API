@@ -744,8 +744,56 @@ namespace WebApi.Controllers
                     notification.otherMemberImage = memberImage;
 
 
+
+
+
+
+
+                    int lastUnixDate = notification.unixdate;
+
+                    DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                    dtDateTime = dtDateTime.AddSeconds(lastUnixDate).ToLocalTime();
+
+                    //Checking if last notification was sent over the last 24 hrs
+                    string notificationDate;
+                    DateTime now = DateTime.Now;
+                    if (dtDateTime > now.AddHours(-24) && dtDateTime <= now)
+                    {
+                        decimal hours = Math.Floor((decimal)(now - dtDateTime).TotalHours);
+                        int hoursDiffInt = (int)hours;
+                        if (hoursDiffInt == 0)
+                        {
+                            notificationDate = (now - dtDateTime).Minutes.ToString();
+                            if (notificationDate == "0")
+                            {
+                                notificationDate = "Now";
+                            }
+                            else
+                            {
+                                notificationDate += " min ago";
+                            }
+
+                        }
+                        else
+                        {
+
+                            notificationDate = $"{hoursDiffInt}h ago";
+                        }
+
+                    }
+                    else
+                    {
+                        string year = dtDateTime.Year.ToString();
+                        string month = dtDateTime.Month.ToString();
+                        string day = dtDateTime.Day.ToString();
+                        notificationDate = $"{day}/{month}/{year}";
+
+                    };
+
+                    notification.notificationDate = notificationDate;
+
                 }
-               
+
 
                 List<NotificationDTO> sortedNotificationList = notifications.OrderByDescending(o => o.unixdate).ToList();
 

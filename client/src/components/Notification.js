@@ -29,7 +29,7 @@ const Notification = (props) => {
     // const [bold, setBold] = useState(false);
 
 
-    const { notificationText, notificationType, otherMemberImage, unixdate,
+    const { notificationText, notificationType, otherMemberImage, unixdate, notificationDate,
         otherMemberId, otherMemberName } = props.notification;
     // console.log("notification type?: " + notificationType)
     // console.log("otherMemberName: " + otherMemberName)
@@ -122,7 +122,7 @@ const Notification = (props) => {
 
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 60 }}>
                     <View style={styles.dateLabel}>
-                        <Text>{dateLabel}</Text>
+                        <Text>{notificationDate}</Text>
                     </View>
                     <TouchableOpacity onPress={() => props.goToOtherUserProfile(otherMemberId)} >
 
