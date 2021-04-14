@@ -257,6 +257,7 @@ const ProfileSetup = (props) => {
       testID="dateTimePicker"
       value={date}
       mode={mode}
+
       is24Hour={true}
       display="default"
       onChange={onChangeDate}

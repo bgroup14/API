@@ -4,7 +4,7 @@ import { View, Platform, Text, StyleSheet, TextInput, Alert, TouchableOpacity } 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, Divider } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
 import { faChessKing } from '@fortawesome/free-solid-svg-icons';
 import SetLocationScreen from '../screens/SetLocationScreen';
@@ -324,10 +324,19 @@ const ScheduleMeeting = (props) => {
                 minimumDate={new Date()}
             /> : <View />}
 
+            <Divider style={{ marginBottom: windowHeight / 100, marginTop: windowHeight / 40 }} />
 
             <View style={styles.saveBtnContainer}>
-                {choseDate ? <Button type='clear' title="Send meeting invitation" onPress={() => sendDateToParent()} /> : null}
+
+                <View style={{ marginLeft: 30 }}>
+                    <Button type='clear' title="SEND" onPress={() => sendDateToParent()} />
+
+                </View>
+                <Button type='clear' title="CANCEL" onPress={() => props.closeDatePicker()} />
             </View>
+            {/* <View style={styles.saveBtnContainer}>
+                {choseDate ? <Button type='clear' title="Send meeting invitation" onPress={() => sendDateToParent()} /> : null}
+            </View> */}
         </View>
     );
 };
@@ -367,7 +376,17 @@ const styles = StyleSheet.create({
 
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 30
+        // marginTop: windowHeight / 30,
+        alignItems: 'stretch',
+        // marginRight: windowWidth / 10,
+        // flexDirection: 'row-reverse',
+        // // justifyContent: 'flex-start',
+        // // marginTop: windowHeight / 40,
+
+        // // marginRight: 50,
+        width: '95%',
+
+        flexDirection: 'row-reverse',
     },
     header: {
         fontSize: 18,
