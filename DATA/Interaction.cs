@@ -22,6 +22,7 @@ namespace DATA
         public string interactionType { get; set; }
         public Nullable<int> strength { get; set; }
         public Nullable<int> unixdate { get; set; }
+        public string categoryName { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual Member Member { get; set; }

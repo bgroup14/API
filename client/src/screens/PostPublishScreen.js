@@ -282,6 +282,7 @@ const PostPublishScreen = (props) => {
 
                 ],
             );
+            updateCategoryStrength();
 
             // console.log("res data (payload is:)")
 
@@ -298,6 +299,26 @@ const PostPublishScreen = (props) => {
 
 
         }
+
+    }
+
+    const updateCategoryStrength = async () => {
+
+        try {
+            const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${postCategory}`
+            //if this will fail (status !=200 ) it will catch the error in the error block
+            const res = await axios.patch(postInteractionUrl);
+            console.log(res.data);
+
+
+
+        } catch (err) {
+
+            console.log(err)
+
+
+        }
+
 
     }
 
