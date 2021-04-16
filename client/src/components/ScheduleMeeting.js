@@ -332,7 +332,7 @@ const ScheduleMeeting = (props) => {
                     <Button type='clear' title="SEND" onPress={() => sendDateToParent()} />
 
                 </View>
-                <Button type='clear' title="CANCEL" onPress={() => props.closeDatePicker()} />
+                <Button type='clear' title="CANCEL" onPress={() => props.closeMeeting()} />
             </View>
             {/* <View style={styles.saveBtnContainer}>
                 {choseDate ? <Button type='clear' title="Send meeting invitation" onPress={() => sendDateToParent()} /> : null}

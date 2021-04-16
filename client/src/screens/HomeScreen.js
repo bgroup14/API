@@ -332,7 +332,7 @@ const HomeScreen = (props) => {
             }
 
             const res = await axios.post(postsFetchURL, body, config);
-
+            console.log(res.data)
             setPosts(res.data)
 
         } catch (err) {
@@ -656,28 +656,28 @@ const HomeScreen = (props) => {
 
     }
 
-    if (!isReady) {
-        return (
-            <View>
+    // if (!isReady) {
+    //     return (
+    //         <View>
 
-                <AppLoading
-                    startAsync={getUserCurrentLocationAndFecthPosts}
-                    onFinish={() => console.log("finished app loading")}
-                    // onFinish={() => setIsReady(true)}
-                    // onFinish={() => setTimeout(() => {
-                    //     setIsReady(true);
-                    //     setSpinner(false)
-                    // }, 500)}
-                    onError={console.warn}
-                />
-                <Spinner
-                    visible={spinner}
-                    textContent={'Loading...'}
-                    textStyle={styles.spinnerTextStyle}
-                />
-            </View>
-        );
-    }
+    //             <AppLoading
+    //                 startAsync={getUserCurrentLocationAndFecthPosts}
+    //                 onFinish={() => console.log("finished app loading")}
+    //                 // onFinish={() => setIsReady(true)}
+    //                 // onFinish={() => setTimeout(() => {
+    //                 //     setIsReady(true);
+    //                 //     setSpinner(false)
+    //                 // }, 500)}
+    //                 onError={console.warn}
+    //             />
+    //             <Spinner
+    //                 visible={spinner}
+    //                 textContent={'Loading...'}
+    //                 textStyle={styles.spinnerTextStyle}
+    //             />
+    //         </View>
+    //     );
+    // }
 
 
 

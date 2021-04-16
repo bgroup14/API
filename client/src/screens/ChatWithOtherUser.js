@@ -525,7 +525,7 @@ const ChatWithOtherUser = (props) => {
                 <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
                 <KeyboardAvoidingView>
                     <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
-                        <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
+                        <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} closeMeeting={() => setIsvisble(false)} />
 
                     </MyOverlay>
                 </KeyboardAvoidingView>

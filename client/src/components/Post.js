@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const Post = (props) => {
     const { postId, text, cityName, recurring, dateLabel, timeOfDay,
-        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe } = props.post;
+        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category } = props.post;
     let currentMemberId = props.currentMemberId;
     //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
@@ -65,6 +65,8 @@ const Post = (props) => {
                 ],
                 setShowCommentInput(false)
             );
+
+            updateCategoryStrength();
 
 
         } catch (err) {
@@ -255,6 +257,35 @@ const Post = (props) => {
         //AT THE END ACTIVATE PROPS.refreshPage
     }
 
+    const updateCategoryStrength = async () => {
+
+        try {
+            const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${category}`
+            //if this will fail (status !=200 ) it will catch the error in the error block
+            const res = await axios.patch(postInteractionUrl);
+            console.log(res.data);
+
+
+
+        } catch (err) {
+
+            console.log(err)
+
+
+        }
+
+
+    }
+
+    const goToChat = () => {
+        props.goToChatWithUser(currentMemberId, member_id);
+        updateCategoryStrength();
+    }
+
+    const goToOtherUserProfile = () => {
+        props.goToOtherUserProfile(member_id);
+        updateCategoryStrength();
+    }
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.postContainer}>
@@ -273,7 +304,7 @@ const Post = (props) => {
                         {/* <TouchableOpacity onPress={() => props.navigation.navigate('OtherUserProfileScreen', {
                             userId: member_id
                         })}> */}
-                        <TouchableOpacity onPress={() => props.goToOtherUserProfile(member_id)}>
+                        <TouchableOpacity onPress={() => goToOtherUserProfile()}>
                             <Text style={styles.userName}>{postCreatorName}</Text>
 
                         </TouchableOpacity>
@@ -321,7 +352,7 @@ const Post = (props) => {
                     <Text style={styles.btnText}>Like</Text>
                 </TouchableOpacity > */}
 
-                {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => props.goToChatWithUser(currentMemberId, member_id)} style={styles.postBtn}>
+                {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => goToChat()} style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
                 </TouchableOpacity >}

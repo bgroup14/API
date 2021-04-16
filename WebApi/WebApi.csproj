@@ -226,6 +226,7 @@
     <Compile Include="DTO\MeetingDTO.cs" />
     <Compile Include="DTO\NotificationDTO.cs" />
     <Compile Include="DTO\NotificationIdDTO.cs" />
+    <Compile Include="DTO\PostInteractionDTO.cs" />
     <Compile Include="DTO\ReviewsDTO.cs" />
     <Compile Include="DTO\ChatHistoryDTO.cs" />
     <Compile Include="DTO\LikeDTO.cs" />
