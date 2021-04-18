@@ -1,5 +1,5 @@
 import { text } from '@fortawesome/fontawesome-svg-core';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { KeyboardAvoidingView, Alert } from 'react-native';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import { Avatar } from 'react-native-elements';
@@ -10,10 +10,38 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { Toast } from "native-base";
+import * as Font from "expo-font";
+import AppLoading from 'expo-app-loading';
+
+
+import {
+    useFonts,
+    Ubuntu_400Regular,
+    Ubuntu_700Bold
+
+} from '@expo-google-fonts/ubuntu';
+
+
+import {
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_700Bold
+
+} from '@expo-google-fonts/inter'
 
 
 
 const Post = (props) => {
+    let [fontsLoaded] = useFonts({
+        Ubuntu_400Regular,
+        Ubuntu_700Bold,
+        Inter_200ExtraLight,
+        Inter_300Light,
+        Inter_400Regular,
+        Inter_700Bold
+    });
     const { postId, text, cityName, recurring, dateLabel, timeOfDay,
         postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category } = props.post;
     let currentMemberId = props.currentMemberId;
@@ -28,7 +56,19 @@ const Post = (props) => {
     let postDistanceKM = cityName != "Zoom Meeting" ? `(${postDistance} km)` : '';
 
 
+    useEffect(() => {
 
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+            loadFonts();
+        }
+
+    }, [])
 
 
 
@@ -56,15 +96,24 @@ const Post = (props) => {
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishcomment", body, config);
             //    console.log(res);
-            Alert.alert(
-                "Comment Publish",
-                "Comment published successfully. ",
-                [
-                    { text: "OK", onPress: () => props.refreshPage() }
 
-                ],
-                setShowCommentInput(false)
-            );
+            Toast.show({
+                text: "Comment published successfully!",
+                // buttonText: "Okay",
+                type: "success",
+                duration: 4000
+            });
+            props.refreshPage();
+            setShowCommentInput(false)
+            // Alert.alert(
+            //     "Comment Publish",
+            //     "Comment published successfully. ",
+            //     [
+            //         { text: "OK", onPress: () => props.refreshPage() }
+
+            //     ],
+            //     setShowCommentInput(false)
+            // );
 
             updateCategoryStrength();
 
@@ -170,7 +219,7 @@ const Post = (props) => {
         let push = {
             to: otherUserNotificationId,
             // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
-            title: `${userName} commented on your post`,
+            title: `${userName}commented on your post`,
             body: comment,
             badge: 3,
             data: pushObj,
@@ -222,14 +271,22 @@ const Post = (props) => {
         try {
 
             const res = await axios.delete(`https://proj.ruppin.ac.il/bgroup14/prod/api/post/deletepost/${postId}`)
-            Alert.alert(
-                "Post Deleted!",
-                "Post deleted successfully.",
-                [
 
-                    { text: "OK" }
-                ],
-            );
+            Toast.show({
+                text: "Post deleted successfully!",
+                // buttonText: "Okay",
+                type: "success",
+                duration: 4000
+            });
+
+            // Alert.alert(
+            //     "Post Deleted!",
+            //     "Post deleted successfully.",
+            //     [
+
+            //         { text: "OK" }
+            //     ],
+            // );
             props.refreshPage();
 
 
@@ -286,6 +343,11 @@ const Post = (props) => {
         props.goToOtherUserProfile(member_id);
         updateCategoryStrength();
     }
+
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.postContainer}>
@@ -403,7 +465,7 @@ const styles = StyleSheet.create({
         marginLeft: windowWidth / 20,
         marginTop: windowHeight / 80,
         maxWidth: windowWidth / 1.8,
-        marginBottom: windowHeight / 20
+        marginBottom: windowHeight / 60
 
 
         // alignItems: 'center'
@@ -417,19 +479,23 @@ const styles = StyleSheet.create({
     userName:
     {
         fontSize: 16,
-        fontWeight: 'bold'
+        // fontWeight: 'bold',
+        fontFamily: 'Inter_700Bold'
     },
     postText: {
         // fontSize: 14
-        marginVertical: 5
+        marginVertical: 5,
+        fontFamily: 'Inter_400Regular'
     },
     postDateText: {
-        // color: 'red'
+        // color: 'blue',
         marginVertical: windowHeight / 100,
         color: 'black'
     },
     postCityName: {
-        color: 'blue'
+        color: 'blue',
+        fontFamily: 'Ubuntu_400Regular'
+
 
     },
     postBtnContainer: {

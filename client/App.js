@@ -11,6 +11,9 @@ import notificationReducer from './store/reducers/notification';
 import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreens from './src/stacks/AppStackScreens';
 
+import { Root } from "native-base";
+
+
 
 
 
@@ -31,7 +34,9 @@ export default function App() {
 
     <Provider store={store}>
       <NavigationContainer  >
-        <AppStackScreens />
+        <Root>
+          <AppStackScreens />
+        </Root>
       </NavigationContainer>
     </Provider>
   );

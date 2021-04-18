@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Post from '../components/Post';
@@ -17,6 +17,7 @@ import { SearchBar } from 'react-native-elements';
 import User from '../components/User';
 import { Fragment } from 'react';
 
+import { Appbar, Searchbar } from 'react-native-paper';
 
 const SearchScreen = (props) => {
     const [searchWord, setSearchWord] = useState("");
@@ -29,6 +30,8 @@ const SearchScreen = (props) => {
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
     const [userHobbies, setUserHobbies] = useState("");
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const onChangeSearch = query => setSearchQuery(query);
 
 
     const [posts, setPosts] = useState([]);
@@ -50,11 +53,12 @@ const SearchScreen = (props) => {
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
+    const [hasBeenFetched, setHasBeenFetched] = useState(false);
     // const [userPosts, setUserPosts] = useState([]);
 
     useEffect(() => {
         // fetchUserDetails()
-        if (searchWord.length > 0) {
+        if (searchQuery.length > 0) {
             fetchUserPosts()
             fetchUsers()
 
@@ -73,27 +77,30 @@ const SearchScreen = (props) => {
         }
 
 
-    }, [commentsToShow, searchWord])
+    }, [commentsToShow, searchQuery])
 
 
 
     useFocusEffect(
         React.useCallback(() => {
             setSearchWord("")
+            setSearchQuery('')
             // fetchPosts()
             // fetchUserDetails()
             // fetchUserPosts()
             setNewComment(false)
 
 
-        }, [newComment])
+        }, [])
     )
 
     const fetchUserPosts = async () => {
         //console.log("fetching posts...")
+        setHasBeenFetched(false)
         try {
-            const res = await axios(`${postsFetchURL}${searchWord}`);
+            const res = await axios(`${postsFetchURL}${searchQuery}`);
             setPosts(res.data);
+            setHasBeenFetched(true)
 
         } catch (error) {
             console.log(error)
@@ -104,7 +111,7 @@ const SearchScreen = (props) => {
     const fetchUsers = async () => {
         //  console.log("fetching users...")
         try {
-            const res = await axios(`${usersFetchURL}${searchWord}`);
+            const res = await axios(`${usersFetchURL}${searchQuery}`);
             // const res = await axios(`https://proj.ruppin.ac.il/bgroup14/prod/api/member/GetMembersBySearchWord/messi`);
             //   console.log(res.data)
             setUsers(res.data);
@@ -170,77 +177,67 @@ const SearchScreen = (props) => {
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
-            <View style={{ padding: windowHeight / 45 }}>
-                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
+
+                <Appbar.Content title="Search" />
+                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+            {/* <View style={{ padding: windowHeight / 45 }}> */}
+            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
                 <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
                 <View style={styles.barContainer}>
 
                     <Text style={styles.barText}>Search</Text>
 
-                </View>
-            </View>
+                </View> */}
+            {/* </View> */}
 
 
 
-
-            <SearchBar
-
-                placeholder="Search users and posts..."
-                onChangeText={(text) => onChangeSearchText(text)}
-                value={searchWord}
-                containerStyle={{ backgroundColor: '#fff' }}
-                // style={{ backgroundColor: 'red' }}
-                inputContainerStyle={{ backgroundColor: '#fff' }}
-
+            <Searchbar
+                placeholder="Search users and posts"
+                onChangeText={onChangeSearch}
+                value={searchQuery}
             />
+
+
+
 
             <View style={styles.inner}>
 
+                {users.length == 0 && posts.length == 0 && searchQuery != '' && searchQuery.length > 1 && hasBeenFetched ?
 
-                <ScrollView  >
-                    {usersHeader}
-
-                    {users.map((user) => {
-                        return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-
-                    })}
-                    {
-                        users.length > 0 ?
-                            <View style={{ marginTop: 40 }}>
-
-                            </View> : null
-                    }
-                    {postsHeader}
-
-
-                    {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-
-                    })}
-                </ScrollView>
-                {/* {posts.length > 0 ? <ScrollView style={{ height: posts.length > 1 ? windowHeight / 1.2 : windowHeight / 30 }}>
-                    {posts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-
-                    })}
-                </ScrollView> : null} */}
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={require('../../assets/search.png')}
+                            style={styles.logo}
+                        />
+                        <Text>Sorry, we didn't find any results</Text>
+                        <Text>matching this search.</Text>
+                    </View> :
+                    <ScrollView  >
+                        {usersHeader}
+                        {users.map((user) => {
+                            return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                        })}
+                        {
+                            users.length > 0 ?
+                                <View style={{ marginTop: 40 }}>
+                                </View> : null
+                        }
+                        {postsHeader}
+                        {posts.map((post) => {
+                            return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
+                                goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+                        })}
+                    </ScrollView>
+                }
 
 
 
 
-
-
-                <ScrollView contentContainerStyle={styles.userPostsContainer}>
-                    {/* {userPosts.map((post) => {
-                        return <Post post={post} key={post.postId} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
-                            goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
-                        // return <Post post={post} key={post.postId} currentMemberId={userId} />
-                        // return <Post text={post.text} cityName={post.cityName} />
-                    })} */}
-                </ScrollView>
 
 
             </View>
@@ -329,7 +326,19 @@ const styles = StyleSheet.create({
         //marginTop: 0,
         alignItems: 'stretch',
         //width: '100%'
-    }
+    },
+    logo: {
+        height: 100,
+        width: 100,
+        // marginBottom: windowHeight / 26.92121,
+    },
+    logoContainer: {
+        marginTop: windowHeight / 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        //     marginBottom: windowHeight / 80
+
+    },
 
 
 

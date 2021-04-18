@@ -23,6 +23,7 @@ function notification(state = initialState, action) {
             }
 
         case NEW_NOTIFICATION:
+            console.log("in the notification reducer with new notifiation dispeched")
             return {
                 ...state,
                 newNotification: true,

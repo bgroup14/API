@@ -16,6 +16,7 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 import AppLoading from 'expo-app-loading';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Divider } from 'react-native-elements';
+import { Appbar } from 'react-native-paper';
 
 
 
@@ -203,13 +204,20 @@ const OtherUserProfileScreen = (props) => {
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
-            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-            <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
-            <View style={styles.barContainer}>
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
+
+                <Appbar.Content title={userName} />
+                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+            {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
+
+            {/* <View style={styles.barContainer}>
 
                 <Text style={styles.barText}>{userName}</Text>
-            </View>
+            </View> */}
 
             <ScrollView style={styles.inner}>
 
@@ -247,15 +255,15 @@ const OtherUserProfileScreen = (props) => {
                         <Text style={{ fontSize: 16, marginHorizontal: 5, fontStyle: 'italic' }}> {userCity}</Text>
                         {/* <Text style={{ fontSize: 16 }}>{userCity}</Text> */}
                     </View>
-
-                    <View style={{ flexDirection: 'row', marginTop: windowHeight / 70, maxWidth: windowWidth / 1.5 }}>
-                        <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>"{userBio}"</Text>
-
-                    </View>
                     {userHobbies.length > 0 ? <View style={{ flexDirection: 'row', marginTop: windowHeight / 70 }}>
                         <Text style={{ fontWeight: 'bold' }} >Hobbies: </Text><Text>{userHobbies}</Text>
 
                     </View> : null}
+                    <View style={{ flexDirection: 'row', marginTop: windowHeight / 70, maxWidth: windowWidth / 1.5 }}>
+                        <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>"{userBio}"</Text>
+
+                    </View>
+
 
 
 

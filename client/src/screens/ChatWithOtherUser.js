@@ -242,7 +242,7 @@ const ChatWithOtherUser = (props) => {
 
         switch (pushObj.functionToRun) {
             case "receivedNewMeetingInvitation":
-                body = `${userName} sent you a meeting invitation`
+                body = `${userName}sent you meeting invitation`
                 break;
             case "meetingApproved":
                 body = `Accepted your meeting invitation`
@@ -261,7 +261,7 @@ const ChatWithOtherUser = (props) => {
         let push = {
             to: otherUserNotificationId,
             // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
-            title: otherMemberName,
+            title: userName,
             body: body,
             badge: 3,
             data: pushObj,
@@ -302,6 +302,7 @@ const ChatWithOtherUser = (props) => {
             try {
                 const createMeetingUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/createMeeting/${chatRoomId}`
                 const res = await axios.post(createMeetingUrl);
+
                 // console.log(res.data)
                 // console.log(res.status)
                 // console.log(res.status == 200)
@@ -310,8 +311,8 @@ const ChatWithOtherUser = (props) => {
                     //This will rerender component
                     setSentNewMessage(!sentNewMessage)
                     Alert.alert(
-                        "",
-                        "Meeting created. You can watch your upcoming meetings in the notifications screen",
+                        "Meeting created",
+                        "You can watch your upcoming meetings in the notifications screen",
                         [
                             {
                                 text: "OK",
@@ -319,6 +320,15 @@ const ChatWithOtherUser = (props) => {
                         ],
                     );
                 }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+            try {
+                const deleteMeetingMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/deleteMeetingMessage/${chatRoomId}`
+                const res = await axios.delete(deleteMeetingMessageUrl);
+
 
             } catch (error) {
                 console.log(error)
@@ -332,6 +342,7 @@ const ChatWithOtherUser = (props) => {
                 // otherMemberImage: userImage
 
             }
+
             PushFromClient(pushObj)
 
             let now = Math.floor(Date.now() / 1000)
