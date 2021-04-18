@@ -19,6 +19,7 @@ import { Fragment } from 'react';
 
 
 
+
 //here we will have to chech from redux if user is logged in - if he is logged in we well show the mainStackScreens - else we show the auth screens
 
 //
@@ -34,7 +35,6 @@ const AppStackScreens = () => {
         //         <AppStack.Screen name="Main" component={MainStackScreens} />
         //         : <AppStack.Screen name="Auth" component={AuthStackScreens} />}
         // </AppStack.Navigator>
-
         <AppStack.Navigator headerMode={isLogged ? 'none' : 'none'}>
             {isLogged ? <Fragment>
                 <AppStack.Screen name="Main" component={MainStackScreens} />

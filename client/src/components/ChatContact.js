@@ -50,7 +50,7 @@ const ChatContact = (props) => {
 
                 <Avatar
 
-                    size='large'
+                    size='medium'
                     containerStyle={{ marginTop: 10 }}
                     rounded
                     source={{

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { KeyboardAvoidingView } from 'react-native';
@@ -16,7 +16,7 @@ import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
 import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { Appbar, Title } from 'react-native-paper';
 
 
 
@@ -25,6 +25,7 @@ const Notifications = (props) => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const dispatch = useDispatch();
     const [notifications, setNotifications] = useState([]);
+    const [wasFetched, setWasFetched] = useState(false);
     const [restartScreen, setRestartScreen] = useState(false);
     let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
@@ -76,6 +77,7 @@ const Notifications = (props) => {
                         //setRestartScreen(!restartScreen)
                         // setUpcomingMeetings(res.data);
                     }
+                    setWasFetched(true)
 
                 } catch (error) {
                     console.log(error)
@@ -115,21 +117,41 @@ const Notifications = (props) => {
 
 
 
-    let notificationsHeader = notifications.length > 0 ? 'Notifications' : 'You are up to date !'
+    let notificationsHeader = notifications.length > 0 ? 'Notifications' : ""
+
+
 
     return (
 
         <KeyboardAvoidingView style={styles.container}  >
+
+
+            <Appbar.Header style={{ backgroundColor: '#3b5998' }} >
+                <Appbar.BackAction onPress={() => props.navigation.navigate('Home')} />
+
+                <Appbar.Content title="Notifications" />
+
+                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+            {upcomingMeetings.length == 0 && notifications.length == 0 && wasFetched ?
+                <View style={styles.logoContainer}>
+                    <Image
+                        source={require('../../assets/bell.png')}
+                        style={styles.logo}
+                    />
+                    <Text style={{ fontSize: 20 }}>No notifications.</Text>
+                </View> : null}
             <ScrollView style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
 
                 <View style={styles.barContainer}><Text style={styles.barText}>Notifications</Text>
 
-                </View>
+                </View> */}
 
-                {upcomingMeetings.length > 0 ? <View style={styles.upcomingMeetingsHeader}><Text style={{ fontSize: 16 }}>Upcoming Meetings</Text></View> : null}
+                {upcomingMeetings.length > 0 ? <View style={styles.upcomingMeetingsHeaderContainer}><Text style={styles.upcomingMeetingsHeader}>Upcoming Meetings</Text></View> : null}
                 <View style={styles.upcomingMeetingsContainer} key={restartScreen} >
                     {/* {console.log(chatRooms)} */}
                     {upcomingMeetings.map((meeting) => {
@@ -142,7 +164,7 @@ const Notifications = (props) => {
                     })}
 
                 </View>
-                <View style={styles.notificationsHeader}><Text style={{ fontSize: 16 }}>{notificationsHeader}</Text></View>
+                <View style={styles.upcomingMeetingsHeaderContainer}><Text style={styles.upcomingMeetingsHeader}>{notificationsHeader}</Text></View>
                 <View style={styles.notificationContainer}>
                     {notifications.map((notification) => {
                         // console.log("notification is: " + notification)
@@ -231,11 +253,13 @@ const styles = StyleSheet.create({
     userGreetingText: {
         fontSize: 18
     },
-    upcomingMeetingsHeader: {
-        marginTop: windowHeight / 25,
-        marginBottom: windowHeight / 40,
+    upcomingMeetingsHeaderContainer: {
+        marginVertical: windowHeight / 50,
 
         alignItems: 'center'
+    },
+    upcomingMeetingsHeader: {
+        fontSize: 18
     },
     upcomingMeetingsContainer: {
         // marginBottom: windowHeight / 10,
@@ -249,5 +273,17 @@ const styles = StyleSheet.create({
         marginBottom: windowHeight / 35,
 
         alignItems: 'center',
+    },
+    logo: {
+        height: 120,
+        width: 120,
+        // marginBottom: windowHeight / 26.92121,
+    },
+    logoContainer: {
+        marginTop: windowHeight / 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        //     marginBottom: windowHeight / 80
+
     },
 })

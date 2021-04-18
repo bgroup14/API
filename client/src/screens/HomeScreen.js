@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { Badge } from 'react-native-elements';
+// import { Badge } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -48,8 +48,26 @@ import CommentsScreens from './CommentsScreens';
 import { Alert } from 'react-native';
 import * as Location from 'expo-location';
 import { set } from 'react-native-reanimated';
+import * as Font from "expo-font";
 
 
+import { Appbar, Badge } from 'react-native-paper';
+
+
+// import { useFonts } from 'expo-font'
+
+import {
+    useFonts,
+    Ubuntu_300Light,
+    Ubuntu_300Light_Italic,
+    Ubuntu_400Regular,
+    Ubuntu_400Regular_Italic,
+    Ubuntu_500Medium,
+    Ubuntu_500Medium_Italic,
+    Ubuntu_700Bold,
+    Ubuntu_700Bold_Italic,
+} from '@expo-google-fonts/ubuntu';
+import { Fragment } from 'react';
 
 
 
@@ -58,6 +76,16 @@ import { set } from 'react-native-reanimated';
 
 
 const HomeScreen = (props) => {
+    let [fontsLoaded] = useFonts({
+        Ubuntu_300Light,
+        Ubuntu_300Light_Italic,
+        Ubuntu_400Regular,
+        Ubuntu_400Regular_Italic,
+        Ubuntu_500Medium,
+        Ubuntu_500Medium_Italic,
+        Ubuntu_700Bold,
+        Ubuntu_700Bold_Italic,
+    });
     const dispatch = useDispatch();
     const [posts, setPosts] = useState([]);
     const [isReady, setIsReady] = useState(false);
@@ -81,6 +109,9 @@ const HomeScreen = (props) => {
     const [filterActivated, setFilterACtivated] = useState(false);
 
     let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
+
+    const [fontsLoad, setFontsLoad] = useState(false);
+
 
 
 
@@ -110,7 +141,8 @@ const HomeScreen = (props) => {
 
 
     const newNotification = async () => {
-        //  console.log("trying to change redux msg recieved state...")
+        // alert(1)
+        console.log("trying to change redux no notification...")
         dispatch({
             type: NEW_NOTIFICATION,
             payload: null
@@ -172,10 +204,9 @@ const HomeScreen = (props) => {
             console.log(notificationBody)
             switch (notificationBody.functionToRun) {
                 case "receivedNewMessage":
-                    receivedNewMessage()
-                    break;
                 case "receivedNewMeetingInvitation":
                     receivedNewMessage()
+                    break;
                 case "meetingApproved":
                 case "meetingRejected":
                 case "receivedNewComment":
@@ -203,15 +234,6 @@ const HomeScreen = (props) => {
             // console.log(notificationBody)
             switch (notificationBody.functionToRun) {
                 case "receivedNewMessage":
-                    console.log("entering chat with other user...")
-                    props.navigation.navigate('ChatWithOtherUser', {
-                        chatRoomId: notificationBody.chatRoomId,
-                        otherMemberName: notificationBody.otherMemberName,
-                        otherMemberImage: notificationBody.otherMemberImage,
-                        otherMemberId: notificationBody.otherMemberId
-                    })
-
-                    break;
                 case "receivedNewMeetingInvitation":
                     console.log("entering chat with other user...")
                     props.navigation.navigate('ChatWithOtherUser', {
@@ -220,8 +242,12 @@ const HomeScreen = (props) => {
                         otherMemberImage: notificationBody.otherMemberImage,
                         otherMemberId: notificationBody.otherMemberId
                     })
+                    break;
                 case "meetingApproved":
+                case "receivedNewComment":
+                case "meetingRejected":
                     props.navigation.navigate("Notifications")
+                    break;
 
                 default:
                     break;
@@ -241,6 +267,18 @@ const HomeScreen = (props) => {
 
 
     useEffect(() => {
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+            setFontsLoad(true)
+
+        }
+        loadFonts();
+
         if (pushNotificationToken == null) {
             checkPushNotifications();
         }
@@ -580,6 +618,14 @@ const HomeScreen = (props) => {
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
     const getUserCurrentLocationAndFecthPosts = async () => {
 
+
+        // const [loaded] = useFonts({
+        //     Montserrat: require('./assets/fonts/Montserrat.ttf'),
+        // });
+        // await Font.loadAsync({
+        //     Roboto: require('native-base/Fonts/Roboto.ttf'),
+        //     Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+        // });
         // return null;
         var obj;
         // console.log("user long is :" + userlong)
@@ -656,63 +702,88 @@ const HomeScreen = (props) => {
 
     }
 
-    // if (!isReady) {
-    //     return (
-    //         <View>
+    if (!isReady) {
+        return (
+            <View>
 
-    //             <AppLoading
-    //                 startAsync={getUserCurrentLocationAndFecthPosts}
-    //                 onFinish={() => console.log("finished app loading")}
-    //                 // onFinish={() => setIsReady(true)}
-    //                 // onFinish={() => setTimeout(() => {
-    //                 //     setIsReady(true);
-    //                 //     setSpinner(false)
-    //                 // }, 500)}
-    //                 onError={console.warn}
-    //             />
-    //             <Spinner
-    //                 visible={spinner}
-    //                 textContent={'Loading...'}
-    //                 textStyle={styles.spinnerTextStyle}
-    //             />
-    //         </View>
-    //     );
-    // }
+                <AppLoading
+                    startAsync={getUserCurrentLocationAndFecthPosts}
+                    onFinish={() => console.log("finished app loading")}
+                    // onFinish={() => setIsReady(true)}
+                    // onFinish={() => setTimeout(() => {
+                    //     setIsReady(true);
+                    //     setSpinner(false)
+                    // }, 500)}
+                    onError={console.warn}
+                />
+                <Spinner
+                    visible={spinner}
+                    textContent={'Loading...'}
+                    textStyle={styles.spinnerTextStyle}
+                />
+            </View>
+        );
+    }
 
 
+    if (!fontsLoad) {
+        return (
+            <View></View>
+        );
 
+    }
 
     return (
         <KeyboardAvoidingView style={styles.container}  >
+
+
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}   >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
+
+
+
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 70 }} >
+                <Appbar.Content title="Feed" />
+                {newNotificationFromRedux ? <Badge
+                    size={10}
+                    style={{ position: 'absolute', top: 14, right: 14 }}
+                /> : null}
+
+
+                <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} />
+
+
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+
+
+            {/* {!newNotificationFromRedux ? < Badge
+                status="error"
+                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
+            /> : null} */}
+            {/* < Badge
+                status="error"
+                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
+            /> */}
             <View style={styles.inner}>
+                {/* <Badge>3</Badge> */}
+                {/* < Badge
+                
+                    status="error"
+                    containerStyle={{ position: 'absolute', top: 0, right: 0}}
+                /> */}
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
 
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
 
 
-                <View style={styles.barContainer}><Text style={styles.barText} >Feed</Text>
-                    {/* {console.log("redux is :::::::::: " + newMeetingFromRedux)} */}
-                    {newNotificationFromRedux ? < Badge
-                        status="error"
-                        containerStyle={{ position: 'absolute', top: 0, right: -3 }}
-                    /> : null}
-                    <Icon
-                        style={styles.bellIcon}
-                        name='bells'
-                        onPress={() => props.navigation.navigate('Notifications')}
 
-                    />
-                </View>
-                {/* <View style={styles.categoryContainer}>
-                        <Text>Category dropdown</Text>
-                    </View> */}
+
 
 
                 <View style={styles.selectCategoryContainer} key={restartComponent} >
@@ -827,9 +898,14 @@ const styles = StyleSheet.create({
     barText: {
         color: "#ffffff",
         fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: windowHeight / 200
+        // fontWeight: 'bold',
+        marginTop: windowHeight / 200,
 
+        // fontFamily: 'Ubuntu_700Bold',
+        fontFamily: 'Ubuntu_300Light',
+        // fontFamily: 'Roboto_medium'
+        // fontFamily: 'Allan_400Regular'
+        // fontFamily: 'Inter_900Black'
     },
     bellIcon: {
         color: '#ffffff',
@@ -840,11 +916,13 @@ const styles = StyleSheet.create({
         //  flex: 1,
         // position: 'relative',
         // backgroundColor: 'red',
-        marginTop: windowHeight / 30,
+        // marginTop: windowHeight / 70,
+        marginVertical: windowHeight / 80,
+
         flexDirection: 'row',
         //alignItems: 'flex-start',
         //  justifyContent: 'space-around',
-        marginBottom: windowHeight / 70,
+        // marginBottom: windowHeight / 70,
         // width: '100%',
         // marginLeft: windowWidth / 50,
         //borderRadius: 50

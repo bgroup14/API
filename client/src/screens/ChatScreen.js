@@ -14,6 +14,7 @@ import Post from '../components/Post';
 import ChatContact from '../components/ChatContact';
 import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
+import { Appbar } from 'react-native-paper';
 
 
 const ChatScreen = (props) => {
@@ -85,15 +86,21 @@ const ChatScreen = (props) => {
         //     <Text>ChatScreen </Text>
         // </View>
         <KeyboardAvoidingView style={styles.container}  >
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
+
+                <Appbar.Content title="Chat" />
+                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
             <View style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
 
 
                 <View style={styles.barContainer}><Text style={styles.barText}>Chat</Text>
 
-                </View>
+                </View> */}
 
 
                 <ScrollView key={restartScreen} >

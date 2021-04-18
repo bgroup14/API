@@ -12,6 +12,7 @@ import { BottomSheet } from 'react-native-btr';
 
 //import to show social icons
 import { SocialIcon } from 'react-native-elements';
+import { windowHeight } from '../../utils/Dimentions';
 
 const MyBottomSheet = (props) => {
     const [visible, setVisible] = useState(props.visible);
@@ -41,7 +42,7 @@ const MyBottomSheet = (props) => {
                             style={{
                                 flex: 1,
                                 flexDirection: 'column',
-                                justifyContent: 'space-between',
+                                justifyContent: 'flex-end',
                             }}>
                             <Text
                                 style={{
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     bottomNavigationView: {
         backgroundColor: '#fff',
         width: '100%',
-        height: 150,
+        height: windowHeight / 6,
         // justifyContent: 'center',
         // alignItems: 'center',
     },

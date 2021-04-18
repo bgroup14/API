@@ -24,6 +24,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import { updateImage } from '../../store/actions/user';
+import { Toast } from "native-base";
+import * as Font from "expo-font";
+
+import { Appbar, Button as Btn } from 'react-native-paper';
+
+
 
 
 
@@ -51,14 +57,34 @@ const EditProfile = (props) => {
   const [gender, setGender] = useState(null);
   const [hobbies, setHobbies] = useState([]);
   const [unixDate, setUnixDate] = useState(null);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
 
   const [checked, setChecked] = useState('first');
+
 
   const toggleOverlay = () => {
     setVisible(!visible);
   };
 
+
+
+
   useEffect(() => {
+
+
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Roboto': require('native-base/Fonts/Roboto.ttf'),
+        'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+      })
+    }
+    loadFonts();
+    setFontsLoaded(true)
+
+
+
     clearAsHobbies("hobbies")
 
 
@@ -68,8 +94,7 @@ const EditProfile = (props) => {
     }
 
     else {
-      // console.log("pictrue ws updated? " + pictureWasUpdated)
-      // console.log("Updating profile...")
+
       updateProfie();
 
 
@@ -221,15 +246,27 @@ const EditProfile = (props) => {
     const body = JSON.stringify(profileSetupDetails)
     try {
       const res = await axios.put(`https://proj.ruppin.ac.il/bgroup14/prod/api/member/Updateprofile/${userId}`, body, config);
-      Alert.alert(
-        "Profile Updated",
-        res.data,
-        [
-
-          { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
-        ],
-      );
       dispatch(updateImage(uploadedPicture.uri));
+
+      Toast.show({
+        text: "Profile updated successfully!",
+        // buttonText: "Okay",
+        type: "success",
+        duration: 4000
+      });
+
+
+
+      props.navigation.navigate('MyProfile')
+
+      // Alert.alert(
+      //   "Profile Updated",
+      //   res.data,
+      //   [
+
+      //     { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
+      //   ],
+      // );
 
 
 
@@ -409,6 +446,11 @@ const EditProfile = (props) => {
   let profileSetupScreen = cameraOn == true ? <MyCamera sendImagePath={(imagePath) => { getCamImage(imagePath) }} toggleCamera={() => setCameraOn(false)} />
     :
     <KeyboardAvoidingView>
+      <Appbar.Header style={{ backgroundColor: '#3b5998' }} >
+
+        <Appbar.BackAction onPress={() => props.navigation.navigate('MyProfile')} />
+        <Appbar.Content title="Edit Profile" />
+      </Appbar.Header>
       <View >
 
         <MyBottomSheet visible={visible} toggle={toggleOverlay} >
@@ -449,8 +491,9 @@ const EditProfile = (props) => {
           </View>
         </MyBottomSheet>
 
+
         <View style={styles.container}>
-          <View style={styles.headerContainer}>
+          {/* <View style={styles.headerContainer}>
             <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
             >
               <Text style={styles.barReset}>Cancel</Text>
@@ -460,7 +503,7 @@ const EditProfile = (props) => {
             </View>
 
 
-          </View>
+          </View> */}
           <View style={styles.imageContainer}>
             {image}
           </View>
@@ -516,6 +559,23 @@ const EditProfile = (props) => {
 
 
 
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>HOBBIES</Text>
+
+            <TouchableOpacity style={styles.dropDownContainer} >
+              <Button
+                title={hobbisTitleFunc()}
+                type="outline"
+                raised={true}
+                buttonStyle={{ padding: 15 }}
+                onPress={() => props.navigation.navigate('EditHobbiesScreen')}
+
+              />
+            </TouchableOpacity>
+          </View>
+
+
+
           <View style={styles.genderContainer}>
             <Text style={styles.setupParams}>GENDER</Text>
             <View style={{ flexDirection: 'row' }}>
@@ -539,35 +599,33 @@ const EditProfile = (props) => {
 
           </View>
 
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>HOBBIES</Text>
 
-            <TouchableOpacity style={styles.dropDownContainer} >
-              <Button
-                title={hobbisTitleFunc()}
-                type="outline"
-                raised={true}
-                buttonStyle={{ padding: 15 }}
-                onPress={() => props.navigation.navigate('EditHobbiesScreen')}
 
-              />
-            </TouchableOpacity>
-          </View>
+          {/* <View style={styles.nextBtnContainer}>
+            <FormButton
+              buttonTitle="Update"
+              onPress={() => updateProfie()}
 
-          <View  >
-            <View style={styles.nextBtnContainer}>
-              <FormButton
-                buttonTitle="Update"
-                onPress={() => updateProfie()}
-
-              />
-            </View>
+            />
+          </View> */}
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
+              Update profile </Btn>
           </View>
 
 
         </View>
       </View >
     </KeyboardAvoidingView>
+
+
+
+  if (!fontsLoaded) {
+    return (
+      <View></View>
+    );
+
+  }
 
 
   return (
@@ -608,7 +666,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    margin: windowHeight / 50,
+    marginVertical: windowHeight / 80,
     alignItems: 'center'
 
   },

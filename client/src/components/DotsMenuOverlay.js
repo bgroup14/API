@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     overlay: {
         marginBottom: windowHeight / 1.3,
         padding: windowHeight / 50,
-        marginLeft: windowHeight / 6,
+        marginLeft: windowHeight / 5,
         borderRadius: 6,
         alignItems: 'center'
 
