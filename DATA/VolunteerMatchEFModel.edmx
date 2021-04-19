@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="ChatHistory">
@@ -82,9 +82,10 @@
           <Property Name="categoryId" Type="int" />
           <Property Name="postId" Type="int" />
           <Property Name="otherMemberId" Type="int" />
-          <Property Name="interactionType" Type="varchar" MaxLength="1" />
+          <Property Name="interactionType" Type="varchar" MaxLength="50" />
           <Property Name="strength" Type="int" />
           <Property Name="unixdate" Type="int" />
+          <Property Name="categoryName" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Likes">
           <Key>
@@ -1082,12 +1083,13 @@
           <Property Name="categoryId" Type="Int32" />
           <Property Name="postId" Type="Int32" />
           <Property Name="otherMemberId" Type="Int32" />
-          <Property Name="interactionType" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="interactionType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="strength" Type="Int32" />
           <Property Name="unixdate" Type="Int32" />
           <NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Interaction" ToRole="Category" />
           <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Interaction" ToRole="Member" />
           <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Interaction" ToRole="Post" />
+          <Property Name="categoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__Interacti__categ__5AB9788F">
           <End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1" />
@@ -1346,6 +1348,7 @@
           <EntitySetMapping Name="Interactions">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
               <MappingFragment StoreEntitySet="Interactions">
+                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
                 <ScalarProperty Name="unixdate" ColumnName="unixdate" />
                 <ScalarProperty Name="strength" ColumnName="strength" />
                 <ScalarProperty Name="interactionType" ColumnName="interactionType" />

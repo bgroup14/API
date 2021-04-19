@@ -1259,16 +1259,23 @@ namespace WebApi.Controllers
 
 
         //SMART ELEMENT
-        public List<Member> findSimilarMembers(int memberId)
+
+        //For debugging purposes, added Route. Will not be necessary in release
+        [HttpGet]
+        [Route("findSimilarMembers/{memberId}")]
+        public HttpResponseMessage findSimilarMembers(int memberId) //List<Member>
         {
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
             int datetimenow = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             try
             {
+                
                 //Get my age
+                float age = 0;
                 var myDateOfBirth = db.Members.Select(x => x.dateOfBirth).FirstOrDefault();
-                float age = (datetimenow - (int)myDateOfBirth) / 60 / 60 / 24 / 365;
+                if (myDateOfBirth != null)
+                    age = (datetimenow - (int)myDateOfBirth) / 60 / 60 / 24 / 365;
 
                 //Get my Hobbies
                 var hobbies = db.MembersHobbies.Where(h => h.memberId == memberId).Select(z => new HobbiesDTO
@@ -1277,13 +1284,145 @@ namespace WebApi.Controllers
                 }).ToList();
 
                 //Location
+                float myLat = 1; //Change to 0
+                if (db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLat).FirstOrDefault() != null)
+                    myLat = float.Parse(db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLat).FirstOrDefault().ToString());
+                float myLong = 1; //Change to 0
+                if (db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLong).FirstOrDefault() != null)
+                    myLong = float.Parse(db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLong).FirstOrDefault().ToString());
 
+
+                //Favorite categories
+                //select categoryName, SUM(strength) as strength from Interactions WHERE memberId = 157 group by categoryName ORDER BY strength DESC
+                /*var categories = db.Interactions.Where(x => x.memberId == memberId).GroupBy(x => x.categoryName).Select(g => new {
+                    categoryName = g.Key,
+                    Strength = g.Sum(x => x.strength != null ? x.strength : 0)
+                }).OrderByDescending(g => g.Strength).ToList();*/
+                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                    g.categoryName,
+                    g.strength
+                }).OrderByDescending(g => g.strength).ToList();
+
+                //Create string for categories to compare
+                string categoriesString = "";
+                for (int i = 0; i < 2; i++)
+                {
+                    if (i == 0)
+                    {
+                        categoriesString = categories[i].categoryName.ToString();
+                    }
+                    else
+                    {
+                        if (categoriesString.CompareTo(categories[i].categoryName.ToString()) < 0)
+                        {
+                            categoriesString = categoriesString + categories[i].categoryName.ToString();
+                        }
+                        else
+                        {
+                            categoriesString = categories[i].categoryName.ToString() + categoriesString;
+                        }
+                    }
+                }
+                string category1 = "";
+                if (categories[0].categoryName != null)
+                    category1 = categories[0].categoryName.ToString();
+                string category2 = "";
+                if (categories[1].categoryName != null)
+                    category2 = categories[1].categoryName.ToString();
+
+                //Fetch 20 members of close location
+                var locationSimilarMembers = db.Members.Where(x => x.id != memberId && Math.Abs((float)x.lastLocationLat - myLat) < 0.4 && Math.Abs((float)x.lastLocationLong - myLong) < 0.4).Select(g => new {
+                    g.id,
+                    /*g.fullName,
+                    g.dateOfBirth,
+                    g.pictureUrl,
+                    g.gender,
+                    age = (g.dateOfBirth != null) ? (datetimenow - (int)g.dateOfBirth) / 60 / 60 / 24 / 365 : 0*/
+                }).Take(20).ToList();
+
+                //Fetch 20 members of similar categories
+                var categorySimilarMembers = db.Interactions.OrderByDescending(x => x.strength).Where(x => x.memberId != memberId && (x.categoryName == category1 || x.categoryName == category2)).Select(g => new {
+                    g.memberId,
+                    g.categoryName,
+                    g.strength
+                }).Take(20).ToList();
+
+                List<int> members = new List<int>();
+                foreach (var member in locationSimilarMembers)
+                {
+                    if ((!members.Contains((int)member.id)))
+                        members.Add((int)member.id);
+                }
+                foreach (var member in categorySimilarMembers)
+                {
+                    if((!members.Contains((int)member.memberId)))
+                        members.Add((int)member.memberId);
+                }
+
+                //Select members and filter using age
+                var initialFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new {
+                    g.id,
+                    g.fullName,
+                    g.dateOfBirth,
+                    g.pictureUrl,
+                    g.gender,
+                    age = (g.dateOfBirth != null) ? (datetimenow - (int)g.dateOfBirth) / 60 / 60 / 24 / 365 : 0,
+                    hobbies = db.MembersHobbies.Where(h => h.memberId == g.id).Select(z => new HobbiesDTO
+                    {
+                        name = z.Hobby.name
+                    }).ToList()
+                }).Take(20).ToList();
+
+                //Take these members and filter using hobbies
+                members.Clear();
+                members = new List<int>();
+                foreach (var member in initialFilteredMembers)
+                {
+                    if (age > 0) {
+                        if (Math.Abs(member.age) - age <= 5) {
+                            if ((!members.Contains((int)member.id)))
+                                members.Add((int)member.id);
+                        }
+                    }
+                    if (hobbies.Count() > 0)
+                    {
+                        foreach (var myHobbie in hobbies)
+                        {
+                            foreach (var hobbie in member.hobbies)
+                            {
+                                if (myHobbie.name.Equals(hobbie.name))
+                                {
+                                    if ((!members.Contains((int)member.id)))
+                                        members.Add((int)member.id);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var finalFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new {
+                    g.id,
+                    g.fullName,
+                    g.dateOfBirth,
+                    g.pictureUrl,
+                    g.gender,
+                    age = (g.dateOfBirth != null) ? (datetimenow - (int)g.dateOfBirth) / 60 / 60 / 24 / 365 : 0,
+                    hobbies = db.MembersHobbies.Where(h => h.memberId == g.id).Select(z => new HobbiesDTO
+                    {
+                        name = z.Hobby.name
+                    }).ToList()
+                }).Take(20).ToList();
+
+                //Select members info and return in function
+
+                return Request.CreateResponse(HttpStatusCode.OK, finalFilteredMembers);
             }
             catch (Exception e)
             {
-                
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
             }
-            return null;
+            //return Request.CreateResponse(HttpStatusCode.InternalServerError, "No results found");
         }
 
         /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
