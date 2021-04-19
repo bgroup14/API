@@ -25,6 +25,7 @@ namespace DATA
         public string meetingDateLabel { get; set; }
         public string meetingTimeLabel { get; set; }
         public string meetingLocationLabel { get; set; }
+        public Nullable<bool> didPushSent { get; set; }
     
         public virtual Location Location { get; set; }
     }

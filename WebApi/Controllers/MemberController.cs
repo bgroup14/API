@@ -811,6 +811,126 @@ namespace WebApi.Controllers
 
 
 
+        [HttpPost]
+        [Route("addInteractionMember")]
+
+
+        public HttpResponseMessage AddInteractionMember(InteractionMemberDTO interactionMemberDTO)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+            int strength = 0;
+
+            switch (interactionMemberDTO.type)
+            {
+
+                case "Profile":
+                    strength = 10;
+                    break;
+                case "Review 1":
+                    strength = -50;
+                    break;
+                case "Review 2":
+                    strength = -10;
+                    break;
+                case "Review 3":
+                    strength = 0;
+                    break;
+                case "Review 4":
+                    strength = 10;
+                    break;
+                case "Review 5":
+                    strength = 50;
+                    break;
+                default:
+                    break;
+            }
+            try
+            {
+                InteractionsMember interactionsMember = db.InteractionsMembers.Where
+                    (x => x.memberId == interactionMemberDTO.memberId && x.otherMemberId == interactionMemberDTO.otherMemberId).FirstOrDefault();
+
+
+                if (interactionsMember == null)
+                {
+                    InteractionsMember interaction = new InteractionsMember()
+                    {
+                        memberId = interactionMemberDTO.memberId,
+                        otherMemberId = interactionMemberDTO.otherMemberId,
+                        strength = strength
+                    };
+                    db.InteractionsMembers.Add(interaction);
+                }
+                else
+                {
+                    interactionsMember.strength += strength;
+                };
+
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Member strength updated");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
+
+
+        [HttpPost]
+        [Route("addcurrentlocation/{memberId}/{lat}/{lng}")]
+
+        public HttpResponseMessage AddCurrentLocation(int memberId, double lat, double lng)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+            try
+            {
+                Member member = db.Members.Where(x => x.id == memberId).FirstOrDefault();
+                member.lastLocationLat = lat;
+                member.lastLocationLong = lng;
+
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Current location updated");
+
+            }
+            catch (Exception)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+
+
 
 
 

@@ -53,6 +53,7 @@ const OtherUserProfileScreen = (props) => {
     useEffect(() => {
         fetchUserDetails()
 
+        addMemberInteraction()
         if (commentsToShow.length > 0) {
             console.log(commentsToShow)
             setIsCommentsVisible(true)
@@ -111,6 +112,26 @@ const OtherUserProfileScreen = (props) => {
 
     }
 
+    const addMemberInteraction = async () => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        let body = {
+            memberId: currentMemberId,
+            otherMemberId: userId,
+            type: 'Profile',
+        }
+        const addMemberInteractionUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addInteractionMember'
+        try {
+            const res = await axios.post(addMemberInteractionUrl, body, config);
+            console.log(res.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
     console.log("userLat is " + userLat)
     console.log("userLong is " + userLong)

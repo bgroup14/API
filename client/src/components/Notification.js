@@ -7,6 +7,7 @@ import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { Button } from 'react-native-paper';
 
 
 
@@ -92,6 +93,28 @@ const Notification = (props) => {
                 let iconType = notificationText.includes("Accepted") ? "like2" : "dislike2"
                 setIconType(iconType)
                 break;
+            case "meetingCheck":
+                // let notificationText = "Did you eventually meet LeBron James for Basketball Practice?"
+                let arr = notificationText.split("for");
+                let firstSentence = `${arr[0]}`;
+                let secondSentence = arr[1];
+                setNotificationContent(
+                    <View>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ marginTop: windowHeight / 100 }}>{firstSentence} </Text>
+                            <Text style={{ marginTop: windowHeight / 100 }}>for{secondSentence} </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: windowHeight / 30 }}>
+
+                            <Button style={{ marginHorizontal: windowWidth / 10 }} labelStyle={{ color: '#3b5998' }} icon="cancel" mode='outlined' onPress={() => console.log('Pressed')}>
+                                No </Button>
+                            <Button labelStyle={{ color: '#3b5998' }} icon="check" mode='outlined' onPress={() => console.log('Pressed')}>
+                                Yes</Button>
+                        </View>
+                    </View>)
+
+
+                break;
 
 
 
@@ -120,7 +143,7 @@ const Notification = (props) => {
                 <Icon name={iconType} size={22} color="#000000" style={{ position: 'absolute', marginLeft: windowWidth / 10, marginTop: windowHeight / 16 }} />
 
 
-                <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 60 }}>
+                <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 60, }}>
                     <View style={styles.dateLabel}>
                         <Text>{notificationDate}</Text>
                     </View>
@@ -173,7 +196,8 @@ const styles = StyleSheet.create({
         //  marginVertical: 1,
         // alignItems: 'flex-start',
         // justifyContent: 'flex-start',
-        maxHeight: windowHeight / 10,
+        // height: 300,
+        // maxHeight: windowHeight / 10,
         marginVertical: windowHeight / 70,
         marginBottom: windowHeight / 20
     },
