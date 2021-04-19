@@ -6,11 +6,15 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Timers;
 
 namespace WebApi
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+
+        static Timer timer = new Timer();
+        string path = null;
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -18,6 +22,36 @@ namespace WebApi
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            //code for timer
+            timer.Interval = 1000;
+            timer.Elapsed += tm_Tick;
+            path = Server.MapPath("/");
+            StartTimer();
         }
+        private void tm_Tick(object sender, ElapsedEventArgs e)
+        {
+            EndTimer();
+           /* GlobalTimerWebApi2.Models.TimerServices.DoSomethingWithtimer(path);*/
+            GlobalTimerWebApi2.Models.TimerServices.CheckMeetings();
+
+        }
+
+        //code for timer
+        public static void StartTimer()
+        {
+            timer.Enabled = true;
+
+        }
+
+        public static void EndTimer()
+        {
+            timer.Enabled = false;
+
+        }
+
+        
+
     }
+
 }

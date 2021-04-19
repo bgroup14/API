@@ -210,6 +210,7 @@ const HomeScreen = (props) => {
                 case "meetingApproved":
                 case "meetingRejected":
                 case "receivedNewComment":
+                case "meetingCheck":
                     newNotification();
                     //FUNCTION THAT WILL MAKE THE BELL RED
                     break;
@@ -246,6 +247,7 @@ const HomeScreen = (props) => {
                 case "meetingApproved":
                 case "receivedNewComment":
                 case "meetingRejected":
+                case "meetingCheck":
                     props.navigation.navigate("Notifications")
                     break;
 
@@ -652,6 +654,7 @@ const HomeScreen = (props) => {
                 meetingLocationLong: location.coords.longitude,
                 meetingLocationLat: location.coords.latitude
             }
+            setCurrentLocationDB(location.coords.latitude, location.coords.longitude,)
             fetchPosts(obj)
             setMyLat(location.coords.latitude);
             setMyLong(location.coords.longitude);
@@ -698,6 +701,22 @@ const HomeScreen = (props) => {
 
 
 
+
+
+    }
+
+    const setCurrentLocationDB = async (lat, long) => {
+
+        try {
+            const setCurrentLocationDBUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/addcurrentlocation/${userId}/${lat}/${long}/`
+
+            const res = await axios.post(setCurrentLocationDBUrl);
+            // alert(res.data)
+
+        } catch (error) {
+            // alert(error.message)
+            console.log(error)
+        }
 
 
     }

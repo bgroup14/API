@@ -87,6 +87,15 @@
           <Property Name="unixdate" Type="int" />
           <Property Name="categoryName" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="InteractionsMembers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="memberId" Type="int" />
+          <Property Name="otherMemberId" Type="int" />
+          <Property Name="strength" Type="int" />
+        </EntityType>
         <EntityType Name="Likes">
           <Key>
             <PropertyRef Name="id" />
@@ -119,6 +128,7 @@
           <Property Name="meetingDateLabel" Type="varchar" MaxLength="50" />
           <Property Name="meetingTimeLabel" Type="varchar" MaxLength="50" />
           <Property Name="meetingLocationLabel" Type="varchar" MaxLength="50" />
+          <Property Name="didPushSent" Type="bit" />
         </EntityType>
         <EntityType Name="Members">
           <Key>
@@ -271,6 +281,18 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Interactions">
+              <PropertyRef Name="memberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Interacti__membe__72910220">
+          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+          <End Role="InteractionsMembers" Type="Self.InteractionsMembers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InteractionsMembers">
               <PropertyRef Name="memberId" />
             </Dependent>
           </ReferentialConstraint>
@@ -486,6 +508,7 @@
           <EntitySet Name="Gender" EntityType="Self.Gender" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hobbies" EntityType="Self.Hobbies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Interactions" EntityType="Self.Interactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InteractionsMembers" EntityType="Self.InteractionsMembers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Likes" EntityType="Self.Likes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Meetings" EntityType="Self.Meetings" Schema="dbo" store:Type="Tables" />
@@ -512,6 +535,10 @@
           <AssociationSet Name="FK__Interacti__membe__59C55456" Association="Self.FK__Interacti__membe__59C55456">
             <End Role="Members" EntitySet="Members" />
             <End Role="Interactions" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__membe__72910220" Association="Self.FK__Interacti__membe__72910220">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="InteractionsMembers" EntitySet="InteractionsMembers" />
           </AssociationSet>
           <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="Self.FK__Interacti__postI__5BAD9CC8">
             <End Role="Posts" EntitySet="Posts" />
@@ -674,6 +701,11 @@
             <End Role="Member" EntitySet="Members" />
             <End Role="Notification" EntitySet="Notifications" />
           </AssociationSet>
+          <EntitySet Name="InteractionsMembers" EntityType="bgroup14_prodModel.InteractionsMember" />
+          <AssociationSet Name="FK__Interacti__membe__72910220" Association="bgroup14_prodModel.FK__Interacti__membe__72910220">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="InteractionsMember" EntitySet="InteractionsMembers" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -788,6 +820,7 @@
           <Property Name="meetingDateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="meetingTimeLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="meetingLocationLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="didPushSent" Type="Boolean" />
         </EntityType>
         <EntityType Name="Member">
           <Key>
@@ -823,6 +856,7 @@
           <Property Name="lastLocationLong" Type="Double" />
           <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
           <NavigationProperty Name="Notifications" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Member" ToRole="Notification" />
+          <NavigationProperty Name="InteractionsMembers" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="Member" ToRole="InteractionsMember" />
         </EntityType>
         <EntityType Name="MembersCategory">
           <Key>
@@ -1185,6 +1219,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="InteractionsMember">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="memberId" Type="Int32" />
+          <Property Name="otherMemberId" Type="Int32" />
+          <Property Name="strength" Type="Int32" />
+          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="InteractionsMember" ToRole="Member" />
+        </EntityType>
+        <Association Name="FK__Interacti__membe__72910220">
+          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
+          <End Type="bgroup14_prodModel.InteractionsMember" Role="InteractionsMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InteractionsMember">
+              <PropertyRef Name="memberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1288,6 +1344,7 @@
           <EntitySetMapping Name="Meetings">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Meeting">
               <MappingFragment StoreEntitySet="Meetings">
+                <ScalarProperty Name="didPushSent" ColumnName="didPushSent" />
                 <ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
                 <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
                 <ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
@@ -1425,6 +1482,16 @@
                 <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
                 <ScalarProperty Name="notificationText" ColumnName="notificationText" />
                 <ScalarProperty Name="notificationType" ColumnName="notificationType" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InteractionsMembers">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.InteractionsMember">
+              <MappingFragment StoreEntitySet="InteractionsMembers">
+                <ScalarProperty Name="strength" ColumnName="strength" />
+                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
                 <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>

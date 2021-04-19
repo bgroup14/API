@@ -445,7 +445,8 @@ namespace WebApi.Controllers
                     didHappen = false,
                     meetingDateLabel = meetingMsg.meetingDateLabel,
                     meetingTimeLabel = meetingMsg.meetingTimeLabel,
-                    meetingLocationLabel = meetingMsg.meetingLocationLabel
+                    meetingLocationLabel = meetingMsg.meetingLocationLabel,
+                    didPushSent = false,
                 };
                 db.Meetings.Add(meeting);
                 db.ChatHistories.Remove(meetingMsg);
