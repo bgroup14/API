@@ -677,14 +677,6 @@ namespace WebApi.Controllers
                 //return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
 
 
-
-
-
-
-
-
-
-
                 if (filterDTO.filterActivated) // IT MEANS WE HAVE FILTER ACTIVATED
                 {
                     // meetingLocation
@@ -778,6 +770,7 @@ namespace WebApi.Controllers
                         {
                             case "Relevance":
                                 //Need to setup smart element
+
                                 break;
                             case "Location":
                                 filteredPosts = filteredPosts.OrderBy(y => y.distanceFromMe);
@@ -877,10 +870,28 @@ namespace WebApi.Controllers
 
 
 
+                    //sortBy
+                    if (filterDTO.sortBy != null)
+                    {
+                        switch (filterDTO.sortBy)
+                        {
+                            case "Relevance":
+                                //Need to setup smart element
+                                // Show favorite categories first if categories selection is ALL
+                                // Show 5 posts of similar members
+                                // Show 5 posts of members and posts user will possibly like (db.InteractionMembers)
 
-
-
-
+                                break;
+                            case "Location":
+                                filteredPosts = filteredPosts.OrderBy(y => y.distanceFromMe);
+                                break;
+                            case "Meeting date":
+                                filteredPosts = filteredPosts.OrderByDescending(y => y.unixDate);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
                 /* return filteredPosts.ToList();*/
@@ -1262,8 +1273,8 @@ namespace WebApi.Controllers
 
         //For debugging purposes, added Route. Will not be necessary in release
         [HttpGet]
-        [Route("findSimilarMembers/{memberId}")]
-        public HttpResponseMessage findSimilarMembers(int memberId) //List<Member>
+        //[Route("findSimilarMembers/{memberId}")]
+        public List<MemberDTO> findSimilarMembers(int memberId) //List<Member>
         {
 
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
@@ -1284,10 +1295,10 @@ namespace WebApi.Controllers
                 }).ToList();
 
                 //Location
-                float myLat = 1; //Change to 0
+                float myLat = 0; //Change to 0
                 if (db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLat).FirstOrDefault() != null)
                     myLat = float.Parse(db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLat).FirstOrDefault().ToString());
-                float myLong = 1; //Change to 0
+                float myLong = 0; //Change to 0
                 if (db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLong).FirstOrDefault() != null)
                     myLong = float.Parse(db.Members.Where(m => m.id == memberId).Select(m => m.lastLocationLong).FirstOrDefault().ToString());
 
@@ -1301,7 +1312,7 @@ namespace WebApi.Controllers
                 var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
                     g.categoryName,
                     g.strength
-                }).OrderByDescending(g => g.strength).ToList();
+                }).OrderByDescending(g => g.strength).Take(2).ToList();
 
                 //Create string for categories to compare
                 string categoriesString = "";
@@ -1331,13 +1342,8 @@ namespace WebApi.Controllers
                     category2 = categories[1].categoryName.ToString();
 
                 //Fetch 20 members of close location
-                var locationSimilarMembers = db.Members.Where(x => x.id != memberId && Math.Abs((float)x.lastLocationLat - myLat) < 0.4 && Math.Abs((float)x.lastLocationLong - myLong) < 0.4).Select(g => new {
+                var locationSimilarMembers = db.Members.Where(x => x.id != memberId && Math.Abs((float)x.lastLocationLat - myLat) <= 1 && Math.Abs((float)x.lastLocationLong - myLong) <= 1).Select(g => new { //0.4 ~ 30km
                     g.id,
-                    /*g.fullName,
-                    g.dateOfBirth,
-                    g.pictureUrl,
-                    g.gender,
-                    age = (g.dateOfBirth != null) ? (datetimenow - (int)g.dateOfBirth) / 60 / 60 / 24 / 365 : 0*/
                 }).Take(20).ToList();
 
                 //Fetch 20 members of similar categories
@@ -1371,7 +1377,7 @@ namespace WebApi.Controllers
                     {
                         name = z.Hobby.name
                     }).ToList()
-                }).Take(20).ToList();
+                }).ToList();
 
                 //Take these members and filter using hobbies
                 members.Clear();
@@ -1401,42 +1407,120 @@ namespace WebApi.Controllers
                     }
                 }
 
-                var finalFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new {
-                    g.id,
-                    g.fullName,
-                    g.dateOfBirth,
-                    g.pictureUrl,
-                    g.gender,
+                var finalFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new MemberDTO {
+                    id = g.id,
+                    name = g.fullName,
+                    dateOfBirth = g.dateOfBirth,
+                    pictureUrl = g.pictureUrl,
+                    gender = g.gender,
                     age = (g.dateOfBirth != null) ? (datetimenow - (int)g.dateOfBirth) / 60 / 60 / 24 / 365 : 0,
                     hobbies = db.MembersHobbies.Where(h => h.memberId == g.id).Select(z => new HobbiesDTO
                     {
                         name = z.Hobby.name
                     }).ToList()
-                }).Take(20).ToList();
+                }).ToList();
 
                 //Select members info and return in function
 
-                return Request.CreateResponse(HttpStatusCode.OK, finalFilteredMembers);
+                return finalFilteredMembers;
+                //return Request.CreateResponse(HttpStatusCode.OK, finalFilteredMembers);
+            }
+            catch (Exception e)
+            {
+                //return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
+                return null;
+            }
+            //return Request.CreateResponse(HttpStatusCode.InternalServerError, "No results found");
+        }
+
+        //For debugging purposes, added Route. Will not be necessary in release
+        [HttpGet]
+        [Route("findSimilarMembersPosts/{memberId}")]
+        public HttpResponseMessage findSimilarMembersPosts(int memberId) //List<Member>
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+                List<MemberDTO> members = findSimilarMembers(memberId);
+                List<int> similarMembersIDs = new List<int>();
+                foreach (var member in members)
+                {
+                    similarMembersIDs.Add((int)member.id);
+                }
+                string memberType = db.FeedSettings.Where(x => x.memberId == memberId).Select(x => x.memberType).FirstOrDefault().ToString();
+                List<int> postIDs = new List<int>();
+
+                //Fetch 5 posts of the member if exist
+                var postsOfSimilarMembersInitial = db.Posts.Where(x => similarMembersIDs.Contains((int)x.member_id)).Select(x => new PostDTO()
+                {
+                    id = (int)x.id,
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
+
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
+                });
+                var postsOfSimilarMembers = postsOfSimilarMembersInitial.ToList();
+                if (!memberType.Equals("Both"))
+                {
+                    if (memberType.Equals("Give Help"))
+                    {
+                        postsOfSimilarMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Where(x => x.helpType == "Need Help").Take(5).ToList();
+                    }
+                    else if (memberType.Equals("Need Help"))
+                    {
+                        postsOfSimilarMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Where(x => x.helpType == "Give Help").Take(5).ToList();
+                    }
+                }
+                else
+                {
+                    postsOfSimilarMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Take(5).ToList();
+                }
+
+                //Fetch 5 posts the similar member had interaction with if exist
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, similarMembersIDs);
             }
             catch (Exception e)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
             }
-            //return Request.CreateResponse(HttpStatusCode.InternalServerError, "No results found");
-        }
-
-        /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
-        {
-            if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
+}
+            /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
             {
-                var sCoord = new GeoCoordinate(longitudeA, latitudeA);
-                var eCoord = new GeoCoordinate(longitudeB, latitudeB);
+                if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
+                {
+                    var sCoord = new GeoCoordinate(longitudeA, latitudeA);
+                    var eCoord = new GeoCoordinate(longitudeB, latitudeB);
 
-                return sCoord.GetDistanceTo(eCoord) / 1000;
-            }
+                    return sCoord.GetDistanceTo(eCoord) / 1000;
+                }
 
-            return 0;
+                return 0;
 
-        }*/
-    }
+            }*/
+        }
 }
