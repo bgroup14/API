@@ -223,8 +223,9 @@ const ScheduleMeeting = (props) => {
                 <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
                     <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
                 </MyOverlay>
-                <Text style={styles.header} >Schedule Meeting</Text>
-
+                <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.header} >Schedule Meeting</Text>
+                </View>
                 <View style={{ alignItems: 'flex-start', marginTop: windowHeight / 20 }}>
                     <Input
                         onChangeText={(text) => changeEventTilteHandler(text)}
@@ -389,7 +390,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     header: {
-        fontSize: 18,
+        fontSize: 24,
+
+        color: '#3b5998',
         marginTop: windowHeight / 50
     }
 

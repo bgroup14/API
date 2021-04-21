@@ -242,7 +242,7 @@ const ChatWithOtherUser = (props) => {
 
         switch (pushObj.functionToRun) {
             case "receivedNewMeetingInvitation":
-                body = `${userName}sent you meeting invitation`
+                body = `sent you meeting invitation`
                 break;
             case "meetingApproved":
                 body = `Accepted your meeting invitation`

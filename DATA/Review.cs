@@ -16,9 +16,9 @@ namespace DATA
     {
         public int id { get; set; }
         public Nullable<int> fromMemberId { get; set; }
-        public Nullable<int> toMemberId { get; set; }
         public string text { get; set; }
         public string url { get; set; }
         public Nullable<int> stars { get; set; }
+        public Nullable<int> memberId { get; set; }
     }
 }

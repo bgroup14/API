@@ -328,7 +328,9 @@ const styles = StyleSheet.create({
 
     },
     header: {
-        fontSize: 18
+        fontSize: 24,
+        color: '#3b5998'
+
     }
 
 

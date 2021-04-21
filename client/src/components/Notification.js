@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Button } from 'react-native-paper';
+import axios from 'axios';
 
 
 
@@ -31,7 +32,8 @@ const Notification = (props) => {
 
 
     const { notificationText, notificationType, otherMemberImage, unixdate, notificationDate,
-        otherMemberId, otherMemberName } = props.notification;
+        otherMemberId, otherMemberName, notificationId } = props.notification;
+    console.log("id is" + notificationId)
     // console.log("notification type?: " + notificationType)
     // console.log("otherMemberName: " + otherMemberName)
     var date = new Date(unixdate * 1000);
@@ -68,15 +70,30 @@ const Notification = (props) => {
         // props.goToOtherUserChat(chatRoomId, otherMemberName, otherMemberImage, otherMemberId, otherMemberId)
     }
 
+    const meetingApproved = async () => {
+        props.meetingApprovedBtn(otherMemberImage, otherMemberName, otherMemberId);
+        //Delete notification
+        const deleteNotificationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/deletenotification/${notificationId}`
+
+        try {
+            const res = await axios.delete(deleteNotificationUrl);
+            console.log(res.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
 
     const setContent = () => {
 
         switch (notificationType) {
             case "Comment":
                 setNotificationContent(
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ marginTop: windowHeight / 100, fontWeight: 'bold' }}>Commented on your post: </Text>
-                        <Text style={{ marginTop: windowHeight / 100, fontStyle: 'italic' }}>{notificationText} </Text>
+                    <View style={{ maxWidth: windowWidth / 1.2 }}>
+                        <Text style={{ marginTop: windowHeight / 150, fontWeight: 'bold' }}>Commented on your post: </Text>
+                        <Text style={{ marginTop: windowHeight / 200, fontStyle: 'italic' }}>{notificationText} </Text>
                     </View>
 
                 )
@@ -106,11 +123,13 @@ const Notification = (props) => {
                         </View>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: windowHeight / 30 }}>
 
+
                             <Button style={{ marginHorizontal: windowWidth / 10 }} labelStyle={{ color: '#3b5998' }} icon="cancel" mode='outlined' onPress={() => console.log('Pressed')}>
                                 No </Button>
-                            <Button labelStyle={{ color: '#3b5998' }} icon="check" mode='outlined' onPress={() => console.log('Pressed')}>
+                            <Button style={{ backgroundColor: '#3b5998' }} labelStyle={{ color: '#fff' }} icon="check" mode='contained' onPress={() => meetingApproved()}>
                                 Yes</Button>
                         </View>
+
                     </View>)
 
 

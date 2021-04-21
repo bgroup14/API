@@ -16,7 +16,11 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 import AppLoading from 'expo-app-loading';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Divider } from 'react-native-elements';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Button } from 'react-native-paper';
+import { Rating, AirbnbRating } from 'react-native-elements';
+import UserReviews from './UserReviews';
+
+
 
 
 
@@ -35,6 +39,8 @@ const OtherUserProfileScreen = (props) => {
     const [userName, setUserName] = useState(null);
     const [userImage, setUserImage] = useState(null);
     const [isReady, setIsReady] = useState(false);
+    const [userRating, setUserRating] = useState(null);
+    const [reviewsCount, setReviewsCount] = useState(null);
 
 
 
@@ -42,6 +48,7 @@ const OtherUserProfileScreen = (props) => {
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+    const [isReviewsVisible, setIsReiviewsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [userPosts, setUserPosts] = useState([]);
@@ -96,6 +103,8 @@ const OtherUserProfileScreen = (props) => {
         setUserBio(res.data.bio)
         setUserName(res.data.fullName)
         setUserImage(res.data.pictureUrl)
+        setUserRating(res.data.rating)
+        res.data.reviewsCount == 1 ? setReviewsCount(res.data.reviewsCount + " Review") : setReviewsCount(res.data.reviewsCount + " Reviews")
         let cityName = res.data.city.replace(/,[^,]+$/, "")
         // console.log(str)
         setUserCity(cityName)
@@ -155,14 +164,15 @@ const OtherUserProfileScreen = (props) => {
         setCommentsToShow(comments)
 
     }
-    const toggleCommentsScreen = () => {
+    const closeCommentsScreen = () => {
         setIsCommentsVisible(false)
         setCommentsToShow([])
 
     }
     const goToOtherUserProfile = (member_id) => {
 
-        toggleCommentsScreen();
+        closeCommentsScreen();
+        closeReviewsScreen();
         if (currentMemberId == member_id) {
             props.navigation.navigate('MyProfile')
         }
@@ -205,6 +215,10 @@ const OtherUserProfileScreen = (props) => {
 
 
     }
+
+    const closeReviewsScreen = () => {
+        setIsReiviewsVisible(false)
+    }
     if (!isReady) {
         return (
             <View>
@@ -222,10 +236,12 @@ const OtherUserProfileScreen = (props) => {
 
     return (
         <KeyboardAvoidingView style={styles.container} >
-            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
+            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => closeCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
-
+            <MyOverlay isVisible={isReviewsVisible} onBackdropPress={() => closeReviewsScreen()}  >
+                <UserReviews userId={userId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+            </MyOverlay>
             <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
 
                 <Appbar.Content title={userName} />
@@ -294,7 +310,21 @@ const OtherUserProfileScreen = (props) => {
 
                 </View> : null}
 
-                <ScrollView contentContainerStyle={styles.userPostsContainer}>
+                <View style={styles.userPostsContainer}>
+                    {userRating > 0 ?
+                        <View style={styles.ratingContainer} >
+                            <Rating fractions={2} startingValue={userRating} imageSize={24} />
+                            <View style={{ marginTop: windowHeight / 200 }}>
+                                <Text>({userRating} Stars - {reviewsCount})</Text>
+
+                            </View>
+                            <Button uppercase={false} mode='text' labelStyle={{ color: 'blue' }} onPress={() => setIsReiviewsVisible(true)}>
+                                Show Reviews
+                            </Button>
+
+
+                        </View> :
+                        null}
                     {userPosts.map((post) => {
                         // console.log(post)
                         return <View key={post.postId}>
@@ -309,7 +339,7 @@ const OtherUserProfileScreen = (props) => {
                         // return <Post text={post.text} cityName={post.cityName} />
 
                     })}
-                </ScrollView>
+                </View>
 
 
             </ScrollView>
@@ -386,15 +416,20 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
     personalInfoContainer: {
-        height: windowHeight / 6,
+        // height: windowHeight / 6,
 
         alignItems: 'center'
     },
     userPostsContainer: {
         //marginTop: 0,
-        alignItems: 'stretch',
+        // alignItems: 'stretch',
         //width: '100%'
+    },
+    ratingContainer: {
+        alignItems: 'center',
+        marginVertical: windowHeight / 100
     }
+
 
 
 

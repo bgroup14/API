@@ -12,6 +12,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebApi.DTO;
 
+
+using System.Text;
+using System.IO;
+
 namespace WebApi.Controllers
 {
     [RoutePrefix("api/member")]
@@ -429,6 +433,10 @@ namespace WebApi.Controllers
                 string dateOfBirth = dtDateTime.ToString();
                 string dateOfBirthLabel = dateOfBirth.Substring(0, dateOfBirth.IndexOf(" "));
 
+
+
+
+
                 ProfileDetailsDTO profileDetailsDTO = new ProfileDetailsDTO()
                 {
                     pictureUrl = member.pictureUrl,
@@ -440,6 +448,7 @@ namespace WebApi.Controllers
                     gender = member.gender,
                     dateOfBirth = dateOfBirthLabel,
 
+
                     hobbies = db.MembersHobbies.Where(h => h.memberId == member.id).Select(z => new HobbiesDTO
                     {
                         name = z.Hobby.name
@@ -447,8 +456,32 @@ namespace WebApi.Controllers
 
                 };
 
+                var ratings = db.Reviews.Where(x => x.memberId == id).ToList();
+
+                double rating = 0;
+                double ratingSum = 0;
+                int numOfRatings = ratings.Count();
+
+                if (ratings.Count() > 0)
+                {
+
+                    foreach (var r in ratings)
+                    {
+                        ratingSum += (int)r.stars;
+                    };
+
+                    rating = ratingSum / (double)ratings.Count();
+                    rating = Math.Round(rating, 1);
+                    profileDetailsDTO.rating = rating;
+                    profileDetailsDTO.reviewsCount = ratings.Count();
+
+
+                }
+
+
 
                 return Request.CreateResponse(HttpStatusCode.OK, profileDetailsDTO);
+                /*       return Request.CreateResponse(HttpStatusCode.OK, rating);*/
 
 
 
@@ -457,7 +490,7 @@ namespace WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
 
 
             }
@@ -476,12 +509,14 @@ namespace WebApi.Controllers
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
             try
             {
-                Review review = new Review();
-                review.fromMemberId = reviewsDTO.fromMemberId;
-                review.toMemberId = reviewsDTO.toMemberId;
-                review.text = reviewsDTO.text;
-                review.url = reviewsDTO.url;
-                review.stars = reviewsDTO.stars;
+                Review review = new Review
+                {
+                    fromMemberId = reviewsDTO.fromMemberId,
+                    memberId = reviewsDTO.memberId,
+                    text = reviewsDTO.text,
+                    url = reviewsDTO.url,
+                    stars = reviewsDTO.stars
+                };
 
                 db.Reviews.Add(review);
                 db.SaveChanges();
@@ -530,7 +565,40 @@ namespace WebApi.Controllers
 
 
 
+        [HttpGet]
+        [Route("getallreviews/{memberId}")]
+        public HttpResponseMessage GetAllReviews(int memberId)
+        {
 
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            List<ReviewsDTO> reviews = db.Reviews.Where(x => x.memberId == memberId).Select(y => new ReviewsDTO
+            {
+                fromMemberId = (int)y.fromMemberId,
+                otherMemberImage = db.Members.Where(x => x.id == (int)y.fromMemberId).FirstOrDefault().pictureUrl,
+                otherMemberName = db.Members.Where(x => x.id == (int)y.fromMemberId).FirstOrDefault().fullName,
+                text = y.text,
+                stars = (int)y.stars,
+                id = y.id
+            }).ToList();
+            try
+            {
+
+
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, reviews);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+
+        }
 
 
 
@@ -809,6 +877,27 @@ namespace WebApi.Controllers
 
 
 
+        [HttpDelete]
+        [Route("deletenotification/{notificationId}")]
+
+
+        public HttpResponseMessage DeleteNotification(int notificationId)
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try
+            {
+                Notification notification = db.Notifications.Where(x => x.id == notificationId).FirstOrDefault();
+
+                db.Notifications.Remove(notification);
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Notification Deleted");
+
+            }
+            catch (Exception)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+        }
 
 
         [HttpPost]
@@ -928,7 +1017,151 @@ namespace WebApi.Controllers
 
 
 
-       
+        [HttpGet]
+        [Route("timertest")]
+
+
+        public HttpResponseMessage CheckMeetings()
+
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            /* Test();*/
+            try
+            {
+                var meetings = db.Meetings.ToList();
+                foreach (var meeting in meetings)
+                {
+                    if (CheckIfShouldSendPush((int)meeting.meetingUnixDate))
+                    {
+                        Member firstMember = db.Members.Where(x => x.id == meeting.firstMemberId).FirstOrDefault();
+                        SendPush(firstMember.notificationId);
+                        Member secondMember = db.Members.Where(x => x.id == meeting.secondMemberId).FirstOrDefault();
+                        SendPush(secondMember.notificationId);
+                        //Add Notification To DB 
+
+                        Notification firstNotification = new Notification()
+                        {
+                            memberId = firstMember.id,
+                            notificationType = "meetingCheck",
+                            otherMemberId = secondMember.id,
+                            notificationText = $"Did you eventually meet {secondMember.fullName} for {meeting.meetingEventTitle}?",
+                            unixdate = (int)DateTimeOffset.Now.ToUnixTimeSeconds(),
+                        };
+                        Notification secondNotification = new Notification()
+                        {
+                            memberId = secondMember.id,
+                            notificationType = "meetingCheck",
+                            otherMemberId = firstMember.id,
+                            notificationText = $"Did you eventually meet {firstMember.fullName} for {meeting.meetingEventTitle}?",
+                            unixdate = (int)DateTimeOffset.Now.ToUnixTimeSeconds(),
+                        };
+
+
+                        db.Notifications.Add(firstNotification);
+                        db.Notifications.Add(secondNotification);
+
+
+
+                        //DELETE MEETING FROM DB and adding notification to db
+                        Meeting meetingTORemove = db.Meetings.Where(x => x.id == meeting.id).FirstOrDefault();
+                        db.Meetings.Remove(meetingTORemove);
+
+
+
+
+
+                    }
+
+                }
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Success");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+                throw;
+            }
+
+            /* long now = DateTimeOffset.Now.ToUnixTimeSeconds();*/
+            // here i will check all upcoimg meetings - if meetings passed 3 days - i will sendpush() for both users - and add notification of meetingCheck to both users
+        }
+
+
+
+
+
+
+        public static bool CheckIfShouldSendPush(int meetingDate)
+        {
+            DateTime now = DateTime.Now;
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(meetingDate).ToLocalTime();
+            double daysPassedFromMeeting = (now - dtDateTime).TotalDays;
+            /* long noww = DateTimeOffset.Now.ToUnixTimeSeconds();*/
+            if (daysPassedFromMeeting >= 3)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static void SendPush(string notificationId)
+        {
+            if (notificationId == null)
+            {
+                return;
+            }
+            // Create a request using a URL that can receive a post.   
+            WebRequest request = WebRequest.Create("https://exp.host/--/api/v2/push/send");
+            // Set the Method property of the request to POST.  
+            request.Method = "POST";
+            // Create POST data and convert it to a byte array. 
+            var objectToSend = new
+            {
+                to = notificationId,
+                title = "Meeting check title",
+                body = "Meeting check body",
+                /*badge = 7,*/
+                /*data = new { name = "nir", grade = 100, seconds = DateTime.Now.Second }*/
+                data = new { functionToRun = "meetingCheck" }
+            };
+
+            string postData = new JavaScriptSerializer().Serialize(objectToSend);
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            // Set the ContentType property of the WebRequest.  
+            request.ContentType = "application/json";
+            // Set the ContentLength property of the WebRequest.  
+            request.ContentLength = byteArray.Length;
+            // Get the request stream.  
+            Stream dataStream = request.GetRequestStream();
+            // Write the data to the request stream.  
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            // Close the Stream object.  
+            dataStream.Close();
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            string returnStatus = ((HttpWebResponse)response).StatusDescription;
+            //Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+            // Get the stream containing content returned by the server.  
+            dataStream = response.GetResponseStream();
+            // Open the stream using a StreamReader for easy access.  
+            StreamReader reader = new StreamReader(dataStream);
+            // Read the content.  
+            string responseFromServer = reader.ReadToEnd();
+            // Display the content.  
+            //Console.WriteLine(responseFromServer);
+            // Clean up the streams.  
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+
+            /* return "success:) --- " + responseFromServer + ", " + returnStatus;*/
+
+        }
+
+
 
 
 

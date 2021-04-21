@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     //  marginTop: 5,
     //  marginBottom: 10,
-    width: windowWidth / 1.08,
+    width: windowWidth / 1.081,
     height: windowHeight / 6,
     borderColor: '#ccc',
     // borderRadius: 15,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
     backgroundColor: '#fff',
     marginTop: windowHeight / 40,
-    borderRadius: 2
+    borderRadius: 3
 
 
 

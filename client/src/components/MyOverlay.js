@@ -7,7 +7,7 @@ import { windowHeight } from '../../utils/Dimentions';
 const MyOverlay = (props) => {
 
     return (
-        <Overlay isVisible={props.isVisible} onBackdropPress={props.onBackdropPress} overlayStyle={{ width: '95%' }}>
+        <Overlay isVisible={props.isVisible} onBackdropPress={props.onBackdropPress} overlayStyle={{ width: '95%', borderRadius: 15, maxHeight: windowHeight / 1.4 }}>
             {props.children}
         </Overlay>
     )
