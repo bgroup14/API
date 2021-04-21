@@ -18,6 +18,7 @@ import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Appbar, Title } from 'react-native-paper';
 import Review from '../screens/Review';
+import MeetingNotApprovedScreen from './MeetingNotApprovedScreen';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
 
@@ -41,6 +42,7 @@ const Notifications = (props) => {
     const [restartScreen, setRestartScreen] = useState(false);
     const [refreshPage, setRefreshPage] = useState(false);
     const [reviewObj, setReviewObj] = useState({});
+    const [meetingDidntOccurObj, setMeetingDidntOccurObj] = useState({});
 
     let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
@@ -58,6 +60,7 @@ const Notifications = (props) => {
 
     const [meetingHappend, setMeetingHappend] = useState(false);
     const [isVisible, setIsvisible] = useState(false);
+    const [meetingNotApproved, setMeetingNotApproved] = useState(false);
 
     const isFirstRun = React.useRef(true)
 
@@ -113,6 +116,7 @@ const Notifications = (props) => {
 
             }
 
+
             const fetchNotifications = async () => {
                 console.log("Fetching notificions....")
                 try {
@@ -132,8 +136,6 @@ const Notifications = (props) => {
                 }
 
             }
-
-
 
             fetchNotifications();
             fetchUpcomingMeetings()
@@ -168,6 +170,15 @@ const Notifications = (props) => {
         }
         setReviewObj(obj)
         setMeetingHappend(true)
+    }
+
+    const meetingNotApproveHanlder = (otherMemberName, otherMemberId) => {
+        let obj = {
+            otherMemberId,
+            otherMemberName,
+        }
+        setMeetingDidntOccurObj(obj)
+        setMeetingNotApproved(true)
     }
 
     const closeReview = () => {
@@ -231,6 +242,9 @@ const Notifications = (props) => {
                 <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisible(false)}   >
                     <Review reviewObj={reviewObj} closeReview={() => closeReview()} />
                 </MyOverlay>
+                <MyOverlay isVisible={meetingNotApproved} onBackdropPress={() => setMeetingNotApproved(false)}   >
+                    <MeetingNotApprovedScreen meetingDidntOccurObj={meetingDidntOccurObj} closeWindow={() => setMeetingNotApproved(false)} />
+                </MyOverlay>
 
                 {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
                 {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
@@ -286,6 +300,7 @@ const Notifications = (props) => {
                         return <Notification notification={notification} key={notification.notificationId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                             meetingApprovedBtn={(otherMemberImage, otherMemberName, otherMemberId) => meetingApproveHanlder(otherMemberImage, otherMemberName, otherMemberId)}
+                            meetingNotApprovedBtn={(otherMemberName, otherMemberId) => meetingNotApproveHanlder(otherMemberName, otherMemberId)}
                         />
                     })}
 
