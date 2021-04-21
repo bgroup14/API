@@ -1,5 +1,5 @@
 import { text } from '@fortawesome/fontawesome-svg-core';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { KeyboardAvoidingView, Alert } from 'react-native';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
 import { Avatar } from 'react-native-elements';
@@ -10,24 +10,65 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import { Toast } from "native-base";
+import * as Font from "expo-font";
+import AppLoading from 'expo-app-loading';
+
+
+import {
+    useFonts,
+    Ubuntu_400Regular,
+    Ubuntu_700Bold
+
+} from '@expo-google-fonts/ubuntu';
+
+
+import {
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_700Bold
+
+} from '@expo-google-fonts/inter'
 
 
 
 const Post = (props) => {
+    let [fontsLoaded] = useFonts({
+        Ubuntu_400Regular,
+        Ubuntu_700Bold,
+        Inter_200ExtraLight,
+        Inter_300Light,
+        Inter_400Regular,
+        Inter_700Bold
+    });
     const { postId, text, cityName, recurring, dateLabel, timeOfDay,
-        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe } = props.post;
+        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category } = props.post;
     let currentMemberId = props.currentMemberId;
     //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
+    let userName = useSelector(state => state.user.userName);
     let commentsLabel = comments.length > 1 ? 'Comments' : 'Comment';
 
     var postDistance = Math.round(distanceFromMe * 10) / 10
     let postDistanceKM = cityName != "Zoom Meeting" ? `(${postDistance} km)` : '';
 
 
+    useEffect(() => {
 
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+            loadFonts();
+        }
+
+    }, [])
 
 
 
@@ -55,15 +96,26 @@ const Post = (props) => {
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishcomment", body, config);
             //    console.log(res);
-            Alert.alert(
-                "Comment Publish",
-                "Comment published successfully. ",
-                [
-                    { text: "OK", onPress: () => props.refreshPage() }
 
-                ],
-                setShowCommentInput(false)
-            );
+            Toast.show({
+                text: "Comment published successfully!",
+                // buttonText: "Okay",
+                type: "success",
+                duration: 4000
+            });
+            props.refreshPage();
+            setShowCommentInput(false)
+            // Alert.alert(
+            //     "Comment Publish",
+            //     "Comment published successfully. ",
+            //     [
+            //         { text: "OK", onPress: () => props.refreshPage() }
+
+            //     ],
+            //     setShowCommentInput(false)
+            // );
+
+            updateCategoryStrength();
 
 
         } catch (err) {
@@ -78,9 +130,125 @@ const Post = (props) => {
             );
 
 
+
         }
 
+        let now = Math.floor(Date.now() / 1000)
+        let obj = {
+            memberId: member_id,
+            notificationType: 'Comment',
+            notificationText: comment,
+            otherMemberId: userId,
+            unixdate: now
+        }
+
+        const notificationBody = JSON.stringify(obj)
+
+        console.log("Will add notification with body: " + notificationBody);
+        const addNotificationUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addNotification';
+        // const config = {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // }
+        try {
+
+            const res = await axios.post(addNotificationUrl, notificationBody, config);
+            console.log(res.data)
+
+
+        } catch (error) {
+            console.log("error in adding notification to db")
+        }
+        let pushObj = {
+            functionToRun: "receivedNewComment",
+            // chatRoomId: chatRoomId,
+            // otherMemberName: userName,
+            // otherMemberId: userId,
+            // otherMemberImage: userImage
+
+        }
+        PushFromClient(pushObj)
+
+
+
+
+
     }
+
+
+    const PushFromClient = async (pushObj) => {
+
+        //GET OTHER USER TOKEN ID FROM SERVER
+        const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${member_id}`
+        try {
+            // console.log("getting other memner push id with id: " + otherMemberId)
+            const res = await axios(fetchOtherUserPushNotificationID);
+
+            var otherUserNotificationId = res.data;
+
+
+
+        } catch (error) {
+
+            console.log(error)
+            return null
+        }
+
+        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
+        // var body = comment;
+
+        // switch (pushObj.functionToRun) {
+        //     case "receivedNewComment":
+        //         body = `${userName} sent you a meeting invitation`
+        //         break;
+        //     // case "meetingApproved":
+        //     //     body = `Accepted your meeting invitation`
+        //     //     break;
+        //     // case "meetingRejected":
+        //     //     body = `Rejected your meeting invitation`
+        //     //     break;
+        //     default:
+        //         break;
+        // }
+        // if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
+        //     body = `${userName} sent you a meeting invitation`
+        // }
+
+
+        let push = {
+            to: otherUserNotificationId,
+            // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
+            title: `${userName}commented on your post`,
+            body: comment,
+            badge: 3,
+            data: pushObj,
+
+
+
+        };
+
+        // POST adds a random id to the object sent
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            body: JSON.stringify(push),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json != null) {
+                    console.log(`
+                  returned from server\n
+                  json.data= ${JSON.stringify(json.data)}`);
+
+                } else {
+                    alert('err json');
+                }
+            });
+    }
+
     const askIfWantToDelete = (postId) => {
         Alert.alert(
             "Delete Post",
@@ -103,14 +271,22 @@ const Post = (props) => {
         try {
 
             const res = await axios.delete(`https://proj.ruppin.ac.il/bgroup14/prod/api/post/deletepost/${postId}`)
-            Alert.alert(
-                "Post Deleted!",
-                "Post deleted successfully.",
-                [
 
-                    { text: "OK" }
-                ],
-            );
+            Toast.show({
+                text: "Post deleted successfully!",
+                // buttonText: "Okay",
+                type: "success",
+                duration: 4000
+            });
+
+            // Alert.alert(
+            //     "Post Deleted!",
+            //     "Post deleted successfully.",
+            //     [
+
+            //         { text: "OK" }
+            //     ],
+            // );
             props.refreshPage();
 
 
@@ -138,6 +314,40 @@ const Post = (props) => {
         //AT THE END ACTIVATE PROPS.refreshPage
     }
 
+    const updateCategoryStrength = async () => {
+
+        try {
+            const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${category}`
+            //if this will fail (status !=200 ) it will catch the error in the error block
+            const res = await axios.patch(postInteractionUrl);
+            console.log(res.data);
+
+
+
+        } catch (err) {
+
+            console.log(err)
+
+
+        }
+
+
+    }
+
+    const goToChat = () => {
+        props.goToChatWithUser(currentMemberId, member_id);
+        updateCategoryStrength();
+    }
+
+    const goToOtherUserProfile = () => {
+        props.goToOtherUserProfile(member_id);
+        updateCategoryStrength();
+    }
+
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.postContainer}>
@@ -156,7 +366,7 @@ const Post = (props) => {
                         {/* <TouchableOpacity onPress={() => props.navigation.navigate('OtherUserProfileScreen', {
                             userId: member_id
                         })}> */}
-                        <TouchableOpacity onPress={() => props.goToOtherUserProfile(member_id)}>
+                        <TouchableOpacity onPress={() => goToOtherUserProfile()}>
                             <Text style={styles.userName}>{postCreatorName}</Text>
 
                         </TouchableOpacity>
@@ -194,20 +404,21 @@ const Post = (props) => {
                 </View> : null}
 
             <View style={styles.postBtnContainer}>
-                <TouchableOpacity onPress={() => setShowCommentInput(!showCommentInput)} style={styles.postBtn}>
-                    <FontAwsome name='commenting-o' size={25} color="gray" />
-                    <Text style={styles.btnText}>Comment</Text>
-                </TouchableOpacity >
+
 
                 {/* <TouchableOpacity style={styles.postBtn}>
                     <FontAwsome name='heart-o' size={25} color="gray" />
                     <Text style={styles.btnText}>Like</Text>
                 </TouchableOpacity > */}
 
-                {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => props.goToChatWithUser(currentMemberId, member_id)} style={styles.postBtn}>
+                {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => goToChat()} style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
                 </TouchableOpacity >}
+                <TouchableOpacity onPress={() => setShowCommentInput(!showCommentInput)} style={styles.postBtn}>
+                    <FontAwsome name='commenting-o' size={25} color="gray" />
+                    <Text style={styles.btnText}>Comment</Text>
+                </TouchableOpacity >
 
             </View>
 
@@ -255,7 +466,7 @@ const styles = StyleSheet.create({
         marginLeft: windowWidth / 20,
         marginTop: windowHeight / 80,
         maxWidth: windowWidth / 1.8,
-        marginBottom: windowHeight / 20
+        marginBottom: windowHeight / 60
 
 
         // alignItems: 'center'
@@ -269,19 +480,23 @@ const styles = StyleSheet.create({
     userName:
     {
         fontSize: 16,
-        fontWeight: 'bold'
+        // fontWeight: 'bold',
+        fontFamily: 'Inter_700Bold'
     },
     postText: {
         // fontSize: 14
-        marginVertical: 5
+        marginVertical: 5,
+        fontFamily: 'Inter_400Regular'
     },
     postDateText: {
-        // color: 'red'
+        // color: 'blue',
         marginVertical: windowHeight / 100,
         color: 'black'
     },
     postCityName: {
-        color: 'blue'
+        color: 'blue',
+        fontFamily: 'Ubuntu_400Regular'
+
 
     },
     postBtnContainer: {
@@ -289,6 +504,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: windowWidth / 100,
         justifyContent: 'space-evenly',
+        // justifyContent: 'flex-end',
         alignItems: 'center',
         marginBottom: windowHeight / 100,
         // marginTop: 2

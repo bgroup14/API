@@ -235,7 +235,7 @@ namespace WebApi.Controllers
                     postId = x.id,
                     postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
                     postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
-                   
+
 
                     comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
                     {
@@ -1265,6 +1265,49 @@ namespace WebApi.Controllers
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
             }
+        }
+
+
+
+
+
+
+        [HttpPatch]
+        [Route("postIntercation/{memberId}/{categoryName}")]
+        public HttpResponseMessage DeletePost(int memberId, string categoryName)
+        {
+            /*  return Request.CreateResponse(HttpStatusCode.OK, "Comment saved in DB");*/
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try
+            {
+
+                Interaction interaction = db.Interactions.Where(x => x.memberId == memberId && categoryName == x.categoryName).FirstOrDefault();
+
+                if (interaction == null)
+                {
+                    Interaction newIntercation = new Interaction()
+                    {
+                        categoryName = categoryName,
+                        memberId = memberId,
+                        strength = 1
+                    };
+                    db.Interactions.Add(newIntercation);
+                }
+                else
+                {
+                    interaction.strength = (int)interaction.strength + 1;
+                }
+                db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "Category strength updated");
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Unknown error occured");
+            }
+
         }
 
         public void Post([FromBody] string value)

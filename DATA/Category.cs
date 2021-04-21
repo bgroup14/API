@@ -20,6 +20,7 @@ namespace DATA
             this.Interactions = new HashSet<Interaction>();
             this.MembersCategories = new HashSet<MembersCategory>();
             this.Posts = new HashSet<Post>();
+            this.Interactions = new HashSet<Interaction>();
         }
     
         public int id { get; set; }
@@ -31,5 +32,7 @@ namespace DATA
         public virtual ICollection<MembersCategory> MembersCategories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Post> Posts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Interaction> Interactions { get; set; }
     }
 }

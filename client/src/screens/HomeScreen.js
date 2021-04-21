@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { getIconType } from 'react-native-elements';
+// import { Badge } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -17,9 +17,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerForPushNotificationsAsync from '../../registerForPushNotificationsAsync';
 import * as Notifications from 'expo-notifications'
 
-import { NEW_MESSAGE, RECEIVED_USER_COORDINATES } from '../../store/actions/types';
+import { NEW_MESSAGE, RECEIVED_USER_COORDINATES, NEW_NOTIFICATION } from '../../store/actions/types';
 import AppLoading from 'expo-app-loading';
 import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 
@@ -47,8 +48,26 @@ import CommentsScreens from './CommentsScreens';
 import { Alert } from 'react-native';
 import * as Location from 'expo-location';
 import { set } from 'react-native-reanimated';
+import * as Font from "expo-font";
 
 
+import { Appbar, Badge } from 'react-native-paper';
+
+
+// import { useFonts } from 'expo-font'
+
+import {
+    useFonts,
+    Ubuntu_300Light,
+    Ubuntu_300Light_Italic,
+    Ubuntu_400Regular,
+    Ubuntu_400Regular_Italic,
+    Ubuntu_500Medium,
+    Ubuntu_500Medium_Italic,
+    Ubuntu_700Bold,
+    Ubuntu_700Bold_Italic,
+} from '@expo-google-fonts/ubuntu';
+import { Fragment } from 'react';
 
 
 
@@ -57,6 +76,16 @@ import { set } from 'react-native-reanimated';
 
 
 const HomeScreen = (props) => {
+    let [fontsLoaded] = useFonts({
+        Ubuntu_300Light,
+        Ubuntu_300Light_Italic,
+        Ubuntu_400Regular,
+        Ubuntu_400Regular_Italic,
+        Ubuntu_500Medium,
+        Ubuntu_500Medium_Italic,
+        Ubuntu_700Bold,
+        Ubuntu_700Bold_Italic,
+    });
     const dispatch = useDispatch();
     const [posts, setPosts] = useState([]);
     const [isReady, setIsReady] = useState(false);
@@ -79,6 +108,12 @@ const HomeScreen = (props) => {
     const [myLat, setMyLat] = useState(null);
     const [filterActivated, setFilterACtivated] = useState(false);
 
+    let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
+
+    const [fontsLoad, setFontsLoad] = useState(false);
+
+
+
 
 
 
@@ -97,9 +132,19 @@ const HomeScreen = (props) => {
 
 
     const receivedNewMessage = async () => {
-        console.log("trying to change redux msg recieved state...")
+        //  console.log("trying to change redux msg recieved state...")
         dispatch({
             type: NEW_MESSAGE,
+            payload: null
+        });
+    }
+
+
+    const newNotification = async () => {
+        // alert(1)
+        console.log("trying to change redux no notification...")
+        dispatch({
+            type: NEW_NOTIFICATION,
             payload: null
         });
     }
@@ -111,8 +156,10 @@ const HomeScreen = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             setCategoryameToSend(null)
+            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newNotificationFromRedux)
+            // newMeetingApproved();
             getUserCurrentLocationAndFecthPosts();
-            console.log("token is " + pushNotificationToken)
+            // console.log("token is " + pushNotificationToken)
             // console.log("redux newMessage is: " + newMessage)
             setRestartComponent(Date.now)
             let categories = [
@@ -145,21 +192,6 @@ const HomeScreen = (props) => {
         //GET USER CURRENT LCOATION
         // getUserCurrentLocationAndFecthPosts();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         //when user in app will preform this
@@ -170,11 +202,29 @@ const HomeScreen = (props) => {
             let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
             // let notificationBody = JSON.parse(notification.request)
             console.log(notificationBody)
-            if (notificationBody.functionToRun == "receivedNewMessage") {
-                receivedNewMessage()
-                //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO RECIEVED A MESSAGE 
+            switch (notificationBody.functionToRun) {
+                case "receivedNewMessage":
+                case "receivedNewMeetingInvitation":
+                    receivedNewMessage()
+                    break;
+                case "meetingApproved":
+                case "meetingRejected":
+                case "receivedNewComment":
+                case "meetingCheck":
+                    newNotification();
+                    //FUNCTION THAT WILL MAKE THE BELL RED
+                    break;
+                // case "meetingRejected":
 
+                // break;
+                default:
+                    break;
             }
+            // if (notificationBody.functionToRun == "receivedNewMessage" || notificationBody.functionToRun == "receivedNewMeetingInvitation") {
+            //     receivedNewMessage()
+            //     //ADD NOTIFICATION TO NOTIFIACTION SCREEN BAR AND TO RECIEVED A MESSAGE 
+            // }
+
         });
 
         //When user not in the app will preform this
@@ -183,20 +233,30 @@ const HomeScreen = (props) => {
             console.log(response.notification.request.trigger.remoteMessage.data.body);
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
             // console.log(notificationBody)
-            if (notificationBody.functionToRun == "receivedNewMessage") {
+            switch (notificationBody.functionToRun) {
+                case "receivedNewMessage":
+                case "receivedNewMeetingInvitation":
+                    console.log("entering chat with other user...")
+                    props.navigation.navigate('ChatWithOtherUser', {
+                        chatRoomId: notificationBody.chatRoomId,
+                        otherMemberName: notificationBody.otherMemberName,
+                        otherMemberImage: notificationBody.otherMemberImage,
+                        otherMemberId: notificationBody.otherMemberId
+                    })
+                    break;
+                case "meetingApproved":
+                case "receivedNewComment":
+                case "meetingRejected":
+                case "meetingCheck":
+                    props.navigation.navigate("Notifications")
+                    break;
 
-
-                console.log("entering chat with other user...")
-
-                props.navigation.navigate('ChatWithOtherUser', {
-                    chatRoomId: notificationBody.chatRoomId,
-                    otherMemberName: notificationBody.otherMemberName,
-                    otherMemberImage: notificationBody.otherMemberImage,
-                    otherMemberId: notificationBody.otherMemberId
-
-                })
-
+                default:
+                    break;
             }
+
+
+
 
         });
 
@@ -209,6 +269,18 @@ const HomeScreen = (props) => {
 
 
     useEffect(() => {
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+            setFontsLoad(true)
+
+        }
+        loadFonts();
+
         if (pushNotificationToken == null) {
             checkPushNotifications();
         }
@@ -234,9 +306,9 @@ const HomeScreen = (props) => {
     const sendPushTokenToServer = async () => {
         const fetchNotificationIdURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/setnotificationid/${userId}/${pushNotificationToken}`
         try {
-            console.log("sending push token to server...")
+            // console.log("sending push token to server...")
             const res = await axios.post(fetchNotificationIdURL);
-            console.log(res.data)
+            // console.log(res.data)
         } catch (error) {
             console.log(error)
         }
@@ -267,7 +339,7 @@ const HomeScreen = (props) => {
 
             }
             else {
-                console.log("Push token is updated to : " + lastTimeTokenTaken)
+                // console.log("Push token is updated to : " + lastTimeTokenTaken)
             }
         }
         catch (error) {
@@ -289,7 +361,7 @@ const HomeScreen = (props) => {
 
 
         const body = JSON.stringify(obj)
-        console.log("body that will be send to filter post is: " + body)
+        // console.log("body that will be send to filter post is: " + body)
 
         try {
 
@@ -300,7 +372,7 @@ const HomeScreen = (props) => {
             }
 
             const res = await axios.post(postsFetchURL, body, config);
-
+            console.log(res.data)
             setPosts(res.data)
 
         } catch (err) {
@@ -518,14 +590,14 @@ const HomeScreen = (props) => {
     }
 
     const goToChatWithUser = async (currentMemberId, member_id) => {
-        console.log(currentMemberId)
-        console.log(member_id)
+        // console.log(currentMemberId)
+        // console.log(member_id)
         const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${member_id}`
 
 
         try {
 
-            console.log("Checking Room Id...")
+            // console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
             // console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
@@ -548,13 +620,21 @@ const HomeScreen = (props) => {
     //goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
     const getUserCurrentLocationAndFecthPosts = async () => {
 
+
+        // const [loaded] = useFonts({
+        //     Montserrat: require('./assets/fonts/Montserrat.ttf'),
+        // });
+        // await Font.loadAsync({
+        //     Roboto: require('native-base/Fonts/Roboto.ttf'),
+        //     Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+        // });
         // return null;
         var obj;
         // console.log("user long is :" + userlong)
         if (userLong == null) {
-            console.log("getting user location.........")
-            console.log("user long is null!!!!")
-            console.log(userLong)
+            // console.log("getting user location.........")
+            // console.log("user long is null!!!!")
+            // console.log(userLong)
 
 
             let { status } = await Location.requestPermissionsAsync();
@@ -568,12 +648,13 @@ const HomeScreen = (props) => {
 
 
             let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
-            console.log(regionName[0].city)
+            // console.log(regionName[0].city)
             obj = {
                 filterActivated: false,
                 meetingLocationLong: location.coords.longitude,
                 meetingLocationLat: location.coords.latitude
             }
+            setCurrentLocationDB(location.coords.latitude, location.coords.longitude,)
             fetchPosts(obj)
             setMyLat(location.coords.latitude);
             setMyLong(location.coords.longitude);
@@ -585,7 +666,7 @@ const HomeScreen = (props) => {
                     userLat: location.coords.latitude
                 }
             });
-            console.log("setting is ready == true")
+            // console.log("setting is ready == true")
             setTimeout(() => {
                 setIsReady(true)
                 setSpinner(false)
@@ -595,9 +676,9 @@ const HomeScreen = (props) => {
 
         }
         else {
-            console.log("not getting user location....")
-            console.log("user long is not null!!!!")
-            console.log(userLong)
+            // console.log("not getting user location....")
+            // console.log("user long is not null!!!!")
+            // console.log(userLong)
 
 
             obj = {
@@ -620,6 +701,22 @@ const HomeScreen = (props) => {
 
 
 
+
+
+    }
+
+    const setCurrentLocationDB = async (lat, long) => {
+
+        try {
+            const setCurrentLocationDBUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/addcurrentlocation/${userId}/${lat}/${long}/`
+
+            const res = await axios.post(setCurrentLocationDBUrl);
+            // alert(res.data)
+
+        } catch (error) {
+            // alert(error.message)
+            console.log(error)
+        }
 
 
     }
@@ -648,32 +745,64 @@ const HomeScreen = (props) => {
     }
 
 
+    if (!fontsLoad) {
+        return (
+            <View></View>
+        );
 
+    }
 
     return (
         <KeyboardAvoidingView style={styles.container}  >
+
+
             <MyOverlay isVisible={isFilterVisible} onBackdropPress={() => setIsFilterVisble(false)}  >
                 <FeedFilterScreen closeFilter={() => setIsFilterVisble(false)} sendFilteredObj={(filteredPostObj => fetchFilteredPosts(filteredPostObj))} />
             </MyOverlay>
             <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}   >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
+
+
+
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 70 }} >
+                <Appbar.Content title="Feed" />
+                {newNotificationFromRedux ? <Badge
+                    size={10}
+                    style={{ position: 'absolute', top: 14, right: 14 }}
+                /> : null}
+
+
+                <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} />
+
+
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+
+
+            {/* {!newNotificationFromRedux ? < Badge
+                status="error"
+                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
+            /> : null} */}
+            {/* < Badge
+                status="error"
+                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
+            /> */}
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
+                {/* <Badge>3</Badge> */}
+                {/* < Badge
+                
+                    status="error"
+                    containerStyle={{ position: 'absolute', top: 0, right: 0}}
+                /> */}
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
+
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
 
 
-                <View style={styles.barContainer}><Text style={styles.barText} >Feed</Text>
-                    <Icon
-                        style={styles.bellIcon}
-                        name='bells'
-                        onPress={() => props.navigation.navigate('Notifications')}
 
-                    />
-                </View>
-                {/* <View style={styles.categoryContainer}>
-                        <Text>Category dropdown</Text>
-                    </View> */}
+
 
 
                 <View style={styles.selectCategoryContainer} key={restartComponent} >
@@ -788,23 +917,31 @@ const styles = StyleSheet.create({
     barText: {
         color: "#ffffff",
         fontSize: 24,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        marginTop: windowHeight / 200,
 
+        // fontFamily: 'Ubuntu_700Bold',
+        fontFamily: 'Ubuntu_300Light',
+        // fontFamily: 'Roboto_medium'
+        // fontFamily: 'Allan_400Regular'
+        // fontFamily: 'Inter_900Black'
     },
     bellIcon: {
         color: '#ffffff',
-        fontSize: 24
+        fontSize: 28
     },
     selectCategoryContainer:
     {
         //  flex: 1,
         // position: 'relative',
         // backgroundColor: 'red',
-        marginTop: windowHeight / 20,
+        // marginTop: windowHeight / 70,
+        marginVertical: windowHeight / 80,
+
         flexDirection: 'row',
         //alignItems: 'flex-start',
         //  justifyContent: 'space-around',
-        marginBottom: windowHeight / 70,
+        // marginBottom: windowHeight / 70,
         // width: '100%',
         // marginLeft: windowWidth / 50,
         //borderRadius: 50

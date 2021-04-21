@@ -11,7 +11,7 @@ namespace WebApi.DTO
         public string meetingDateLabel;
         public string meetingEventTitle;
         public string meetingTimeLabel;
-        /*public int meetingUnixDate;*/
+        public int meetingUnixDate;
         /*public bool meetingMsg;*/
         public string meetingLocationLabel;
         public string otherMemberName;

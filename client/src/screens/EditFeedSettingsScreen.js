@@ -15,6 +15,11 @@ import { updateFeedSettingsRedux } from '../../store/actions/user';
 
 import { register } from '../../store/actions/auth';
 
+import { Toast } from "native-base";
+import * as Font from "expo-font";
+import { Appbar, Button as Btn } from 'react-native-paper';
+
+
 
 const EditFeedSettingsScreen = (props) => {
   let userId = useSelector(state => state.auth.userId);
@@ -23,10 +28,20 @@ const EditFeedSettingsScreen = (props) => {
   const [postsLocation, setPostsLocation] = useState();
   const [fromGender, setFromGender] = useState();
   const [participantAgeRange, setParticipantAgeRange] = useState();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
 
 
   useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Roboto': require('native-base/Fonts/Roboto.ttf'),
+        'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
 
+      })
+    }
+    loadFonts();
+    setFontsLoaded(true)
 
   }, [])
 
@@ -64,13 +79,23 @@ const EditFeedSettingsScreen = (props) => {
       const res = await axios.put(updateFeedSettingsURL, body, config);
       dispatch(updateFeedSettingsRedux(feedSettings));
 
-      Alert.alert(
-        "Feed Settings Updated",
-        res.data,
-        [
-          { text: 'OK', onPress: () => props.navigation.navigate('Home') },
-        ],
-      );
+      Toast.show({
+        text: "Feed settings updated successfully!",
+        // buttonText: "Okay",
+        type: "success",
+        duration: 4000
+      });
+      props.navigation.navigate('MyProfile')
+
+
+
+      // Alert.alert(
+      //   "Feed Settings Updated",
+      //   res.data,
+      //   [
+      //     { text: 'OK', onPress: () => props.navigation.navigate('Home') },
+      //   ],
+      // );
 
 
 
@@ -110,13 +135,27 @@ const EditFeedSettingsScreen = (props) => {
 
 
   }
+
+  if (!fontsLoaded) {
+    return (
+      <View></View>
+    );
+
+  }
   return (
     <ScrollView >
       {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1500} />
+      <View style={{ marginBottom: windowHeight / 40 }}>
+        <Appbar.Header style={{ backgroundColor: '#3b5998' }} >
 
+          <Appbar.BackAction onPress={() => props.navigation.navigate('MyProfile')} />
+          <Appbar.Content title="Feed Settings" />
+        </Appbar.Header>
+      </View>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
+
+        {/* <View style={styles.headerContainer}>
           <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
           >
             <Text style={styles.barReset}>Cancel</Text>
@@ -126,7 +165,8 @@ const EditFeedSettingsScreen = (props) => {
           </View>
 
 
-        </View>
+        </View> */}
+
         <Text style={styles.feedSettingsFilterText}>Do you</Text>
         <View style={styles.radioBtnContainer}>
           <CheckBox containerStyle={styles.CheckBox}
@@ -222,10 +262,15 @@ const EditFeedSettingsScreen = (props) => {
         </View>
 
 
-        <FormButton
-          buttonTitle="Update feed settings"
+        {/* <FormButton
+          buttonTitle="Update"
           onPress={() => updateFeedSettings()}
-        />
+        /> */}
+        <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: windowHeight / 40 }}>
+          <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateFeedSettings()}>
+            Update Feed Settings </Btn>
+        </View>
+
 
 
       </ View>
@@ -237,13 +282,13 @@ export default EditFeedSettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    padding: windowWidth / 20,
+    // padding: windowWidth / 50,
 
   },
   radioBtnContainer: {
 
     marginVertical: windowHeight / 150,
-    width: '100%',
+    // width: '100%',
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
@@ -270,7 +315,9 @@ const styles = StyleSheet.create({
   },
   feedSettingsFilterText: {
     fontSize: 20,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    marginLeft: windowWidth / 20,
+
   },
   // headerContainer:
   // {

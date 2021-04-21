@@ -17,7 +17,7 @@ const ChatContact = (props) => {
 
     const { otherMemberName, otherMemberId, otherMemberImage, latstSentence,
         lastDate, chatRoomId, lastMessageSenderId, lastMessageMarkedAsRead } = props.chatRoom;
-    console.log("read??: " + lastMessageMarkedAsRead)
+    // console.log("read??: " + lastMessageMarkedAsRead)
     // setBold(false)
     // console.log("bold is set to: " + bold)
 
@@ -50,7 +50,7 @@ const ChatContact = (props) => {
 
                 <Avatar
 
-                    size='large'
+                    size='medium'
                     containerStyle={{ marginTop: 10 }}
                     rounded
                     source={{

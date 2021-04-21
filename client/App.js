@@ -6,10 +6,13 @@ import thunk from 'redux-thunk';
 
 import authReducer from './store/reducers/auth';
 import userReducer from './store/reducers/user';
-import chatReducer from './store/reducers/chat';
+import notificationReducer from './store/reducers/notification';
 
 import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreens from './src/stacks/AppStackScreens';
+
+import { Root } from "native-base";
+
 
 
 
@@ -17,7 +20,7 @@ import AppStackScreens from './src/stacks/AppStackScreens';
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
-  chat: chatReducer
+  notification: notificationReducer
 });
 
 
@@ -31,7 +34,9 @@ export default function App() {
 
     <Provider store={store}>
       <NavigationContainer  >
-        <AppStackScreens />
+        <Root>
+          <AppStackScreens />
+        </Root>
       </NavigationContainer>
     </Provider>
   );

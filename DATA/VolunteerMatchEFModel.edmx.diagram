@@ -45,6 +45,14 @@
         <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" />
         <AssociationConnector Association="bgroup14_prodModel.FK__Notificat__membe__6166761E" />
         <AssociationConnector Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Interaction" Width="1.5" PointX="11.25" PointY="9.75" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.Notification" Width="1.5" PointX="8.25" PointY="18.25" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Interacti__membe__59C55456" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Notificat__membe__6166761E" />
+        <EntityTypeShape EntityType="bgroup14_prodModel.InteractionsMember" Width="1.5" PointX="8.25" PointY="21.5" />
+        <AssociationConnector Association="bgroup14_prodModel.FK__Interacti__membe__72910220" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

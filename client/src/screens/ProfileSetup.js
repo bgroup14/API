@@ -257,6 +257,7 @@ const ProfileSetup = (props) => {
       testID="dateTimePicker"
       value={date}
       mode={mode}
+
       is24Hour={true}
       display="default"
       onChange={onChangeDate}
@@ -372,6 +373,22 @@ const ProfileSetup = (props) => {
           </View>
 
 
+          <View style={styles.setupParamsContainer}>
+            <Text style={styles.setupParams}>HOBBIES</Text>
+
+            <TouchableOpacity style={styles.dropDownContainer} >
+              <Button
+                title={hobbisTitleFunc()}
+                type="outline"
+                raised={true}
+                buttonStyle={{ padding: 15 }}
+                onPress={() => props.navigation.navigate('HobbiesScreen')}
+
+              />
+            </TouchableOpacity>
+          </View>
+
+
 
           <View style={styles.genderContainer}>
             <Text style={styles.setupParams}>GENDER</Text>
@@ -421,20 +438,7 @@ const ProfileSetup = (props) => {
           /> */}
           </View>
 
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>HOBBIES</Text>
 
-            <TouchableOpacity style={styles.dropDownContainer} >
-              <Button
-                title={hobbisTitleFunc()}
-                type="outline"
-                raised={true}
-                buttonStyle={{ padding: 15 }}
-                onPress={() => props.navigation.navigate('HobbiesScreen')}
-
-              />
-            </TouchableOpacity>
-          </View>
 
           <View  >
             <View style={styles.nextBtnContainer}>

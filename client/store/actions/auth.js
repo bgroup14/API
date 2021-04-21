@@ -41,7 +41,7 @@ export const login = (email, password) => async dispatch => {
 
         Alert.alert(
             "OOPS!",
-            "Wrong Email Or Password",
+            "Wrong email or password",
             [
 
                 { text: "OK" }

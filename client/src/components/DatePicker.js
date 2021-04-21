@@ -1,11 +1,13 @@
 // import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState, useEffect } from 'react';
-import { View, Platform, Text, StyleSheet } from 'react-native';
+import { View, Platform, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-import { Button } from 'react-native-elements';
+import { Button, Input, Divider } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 
 
@@ -131,7 +133,13 @@ const DatePicker = (props) => {
     ]
     const sendDateToParent = () => {
         if (!choseDate) {
-            alert("You must choose date before saving")
+            Alert.alert(
+                "",
+                "You must choose date before saving",
+                [
+                    { text: "OK" }
+                ],
+            );
             return null;
         }
         let dateObj = {
@@ -154,10 +162,26 @@ const DatePicker = (props) => {
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={styles.header} >Meeting Date</Text>
             </View>
-            <View style={styles.dateContainer}>
-                {dateLabel == null ? <Button buttonStyle={styles.selectDateBtn} onPress={showDatepicker} title="Click to select date" /> : <View><Text style={{ fontSize: 16, marginBottom: 20 }} >Selected Date: {dateLabel}</Text><Button title="Change Date" onPress={showDatepicker} /></View>}
-                {/* <Button onPress={() => checkDate()} title="CHECK Date" /> */}
-            </View>
+
+            <TouchableOpacity onPress={showDatepicker} style={{ marginTop: windowHeight / 40 }}   >
+                <Input
+                    placeholder='Select date'
+                    // containerStyle={{ marginTop: 100 }}
+                    value={dateLabel}
+                    disabled={true}
+                    // style={{ minWidth: windowWidth / 1.3 }}
+                    rightIcon={
+
+                        <Icon
+                            name='calendar'
+                            size={24}
+                            color='black'
+                        />
+                    }
+                    containerStyle={{ width: windowWidth / 1.2 }}
+
+                />
+            </TouchableOpacity>
 
             <View>
                 <View style={styles.selectCategoryContainer}>
@@ -232,9 +256,21 @@ const DatePicker = (props) => {
                 />
             )} */}
 
-            <View style={styles.saveBtnContainer}>
-                {choseDate ? <Button type='clear' title="Save" onPress={() => sendDateToParent()} /> : null}
+            <View>
+                <Divider style={{ marginBottom: windowHeight / 100 }} />
+
+                <View style={styles.saveBtnContainer}>
+
+                    <View style={{ marginLeft: 30 }}>
+                        <Button type='clear' title="SAVE" onPress={() => sendDateToParent()} />
+
+                    </View>
+                    <Button type='clear' title="CANCEL" onPress={() => props.closeDatePicker()} />
+                </View>
+
+
             </View>
+
         </View>
     );
 };
@@ -247,12 +283,13 @@ const styles = StyleSheet.create({
     {
         //width: '95%',
         //marginLeft: windowWidth / 50
+        marginBottom: windowHeight / 10
     },
     dropDownContainer: {
 
         // marginTop: 5,
         //  marginBottom: 10,
-        //width: '98%',
+        width: windowWidth * 0.82,
         height: windowHeight / 15,
         // marginTop: windowHeight / 100,
         marginBottom: windowHeight / 100,
@@ -260,17 +297,40 @@ const styles = StyleSheet.create({
 
     },
     dateContainer: {
-        marginTop: windowHeight / 40,
+        //marginTop: windowHeight / 40,
         marginBottom: windowHeight / 40,
     },
     selectDateBtn: {
         // width: '95%',
     },
     saveBtnContainer: {
-        marginTop: windowHeight / 8
+        // flexDirection: 'row',
+        // marginTop: windowHeight / 8,
+        // justifyContent: 'space-evenly',
+        alignItems: 'stretch',
+        // marginRight: windowWidth / 10,
+        // flexDirection: 'row-reverse',
+        // // justifyContent: 'flex-start',
+        // // marginTop: windowHeight / 40,
+
+        // // marginRight: 50,
+        width: '95%',
+
+        flexDirection: 'row-reverse',
+        // justifyContent: 'flex-start',
+        // marginTop: windowHeight / 40,
+
+        // marginRight: 50,
+        // width: '90%',
+        // padding: windowHeight / 100,
+        // height: windowHeight / 10
+        // alignItems: 'flex-start'
+
     },
     header: {
-        fontSize: 18
+        fontSize: 24,
+        color: '#3b5998'
+
     }
 
 

@@ -14,6 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MyOverlay from '../components/MyOverlay';
 import { Alert } from 'react-native';
+import AddNotificationToDb from '../components/AddNotificationToDb';
 
 
 
@@ -62,7 +63,7 @@ const ChatWithOtherUser = (props) => {
     const [sentNewMessage, setSentNewMessage] = useState(false);
     const dispatch = useDispatch();
     const [isVisible, setIsvisble] = useState(false);
-    let newMessageFromRedux = useSelector(state => state.chat.receivedMessage);
+    let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
 
 
 
@@ -236,12 +237,32 @@ const ChatWithOtherUser = (props) => {
             return null
         }
 
-        console.log("new message hopefully null " + newMessage)
+        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
+        var body = newMessage;
+
+        switch (pushObj.functionToRun) {
+            case "receivedNewMeetingInvitation":
+                body = `sent you meeting invitation`
+                break;
+            case "meetingApproved":
+                body = `Accepted your meeting invitation`
+                break;
+            case "meetingRejected":
+                body = `Rejected your meeting invitation`
+                break;
+            default:
+                break;
+        }
+        // if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
+        //     body = `${userName} sent you a meeting invitation`
+        // }
+
+
         let push = {
             to: otherUserNotificationId,
             // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
-            title: otherMemberName,
-            body: newMessage,
+            title: userName,
+            body: body,
             badge: 3,
             data: pushObj,
 
@@ -281,16 +302,17 @@ const ChatWithOtherUser = (props) => {
             try {
                 const createMeetingUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/createMeeting/${chatRoomId}`
                 const res = await axios.post(createMeetingUrl);
-                console.log(res.data)
-                console.log(res.status)
-                console.log(res.status == 200)
+
+                // console.log(res.data)
+                // console.log(res.status)
+                // console.log(res.status == 200)
 
                 if (res.status == 200) {
                     //This will rerender component
                     setSentNewMessage(!sentNewMessage)
                     Alert.alert(
-                        "",
-                        "Meeting created. You can watch your upcoming meeting in the notifications screen",
+                        "Meeting created",
+                        "You can watch your upcoming meetings in the notifications screen",
                         [
                             {
                                 text: "OK",
@@ -302,6 +324,107 @@ const ChatWithOtherUser = (props) => {
             } catch (error) {
                 console.log(error)
             }
+
+            try {
+                const deleteMeetingMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/deleteMeetingMessage/${chatRoomId}`
+                const res = await axios.delete(deleteMeetingMessageUrl);
+
+
+            } catch (error) {
+                console.log(error)
+            }
+
+            let pushObj = {
+                functionToRun: "meetingApproved",
+                // chatRoomId: chatRoomId,
+                // otherMemberName: userName,
+                // otherMemberId: userId,
+                // otherMemberImage: userImage
+
+            }
+
+            PushFromClient(pushObj)
+
+            let now = Math.floor(Date.now() / 1000)
+            let notificationText = `Accepted your meeting invitation`
+            let obj = {
+                memberId: otherMemberId,
+                notificationType: 'MeetingAnswer',
+                notificationText: notificationText,
+                otherMemberId: userId,
+                unixdate: now
+            }
+
+            AddNotificationToDb(obj)
+
+
+
+        }
+        else if (answer == "Reject") {
+
+
+
+
+            try {
+                const deleteMeetingMessageUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/deleteMeetingMessage/${chatRoomId}`
+                const res = await axios.delete(deleteMeetingMessageUrl);
+
+
+                if (res.status == 200) {
+                    //This will rerender component
+                    setSentNewMessage(!sentNewMessage)
+                    Alert.alert(
+                        "",
+                        "Meeting rejected",
+                        [
+                            {
+                                text: "OK",
+                            }
+                        ],
+                    );
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+
+
+
+            let pushObj = {
+                functionToRun: "meetingRejected",
+                // chatRoomId: chatRoomId,
+                // otherMemberName: userName,
+                // otherMemberId: userId,
+                // otherMemberImage: userImage
+
+            }
+            PushFromClient(pushObj)
+
+            let now = Math.floor(Date.now() / 1000)
+            let notificationText = `Rejected your meeting invitation`
+            let obj = {
+                memberId: otherMemberId,
+                notificationType: 'MeetingAnswer',
+                notificationText: notificationText,
+                otherMemberId: userId,
+                unixdate: now
+            }
+
+            AddNotificationToDb(obj)
+
+
+
+
+
+
+
+            //DELETE MEETING MSG FROM DB
+
+
+
+
+
+
         }
 
 
@@ -355,7 +478,7 @@ const ChatWithOtherUser = (props) => {
         }
         console.log("meetingMsgDetails.......")
         let body = JSON.stringify(meetingMsgDetails);
-        console.log(body)
+        // console.log(body)
 
         try {
             const config = {
@@ -409,11 +532,15 @@ const ChatWithOtherUser = (props) => {
 
 
             <View style={styles.inner}>
-                <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
-                <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
-                    <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} />
+                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
+                <KeyboardAvoidingView>
+                    <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
+                        <ScheduleMeeting receiveDateFromDatePicker={(dateObj) => inviteMeeting(dateObj)} closeMeeting={() => setIsvisble(false)} />
 
-                </MyOverlay>
+                    </MyOverlay>
+                </KeyboardAvoidingView>
+
                 {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
                 <View >
                     <View>
@@ -449,7 +576,7 @@ const ChatWithOtherUser = (props) => {
                 <ScrollView style={{ marginTop: windowHeight / 20 }} ref={scrollView} >
 
                     {chatHistory.map((message) => {
-                        console.log(message)
+                        // console.log(message)
                         //console.log(otherMemberName)
                         return <MessageBubble message={message} mine={!message.mine} text={message.text}
                             key={message.messageId} otherMemberName={otherMemberName} meetingAnswer={(answer) => meetingAnswer(answer)}

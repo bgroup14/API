@@ -332,7 +332,7 @@ namespace WebApi.Controllers
                     newMessage.meetingTimeLabel = message.meetingTimeLabel;
                     newMessage.meetingUnixDate = message.meetingUnixDate;
                     newMessage.meetingLocationLabel = message.meetingLocationLabel;
-                    newMessage.text = "Meeting MSG";
+                    newMessage.text = "Meeting invitation";
 
 
 
@@ -445,7 +445,8 @@ namespace WebApi.Controllers
                     didHappen = false,
                     meetingDateLabel = meetingMsg.meetingDateLabel,
                     meetingTimeLabel = meetingMsg.meetingTimeLabel,
-                    meetingLocationLabel = meetingMsg.meetingLocationLabel
+                    meetingLocationLabel = meetingMsg.meetingLocationLabel,
+                    didPushSent = false,
                 };
                 db.Meetings.Add(meeting);
                 db.ChatHistories.Remove(meetingMsg);
@@ -455,6 +456,37 @@ namespace WebApi.Controllers
 
 
                 return Request.CreateResponse(HttpStatusCode.OK, "Meeting saved in DB!");
+
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+        }
+
+
+
+
+
+        [HttpDelete]
+        [Route("deleteMeetingMessage/{chatRoomId}")]
+        public HttpResponseMessage DeleteMeetingMessage(int chatRoomId)
+        {
+
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            try
+            {
+
+                ChatHistory meetingMsgToDelete = db.ChatHistories.Where(x => x.chatRoomId == chatRoomId && x.meetingMsg == true).FirstOrDefault();
+                db.ChatHistories.Remove(meetingMsgToDelete);
+                db.SaveChanges();
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Meeting msg deleted from DB");
 
             }
             catch (Exception ex)

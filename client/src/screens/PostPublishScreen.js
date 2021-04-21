@@ -23,16 +23,32 @@ import SetLocationScreen from './SetLocationScreen';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { Toast } from "native-base";
+import { RotationGestureHandler } from 'react-native-gesture-handler';
+import Root from "native-base";
+import * as Font from "expo-font";
 
+import { Appbar, Button as Btn } from 'react-native-paper';
 
 const PostPublishScreen = (props) => {
     const [participantAge, setParticipantAge] = useState(useSelector(state => state.user.participantAge));
+    const [fontsLoaded, setFontsLoaded] = useState(false);
 
 
 
 
     useEffect(() => {
 
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+        }
+        loadFonts();
+        setFontsLoaded(true)
         setAgeRange();
 
     }, [participantAge])
@@ -273,15 +289,24 @@ const PostPublishScreen = (props) => {
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishpost", body, config);
             resetPost();
 
-            console.log(res);
-            Alert.alert(
-                "Post Publish",
-                "Post published successfully. ",
-                [
-                    { text: "OK", onPress: () => props.navigation.navigate('Home') }
+            // console.log(res);
+            Toast.show({
+                text: "Post published successfully!",
+                // buttonText: "Okay",
+                type: "success",
+                duration: 4000
+            });
 
-                ],
-            );
+            props.navigation.navigate('Home')
+            // Alert.alert(
+            //     "Post Publish",
+            //     "Post published successfully. ",
+            //     [
+            //         { text: "OK", onPress: () => props.navigation.navigate('Home') }
+
+            //     ],
+            // );
+            updateCategoryStrength();
 
             // console.log("res data (payload is:)")
 
@@ -301,26 +326,65 @@ const PostPublishScreen = (props) => {
 
     }
 
+    const updateCategoryStrength = async () => {
 
+        try {
+            const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${postCategory}`
+            //if this will fail (status !=200 ) it will catch the error in the error block
+            const res = await axios.patch(postInteractionUrl);
+            console.log(res.data);
+
+
+
+        } catch (err) {
+
+            console.log(err)
+
+
+        }
+
+
+    }
+
+
+    if (!fontsLoaded) {
+        return (
+            <View></View>
+        );
+
+    }
     return (
         <View style={styles.container}>
             <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisble(false)}  >
-                <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)} />
+                <DatePicker receiveDateFromDatePicker={(dateObj) => receiveDateFromDatePicker(dateObj)}
+                    closeDatePicker={() => setIsvisble(false)} />
             </MyOverlay>
             <MyOverlay isVisible={isVisibleLocation} onBackdropPress={() => setIsVisibleLocation(false)}   >
                 <SetLocationScreen closeSetLocation={() => setIsVisibleLocation(false)} setLocation={(locationObj) => setLocation(locationObj)} />
             </MyOverlay>
+
+
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
+                <Appbar.Content title="Create Post" />
+
+                {/* <Appbar.Action icon='' onPress={() => { props.navigation.navigate('Notifications') }} /> */}
+                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+            </Appbar.Header>
+
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
-            <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} />
+            {/* <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} /> */}
+            {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
 
 
-            <View style={styles.barContainer}><Text style={styles.barText}>Publish Post</Text>
-                <TouchableOpacity onPress={() => resetPost()}>
-                    <Text style={styles.barReset}>Reset</Text>
+
+            {/* <View style={styles.barContainer}><Text style={styles.barText}>Create Post</Text>
+                <TouchableOpacity onPress={() => publishPost()}>
+                    <Text style={styles.barReset}>POST</Text>
                 </TouchableOpacity>
-            </View>
-            <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting} {userFirstName}</Text>
+            </View> */}
+
+            <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting}, {userFirstName}</Text>
                 <Text style={{ padding: windowWidth / 30, fontSize: 16 }}>{userGiveOrGet}</Text>
 
 
@@ -376,7 +440,7 @@ const PostPublishScreen = (props) => {
                     </ModalSelector>
                 </View>
 
-                <Divider />
+                {/* <Divider /> */}
 
 
                 <View style={styles.optionContainer}>
@@ -401,7 +465,7 @@ const PostPublishScreen = (props) => {
                     </ModalSelector>
 
                 </View>
-                <Divider />
+                {/* <Divider /> */}
 
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Participant Age</Text>
@@ -429,7 +493,7 @@ const PostPublishScreen = (props) => {
                 </View>
 
 
-                <Divider />
+                {/* <Divider /> */}
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
                     {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
@@ -455,7 +519,7 @@ const PostPublishScreen = (props) => {
 
 
                 </View>
-                <Divider />
+                {/* <Divider /> */}
 
 
 
@@ -464,11 +528,11 @@ const PostPublishScreen = (props) => {
                     <Text style={{ marginTop: 10, fontSize: 16 }} >Specific Date?</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ marginHorizontal: windowWidth / 9 }}>
-                            <Button title="NO" type='solid' onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "green", borderRadius: 2 } : { fontSize: 10, borderRadius: 2 }} />
+                            <Button title="NO" type={specificDate ? 'clear' : 'solid'} onPress={() => setSpecificDate(false)} buttonStyle={!specificDate ? { backgroundColor: "red", borderRadius: 2 } : { fontSize: 10, borderRadius: 2 }} />
 
                         </View>
 
-                        <Button title="YES" type='solid' onPress={() => setIsvisble(true)} buttonStyle={{ borderRadius: 2 }} />
+                        <Button title="YES" type='clear' onPress={() => setIsvisble(true)} buttonStyle={{ borderRadius: 2 }} />
                     </View>
 
 
@@ -491,8 +555,19 @@ const PostPublishScreen = (props) => {
                     </View>
                 }
 
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 12 }}>
+                    <Btn style={{ width: windowWidth }} mode='outlined' color='#3b5998' onPress={() => publishPost()}>
+                        post  </Btn>
+                </View>
 
-                <View style={styles.btnContainer}>
+
+
+                {/* <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 25 }}>
+                    <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
+                        post </Btn>
+                </View> */}
+
+                {/* <View style={styles.btnContainer}>
 
 
                     <FormButton
@@ -500,7 +575,7 @@ const PostPublishScreen = (props) => {
                         onPress={() => publishPost()}
                     />
 
-                </View>
+                </View> */}
 
             </View>
         </View >
@@ -528,14 +603,14 @@ const styles = StyleSheet.create({
         height: windowHeight / 10,
     },
     barText: {
-        color: 'black',
+        color: '#fff',
         fontSize: 22,
         fontWeight: 'bold',
         marginTop: 20,
     },
     barReset: {
-        color: 'red',
-        marginTop: windowHeight / 40
+        color: '#fff',
+        marginTop: windowHeight / 40,
     },
     bellIcon: {
         color: '#ffffff',
@@ -543,7 +618,8 @@ const styles = StyleSheet.create({
     },
     userGreetingContainer: {
         alignItems: 'center',
-        height: windowHeight / 6,
+        marginTop: windowHeight / 50
+        //  height: windowHeight / 6,
 
     },
     userGreetingText: {
@@ -558,11 +634,14 @@ const styles = StyleSheet.create({
     txtAreaContainer:
     {
         alignItems: 'center',
-        height: windowHeight / 5,
+        // height: windowHeight / 5,
+        marginTop: windowHeight / 100
     },
 
     postOptionsContainer: {
-        height: windowHeight / 2.4,
+        // height: windowHeight / 2.4,
+        marginTop: windowHeight / 100,
+        marginLeft: windowWidth / 150
     },
     optionContainer: {
         height: windowHeight / 13,

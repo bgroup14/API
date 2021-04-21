@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     container: {
         // flex: 0.9,
         // minHeight: 900,
-        height: windowHeight * 0.80,
+        //  height: windowHeight * 0.80,
 
     },
     postsContainer: {

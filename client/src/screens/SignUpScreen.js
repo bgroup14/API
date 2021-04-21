@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight } from '../../utils/Dimentions';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAvoidingView } from 'react-native';
 
 const SignupScreenTest = (props) => {
   const [email, setEmail] = useState();
@@ -159,7 +160,7 @@ const SignupScreenTest = (props) => {
 
 
   return (
-    <View >
+    <KeyboardAvoidingView >
       <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
 
       <View style={styles.container}>
@@ -225,7 +226,7 @@ const SignupScreenTest = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

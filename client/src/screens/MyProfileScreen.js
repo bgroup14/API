@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Post from '../components/Post';
@@ -16,6 +16,13 @@ import DotsMenuOverlay from '../components/DotsMenuOverlay';
 import AppLoading from 'expo-app-loading';
 import { Divider } from 'react-native-elements';
 
+import { Appbar, Button } from 'react-native-paper';
+import { Rating, AirbnbRating } from 'react-native-elements';
+import { TextInput } from 'react-native-gesture-handler';
+import UserReviews from './UserReviews';
+
+
+const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
 
 const MyProfileScreen = (props) => {
@@ -25,13 +32,17 @@ const MyProfileScreen = (props) => {
     const [userBio, setUserBio] = useState(null);
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
+    const [userRating, setUserRating] = useState(null);
+    const [reviewsCount, setReviewsCount] = useState(null);
     const [userHobbies, setUserHobbies] = useState("");
+
 
 
     const [posts, setPosts] = useState([]);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
     const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
+    const [isReviewsVisible, setIsReiviewsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [userPosts, setUserPosts] = useState([]);
@@ -79,6 +90,8 @@ const MyProfileScreen = (props) => {
         // console.log(res.data)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
+        setUserRating(res.data.rating)
+        res.data.reviewsCount == 1 ? setReviewsCount(res.data.reviewsCount + " Review") : setReviewsCount(res.data.reviewsCount + " Reviews")
         //  console.log("user image is :" + res.data.pictureUrl)
         setUserImage(res.data.pictureUrl)
         let cityName = res.data.city.replace(/,[^,]+$/, "")
@@ -114,15 +127,19 @@ const MyProfileScreen = (props) => {
         setCommentsToShow(comments)
 
     }
-    const toggleCommentsScreen = () => {
+    const closeCommentsScreen = () => {
         setIsCommentsVisible(false)
         setCommentsToShow([])
 
     }
+    const closeReviewsScreen = () => {
+        setIsReiviewsVisible(false)
+    }
 
     const goToOtherUserProfile = (member_id) => {
 
-        toggleCommentsScreen();
+        closeCommentsScreen();
+        closeReviewsScreen();
         // alert(member_id)
         if (userId == member_id) {
             props.navigation.navigate('MyProfile')
@@ -166,11 +183,26 @@ const MyProfileScreen = (props) => {
 
     return (
         <KeyboardAvoidingView style={styles.container} >
-            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => toggleCommentsScreen()}  >
+            <MyOverlay isVisible={isCommentsVisible} onBackdropPress={() => closeCommentsScreen()}  >
                 <CommentsScreens comments={commentsToShow} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
             </MyOverlay>
-            <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
-            <View style={styles.barContainer}>
+            <MyOverlay isVisible={isReviewsVisible} onBackdropPress={() => closeReviewsScreen()}  >
+                <UserReviews userId={userId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
+            </MyOverlay>
+
+
+            <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }}>
+                <Appbar.Content title="My Profile" />
+                {/* <Appbar.Action icon="magnify" onPress={() => { }} /> */}
+                <Appbar.Action icon={MORE_ICON} onPress={() => setIsMenuVisible(true)} />
+            </Appbar.Header>
+            <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
+                <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
+            </DotsMenuOverlay>
+            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
+            {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
+
+            {/* <View style={styles.barContainer}>
                 <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
                     <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
                 </DotsMenuOverlay>
@@ -180,13 +212,13 @@ const MyProfileScreen = (props) => {
                     name='dots-vertical'
                     onPress={() => setIsMenuVisible(true)}
                 />
-            </View>
+            </View> */}
             <ScrollView style={styles.inner}>
 
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
-                        containerStyle={{ marginTop: 10 }}
+                        //   containerStyle={{ marginTop: 10 }}
                         rounded
                         source={{
                             uri:
@@ -207,14 +239,16 @@ const MyProfileScreen = (props) => {
                         {/* <Text style={{ fontSize: 16 }}>{userCity}</Text> */}
                     </View>
 
-                    <View style={{ flexDirection: 'row', marginTop: windowHeight / 70, maxWidth: windowWidth / 1.5 }}>
-                        <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>"{userBio}"</Text>
-
-                    </View>
                     {userHobbies.length > 0 ? <View style={{ flexDirection: 'row', marginTop: windowHeight / 70 }}>
                         <Text style={{ fontWeight: 'bold' }} >Hobbies: </Text><Text>{userHobbies}</Text>
 
                     </View> : null}
+
+
+                    <View style={{ flexDirection: 'row', marginTop: windowHeight / 70, maxWidth: windowWidth / 1.5 }}>
+                        <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>"{userBio}"</Text>
+
+                    </View>
 
 
 
@@ -227,7 +261,19 @@ const MyProfileScreen = (props) => {
 
 
 
-                <ScrollView contentContainerStyle={styles.userPostsContainer}>
+                <View style={styles.userPostsContainer}>
+                    {userRating > 0 ?
+                        <View style={styles.ratingContainer} >
+                            <Rating fractions={2} startingValue={userRating} imageSize={24} />
+                            <View style={{ marginTop: windowHeight / 200 }}>
+                                <Text>({userRating} Stars - {reviewsCount})</Text>
+                            </View>
+                            <Button uppercase={false} mode='text' labelStyle={{ color: 'blue' }} onPress={() => setIsReiviewsVisible(true)}>
+                                Show Reviews
+                            </Button>
+
+                        </View> :
+                        null}
                     {userPosts.map((post) => {
                         return <View key={post.postId}><Post post={post} showComments={(comments) => showComments(comments)} refreshPage={() => setNewComment(true)} currentMemberId={userId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
@@ -237,7 +283,7 @@ const MyProfileScreen = (props) => {
                         // return <Post post={post} key={post.postId} currentMemberId={userId} />
                         // return <Post text={post.text} cityName={post.cityName} />
                     })}
-                </ScrollView>
+                </View>
 
 
             </ScrollView>
@@ -278,6 +324,8 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontSize: 24,
         fontWeight: 'bold',
+        marginTop: windowHeight / 150
+
 
     },
     dotsMenu: {
@@ -300,14 +348,18 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
     personalInfoContainer: {
-        height: windowHeight / 6,
+        // height: windowHeight / 6,
 
         alignItems: 'center'
     },
     userPostsContainer: {
-        //marginTop: 0,
-        alignItems: 'stretch',
+        // marginTop: 0,
+        // alignItems: 'stretch',
         //width: '100%'
+    },
+    ratingContainer: {
+        alignItems: 'center',
+        marginVertical: windowHeight / 100
     }
 
 

@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
         </EntityType>
         <EntityType Name="ChatHistory">
@@ -706,6 +706,29 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="MembersPost" EntitySet="MembersPosts" />
           </AssociationSet>
+          <EntitySet Name="Interactions" EntityType="bgroup14_prodModel.Interaction" />
+          <EntitySet Name="Notifications" EntityType="bgroup14_prodModel.Notification" />
+          <AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__membe__59C55456" Association="bgroup14_prodModel.FK__Interacti__membe__59C55456">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Interaction" EntitySet="Interactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificat__membe__6166761E" Association="bgroup14_prodModel.FK__Notificat__membe__6166761E">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <EntitySet Name="InteractionsMembers" EntityType="bgroup14_prodModel.InteractionsMember" />
+          <AssociationSet Name="FK__Interacti__membe__72910220" Association="bgroup14_prodModel.FK__Interacti__membe__72910220">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="InteractionsMember" EntitySet="InteractionsMembers" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Category">
           <Key>
@@ -716,6 +739,7 @@
           <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
           <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="Category" ToRole="MembersCategory" />
           <NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Category" ToRole="Post" />
+          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
         </EntityType>
         <EntityType Name="ChatHistory">
           <Key>
@@ -883,7 +907,12 @@
           <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="Member" ToRole="MembersCategory" />
           <NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="Member" ToRole="MembersHobby" />
           <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="Member" ToRole="MembersPost" />
+          <Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="lastLocationLat" Type="Double" />
+          <Property Name="lastLocationLong" Type="Double" />
+          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
           <NavigationProperty Name="Notifications" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Member" ToRole="Notification" />
+          <NavigationProperty Name="InteractionsMembers" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="Member" ToRole="InteractionsMember" />
         </EntityType>
         <EntityType Name="MembersCategory">
           <Key>
@@ -965,10 +994,10 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="fromMemberId" Type="Int32" />
-          <Property Name="memberId" Type="Int32" />
           <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="stars" Type="Int32" />
+          <Property Name="memberId" Type="Int32" />
         </EntityType>
         <EntityType Name="WhereActivity">
           <Key>
@@ -1480,10 +1509,10 @@
           <EntitySetMapping Name="Reviews">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Review">
               <MappingFragment StoreEntitySet="Reviews">
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="stars" ColumnName="stars" />
                 <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
@@ -1493,6 +1522,43 @@
             <EntityTypeMapping TypeName="bgroup14_prodModel.WhereActivity">
               <MappingFragment StoreEntitySet="WhereActivity">
                 <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Interactions">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
+              <MappingFragment StoreEntitySet="Interactions">
+                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
+                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
+                <ScalarProperty Name="strength" ColumnName="strength" />
+                <ScalarProperty Name="interactionType" ColumnName="interactionType" />
+                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+                <ScalarProperty Name="postId" ColumnName="postId" />
+                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.Notification">
+              <MappingFragment StoreEntitySet="Notifications">
+                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
+                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+                <ScalarProperty Name="notificationText" ColumnName="notificationText" />
+                <ScalarProperty Name="notificationType" ColumnName="notificationType" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InteractionsMembers">
+            <EntityTypeMapping TypeName="bgroup14_prodModel.InteractionsMember">
+              <MappingFragment StoreEntitySet="InteractionsMembers">
+                <ScalarProperty Name="strength" ColumnName="strength" />
+                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

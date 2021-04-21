@@ -223,8 +223,11 @@
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTO\ChatRoomDTO.cs" />
     <Compile Include="DTO\FeedFilterDTO.cs" />
+    <Compile Include="DTO\InteractionMemberDTO.cs" />
     <Compile Include="DTO\MeetingDTO.cs" />
+    <Compile Include="DTO\NotificationDTO.cs" />
     <Compile Include="DTO\NotificationIdDTO.cs" />
+    <Compile Include="DTO\PostInteractionDTO.cs" />
     <Compile Include="DTO\ReviewsDTO.cs" />
     <Compile Include="DTO\ChatHistoryDTO.cs" />
     <Compile Include="DTO\LikeDTO.cs" />
@@ -244,6 +247,7 @@
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\TimerServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
