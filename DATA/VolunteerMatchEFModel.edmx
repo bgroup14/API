@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
-  <!-- EF Runtime content -->
-  <edmx:Runtime>
-    <!-- SSDL content -->
-    <edmx:StorageModels>
-    <Schema Namespace="bgroup14_prodModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+		<Schema Namespace="bgroup14_prodModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categories">
           <Key>
             <PropertyRef Name="id" />
@@ -108,7 +108,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="x_coordinate" Type="float" Nullable="false" />
           <Property Name="y_coordinate" Type="float" Nullable="false" />
@@ -602,988 +602,922 @@
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="bgroup14_prodModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="VolunteerMatchDbContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Categories" EntityType="bgroup14_prodModel.Category" />
-          <EntitySet Name="ChatHistories" EntityType="bgroup14_prodModel.ChatHistory" />
-          <EntitySet Name="Comments" EntityType="bgroup14_prodModel.Comment" />
-          <EntitySet Name="Favorites" EntityType="bgroup14_prodModel.Favorite" />
-          <EntitySet Name="FeedSettings" EntityType="bgroup14_prodModel.FeedSetting" />
-          <EntitySet Name="Genders" EntityType="bgroup14_prodModel.Gender" />
-          <EntitySet Name="Hobbies" EntityType="bgroup14_prodModel.Hobby" />
-          <EntitySet Name="Interactions" EntityType="bgroup14_prodModel.Interaction" />
-          <EntitySet Name="InteractionsMembers" EntityType="bgroup14_prodModel.InteractionsMember" />
-          <EntitySet Name="Likes" EntityType="bgroup14_prodModel.Like" />
-          <EntitySet Name="Locations" EntityType="bgroup14_prodModel.Location" />
-          <EntitySet Name="Meetings" EntityType="bgroup14_prodModel.Meeting" />
-          <EntitySet Name="Members" EntityType="bgroup14_prodModel.Member" />
-          <EntitySet Name="MembersCategories" EntityType="bgroup14_prodModel.MembersCategory" />
-          <EntitySet Name="MembersHobbies" EntityType="bgroup14_prodModel.MembersHobby" />
-          <EntitySet Name="MembersPosts" EntityType="bgroup14_prodModel.MembersPost" />
-          <EntitySet Name="Notifications" EntityType="bgroup14_prodModel.Notification" />
-          <EntitySet Name="Posts" EntityType="bgroup14_prodModel.Post" />
-          <EntitySet Name="Reviews" EntityType="bgroup14_prodModel.Review" />
-          <EntitySet Name="WhereActivities" EntityType="bgroup14_prodModel.WhereActivity" />
-          <AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersCa__categ__76969D2E" Association="bgroup14_prodModel.FK__MembersCa__categ__76969D2E">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="MembersCategory" EntitySet="MembersCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Posts__helpType__03F0984C" Association="bgroup14_prodModel.FK__Posts__helpType__03F0984C">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Comments__commen__1F98B2C1" Association="bgroup14_prodModel.FK__Comments__commen__1F98B2C1">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Comments__postId__208CD6FA" Association="bgroup14_prodModel.FK__Comments__postId__208CD6FA">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Comment" EntitySet="Comments" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Members__genderI__628FA481" Association="bgroup14_prodModel.FK__Members__genderI__628FA481">
-            <End Role="Gender" EntitySet="Genders" />
-            <End Role="Member" EntitySet="Members" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Posts__fromGende__06CD04F7" Association="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7">
-            <End Role="Gender" EntitySet="Genders" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersHo__hobby__6C190EBB" Association="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB">
-            <End Role="Hobby" EntitySet="Hobbies" />
-            <End Role="MembersHobby" EntitySet="MembersHobbies" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Interacti__membe__59C55456" Association="bgroup14_prodModel.FK__Interacti__membe__59C55456">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Interacti__membe__72910220" Association="bgroup14_prodModel.FK__Interacti__membe__72910220">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="InteractionsMember" EntitySet="InteractionsMembers" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Likes__likingMem__19DFD96B" Association="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Like" EntitySet="Likes" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Likes__postId__1AD3FDA4" Association="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Like" EntitySet="Likes" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Meetings__locati__151B244E" Association="bgroup14_prodModel.FK__Meetings__locati__151B244E">
-            <End Role="Location" EntitySet="Locations" />
-            <End Role="Meeting" EntitySet="Meetings" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Posts__locationI__04E4BC85" Association="bgroup14_prodModel.FK__Posts__locationI__04E4BC85">
-            <End Role="Location" EntitySet="Locations" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersCa__count__75A278F5" Association="bgroup14_prodModel.FK__MembersCa__count__75A278F5">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="MembersCategory" EntitySet="MembersCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersHo__membe__6B24EA82" Association="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="MembersHobby" EntitySet="MembersHobbies" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersPo__membe__0B91BA14" Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="MembersPost" EntitySet="MembersPosts" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Notificat__membe__6166761E" Association="bgroup14_prodModel.FK__Notificat__membe__6166761E">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Notification" EntitySet="Notifications" />
-          </AssociationSet>
-          <AssociationSet Name="FK__MembersPo__postI__0C85DE4D" Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="MembersPost" EntitySet="MembersPosts" />
-          </AssociationSet>
-          <EntitySet Name="Interactions" EntityType="bgroup14_prodModel.Interaction" />
-          <EntitySet Name="Notifications" EntityType="bgroup14_prodModel.Notification" />
-          <AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Interacti__membe__59C55456" Association="bgroup14_prodModel.FK__Interacti__membe__59C55456">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Interaction" EntitySet="Interactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Notificat__membe__6166761E" Association="bgroup14_prodModel.FK__Notificat__membe__6166761E">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="Notification" EntitySet="Notifications" />
-          </AssociationSet>
-          <EntitySet Name="InteractionsMembers" EntityType="bgroup14_prodModel.InteractionsMember" />
-          <AssociationSet Name="FK__Interacti__membe__72910220" Association="bgroup14_prodModel.FK__Interacti__membe__72910220">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="InteractionsMember" EntitySet="InteractionsMembers" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
-          <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="Category" ToRole="MembersCategory" />
-          <NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Category" ToRole="Post" />
-          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
-        </EntityType>
-        <EntityType Name="ChatHistory">
-          <Key>
-            <PropertyRef Name="messageId" />
-          </Key>
-          <Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="datetime" Type="Int32" />
-          <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="fromMemberId" Type="Int32" />
-          <Property Name="toMemberId" Type="Int32" />
-          <Property Name="chatRoomId" Type="Int32" />
-          <Property Name="markAsRead" Type="Boolean" />
-          <Property Name="meetingMsg" Type="Boolean" />
-          <Property Name="meetingDateLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="meetingEventTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="meetingTimeLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="meetingUnixDate" Type="Int32" />
-          <Property Name="meetingLocationLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Comment">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="commentingMemberId" Type="Int32" />
-          <Property Name="postId" Type="Int32" />
-          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" FromRole="Comment" ToRole="Member" />
-          <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Comments__postId__208CD6FA" FromRole="Comment" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Favorite">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="datetime" Type="Int32" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="favoritedMemberId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="FeedSetting">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="memberType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="postLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="participantGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="participantAgeRange" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Gender">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Members" Relationship="bgroup14_prodModel.FK__Members__genderI__628FA481" FromRole="Gender" ToRole="Member" />
-          <NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" FromRole="Gender" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Hobby">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" FromRole="Hobby" ToRole="MembersHobby" />
-        </EntityType>
-        <EntityType Name="Interaction">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="categoryId" Type="Int32" />
-          <Property Name="postId" Type="Int32" />
-          <Property Name="otherMemberId" Type="Int32" />
-          <Property Name="interactionType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="strength" Type="Int32" />
-          <Property Name="unixdate" Type="Int32" />
-          <Property Name="categoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Interaction" ToRole="Category" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Interaction" ToRole="Member" />
-          <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Interaction" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="InteractionsMember">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="otherMemberId" Type="Int32" />
-          <Property Name="strength" Type="Int32" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="InteractionsMember" ToRole="Member" />
-        </EntityType>
-        <EntityType Name="Like">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="likingMemberId" Type="Int32" />
-          <Property Name="postId" Type="Int32" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" FromRole="Like" ToRole="Member" />
-          <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" FromRole="Like" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Location">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="x_coordinate" Type="Double" Nullable="false" />
-          <Property Name="y_coordinate" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Meetings" Relationship="bgroup14_prodModel.FK__Meetings__locati__151B244E" FromRole="Location" ToRole="Meeting" />
-          <NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" FromRole="Location" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Meeting">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="firstMemberId" Type="Int32" />
-          <Property Name="meetingEventTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="secondMemberId" Type="Int32" />
-          <Property Name="meetingUnixDate" Type="Int32" />
-          <Property Name="locationId" Type="Int32" />
-          <Property Name="didAccept" Type="Boolean" />
-          <Property Name="didHappen" Type="Boolean" />
-          <Property Name="meetingDateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="meetingTimeLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="meetingLocationLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="didPushSent" Type="Boolean" />
-          <NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Meetings__locati__151B244E" FromRole="Meeting" ToRole="Location" />
-        </EntityType>
-        <EntityType Name="Member">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="fullName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="facebookId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="googleId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="biography" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
-          <Property Name="genderId" Type="Int32" />
-          <Property Name="dateOfBirth" Type="Int32" />
-          <Property Name="occupation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="helpType" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="numPosts" Type="Int32" />
-          <Property Name="numMeetingsSkipped" Type="Int32" />
-          <Property Name="rankLevel" Type="Int32" />
-          <Property Name="pictureUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="isBanned" Type="Boolean" />
-          <Property Name="systemScore" Type="Int32" />
-          <Property Name="gender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="lastLocationLat" Type="Double" />
-          <Property Name="lastLocationLong" Type="Double" />
-          <NavigationProperty Name="Comments" Relationship="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" FromRole="Member" ToRole="Comment" />
-          <NavigationProperty Name="Gender1" Relationship="bgroup14_prodModel.FK__Members__genderI__628FA481" FromRole="Member" ToRole="Gender" />
-          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
-          <NavigationProperty Name="InteractionsMembers" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="Member" ToRole="InteractionsMember" />
-          <NavigationProperty Name="Likes" Relationship="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" FromRole="Member" ToRole="Like" />
-          <NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="Member" ToRole="MembersCategory" />
-          <NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="Member" ToRole="MembersHobby" />
-          <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="Member" ToRole="MembersPost" />
-          <Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="lastLocationLat" Type="Double" />
-          <Property Name="lastLocationLong" Type="Double" />
-          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
-          <NavigationProperty Name="Notifications" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Member" ToRole="Notification" />
-          <NavigationProperty Name="InteractionsMembers" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="Member" ToRole="InteractionsMember" />
-        </EntityType>
-        <EntityType Name="MembersCategory">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="categoryId" Type="Int32" />
-          <Property Name="count" Type="Int32" />
-          <NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="MembersCategory" ToRole="Category" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="MembersCategory" ToRole="Member" />
-        </EntityType>
-        <EntityType Name="MembersHobby">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="hobbyId" Type="Int32" />
-          <NavigationProperty Name="Hobby" Relationship="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" FromRole="MembersHobby" ToRole="Hobby" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="MembersHobby" ToRole="Member" />
-        </EntityType>
-        <EntityType Name="MembersPost">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="postId" Type="Int32" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="MembersPost" ToRole="Member" />
-          <NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="MembersPost" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Notification">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="memberId" Type="Int32" />
-          <Property Name="notificationType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="notificationText" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="otherMemberId" Type="Int32" />
-          <Property Name="unixdate" Type="Int32" />
-          <NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Notification" ToRole="Member" />
-        </EntityType>
-        <EntityType Name="Post">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="categoryId" Type="Int32" />
-          <Property Name="locationId" Type="Int32" />
-          <Property Name="fromGenderId" Type="Int32" />
-          <Property Name="fromAge" Type="Int32" />
-          <Property Name="toAge" Type="Int32" />
-          <Property Name="helpType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="isZoom" Type="Boolean" Nullable="false" />
-          <Property Name="unixDate" Type="Int32" />
-          <Property Name="recurring" Type="Boolean" Nullable="false" />
-          <Property Name="longitude" Type="Double" />
-          <Property Name="latitude" Type="Double" />
-          <Property Name="fromGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="timeOfDay" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="member_id" Type="Int32" />
-          <Property Name="category" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="cityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="dateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Category1" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Post" ToRole="Category" />
-          <NavigationProperty Name="Comments" Relationship="bgroup14_prodModel.FK__Comments__postId__208CD6FA" FromRole="Post" ToRole="Comment" />
-          <NavigationProperty Name="Gender" Relationship="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" FromRole="Post" ToRole="Gender" />
-          <NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Post" ToRole="Interaction" />
-          <NavigationProperty Name="Likes" Relationship="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" FromRole="Post" ToRole="Like" />
-          <NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" FromRole="Post" ToRole="Location" />
-          <NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="Post" ToRole="MembersPost" />
-        </EntityType>
-        <EntityType Name="Review">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fromMemberId" Type="Int32" />
-          <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="stars" Type="Int32" />
-          <Property Name="memberId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="WhereActivity">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <Association Name="FK__Interacti__categ__5AB9788F">
-          <End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Interaction">
-              <PropertyRef Name="categoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersCa__categ__76969D2E">
-          <End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.MembersCategory" Role="MembersCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersCategory">
-              <PropertyRef Name="categoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Posts__helpType__03F0984C">
-          <End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="categoryId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Comments__commen__1F98B2C1">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Comment" Role="Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="commentingMemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Comments__postId__208CD6FA">
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Comment" Role="Comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Comment">
-              <PropertyRef Name="postId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Members__genderI__628FA481">
-          <End Type="bgroup14_prodModel.Gender" Role="Gender" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Gender">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Member">
-              <PropertyRef Name="genderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Posts__fromGende__06CD04F7">
-          <End Type="bgroup14_prodModel.Gender" Role="Gender" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Gender">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="fromGenderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersHo__hobby__6C190EBB">
-          <End Type="bgroup14_prodModel.Hobby" Role="Hobby" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.MembersHobby" Role="MembersHobby" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Hobby">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersHobby">
-              <PropertyRef Name="hobbyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Interacti__membe__59C55456">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Interaction">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Interacti__postI__5BAD9CC8">
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Interaction">
-              <PropertyRef Name="postId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Interacti__membe__72910220">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.InteractionsMember" Role="InteractionsMember" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="InteractionsMember">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Likes__likingMem__19DFD96B">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Like" Role="Like" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Like">
-              <PropertyRef Name="likingMemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Likes__postId__1AD3FDA4">
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Like" Role="Like" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Like">
-              <PropertyRef Name="postId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Meetings__locati__151B244E">
-          <End Type="bgroup14_prodModel.Location" Role="Location" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Meeting" Role="Meeting" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Meeting">
-              <PropertyRef Name="locationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Posts__locationI__04E4BC85">
-          <End Type="bgroup14_prodModel.Location" Role="Location" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Location">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="locationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersCa__count__75A278F5">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.MembersCategory" Role="MembersCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersCategory">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersHo__membe__6B24EA82">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.MembersHobby" Role="MembersHobby" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersHobby">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersPo__membe__0B91BA14">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="bgroup14_prodModel.MembersPost" Role="MembersPost" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersPost">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Notificat__membe__6166761E">
-          <End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.Notification" Role="Notification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Notification">
-              <PropertyRef Name="memberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__MembersPo__postI__0C85DE4D">
-          <End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="bgroup14_prodModel.MembersPost" Role="MembersPost" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="MembersPost">
-              <PropertyRef Name="postId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        </Schema>
-    </edmx:ConceptualModels>
-    <!-- C-S mapping content -->
-    <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="bgroup14_prodModelStoreContainer" CdmEntityContainer="VolunteerMatchDbContext">
-          <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Category">
-              <MappingFragment StoreEntitySet="Categories">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ChatHistories">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
-              <MappingFragment StoreEntitySet="ChatHistory">
-                <ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
-                <ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
-                <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
-                <ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
-                <ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
-                <ScalarProperty Name="meetingMsg" ColumnName="meetingMsg" />
-                <ScalarProperty Name="markAsRead" ColumnName="markAsRead" />
-                <ScalarProperty Name="chatRoomId" ColumnName="chatRoomId" />
-                <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
-                <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
-                <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="datetime" ColumnName="datetime" />
-                <ScalarProperty Name="messageId" ColumnName="messageId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Comments">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Comment">
-              <MappingFragment StoreEntitySet="Comments">
-                <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="postId" ColumnName="postId" />
-                <ScalarProperty Name="commentingMemberId" ColumnName="commentingMemberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Favorites">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Favorite">
-              <MappingFragment StoreEntitySet="Favorites">
-                <ScalarProperty Name="favoritedMemberId" ColumnName="favoritedMemberId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="datetime" ColumnName="datetime" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FeedSettings">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.FeedSetting">
-              <MappingFragment StoreEntitySet="FeedSettings">
-                <ScalarProperty Name="participantAgeRange" ColumnName="participantAgeRange" />
-                <ScalarProperty Name="participantGender" ColumnName="participantGender" />
-                <ScalarProperty Name="postLocation" ColumnName="postLocation" />
-                <ScalarProperty Name="memberType" ColumnName="memberType" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Genders">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Gender">
-              <MappingFragment StoreEntitySet="Gender">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Hobbies">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Hobby">
-              <MappingFragment StoreEntitySet="Hobbies">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Interactions">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
-              <MappingFragment StoreEntitySet="Interactions">
-                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
-                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
-                <ScalarProperty Name="strength" ColumnName="strength" />
-                <ScalarProperty Name="interactionType" ColumnName="interactionType" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="postId" ColumnName="postId" />
-                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InteractionsMembers">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.InteractionsMember">
-              <MappingFragment StoreEntitySet="InteractionsMembers">
-                <ScalarProperty Name="strength" ColumnName="strength" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Likes">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Like">
-              <MappingFragment StoreEntitySet="Likes">
-                <ScalarProperty Name="postId" ColumnName="postId" />
-                <ScalarProperty Name="likingMemberId" ColumnName="likingMemberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Locations">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Location">
-              <MappingFragment StoreEntitySet="Location">
-                <ScalarProperty Name="y_coordinate" ColumnName="y_coordinate" />
-                <ScalarProperty Name="x_coordinate" ColumnName="x_coordinate" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Meetings">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Meeting">
-              <MappingFragment StoreEntitySet="Meetings">
-                <ScalarProperty Name="didPushSent" ColumnName="didPushSent" />
-                <ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
-                <ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
-                <ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
-                <ScalarProperty Name="didHappen" ColumnName="didHappen" />
-                <ScalarProperty Name="didAccept" ColumnName="didAccept" />
-                <ScalarProperty Name="locationId" ColumnName="locationId" />
-                <ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
-                <ScalarProperty Name="secondMemberId" ColumnName="secondMemberId" />
-                <ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
-                <ScalarProperty Name="firstMemberId" ColumnName="firstMemberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Members">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Member">
-              <MappingFragment StoreEntitySet="Members">
-                <ScalarProperty Name="lastLocationLong" ColumnName="lastLocationLong" />
-                <ScalarProperty Name="lastLocationLat" ColumnName="lastLocationLat" />
-                <ScalarProperty Name="notificationId" ColumnName="notificationId" />
-                <ScalarProperty Name="city" ColumnName="city" />
-                <ScalarProperty Name="gender" ColumnName="gender" />
-                <ScalarProperty Name="systemScore" ColumnName="systemScore" />
-                <ScalarProperty Name="isBanned" ColumnName="isBanned" />
-                <ScalarProperty Name="pictureUrl" ColumnName="pictureUrl" />
-                <ScalarProperty Name="rankLevel" ColumnName="rankLevel" />
-                <ScalarProperty Name="numMeetingsSkipped" ColumnName="numMeetingsSkipped" />
-                <ScalarProperty Name="numPosts" ColumnName="numPosts" />
-                <ScalarProperty Name="helpType" ColumnName="helpType" />
-                <ScalarProperty Name="occupation" ColumnName="occupation" />
-                <ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
-                <ScalarProperty Name="genderId" ColumnName="genderId" />
-                <ScalarProperty Name="biography" ColumnName="biography" />
-                <ScalarProperty Name="password" ColumnName="password" />
-                <ScalarProperty Name="googleId" ColumnName="googleId" />
-                <ScalarProperty Name="facebookId" ColumnName="facebookId" />
-                <ScalarProperty Name="fullName" ColumnName="fullName" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MembersCategories">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.MembersCategory">
-              <MappingFragment StoreEntitySet="MembersCategories">
-                <ScalarProperty Name="count" ColumnName="count" />
-                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MembersHobbies">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.MembersHobby">
-              <MappingFragment StoreEntitySet="MembersHobbies">
-                <ScalarProperty Name="hobbyId" ColumnName="hobbyId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MembersPosts">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.MembersPost">
-              <MappingFragment StoreEntitySet="MembersPosts">
-                <ScalarProperty Name="postId" ColumnName="postId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Notifications">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Notification">
-              <MappingFragment StoreEntitySet="Notifications">
-                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="notificationText" ColumnName="notificationText" />
-                <ScalarProperty Name="notificationType" ColumnName="notificationType" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Posts">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Post">
-              <MappingFragment StoreEntitySet="Posts">
-                <ScalarProperty Name="dateLabel" ColumnName="dateLabel" />
-                <ScalarProperty Name="cityName" ColumnName="cityName" />
-                <ScalarProperty Name="category" ColumnName="category" />
-                <ScalarProperty Name="member_id" ColumnName="member_id" />
-                <ScalarProperty Name="timeOfDay" ColumnName="timeOfDay" />
-                <ScalarProperty Name="fromGender" ColumnName="fromGender" />
-                <ScalarProperty Name="latitude" ColumnName="latitude" />
-                <ScalarProperty Name="longitude" ColumnName="longitude" />
-                <ScalarProperty Name="recurring" ColumnName="recurring" />
-                <ScalarProperty Name="unixDate" ColumnName="unixDate" />
-                <ScalarProperty Name="isZoom" ColumnName="isZoom" />
-                <ScalarProperty Name="helpType" ColumnName="helpType" />
-                <ScalarProperty Name="toAge" ColumnName="toAge" />
-                <ScalarProperty Name="fromAge" ColumnName="fromAge" />
-                <ScalarProperty Name="fromGenderId" ColumnName="fromGenderId" />
-                <ScalarProperty Name="locationId" ColumnName="locationId" />
-                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
-                <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Reviews">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Review">
-              <MappingFragment StoreEntitySet="Reviews">
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="stars" ColumnName="stars" />
-                <ScalarProperty Name="url" ColumnName="url" />
-                <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="WhereActivities">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.WhereActivity">
-              <MappingFragment StoreEntitySet="WhereActivity">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Interactions">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
-              <MappingFragment StoreEntitySet="Interactions">
-                <ScalarProperty Name="categoryName" ColumnName="categoryName" />
-                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
-                <ScalarProperty Name="strength" ColumnName="strength" />
-                <ScalarProperty Name="interactionType" ColumnName="interactionType" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="postId" ColumnName="postId" />
-                <ScalarProperty Name="categoryId" ColumnName="categoryId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Notifications">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.Notification">
-              <MappingFragment StoreEntitySet="Notifications">
-                <ScalarProperty Name="unixdate" ColumnName="unixdate" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="notificationText" ColumnName="notificationText" />
-                <ScalarProperty Name="notificationType" ColumnName="notificationType" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InteractionsMembers">
-            <EntityTypeMapping TypeName="bgroup14_prodModel.InteractionsMember">
-              <MappingFragment StoreEntitySet="InteractionsMembers">
-                <ScalarProperty Name="strength" ColumnName="strength" />
-                <ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
-                <ScalarProperty Name="memberId" ColumnName="memberId" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
-  </edmx:Runtime>
-  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
-    <Connection>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
-      </DesignerInfoPropertySet>
-    </Connection>
-    <Options>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-      </DesignerInfoPropertySet>
-    </Options>
-    <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
-  </Designer>
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema Namespace="bgroup14_prodModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+				<EntityContainer Name="VolunteerMatchDbContext" annotation:LazyLoadingEnabled="true">
+					<EntitySet Name="Categories" EntityType="bgroup14_prodModel.Category" />
+					<EntitySet Name="ChatHistories" EntityType="bgroup14_prodModel.ChatHistory" />
+					<EntitySet Name="Comments" EntityType="bgroup14_prodModel.Comment" />
+					<EntitySet Name="Favorites" EntityType="bgroup14_prodModel.Favorite" />
+					<EntitySet Name="FeedSettings" EntityType="bgroup14_prodModel.FeedSetting" />
+					<EntitySet Name="Genders" EntityType="bgroup14_prodModel.Gender" />
+					<EntitySet Name="Hobbies" EntityType="bgroup14_prodModel.Hobby" />
+					<EntitySet Name="Likes" EntityType="bgroup14_prodModel.Like" />
+					<EntitySet Name="Locations" EntityType="bgroup14_prodModel.Location" />
+					<EntitySet Name="Meetings" EntityType="bgroup14_prodModel.Meeting" />
+					<EntitySet Name="Members" EntityType="bgroup14_prodModel.Member" />
+					<EntitySet Name="MembersCategories" EntityType="bgroup14_prodModel.MembersCategory" />
+					<EntitySet Name="MembersHobbies" EntityType="bgroup14_prodModel.MembersHobby" />
+					<EntitySet Name="MembersPosts" EntityType="bgroup14_prodModel.MembersPost" />
+					<EntitySet Name="Posts" EntityType="bgroup14_prodModel.Post" />
+					<EntitySet Name="Reviews" EntityType="bgroup14_prodModel.Review" />
+					<EntitySet Name="WhereActivities" EntityType="bgroup14_prodModel.WhereActivity" />
+					<AssociationSet Name="FK__MembersCa__categ__76969D2E" Association="bgroup14_prodModel.FK__MembersCa__categ__76969D2E">
+						<End Role="Category" EntitySet="Categories" />
+						<End Role="MembersCategory" EntitySet="MembersCategories" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Posts__helpType__03F0984C" Association="bgroup14_prodModel.FK__Posts__helpType__03F0984C">
+						<End Role="Category" EntitySet="Categories" />
+						<End Role="Post" EntitySet="Posts" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Comments__commen__1F98B2C1" Association="bgroup14_prodModel.FK__Comments__commen__1F98B2C1">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="Comment" EntitySet="Comments" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Comments__postId__208CD6FA" Association="bgroup14_prodModel.FK__Comments__postId__208CD6FA">
+						<End Role="Post" EntitySet="Posts" />
+						<End Role="Comment" EntitySet="Comments" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Members__genderI__628FA481" Association="bgroup14_prodModel.FK__Members__genderI__628FA481">
+						<End Role="Gender" EntitySet="Genders" />
+						<End Role="Member" EntitySet="Members" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Posts__fromGende__06CD04F7" Association="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7">
+						<End Role="Gender" EntitySet="Genders" />
+						<End Role="Post" EntitySet="Posts" />
+					</AssociationSet>
+					<AssociationSet Name="FK__MembersHo__hobby__6C190EBB" Association="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB">
+						<End Role="Hobby" EntitySet="Hobbies" />
+						<End Role="MembersHobby" EntitySet="MembersHobbies" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Likes__likingMem__19DFD96B" Association="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="Like" EntitySet="Likes" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Likes__postId__1AD3FDA4" Association="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4">
+						<End Role="Post" EntitySet="Posts" />
+						<End Role="Like" EntitySet="Likes" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Meetings__locati__151B244E" Association="bgroup14_prodModel.FK__Meetings__locati__151B244E">
+						<End Role="Location" EntitySet="Locations" />
+						<End Role="Meeting" EntitySet="Meetings" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Posts__locationI__04E4BC85" Association="bgroup14_prodModel.FK__Posts__locationI__04E4BC85">
+						<End Role="Location" EntitySet="Locations" />
+						<End Role="Post" EntitySet="Posts" />
+					</AssociationSet>
+					<AssociationSet Name="FK__MembersCa__count__75A278F5" Association="bgroup14_prodModel.FK__MembersCa__count__75A278F5">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="MembersCategory" EntitySet="MembersCategories" />
+					</AssociationSet>
+					<AssociationSet Name="FK__MembersHo__membe__6B24EA82" Association="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="MembersHobby" EntitySet="MembersHobbies" />
+					</AssociationSet>
+					<AssociationSet Name="FK__MembersPo__membe__0B91BA14" Association="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="MembersPost" EntitySet="MembersPosts" />
+					</AssociationSet>
+					<AssociationSet Name="FK__MembersPo__postI__0C85DE4D" Association="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D">
+						<End Role="Post" EntitySet="Posts" />
+						<End Role="MembersPost" EntitySet="MembersPosts" />
+					</AssociationSet>
+					<EntitySet Name="Interactions" EntityType="bgroup14_prodModel.Interaction" />
+					<EntitySet Name="Notifications" EntityType="bgroup14_prodModel.Notification" />
+					<AssociationSet Name="FK__Interacti__categ__5AB9788F" Association="bgroup14_prodModel.FK__Interacti__categ__5AB9788F">
+						<End Role="Category" EntitySet="Categories" />
+						<End Role="Interaction" EntitySet="Interactions" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Interacti__membe__59C55456" Association="bgroup14_prodModel.FK__Interacti__membe__59C55456">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="Interaction" EntitySet="Interactions" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Interacti__postI__5BAD9CC8" Association="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8">
+						<End Role="Post" EntitySet="Posts" />
+						<End Role="Interaction" EntitySet="Interactions" />
+					</AssociationSet>
+					<AssociationSet Name="FK__Notificat__membe__6166761E" Association="bgroup14_prodModel.FK__Notificat__membe__6166761E">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="Notification" EntitySet="Notifications" />
+					</AssociationSet>
+					<EntitySet Name="InteractionsMembers" EntityType="bgroup14_prodModel.InteractionsMember" />
+					<AssociationSet Name="FK__Interacti__membe__72910220" Association="bgroup14_prodModel.FK__Interacti__membe__72910220">
+						<End Role="Member" EntitySet="Members" />
+						<End Role="InteractionsMember" EntitySet="InteractionsMembers" />
+					</AssociationSet>
+				</EntityContainer>
+				<EntityType Name="Category">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="Category" ToRole="MembersCategory" />
+					<NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Category" ToRole="Post" />
+					<NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Category" ToRole="Interaction" />
+				</EntityType>
+				<EntityType Name="ChatHistory">
+					<Key>
+						<PropertyRef Name="messageId" />
+					</Key>
+					<Property Name="messageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="datetime" Type="Int32" />
+					<Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="fromMemberId" Type="Int32" />
+					<Property Name="toMemberId" Type="Int32" />
+					<Property Name="chatRoomId" Type="Int32" />
+					<Property Name="markAsRead" Type="Boolean" />
+					<Property Name="meetingMsg" Type="Boolean" />
+					<Property Name="meetingDateLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="meetingEventTitle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="meetingTimeLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="meetingUnixDate" Type="Int32" />
+					<Property Name="meetingLocationLabel" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+				</EntityType>
+				<EntityType Name="Comment">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="commentingMemberId" Type="Int32" />
+					<Property Name="postId" Type="Int32" />
+					<Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" FromRole="Comment" ToRole="Member" />
+					<NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Comments__postId__208CD6FA" FromRole="Comment" ToRole="Post" />
+				</EntityType>
+				<EntityType Name="Favorite">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="datetime" Type="Int32" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="favoritedMemberId" Type="Int32" />
+				</EntityType>
+				<EntityType Name="FeedSetting">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="memberType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="postLocation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="participantGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="participantAgeRange" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+				</EntityType>
+				<EntityType Name="Gender">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="Members" Relationship="bgroup14_prodModel.FK__Members__genderI__628FA481" FromRole="Gender" ToRole="Member" />
+					<NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" FromRole="Gender" ToRole="Post" />
+				</EntityType>
+				<EntityType Name="Hobby">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" FromRole="Hobby" ToRole="MembersHobby" />
+				</EntityType>
+				<EntityType Name="Like">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="likingMemberId" Type="Int32" />
+					<Property Name="postId" Type="Int32" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" FromRole="Like" ToRole="Member" />
+					<NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" FromRole="Like" ToRole="Post" />
+				</EntityType>
+				<EntityType Name="Location">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="x_coordinate" Type="Double" Nullable="false" />
+					<Property Name="y_coordinate" Type="Double" Nullable="false" />
+					<NavigationProperty Name="Meetings" Relationship="bgroup14_prodModel.FK__Meetings__locati__151B244E" FromRole="Location" ToRole="Meeting" />
+					<NavigationProperty Name="Posts" Relationship="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" FromRole="Location" ToRole="Post" />
+				</EntityType>
+				<EntityType Name="Meeting">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="locationId" Type="Int32" />
+					<Property Name="didAccept" Type="Boolean" />
+					<Property Name="didHappen" Type="Boolean" />
+					<NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Meetings__locati__151B244E" FromRole="Meeting" ToRole="Location" />
+					<Property Name="firstMemberId" Type="Int32" />
+					<Property Name="meetingEventTitle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="secondMemberId" Type="Int32" />
+					<Property Name="meetingUnixDate" Type="Int32" />
+					<Property Name="meetingDateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="meetingTimeLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="meetingLocationLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="didPushSent" Type="Boolean" />
+				</EntityType>
+				<EntityType Name="Member">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="fullName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="facebookId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="googleId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="biography" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+					<Property Name="genderId" Type="Int32" />
+					<Property Name="dateOfBirth" Type="Int32" />
+					<Property Name="occupation" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="helpType" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+					<Property Name="numPosts" Type="Int32" />
+					<Property Name="numMeetingsSkipped" Type="Int32" />
+					<Property Name="rankLevel" Type="Int32" />
+					<Property Name="pictureUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+					<Property Name="isBanned" Type="Boolean" />
+					<Property Name="systemScore" Type="Int32" />
+					<Property Name="gender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="Comments" Relationship="bgroup14_prodModel.FK__Comments__commen__1F98B2C1" FromRole="Member" ToRole="Comment" />
+					<NavigationProperty Name="Gender1" Relationship="bgroup14_prodModel.FK__Members__genderI__628FA481" FromRole="Member" ToRole="Gender" />
+					<NavigationProperty Name="Likes" Relationship="bgroup14_prodModel.FK__Likes__likingMem__19DFD96B" FromRole="Member" ToRole="Like" />
+					<NavigationProperty Name="MembersCategories" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="Member" ToRole="MembersCategory" />
+					<NavigationProperty Name="MembersHobbies" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="Member" ToRole="MembersHobby" />
+					<NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="Member" ToRole="MembersPost" />
+					<Property Name="notificationId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="lastLocationLat" Type="Double" />
+					<Property Name="lastLocationLong" Type="Double" />
+					<NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Member" ToRole="Interaction" />
+					<NavigationProperty Name="Notifications" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Member" ToRole="Notification" />
+					<NavigationProperty Name="InteractionsMembers" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="Member" ToRole="InteractionsMember" />
+				</EntityType>
+				<EntityType Name="MembersCategory">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="categoryId" Type="Int32" />
+					<Property Name="count" Type="Int32" />
+					<NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__MembersCa__categ__76969D2E" FromRole="MembersCategory" ToRole="Category" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersCa__count__75A278F5" FromRole="MembersCategory" ToRole="Member" />
+				</EntityType>
+				<EntityType Name="MembersHobby">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="hobbyId" Type="Int32" />
+					<NavigationProperty Name="Hobby" Relationship="bgroup14_prodModel.FK__MembersHo__hobby__6C190EBB" FromRole="MembersHobby" ToRole="Hobby" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersHo__membe__6B24EA82" FromRole="MembersHobby" ToRole="Member" />
+				</EntityType>
+				<EntityType Name="MembersPost">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="postId" Type="Int32" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__MembersPo__membe__0B91BA14" FromRole="MembersPost" ToRole="Member" />
+					<NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="MembersPost" ToRole="Post" />
+				</EntityType>
+				<EntityType Name="Post">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="categoryId" Type="Int32" />
+					<Property Name="locationId" Type="Int32" />
+					<Property Name="fromGenderId" Type="Int32" />
+					<Property Name="fromAge" Type="Int32" />
+					<Property Name="toAge" Type="Int32" />
+					<Property Name="helpType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="isZoom" Type="Boolean" Nullable="false" />
+					<Property Name="unixDate" Type="Int32" />
+					<Property Name="recurring" Type="Boolean" Nullable="false" />
+					<Property Name="longitude" Type="Double" />
+					<Property Name="latitude" Type="Double" />
+					<Property Name="fromGender" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="timeOfDay" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="member_id" Type="Int32" />
+					<Property Name="category" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="Category1" Relationship="bgroup14_prodModel.FK__Posts__helpType__03F0984C" FromRole="Post" ToRole="Category" />
+					<NavigationProperty Name="Comments" Relationship="bgroup14_prodModel.FK__Comments__postId__208CD6FA" FromRole="Post" ToRole="Comment" />
+					<NavigationProperty Name="Gender" Relationship="bgroup14_prodModel.FK__Posts__fromGende__06CD04F7" FromRole="Post" ToRole="Gender" />
+					<NavigationProperty Name="Likes" Relationship="bgroup14_prodModel.FK__Likes__postId__1AD3FDA4" FromRole="Post" ToRole="Like" />
+					<NavigationProperty Name="Location" Relationship="bgroup14_prodModel.FK__Posts__locationI__04E4BC85" FromRole="Post" ToRole="Location" />
+					<NavigationProperty Name="MembersPosts" Relationship="bgroup14_prodModel.FK__MembersPo__postI__0C85DE4D" FromRole="Post" ToRole="MembersPost" />
+					<Property Name="cityName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="dateLabel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<NavigationProperty Name="Interactions" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Post" ToRole="Interaction" />
+				</EntityType>
+				<EntityType Name="Review">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="fromMemberId" Type="Int32" />
+					<Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="stars" Type="Int32" />
+					<Property Name="memberId" Type="Int32" />
+				</EntityType>
+				<EntityType Name="WhereActivity">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+				</EntityType>
+				<Association Name="FK__MembersCa__categ__76969D2E">
+					<End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.MembersCategory" Role="MembersCategory" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Category">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersCategory">
+							<PropertyRef Name="categoryId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Posts__helpType__03F0984C">
+					<End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Category">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Post">
+							<PropertyRef Name="categoryId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Comments__commen__1F98B2C1">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Comment" Role="Comment" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Comment">
+							<PropertyRef Name="commentingMemberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Comments__postId__208CD6FA">
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Comment" Role="Comment" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Post">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Comment">
+							<PropertyRef Name="postId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Members__genderI__628FA481">
+					<End Type="bgroup14_prodModel.Gender" Role="Gender" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Gender">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Member">
+							<PropertyRef Name="genderId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Posts__fromGende__06CD04F7">
+					<End Type="bgroup14_prodModel.Gender" Role="Gender" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Gender">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Post">
+							<PropertyRef Name="fromGenderId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__MembersHo__hobby__6C190EBB">
+					<End Type="bgroup14_prodModel.Hobby" Role="Hobby" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.MembersHobby" Role="MembersHobby" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Hobby">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersHobby">
+							<PropertyRef Name="hobbyId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Likes__likingMem__19DFD96B">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Like" Role="Like" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Like">
+							<PropertyRef Name="likingMemberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Likes__postId__1AD3FDA4">
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Like" Role="Like" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Post">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Like">
+							<PropertyRef Name="postId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Meetings__locati__151B244E">
+					<End Type="bgroup14_prodModel.Location" Role="Location" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Meeting" Role="Meeting" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Location">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Meeting">
+							<PropertyRef Name="locationId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Posts__locationI__04E4BC85">
+					<End Type="bgroup14_prodModel.Location" Role="Location" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Location">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Post">
+							<PropertyRef Name="locationId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__MembersCa__count__75A278F5">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.MembersCategory" Role="MembersCategory" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersCategory">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__MembersHo__membe__6B24EA82">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.MembersHobby" Role="MembersHobby" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersHobby">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__MembersPo__membe__0B91BA14">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1">
+						<OnDelete Action="Cascade" />
+					</End>
+					<End Type="bgroup14_prodModel.MembersPost" Role="MembersPost" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersPost">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__MembersPo__postI__0C85DE4D">
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.MembersPost" Role="MembersPost" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Post">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="MembersPost">
+							<PropertyRef Name="postId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityType Name="Interaction">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="categoryId" Type="Int32" />
+					<Property Name="postId" Type="Int32" />
+					<Property Name="otherMemberId" Type="Int32" />
+					<Property Name="interactionType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="strength" Type="Int32" />
+					<Property Name="unixdate" Type="Int32" />
+					<NavigationProperty Name="Category" Relationship="bgroup14_prodModel.FK__Interacti__categ__5AB9788F" FromRole="Interaction" ToRole="Category" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__59C55456" FromRole="Interaction" ToRole="Member" />
+					<NavigationProperty Name="Post" Relationship="bgroup14_prodModel.FK__Interacti__postI__5BAD9CC8" FromRole="Interaction" ToRole="Post" />
+					<Property Name="categoryName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+				</EntityType>
+				<EntityType Name="Notification">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="notificationType" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="notificationText" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+					<Property Name="otherMemberId" Type="Int32" />
+					<Property Name="unixdate" Type="Int32" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Notificat__membe__6166761E" FromRole="Notification" ToRole="Member" />
+				</EntityType>
+				<Association Name="FK__Interacti__categ__5AB9788F">
+					<End Type="bgroup14_prodModel.Category" Role="Category" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Category">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Interaction">
+							<PropertyRef Name="categoryId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Interacti__membe__59C55456">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Interaction">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Interacti__postI__5BAD9CC8">
+					<End Type="bgroup14_prodModel.Post" Role="Post" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Interaction" Role="Interaction" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Post">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Interaction">
+							<PropertyRef Name="postId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__Notificat__membe__6166761E">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.Notification" Role="Notification" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="Notification">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityType Name="InteractionsMember">
+					<Key>
+						<PropertyRef Name="id" />
+					</Key>
+					<Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="memberId" Type="Int32" />
+					<Property Name="otherMemberId" Type="Int32" />
+					<Property Name="strength" Type="Int32" />
+					<NavigationProperty Name="Member" Relationship="bgroup14_prodModel.FK__Interacti__membe__72910220" FromRole="InteractionsMember" ToRole="Member" />
+				</EntityType>
+				<Association Name="FK__Interacti__membe__72910220">
+					<End Type="bgroup14_prodModel.Member" Role="Member" Multiplicity="0..1" />
+					<End Type="bgroup14_prodModel.InteractionsMember" Role="InteractionsMember" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Member">
+							<PropertyRef Name="id" />
+						</Principal>
+						<Dependent Role="InteractionsMember">
+							<PropertyRef Name="memberId" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+			</Schema>
+		</edmx:ConceptualModels>
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+				<EntityContainerMapping StorageEntityContainer="bgroup14_prodModelStoreContainer" CdmEntityContainer="VolunteerMatchDbContext">
+					<EntitySetMapping Name="Categories">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Category">
+							<MappingFragment StoreEntitySet="Categories">
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="ChatHistories">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.ChatHistory">
+							<MappingFragment StoreEntitySet="ChatHistory">
+								<ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
+								<ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
+								<ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
+								<ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
+								<ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
+								<ScalarProperty Name="meetingMsg" ColumnName="meetingMsg" />
+								<ScalarProperty Name="markAsRead" ColumnName="markAsRead" />
+								<ScalarProperty Name="chatRoomId" ColumnName="chatRoomId" />
+								<ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
+								<ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
+								<ScalarProperty Name="text" ColumnName="text" />
+								<ScalarProperty Name="datetime" ColumnName="datetime" />
+								<ScalarProperty Name="messageId" ColumnName="messageId" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Comments">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Comment">
+							<MappingFragment StoreEntitySet="Comments">
+								<ScalarProperty Name="text" ColumnName="text" />
+								<ScalarProperty Name="postId" ColumnName="postId" />
+								<ScalarProperty Name="commentingMemberId" ColumnName="commentingMemberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Favorites">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Favorite">
+							<MappingFragment StoreEntitySet="Favorites">
+								<ScalarProperty Name="favoritedMemberId" ColumnName="favoritedMemberId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="datetime" ColumnName="datetime" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="FeedSettings">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.FeedSetting">
+							<MappingFragment StoreEntitySet="FeedSettings">
+								<ScalarProperty Name="participantAgeRange" ColumnName="participantAgeRange" />
+								<ScalarProperty Name="participantGender" ColumnName="participantGender" />
+								<ScalarProperty Name="postLocation" ColumnName="postLocation" />
+								<ScalarProperty Name="memberType" ColumnName="memberType" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Genders">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Gender">
+							<MappingFragment StoreEntitySet="Gender">
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Hobbies">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Hobby">
+							<MappingFragment StoreEntitySet="Hobbies">
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Likes">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Like">
+							<MappingFragment StoreEntitySet="Likes">
+								<ScalarProperty Name="postId" ColumnName="postId" />
+								<ScalarProperty Name="likingMemberId" ColumnName="likingMemberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Locations">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Location">
+							<MappingFragment StoreEntitySet="Location">
+								<ScalarProperty Name="y_coordinate" ColumnName="y_coordinate" />
+								<ScalarProperty Name="x_coordinate" ColumnName="x_coordinate" />
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Meetings">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Meeting">
+							<MappingFragment StoreEntitySet="Meetings">
+								<ScalarProperty Name="didPushSent" ColumnName="didPushSent" />
+								<ScalarProperty Name="meetingLocationLabel" ColumnName="meetingLocationLabel" />
+								<ScalarProperty Name="meetingTimeLabel" ColumnName="meetingTimeLabel" />
+								<ScalarProperty Name="meetingDateLabel" ColumnName="meetingDateLabel" />
+								<ScalarProperty Name="meetingUnixDate" ColumnName="meetingUnixDate" />
+								<ScalarProperty Name="secondMemberId" ColumnName="secondMemberId" />
+								<ScalarProperty Name="meetingEventTitle" ColumnName="meetingEventTitle" />
+								<ScalarProperty Name="firstMemberId" ColumnName="firstMemberId" />
+								<ScalarProperty Name="didHappen" ColumnName="didHappen" />
+								<ScalarProperty Name="didAccept" ColumnName="didAccept" />
+								<ScalarProperty Name="locationId" ColumnName="locationId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Members">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Member">
+							<MappingFragment StoreEntitySet="Members">
+								<ScalarProperty Name="lastLocationLong" ColumnName="lastLocationLong" />
+								<ScalarProperty Name="lastLocationLat" ColumnName="lastLocationLat" />
+								<ScalarProperty Name="notificationId" ColumnName="notificationId" />
+								<ScalarProperty Name="city" ColumnName="city" />
+								<ScalarProperty Name="gender" ColumnName="gender" />
+								<ScalarProperty Name="systemScore" ColumnName="systemScore" />
+								<ScalarProperty Name="isBanned" ColumnName="isBanned" />
+								<ScalarProperty Name="pictureUrl" ColumnName="pictureUrl" />
+								<ScalarProperty Name="rankLevel" ColumnName="rankLevel" />
+								<ScalarProperty Name="numMeetingsSkipped" ColumnName="numMeetingsSkipped" />
+								<ScalarProperty Name="numPosts" ColumnName="numPosts" />
+								<ScalarProperty Name="helpType" ColumnName="helpType" />
+								<ScalarProperty Name="occupation" ColumnName="occupation" />
+								<ScalarProperty Name="dateOfBirth" ColumnName="dateOfBirth" />
+								<ScalarProperty Name="genderId" ColumnName="genderId" />
+								<ScalarProperty Name="biography" ColumnName="biography" />
+								<ScalarProperty Name="password" ColumnName="password" />
+								<ScalarProperty Name="googleId" ColumnName="googleId" />
+								<ScalarProperty Name="facebookId" ColumnName="facebookId" />
+								<ScalarProperty Name="fullName" ColumnName="fullName" />
+								<ScalarProperty Name="email" ColumnName="email" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="MembersCategories">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.MembersCategory">
+							<MappingFragment StoreEntitySet="MembersCategories">
+								<ScalarProperty Name="count" ColumnName="count" />
+								<ScalarProperty Name="categoryId" ColumnName="categoryId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="MembersHobbies">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.MembersHobby">
+							<MappingFragment StoreEntitySet="MembersHobbies">
+								<ScalarProperty Name="hobbyId" ColumnName="hobbyId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="MembersPosts">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.MembersPost">
+							<MappingFragment StoreEntitySet="MembersPosts">
+								<ScalarProperty Name="postId" ColumnName="postId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Posts">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Post">
+							<MappingFragment StoreEntitySet="Posts">
+								<ScalarProperty Name="dateLabel" ColumnName="dateLabel" />
+								<ScalarProperty Name="cityName" ColumnName="cityName" />
+								<ScalarProperty Name="category" ColumnName="category" />
+								<ScalarProperty Name="member_id" ColumnName="member_id" />
+								<ScalarProperty Name="timeOfDay" ColumnName="timeOfDay" />
+								<ScalarProperty Name="fromGender" ColumnName="fromGender" />
+								<ScalarProperty Name="latitude" ColumnName="latitude" />
+								<ScalarProperty Name="longitude" ColumnName="longitude" />
+								<ScalarProperty Name="recurring" ColumnName="recurring" />
+								<ScalarProperty Name="unixDate" ColumnName="unixDate" />
+								<ScalarProperty Name="isZoom" ColumnName="isZoom" />
+								<ScalarProperty Name="helpType" ColumnName="helpType" />
+								<ScalarProperty Name="toAge" ColumnName="toAge" />
+								<ScalarProperty Name="fromAge" ColumnName="fromAge" />
+								<ScalarProperty Name="fromGenderId" ColumnName="fromGenderId" />
+								<ScalarProperty Name="locationId" ColumnName="locationId" />
+								<ScalarProperty Name="categoryId" ColumnName="categoryId" />
+								<ScalarProperty Name="text" ColumnName="text" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Reviews">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Review">
+							<MappingFragment StoreEntitySet="Reviews">
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="stars" ColumnName="stars" />
+								<ScalarProperty Name="url" ColumnName="url" />
+								<ScalarProperty Name="text" ColumnName="text" />
+								<ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="WhereActivities">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.WhereActivity">
+							<MappingFragment StoreEntitySet="WhereActivity">
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Interactions">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Interaction">
+							<MappingFragment StoreEntitySet="Interactions">
+								<ScalarProperty Name="categoryName" ColumnName="categoryName" />
+								<ScalarProperty Name="unixdate" ColumnName="unixdate" />
+								<ScalarProperty Name="strength" ColumnName="strength" />
+								<ScalarProperty Name="interactionType" ColumnName="interactionType" />
+								<ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+								<ScalarProperty Name="postId" ColumnName="postId" />
+								<ScalarProperty Name="categoryId" ColumnName="categoryId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Notifications">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.Notification">
+							<MappingFragment StoreEntitySet="Notifications">
+								<ScalarProperty Name="unixdate" ColumnName="unixdate" />
+								<ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+								<ScalarProperty Name="notificationText" ColumnName="notificationText" />
+								<ScalarProperty Name="notificationType" ColumnName="notificationType" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="InteractionsMembers">
+						<EntityTypeMapping TypeName="bgroup14_prodModel.InteractionsMember">
+							<MappingFragment StoreEntitySet="InteractionsMembers">
+								<ScalarProperty Name="strength" ColumnName="strength" />
+								<ScalarProperty Name="otherMemberId" ColumnName="otherMemberId" />
+								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="id" ColumnName="id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+		<Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</Connection>
+		<Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="ValidateOnBuild" Value="true" />
+				<DesignerProperty Name="EnablePluralization" Value="true" />
+				<DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+				<DesignerProperty Name="UseLegacyProvider" Value="false" />
+				<DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+			</DesignerInfoPropertySet>
+		</Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<Diagrams></Diagrams>
+	</Designer>
 </edmx:Edmx>
