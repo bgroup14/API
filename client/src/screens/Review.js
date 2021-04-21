@@ -11,6 +11,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
+import AddNotificationToDb from '../components/AddNotificationToDb';
+
+
 
 
 
@@ -28,6 +31,8 @@ const Review = (props) => {
 
     const [rating, setRating] = useState(3);
     const [reviewText, setReviewText] = useState(null);
+    let userName = useSelector(state => state.user.userName);
+
 
 
 
@@ -78,6 +83,61 @@ const Review = (props) => {
         }
     }
 
+    const PushFromClient = async (pushObj) => {
+
+        //GET OTHER USER TOKEN ID FROM SERVER
+        const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
+        try {
+            // console.log("getting other memner push id with id: " + otherMemberId)
+            const res = await axios(fetchOtherUserPushNotificationID);
+
+            var otherUserNotificationId = res.data;
+
+
+
+        } catch (error) {
+
+            console.log(error)
+            return null
+        }
+
+        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
+
+
+
+        let push = {
+            to: otherUserNotificationId,
+            // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
+            title: "New review",
+            body: `${userName} has given you a review`,
+            badge: 3,
+            data: pushObj,
+
+
+
+        };
+
+        // POST adds a random id to the object sent
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            body: JSON.stringify(push),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json != null) {
+                    console.log(`
+                  returned from server\n
+                  json.data= ${JSON.stringify(json.data)}`);
+
+                } else {
+                    alert('err json');
+                }
+            });
+    }
+
     const submitReview = async () => {
         console.log(rating)
         console.log(reviewText)
@@ -95,6 +155,7 @@ const Review = (props) => {
 
         let type = `Review ${rating}`;
         addMemberInteraction(type)
+
 
 
 
@@ -119,6 +180,24 @@ const Review = (props) => {
         } catch (error) {
             //ALERT ERROR
         }
+
+        let now = Math.floor(Date.now() / 1000)
+        let obj = {
+            memberId: otherMemberId,
+            notificationType: 'Review',
+            notificationText: `Gave you a rating of ${rating} stars`,
+            otherMemberId: userId,
+            unixdate: now
+        }
+
+        AddNotificationToDb(obj)
+        let pushObj = {
+            functionToRun: "receivedNewReview",
+
+        }
+        PushFromClient(pushObj)
+
+
 
 
     }

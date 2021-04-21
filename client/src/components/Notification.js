@@ -27,6 +27,7 @@ const Notification = (props) => {
     let userId = useSelector(state => state.auth.userId);
     const [notificationContent, setNotificationContent] = useState();
     const [iconType, setIconType] = useState();
+    const [iconColor, setIconColor] = useState();
 
     // const [bold, setBold] = useState(false);
 
@@ -85,6 +86,23 @@ const Notification = (props) => {
 
     }
 
+    const meetingNotApproved = async () => {
+        props.meetingNotApprovedBtn(otherMemberName, otherMemberId);
+        //Delete notification
+        const deleteNotificationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/deletenotification/${notificationId}`
+
+        // try {
+        //     const res = await axios.delete(deleteNotificationUrl);
+        //     console.log(res.data)
+
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+    }
+
+
+
 
     const setContent = () => {
 
@@ -97,7 +115,8 @@ const Notification = (props) => {
                     </View>
 
                 )
-                setIconType("message1")
+                setIconType("message1");
+                setIconColor("#000000")
 
                 break;
 
@@ -109,6 +128,21 @@ const Notification = (props) => {
                 )
                 let iconType = notificationText.includes("Accepted") ? "like2" : "dislike2"
                 setIconType(iconType)
+                setIconColor("#000000")
+                // setIconColor("blue")
+
+                break;
+            case "Review":
+                setNotificationContent(
+                    <View style={{ maxWidth: windowWidth / 1.2 }}>
+                        <Text style={{ marginTop: windowHeight / 200, fontStyle: 'italic' }}>{notificationText} </Text>
+                    </View>
+
+                )
+                setIconType("star")
+                setIconColor("#f1c40f")
+
+
                 break;
             case "meetingCheck":
                 // let notificationText = "Did you eventually meet LeBron James for Basketball Practice?"
@@ -124,7 +158,7 @@ const Notification = (props) => {
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: windowHeight / 30 }}>
 
 
-                            <Button style={{ marginHorizontal: windowWidth / 10 }} labelStyle={{ color: '#3b5998' }} icon="cancel" mode='outlined' onPress={() => console.log('Pressed')}>
+                            <Button style={{ marginHorizontal: windowWidth / 10 }} labelStyle={{ color: '#3b5998' }} icon="cancel" mode='outlined' onPress={() => meetingNotApproved()}>
                                 No </Button>
                             <Button style={{ backgroundColor: '#3b5998' }} labelStyle={{ color: '#fff' }} icon="check" mode='contained' onPress={() => meetingApproved()}>
                                 Yes</Button>
@@ -159,7 +193,7 @@ const Notification = (props) => {
                             otherMemberImage,
                     }}
                 />
-                <Icon name={iconType} size={22} color="#000000" style={{ position: 'absolute', marginLeft: windowWidth / 10, marginTop: windowHeight / 16 }} />
+                <Icon name={iconType} size={22} color={iconColor} style={{ position: 'absolute', marginLeft: windowWidth / 10, marginTop: windowHeight / 16 }} />
 
 
                 <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 60, }}>

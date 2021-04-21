@@ -211,6 +211,7 @@ const HomeScreen = (props) => {
                 case "meetingRejected":
                 case "receivedNewComment":
                 case "meetingCheck":
+                case "receivedNewReview":
                     newNotification();
                     //FUNCTION THAT WILL MAKE THE BELL RED
                     break;
@@ -248,6 +249,8 @@ const HomeScreen = (props) => {
                 case "receivedNewComment":
                 case "meetingRejected":
                 case "meetingCheck":
+                case "receivedNewReview":
+
                     props.navigation.navigate("Notifications")
                     break;
 
