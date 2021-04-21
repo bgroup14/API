@@ -29,6 +29,7 @@ import LottieView from 'lottie-react-native';
 
 import { Button } from 'react-native-paper';
 import Confetti from '../components/Confetti';
+import { Alert } from 'react-native';
 // import MyOverlay from '../components/MyOverlay';
 // 
 
@@ -172,13 +173,30 @@ const Notifications = (props) => {
         setMeetingHappend(true)
     }
 
-    const meetingNotApproveHanlder = (otherMemberName, otherMemberId) => {
+    const meetingNotApproveHanlder = async (otherMemberName, otherMemberId, notificationId) => {
         let obj = {
             otherMemberId,
             otherMemberName,
+
         }
+        // alert(notificationId)
         setMeetingDidntOccurObj(obj)
         setMeetingNotApproved(true)
+
+
+
+        // DELETE NOTIFICATION 
+        const deleteNotificationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/deletenotification/${notificationId}`
+
+
+        try {
+            const res = await axios.delete(deleteNotificationUrl);
+            console.log(res.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     const closeReview = () => {
@@ -221,11 +239,19 @@ const Notifications = (props) => {
         }
 
     }
+    const closeWindow = () => {
+
+        setRefreshPage(!refreshPage);
+        setMeetingNotApproved(false);
+
+
+    }
 
 
 
 
     let notificationsHeader = notifications.length > 0 ? 'Notifications' : ""
+
 
 
     const animation = React.useRef(null)
@@ -243,7 +269,7 @@ const Notifications = (props) => {
                     <Review reviewObj={reviewObj} closeReview={() => closeReview()} />
                 </MyOverlay>
                 <MyOverlay isVisible={meetingNotApproved} onBackdropPress={() => setMeetingNotApproved(false)}   >
-                    <MeetingNotApprovedScreen meetingDidntOccurObj={meetingDidntOccurObj} closeWindow={() => setMeetingNotApproved(false)} />
+                    <MeetingNotApprovedScreen meetingDidntOccurObj={meetingDidntOccurObj} closeWindow={() => setMeetingNotApproved(false)} closeWindow={() => closeWindow()} />
                 </MyOverlay>
 
                 {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
@@ -300,7 +326,7 @@ const Notifications = (props) => {
                         return <Notification notification={notification} key={notification.notificationId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                             meetingApprovedBtn={(otherMemberImage, otherMemberName, otherMemberId) => meetingApproveHanlder(otherMemberImage, otherMemberName, otherMemberId)}
-                            meetingNotApprovedBtn={(otherMemberName, otherMemberId) => meetingNotApproveHanlder(otherMemberName, otherMemberId)}
+                            meetingNotApprovedBtn={(otherMemberName, otherMemberId, notificationId) => meetingNotApproveHanlder(otherMemberName, otherMemberId, notificationId)}
                         />
                     })}
 
