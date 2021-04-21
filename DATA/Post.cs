@@ -18,9 +18,9 @@ namespace DATA
         public Post()
         {
             this.Comments = new HashSet<Comment>();
+            this.Interactions = new HashSet<Interaction>();
             this.Likes = new HashSet<Like>();
             this.MembersPosts = new HashSet<MembersPost>();
-            this.Interactions = new HashSet<Interaction>();
         }
     
         public int id { get; set; }
@@ -48,11 +48,11 @@ namespace DATA
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Gender Gender { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Interaction> Interactions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Like> Likes { get; set; }
         public virtual Location Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembersPost> MembersPosts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Interaction> Interactions { get; set; }
     }
 }

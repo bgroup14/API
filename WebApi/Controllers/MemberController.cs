@@ -478,7 +478,7 @@ namespace WebApi.Controllers
             {
                 Review review = new Review();
                 review.fromMemberId = reviewsDTO.fromMemberId;
-                review.toMemberId = reviewsDTO.toMemberId;
+                review.memberId = reviewsDTO.toMemberId;
                 review.text = reviewsDTO.text;
                 review.url = reviewsDTO.url;
                 review.stars = reviewsDTO.stars;

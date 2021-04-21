@@ -32,6 +32,8 @@ namespace DATA
         public virtual DbSet<FeedSetting> FeedSettings { get; set; }
         public virtual DbSet<Gender> Genders { get; set; }
         public virtual DbSet<Hobby> Hobbies { get; set; }
+        public virtual DbSet<Interaction> Interactions { get; set; }
+        public virtual DbSet<InteractionsMember> InteractionsMembers { get; set; }
         public virtual DbSet<Like> Likes { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Meeting> Meetings { get; set; }
@@ -39,9 +41,9 @@ namespace DATA
         public virtual DbSet<MembersCategory> MembersCategories { get; set; }
         public virtual DbSet<MembersHobby> MembersHobbies { get; set; }
         public virtual DbSet<MembersPost> MembersPosts { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<WhereActivity> WhereActivities { get; set; }
-        public virtual DbSet<Interaction> Interactions { get; set; }
     }
 }

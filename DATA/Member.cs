@@ -18,11 +18,13 @@ namespace DATA
         public Member()
         {
             this.Comments = new HashSet<Comment>();
+            this.Interactions = new HashSet<Interaction>();
+            this.InteractionsMembers = new HashSet<InteractionsMember>();
             this.Likes = new HashSet<Like>();
             this.MembersCategories = new HashSet<MembersCategory>();
             this.MembersHobbies = new HashSet<MembersHobby>();
             this.MembersPosts = new HashSet<MembersPost>();
-            this.Interactions = new HashSet<Interaction>();
+            this.Notifications = new HashSet<Notification>();
         }
     
         public int id { get; set; }
@@ -52,6 +54,10 @@ namespace DATA
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Gender Gender1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Interaction> Interactions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InteractionsMember> InteractionsMembers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Like> Likes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembersCategory> MembersCategories { get; set; }
@@ -60,6 +66,6 @@ namespace DATA
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembersPost> MembersPosts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Interaction> Interactions { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
     }
 }

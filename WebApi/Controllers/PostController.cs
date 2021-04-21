@@ -1434,9 +1434,9 @@ namespace WebApi.Controllers
         }
 
         //For debugging purposes, added Route. Will not be necessary in release
-        [HttpGet]
-        [Route("findSimilarMembersPosts/{memberId}")]
-        public HttpResponseMessage findSimilarMembersPosts(int memberId) //List<Member>
+        //[HttpGet]
+        //[Route("findSimilarMembersPosts/{memberId}")]
+        public List<PostDTO> findSimilarMembersPosts(int memberId)
         {
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
@@ -1500,13 +1500,72 @@ namespace WebApi.Controllers
                 }
 
                 //Fetch 5 posts the similar member had interaction with if exist
+                List<int> similarMembersInteractionOtherMemberIDs = new List<int>();
+                var similarInteractions = db.InteractionsMembers.Where(x => similarMembersIDs.Contains((int)x.memberId)).Take(5);
+                foreach (var similarInteraction in similarInteractions)
+                {
+                    similarMembersInteractionOtherMemberIDs.Add((int)similarInteraction.otherMemberId);
+                }
 
+                var postsOfInteractedMembersInitial = db.Posts.Where(x => similarMembersInteractionOtherMemberIDs.Contains((int)x.member_id)).Select(x => new PostDTO()
+                {
+                    id = (int)x.id,
+                    text = x.text,
+                    fromAge = (int)x.fromAge,
+                    toAge = (int)x.toAge,
+                    helpType = x.helpType,
+                    isZoom = x.isZoom,
+                    unixDate = (int)x.unixDate,
+                    recurring = x.recurring,
+                    fromGender = x.fromGender,
+                    longitude = (double)x.longitude,
+                    latitude = (double)x.latitude,
+                    timeOfDay = x.timeOfDay,
+                    category = x.category,
+                    member_id = (int)x.member_id,
+                    cityName = x.cityName,
+                    dateLabel = x.dateLabel,
+                    postId = x.id,
+                    postCreatorName = db.Members.Where(y => y.id == (int)x.member_id).FirstOrDefault().fullName,
+                    postCreatorImg = db.Members.Where(y => y.id == x.member_id).FirstOrDefault().pictureUrl,
 
-                return Request.CreateResponse(HttpStatusCode.OK, similarMembersIDs);
+                    comments = db.Comments.Where(c => c.postId == x.id).Select(y => new CommentDTO()
+                    {
+                        commentingMemberId = (int)y.commentingMemberId,
+                        commentingMemberImage = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().pictureUrl,
+                        commentingMemberName = db.Members.Where(m => m.id == (int)y.commentingMemberId).FirstOrDefault().fullName,
+                        text = y.text
+                    }).ToList()
+                });
+                var postsOfInteractedMembers = postsOfInteractedMembersInitial.ToList();
+                if (!memberType.Equals("Both"))
+                {
+                    if (memberType.Equals("Give Help"))
+                    {
+                        postsOfInteractedMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Where(x => x.helpType == "Need Help").Take(5).ToList();
+                    }
+                    else if (memberType.Equals("Need Help"))
+                    {
+                        postsOfInteractedMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Where(x => x.helpType == "Give Help").Take(5).ToList();
+                    }
+                }
+                else
+                {
+                    postsOfInteractedMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Take(5).ToList();
+                }
+
+                foreach (var postOfInteracted in postsOfInteractedMembers)
+                {
+                    postsOfSimilarMembers.Add(postOfInteracted);
+                }
+
+                return postsOfSimilarMembers;
+                //return Request.CreateResponse(HttpStatusCode.OK, postsOfSimilarMembers);
             }
             catch (Exception e)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
+                //return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
+                return null;
             }
 }
             /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)

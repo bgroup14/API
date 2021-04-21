@@ -12,13 +12,15 @@ namespace DATA
     using System;
     using System.Collections.Generic;
     
-    public partial class Review
+    public partial class Notification
     {
         public int id { get; set; }
-        public Nullable<int> fromMemberId { get; set; }
         public Nullable<int> memberId { get; set; }
-        public string text { get; set; }
-        public string url { get; set; }
-        public Nullable<int> stars { get; set; }
+        public string notificationType { get; set; }
+        public string notificationText { get; set; }
+        public Nullable<int> otherMemberId { get; set; }
+        public Nullable<int> unixdate { get; set; }
+    
+        public virtual Member Member { get; set; }
     }
 }
