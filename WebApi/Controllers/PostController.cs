@@ -638,6 +638,7 @@ namespace WebApi.Controllers
 
                 var filteredPostsList = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
                 {
+                    id = (int)x.id,
                     text = x.text,
                     fromAge = (int)x.fromAge,
                     toAge = (int)x.toAge,
@@ -674,7 +675,7 @@ namespace WebApi.Controllers
                         Longitude = (double)z.longitude
                     }).ToList()*/
 
-                }).ToList();
+                }).OrderByDescending(x => x.id).ToList();
 
                 var filteredPostsFinalList = filteredPostsList;
                 if (smartElementPosts != null)
