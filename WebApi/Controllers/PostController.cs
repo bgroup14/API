@@ -677,16 +677,17 @@ namespace WebApi.Controllers
                 }).ToList();
 
                 var filteredPostsFinalList = filteredPostsList;
-                /*if (smartElementPosts != null)
+                if (smartElementPosts != null)
                 {
                     for (int i = smartElementPosts.Count()-1; i >= 0; i--)
                     {
-                        filteredPostsFinalList.Insert(0, smartElementPosts[i]);
+                        if (!filteredPostsFinalList.Contains(smartElementPosts[i]))
+                            filteredPostsFinalList.Insert(0, smartElementPosts[i]);
                     }
-                }*/
+                }
 
-                return Request.CreateResponse(HttpStatusCode.OK, filteredPostsFinalList);
                 var filteredPosts = filteredPostsFinalList.AsQueryable();
+                //return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
 
 
                 if (filterDTO.filterActivated) // IT MEANS WE HAVE FILTER ACTIVATED
@@ -782,6 +783,7 @@ namespace WebApi.Controllers
                         {
                             case "Relevance":
                                 //Need to setup smart element
+                                // Show favorite categories first if categories selection is ALL
 
                                 break;
                             case "Location":
@@ -890,8 +892,6 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 // Show favorite categories first if categories selection is ALL
-                                // Show 5 posts of similar members
-                                // Show 5 posts of members and posts user will possibly like (db.InteractionMembers)
 
                                 break;
                             case "Location":
