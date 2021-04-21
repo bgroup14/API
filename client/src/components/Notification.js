@@ -87,7 +87,7 @@ const Notification = (props) => {
     }
 
     const meetingNotApproved = async () => {
-        props.meetingNotApprovedBtn(otherMemberName, otherMemberId);
+        props.meetingNotApprovedBtn(otherMemberName, otherMemberId, notificationId);
         //Delete notification
         const deleteNotificationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/deletenotification/${notificationId}`
 
