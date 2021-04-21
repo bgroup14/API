@@ -7,6 +7,7 @@ namespace WebApi.DTO
 {
     public class PostDTO
     {
+        public int id;
         public string text;
         public int fromAge;
         public int toAge;

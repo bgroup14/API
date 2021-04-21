@@ -18,6 +18,8 @@ namespace DATA
         public Member()
         {
             this.Comments = new HashSet<Comment>();
+            this.Interactions = new HashSet<Interaction>();
+            this.InteractionsMembers = new HashSet<InteractionsMember>();
             this.Likes = new HashSet<Like>();
             this.MembersCategories = new HashSet<MembersCategory>();
             this.MembersHobbies = new HashSet<MembersHobby>();
@@ -53,6 +55,10 @@ namespace DATA
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Gender Gender1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Interaction> Interactions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InteractionsMember> InteractionsMembers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Like> Likes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -16,7 +16,6 @@ namespace DATA
     public class MemberMetaData
     {
 
-
         [Required(AllowEmptyStrings = false, ErrorMessage = "full name can't be empty")]
         public string fullName;
 
@@ -26,17 +25,21 @@ namespace DATA
         [Required(AllowEmptyStrings = false, ErrorMessage = "occopation can't be empty")]
         public string occupation;
 
-       
         [Required(AllowEmptyStrings = false, ErrorMessage = "pictureURL can't be empty")]
         public string pictureUrl;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "city can't be empty")]
         public string city;
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "gender can't be empty")]
         public string gender;
 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "location latitude can't be empty")]
+        public float lastLocationLat;
 
-       /* [MinLength(6, ErrorMessage = "Password must be at leasts 6 chars + ")]
-        public string password;*/
+        [Required(AllowEmptyStrings = false, ErrorMessage = "location longitude can't be empty")]
+        public float lastLocationLong;
+        /* [MinLength(6, ErrorMessage = "Password must be at leasts 6 chars + ")]
+         public string password;*/
     }
 }
