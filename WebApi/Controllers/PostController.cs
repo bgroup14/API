@@ -634,7 +634,9 @@ namespace WebApi.Controllers
                  }*/
 
 
-                var filteredPosts = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
+                var smartElementPosts = findSimilarMembersPosts(memberId);
+
+                var filteredPostsList = db.Posts.Where(p => p.member_id != memberId).Select(x => new PostDTO()
                 {
                     text = x.text,
                     fromAge = (int)x.fromAge,
@@ -672,9 +674,19 @@ namespace WebApi.Controllers
                         Longitude = (double)z.longitude
                     }).ToList()*/
 
-                });
+                }).ToList();
 
-                //return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
+                var filteredPostsFinalList = filteredPostsList;
+                /*if (smartElementPosts != null)
+                {
+                    for (int i = smartElementPosts.Count()-1; i >= 0; i--)
+                    {
+                        filteredPostsFinalList.Insert(0, smartElementPosts[i]);
+                    }
+                }*/
+
+                return Request.CreateResponse(HttpStatusCode.OK, filteredPostsFinalList);
+                var filteredPosts = filteredPostsFinalList.AsQueryable();
 
 
                 if (filterDTO.filterActivated) // IT MEANS WE HAVE FILTER ACTIVATED
@@ -1443,6 +1455,11 @@ namespace WebApi.Controllers
             try
             {
                 List<MemberDTO> members = findSimilarMembers(memberId);
+                if (members == null)
+                {
+                    //If no similar members, don't look for posts
+                    return null;
+                }
                 List<int> similarMembersIDs = new List<int>();
                 foreach (var member in members)
                 {
@@ -1560,7 +1577,7 @@ namespace WebApi.Controllers
                 }
 
                 return postsOfSimilarMembers;
-                //return Request.CreateResponse(HttpStatusCode.OK, postsOfSimilarMembers);
+                //return Request.CreateResponse(HttpStatusCode.OK, postsOfSimilarMembers.AsQueryable());
             }
             catch (Exception e)
             {
