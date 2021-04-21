@@ -223,8 +223,8 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="fromMemberId" Type="int" />
-          <Property Name="toMemberId" Type="int" />
-          <Property Name="text" Type="text" />
+          <Property Name="memberId" Type="int" />
+          <Property Name="text" Type="varchar" MaxLength="255" />
           <Property Name="url" Type="varchar" MaxLength="255" />
           <Property Name="stars" Type="int" />
         </EntityType>
@@ -926,10 +926,10 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="fromMemberId" Type="Int32" />
-          <Property Name="toMemberId" Type="Int32" />
-          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="text" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="stars" Type="Int32" />
+          <Property Name="memberId" Type="Int32" />
         </EntityType>
         <EntityType Name="WhereActivity">
           <Key>
@@ -1443,10 +1443,10 @@
           <EntitySetMapping Name="Reviews">
             <EntityTypeMapping TypeName="bgroup14_prodModel.Review">
               <MappingFragment StoreEntitySet="Reviews">
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
                 <ScalarProperty Name="stars" ColumnName="stars" />
                 <ScalarProperty Name="url" ColumnName="url" />
                 <ScalarProperty Name="text" ColumnName="text" />
-                <ScalarProperty Name="toMemberId" ColumnName="toMemberId" />
                 <ScalarProperty Name="fromMemberId" ColumnName="fromMemberId" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>

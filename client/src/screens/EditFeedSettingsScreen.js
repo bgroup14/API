@@ -267,8 +267,8 @@ const EditFeedSettingsScreen = (props) => {
           onPress={() => updateFeedSettings()}
         /> */}
         <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: windowHeight / 40 }}>
-          <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateFeedSettings()}>
-            Update feed settings </Btn>
+          <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateFeedSettings()}>
+            Update Feed Settings </Btn>
         </View>
 
 

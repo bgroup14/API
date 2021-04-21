@@ -17,7 +17,19 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Appbar, Title } from 'react-native-paper';
+import Review from '../screens/Review';
+import { Toast } from "native-base";
+import * as Font from "expo-font";
 
+
+
+
+import LottieView from 'lottie-react-native';
+
+import { Button } from 'react-native-paper';
+import Confetti from '../components/Confetti';
+// import MyOverlay from '../components/MyOverlay';
+// 
 
 
 const Notifications = (props) => {
@@ -27,6 +39,9 @@ const Notifications = (props) => {
     const [notifications, setNotifications] = useState([]);
     const [wasFetched, setWasFetched] = useState(false);
     const [restartScreen, setRestartScreen] = useState(false);
+    const [refreshPage, setRefreshPage] = useState(false);
+    const [reviewObj, setReviewObj] = useState({});
+
     let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
     const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/meeting/getUpcomingMeetings/${userId}`
@@ -40,6 +55,39 @@ const Notifications = (props) => {
             payload: null
         });
     }
+
+    const [meetingHappend, setMeetingHappend] = useState(false);
+    const [isVisible, setIsvisible] = useState(false);
+
+    const isFirstRun = React.useRef(true)
+
+    useEffect(() => {
+
+        const loadFonts = async () => {
+            await Font.loadAsync({
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+
+            })
+            loadFonts();
+        }
+
+
+        if (meetingHappend) {
+            setTimeout(() => {
+                // alert(1)
+                // setMeetingHappend(false)
+                setIsvisible(true)
+                setMeetingHappend(false)
+
+            }, 2000);
+
+        }
+
+
+
+    }, [meetingHappend])
+
 
     useFocusEffect(
         React.useCallback(() => {
@@ -93,7 +141,7 @@ const Notifications = (props) => {
             return () => {
                 isActive = false;
             };
-        }, [])
+        }, [refreshPage])
     )
 
 
@@ -112,7 +160,56 @@ const Notifications = (props) => {
         })
 
     }
+    const meetingApproveHanlder = (otherMemberImage, otherMemberName, otherMemberId) => {
+        let obj = {
+            otherMemberId,
+            otherMemberImage,
+            otherMemberName,
+        }
+        setReviewObj(obj)
+        setMeetingHappend(true)
+    }
 
+    const closeReview = () => {
+        // fetchNotifications();
+        setIsvisible(false);
+        setRefreshPage(!refreshPage)
+
+
+
+        Toast.show({
+            text: "Review published successfully",
+            // buttonText: "Okay",
+            type: "success",
+            duration: 4000
+        });
+
+
+
+
+
+
+    }
+
+    const fetchNotifications = async () => {
+        console.log("Fetching notificions....")
+        try {
+
+            const res = await axios.post(notificationsFetchURL);
+            if (isActive) {
+                console.log("setting notifications......")
+                console.log(res.data)
+                setNotifications(res.data)
+                //setRestartScreen(!restartScreen)
+                // setUpcomingMeetings(res.data);
+            }
+            setWasFetched(true)
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 
 
 
@@ -120,6 +217,7 @@ const Notifications = (props) => {
     let notificationsHeader = notifications.length > 0 ? 'Notifications' : ""
 
 
+    const animation = React.useRef(null)
 
     return (
 
@@ -130,18 +228,34 @@ const Notifications = (props) => {
                 <Appbar.BackAction onPress={() => props.navigation.navigate('Home')} />
 
                 <Appbar.Content title="Notifications" />
+                <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisible(false)}   >
+                    <Review reviewObj={reviewObj} closeReview={() => closeReview()} />
+                </MyOverlay>
 
                 {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
                 {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
             </Appbar.Header>
-            {upcomingMeetings.length == 0 && notifications.length == 0 && wasFetched ?
-                <View style={styles.logoContainer}>
-                    <Image
-                        source={require('../../assets/bell.png')}
-                        style={styles.logo}
-                    />
-                    <Text style={{ fontSize: 20 }}>No notifications.</Text>
-                </View> : null}
+
+            {meetingHappend ? <Confetti /> : null}
+
+            {/* <View style={{ zIndex: 1, position: 'absolute', bottom: windowHeight / 5, right: - (windowHeight / 20) }}>
+                <LottieView style={styles.lottie}
+                    ref={animation}
+                    source={require('../../assets/lottie/1370-confetti.json')}
+                    autoPlay={false}
+                    loop={false} />
+            </View> */}
+
+            {
+                upcomingMeetings.length == 0 && notifications.length == 0 && wasFetched ?
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={require('../../assets/bell.png')}
+                            style={styles.logo}
+                        />
+                        <Text style={{ fontSize: 20 }}>No notifications.</Text>
+                    </View> : null
+            }
             <ScrollView style={styles.inner}>
                 {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
                 {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
@@ -150,6 +264,7 @@ const Notifications = (props) => {
                 <View style={styles.barContainer}><Text style={styles.barText}>Notifications</Text>
 
                 </View> */}
+
 
                 {upcomingMeetings.length > 0 ? <View style={styles.upcomingMeetingsHeaderContainer}><Text style={styles.upcomingMeetingsHeader}>Upcoming Meetings</Text></View> : null}
                 <View style={styles.upcomingMeetingsContainer} key={restartScreen} >
@@ -170,12 +285,17 @@ const Notifications = (props) => {
                         // console.log("notification is: " + notification)
                         return <Notification notification={notification} key={notification.notificationId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
+                            meetingApprovedBtn={(otherMemberImage, otherMemberName, otherMemberId) => meetingApproveHanlder(otherMemberImage, otherMemberName, otherMemberId)}
                         />
                     })}
+
                 </View>
+
             </ScrollView>
 
-        </KeyboardAvoidingView>
+
+
+        </KeyboardAvoidingView >
     )
 }
 
@@ -184,6 +304,7 @@ export default Notifications
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        zIndex: 1
         //backgroundColor: '#fff',
         // justifyContent: 'center',
         // alignItems: 'center'
@@ -259,7 +380,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     upcomingMeetingsHeader: {
-        fontSize: 18
+        fontSize: 18,
+        color: '#3b5998'
+
     },
     upcomingMeetingsContainer: {
         // marginBottom: windowHeight / 10,
@@ -286,4 +409,10 @@ const styles = StyleSheet.create({
         //     marginBottom: windowHeight / 80
 
     },
+    lottie: {
+        width: 500,
+        height: 500,
+        // position: 'absolute',
+        // paddingRight: 200
+    }
 })

@@ -197,7 +197,7 @@ const SearchScreen = (props) => {
 
 
             <Searchbar
-                placeholder="Search users and posts"
+                placeholder="Search for users & posts"
                 onChangeText={onChangeSearch}
                 value={searchQuery}
             />

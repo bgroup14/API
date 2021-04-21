@@ -9,9 +9,11 @@ namespace WebApi.DTO
     {
         public int id;
         public int fromMemberId;
-        public int toMemberId;
+        public int memberId;
         public string text;
         public string url;
         public int stars;
+        public string otherMemberImage;
+        public string otherMemberName;
     }
 }

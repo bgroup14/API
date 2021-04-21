@@ -404,10 +404,7 @@ const Post = (props) => {
                 </View> : null}
 
             <View style={styles.postBtnContainer}>
-                <TouchableOpacity onPress={() => setShowCommentInput(!showCommentInput)} style={styles.postBtn}>
-                    <FontAwsome name='commenting-o' size={25} color="gray" />
-                    <Text style={styles.btnText}>Comment</Text>
-                </TouchableOpacity >
+
 
                 {/* <TouchableOpacity style={styles.postBtn}>
                     <FontAwsome name='heart-o' size={25} color="gray" />
@@ -418,6 +415,10 @@ const Post = (props) => {
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
                 </TouchableOpacity >}
+                <TouchableOpacity onPress={() => setShowCommentInput(!showCommentInput)} style={styles.postBtn}>
+                    <FontAwsome name='commenting-o' size={25} color="gray" />
+                    <Text style={styles.btnText}>Comment</Text>
+                </TouchableOpacity >
 
             </View>
 
@@ -503,6 +504,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: windowWidth / 100,
         justifyContent: 'space-evenly',
+        // justifyContent: 'flex-end',
         alignItems: 'center',
         marginBottom: windowHeight / 100,
         // marginTop: 2

@@ -609,8 +609,8 @@ const EditProfile = (props) => {
             />
           </View> */}
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
-              Update profile </Btn>
+            <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
+              Update Profile </Btn>
           </View>
 
 

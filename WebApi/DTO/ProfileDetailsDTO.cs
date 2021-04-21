@@ -18,6 +18,7 @@ namespace WebApi.DTO
         public string dateOfBirth;
         public int? unixDate;
         public int memberId;
-
+        public double rating;
+        public int reviewsCount;
     }
 }

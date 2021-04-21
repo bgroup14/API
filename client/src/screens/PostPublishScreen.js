@@ -440,7 +440,7 @@ const PostPublishScreen = (props) => {
                     </ModalSelector>
                 </View>
 
-                <Divider />
+                {/* <Divider /> */}
 
 
                 <View style={styles.optionContainer}>
@@ -465,7 +465,7 @@ const PostPublishScreen = (props) => {
                     </ModalSelector>
 
                 </View>
-                <Divider />
+                {/* <Divider /> */}
 
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Participant Age</Text>
@@ -493,7 +493,7 @@ const PostPublishScreen = (props) => {
                 </View>
 
 
-                <Divider />
+                {/* <Divider /> */}
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
                     {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
@@ -519,7 +519,7 @@ const PostPublishScreen = (props) => {
 
 
                 </View>
-                <Divider />
+                {/* <Divider /> */}
 
 
 
@@ -555,10 +555,12 @@ const PostPublishScreen = (props) => {
                     </View>
                 }
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 18 }}>
-                    <Btn color='#3b5998' style={{ width: windowWidth }} mode="contained" onPress={() => publishPost()}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 12 }}>
+                    <Btn style={{ width: windowWidth }} mode='outlined' color='#3b5998' onPress={() => publishPost()}>
                         post  </Btn>
                 </View>
+
+
 
                 {/* <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 25 }}>
                     <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
@@ -638,7 +640,8 @@ const styles = StyleSheet.create({
 
     postOptionsContainer: {
         // height: windowHeight / 2.4,
-        marginTop: windowHeight / 30
+        marginTop: windowHeight / 100,
+        marginLeft: windowWidth / 150
     },
     optionContainer: {
         height: windowHeight / 13,

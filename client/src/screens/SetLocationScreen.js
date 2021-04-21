@@ -148,6 +148,7 @@ const SetLocationScreen = (props) => {
                                 style={{ padding: 6, marginLeft: 3 }}
                             />
                         }
+
                         title="Custom Address"
                         type='clear'
                         buttonStyle={styles.locationBtn}
@@ -180,12 +181,16 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     header: {
-        fontSize: 20,
+        fontSize: 24,
+
+        color: '#3b5998'
     },
     btnContainer: {
         marginTop: 10
+
     },
     locationBtn: {
+
         // marginTop: 3
         //justifyContent: 'flex-start',
         // borderWidth: 0,
