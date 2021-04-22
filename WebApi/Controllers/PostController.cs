@@ -680,10 +680,17 @@ namespace WebApi.Controllers
                 var filteredPostsFinalList = filteredPostsList;
                 if (smartElementPosts != null)
                 {
-                    for (int i = smartElementPosts.Count()-1; i >= 0; i--)
+                    filteredPostsFinalList = smartElementPosts;
+                    List<int> filteredPostsFinalListIDs = new List<int>();
+                    foreach (var post in smartElementPosts)
                     {
-                        if (!filteredPostsFinalList.Contains(smartElementPosts[i]))
-                            filteredPostsFinalList.Insert(0, smartElementPosts[i]);
+                        filteredPostsFinalListIDs.Add((int)post.id);
+                    }
+                    //for (int i = smartElementPosts.Count() - 1; i >= 0; i--)
+                    foreach (var post in filteredPostsList)
+                    {
+                        if (!filteredPostsFinalListIDs.Contains((int)post.id))
+                            filteredPostsFinalList.Add(post);
                     }
                 }
 
@@ -785,7 +792,17 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 // Show favorite categories first if categories selection is ALL
-
+                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                                    g.categoryName,
+                                    g.strength
+                                }).OrderByDescending(g => g.strength).Take(2).ToList();
+                                List<String> preferences = new List<String>();
+                                foreach (var category in categories)
+                                {
+                                    preferences.Add(category.categoryName);
+                                }
+                                filteredPosts = filteredPosts.OrderByDescending(
+                                    item => preferences.IndexOf(item.category));
                                 break;
                             case "Location":
                                 filteredPosts = filteredPosts.OrderBy(y => y.distanceFromMe);
@@ -893,7 +910,17 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 // Show favorite categories first if categories selection is ALL
-
+                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                                    g.categoryName,
+                                    g.strength
+                                }).OrderByDescending(g => g.strength).Take(2).ToList();
+                                List<String> preferences = new List<String>();
+                                foreach (var category in categories)
+                                {
+                                    preferences.Add(category.categoryName);
+                                }
+                                filteredPosts = filteredPosts.OrderByDescending(
+                                    item => preferences.IndexOf(item.category));
                                 break;
                             case "Location":
                                 filteredPosts = filteredPosts.OrderBy(y => y.distanceFromMe);
@@ -1615,9 +1642,15 @@ namespace WebApi.Controllers
                     postsOfInteractedMembers = postsOfSimilarMembersInitial.OrderByDescending(x => x.unixDate).Take(5).ToList();
                 }
 
+                List<int> postsOfSimilarMembersIDs = new List<int>();
+                foreach (var post in postsOfInteractedMembers)
+                {
+                    postsOfSimilarMembersIDs.Add((int)post.id);
+                }
                 foreach (var postOfInteracted in postsOfInteractedMembers)
                 {
-                    postsOfSimilarMembers.Add(postOfInteracted);
+                    if (!postsOfSimilarMembersIDs.Contains((int)postOfInteracted.id))
+                        postsOfSimilarMembers.Add(postOfInteracted);
                 }
 
                 return postsOfSimilarMembers;
