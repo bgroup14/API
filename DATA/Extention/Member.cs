@@ -19,6 +19,9 @@ namespace DATA
         [Required(AllowEmptyStrings = false, ErrorMessage = "full name can't be empty")]
         public string fullName;
 
+       
+
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "bio can't be empty")]
         public string biography;
 

@@ -18,6 +18,7 @@ import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
 import { Appbar, Title } from 'react-native-paper';
 import Review from '../screens/Review';
+import MeetingNotApprovedScreen from './MeetingNotApprovedScreen';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
 
@@ -28,6 +29,7 @@ import LottieView from 'lottie-react-native';
 
 import { Button } from 'react-native-paper';
 import Confetti from '../components/Confetti';
+import { Alert } from 'react-native';
 // import MyOverlay from '../components/MyOverlay';
 // 
 
@@ -41,6 +43,7 @@ const Notifications = (props) => {
     const [restartScreen, setRestartScreen] = useState(false);
     const [refreshPage, setRefreshPage] = useState(false);
     const [reviewObj, setReviewObj] = useState({});
+    const [meetingDidntOccurObj, setMeetingDidntOccurObj] = useState({});
 
     let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
@@ -58,6 +61,7 @@ const Notifications = (props) => {
 
     const [meetingHappend, setMeetingHappend] = useState(false);
     const [isVisible, setIsvisible] = useState(false);
+    const [meetingNotApproved, setMeetingNotApproved] = useState(false);
 
     const isFirstRun = React.useRef(true)
 
@@ -113,6 +117,7 @@ const Notifications = (props) => {
 
             }
 
+
             const fetchNotifications = async () => {
                 console.log("Fetching notificions....")
                 try {
@@ -132,8 +137,6 @@ const Notifications = (props) => {
                 }
 
             }
-
-
 
             fetchNotifications();
             fetchUpcomingMeetings()
@@ -168,6 +171,32 @@ const Notifications = (props) => {
         }
         setReviewObj(obj)
         setMeetingHappend(true)
+    }
+
+    const meetingNotApproveHanlder = async (otherMemberName, otherMemberId, notificationId) => {
+        let obj = {
+            otherMemberId,
+            otherMemberName,
+
+        }
+        // alert(notificationId)
+        setMeetingDidntOccurObj(obj)
+        setMeetingNotApproved(true)
+
+
+
+        // DELETE NOTIFICATION 
+        const deleteNotificationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/deletenotification/${notificationId}`
+
+
+        try {
+            const res = await axios.delete(deleteNotificationUrl);
+            console.log(res.data)
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     const closeReview = () => {
@@ -210,11 +239,19 @@ const Notifications = (props) => {
         }
 
     }
+    const closeWindow = () => {
+
+        setRefreshPage(!refreshPage);
+        setMeetingNotApproved(false);
+
+
+    }
 
 
 
 
     let notificationsHeader = notifications.length > 0 ? 'Notifications' : ""
+
 
 
     const animation = React.useRef(null)
@@ -230,6 +267,9 @@ const Notifications = (props) => {
                 <Appbar.Content title="Notifications" />
                 <MyOverlay isVisible={isVisible} onBackdropPress={() => setIsvisible(false)}   >
                     <Review reviewObj={reviewObj} closeReview={() => closeReview()} />
+                </MyOverlay>
+                <MyOverlay isVisible={meetingNotApproved} onBackdropPress={() => setMeetingNotApproved(false)}   >
+                    <MeetingNotApprovedScreen meetingDidntOccurObj={meetingDidntOccurObj} closeWindow={() => setMeetingNotApproved(false)} closeWindow={() => closeWindow()} />
                 </MyOverlay>
 
                 {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
@@ -286,6 +326,7 @@ const Notifications = (props) => {
                         return <Notification notification={notification} key={notification.notificationId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                             meetingApprovedBtn={(otherMemberImage, otherMemberName, otherMemberId) => meetingApproveHanlder(otherMemberImage, otherMemberName, otherMemberId)}
+                            meetingNotApprovedBtn={(otherMemberName, otherMemberId, notificationId) => meetingNotApproveHanlder(otherMemberName, otherMemberId, notificationId)}
                         />
                     })}
 

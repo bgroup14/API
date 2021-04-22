@@ -1000,6 +1000,83 @@ namespace WebApi.Controllers
 
 
 
+        [HttpPost]
+        [Route("addMeetingSkipped/{memberId}")]
+
+
+        public HttpResponseMessage AddMeetingSkipped(int memberId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+
+            try
+            {
+
+                Member member = db.Members.Where(x => x.id == memberId).FirstOrDefault();
+                if (member.numMeetingsSkipped >= 2)
+                {
+                    //TO ADD:
+                    //PDF TO MAIL THAT ACCOUNT IS BLOCKED SINCE SKIPPED 3 MEETINGS
+                    //DELETE MEMBER FROM DB
+                    member.numMeetingsSkipped += 1;
+                    db.SaveChanges();
+                    return Request.CreateResponse(HttpStatusCode.OK, "Member account is now blocked - deleted from db and sent pdf to mail with details");
+                }
+                else if (member.numMeetingsSkipped == null)
+                {
+                    member.numMeetingsSkipped = 1;
+                }
+                else
+                {
+                    member.numMeetingsSkipped += 1;
+
+                }
+
+                db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "One skipped meeting was added ");
+
+            }
+
+            catch (DbEntityValidationException ex)
+            {
+                string errors = "";
+                foreach (DbEntityValidationResult vr in ex.EntityValidationErrors)
+                {
+                    foreach (DbValidationError er in vr.ValidationErrors)
+                    {
+                        errors += $"PropertyName - {er.PropertyName }, Error {er.ErrorMessage} <br/>";
+                    }
+                }
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+
+            }
+            catch (DbUpdateException ex)
+            {
+                DbUpdateException e = (DbUpdateException)ex;
+                string errors = "";
+                foreach (DbEntityEntry entry in e.Entries)
+                {
+                    errors += $"Error in entity - {entry.Entity.GetType().Name}, entity state - {entry.State} <br/>";
+
+                    foreach (string prop in entry.CurrentValues.PropertyNames)
+                    {
+                        errors += $"for column - {prop}, value - {entry.CurrentValues[prop]} <br/>";
+                    }
+                    errors += "---------------";
+                }
+
+                return Request.CreateResponse(HttpStatusCode.BadRequest, errors);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+        }
+
+
 
 
 
