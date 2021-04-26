@@ -375,7 +375,7 @@ const HomeScreen = (props) => {
             }
 
             const res = await axios.post(postsFetchURL, body, config);
-            console.log(res.data)
+            // console.log(res.data)
             setPosts(res.data)
 
         } catch (err) {
@@ -624,6 +624,7 @@ const HomeScreen = (props) => {
     const getUserCurrentLocationAndFecthPosts = async () => {
 
 
+
         // const [loaded] = useFonts({
         //     Montserrat: require('./assets/fonts/Montserrat.ttf'),
         // });
@@ -642,6 +643,8 @@ const HomeScreen = (props) => {
 
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
+                // alert("here")
+
                 // setErrorMsg('Permission to access location was denied');
                 return;
             }
@@ -657,6 +660,7 @@ const HomeScreen = (props) => {
                 meetingLocationLong: location.coords.longitude,
                 meetingLocationLat: location.coords.latitude
             }
+            // alert("here 2 before setting location")
             setCurrentLocationDB(location.coords.latitude, location.coords.longitude,)
             fetchPosts(obj)
             setMyLat(location.coords.latitude);
@@ -709,7 +713,8 @@ const HomeScreen = (props) => {
     }
 
     const setCurrentLocationDB = async (lat, long) => {
-
+        // alert("in")
+        console.log("!!!!!!!!!!!!!!!!1lat and long " + lat + " ," + long + "user id + " + userId)
         try {
             const setCurrentLocationDBUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/addcurrentlocation/${userId}/${lat}/${long}/`
 

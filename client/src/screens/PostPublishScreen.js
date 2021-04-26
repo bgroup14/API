@@ -555,10 +555,7 @@ const PostPublishScreen = (props) => {
                     </View>
                 }
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 12 }}>
-                    <Btn style={{ width: windowWidth }} mode='outlined' color='#3b5998' onPress={() => publishPost()}>
-                        post  </Btn>
-                </View>
+
 
 
 
@@ -576,6 +573,18 @@ const PostPublishScreen = (props) => {
                     />
 
                 </View> */}
+
+            </View>
+            {/* <View style={{ width: windowWidth / 3 }} >
+                <Button containerStyle={{ alignItems: 'center', justifyContent: 'center' }} buttonStyle={{ backgroundColor: 'blue' }} title='Post' />
+
+            </View> */}
+            <View style={{ alignItems: 'center', marginTop: windowWidth / 12 }}>
+                {/* <Btn mode='contained' color='#3b5998' onPress={() => publishPost()}>
+                    post  </Btn> */}
+                <Button containerStyle={{ alignItems: 'center', justifyContent: 'center' }}
+                    buttonStyle={{ backgroundColor: '#3b5998', width: windowWidth / 2 }}
+                    title='Post' onPress={() => publishPost()} />
 
             </View>
         </View >

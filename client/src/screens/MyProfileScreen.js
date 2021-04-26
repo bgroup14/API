@@ -254,10 +254,10 @@ const MyProfileScreen = (props) => {
 
 
                 </View>
-                {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
+                {/* {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
                     <Text style={{ fontSize: 22 }}>You have no posts yet </Text>
 
-                </View> : null}
+                </View> : null} */}
 
 
 

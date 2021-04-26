@@ -214,9 +214,11 @@ const SearchScreen = (props) => {
                             source={require('../../assets/search.png')}
                             style={styles.logo}
                         />
-                        <Text>Sorry, we didn't find any results</Text>
-                        <Text>matching this search.</Text>
-                    </View> :
+                        <View style={{ marginTop: windowHeight / 60, alignItems: 'center' }}>
+
+                            <Text style={{ fontSize: 16 }}>Sorry, we didn't find any results</Text>
+                            <Text style={{ fontSize: 16 }} >matching this search.</Text>
+                        </View></View> :
                     <ScrollView  >
                         {usersHeader}
                         {users.map((user) => {

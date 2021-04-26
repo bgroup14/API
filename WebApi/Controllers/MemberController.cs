@@ -158,6 +158,9 @@ namespace WebApi.Controllers
                 member.gender = memberSignupDTO.gender;
                 member.biography = memberSignupDTO.bio;
                 member.dateOfBirth = memberSignupDTO.dateOfBirth;
+                member.lastLocationLat = 0;
+                member.lastLocationLong = 0;
+
 
                 db.Members.Add(member);
                 db.SaveChanges();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
@@ -22,6 +22,8 @@ const ChatScreen = (props) => {
     const [chatRooms, setChatRooms] = useState([]);
     const [restartScreen, setRestartScreen] = useState(false);
     let newMessageFromRedux = useSelector(state => state.notification.receivedMessage);
+    const [wasFetched, setWasFetched] = useState(false);
+
 
 
 
@@ -40,6 +42,8 @@ const ChatScreen = (props) => {
                         console.log(res.data)
                         setRestartScreen(!restartScreen)
                         setChatRooms(res.data);
+                        setWasFetched(true)
+
                     }
 
                 } catch (error) {
@@ -101,6 +105,21 @@ const ChatScreen = (props) => {
                 <View style={styles.barContainer}><Text style={styles.barText}>Chat</Text>
 
                 </View> */}
+
+                {
+                    chatRooms.length == 0 && wasFetched ?
+                        <View style={styles.logoContainer}>
+                            <Image
+                                source={require('../../assets/noMessages.png')}
+                                style={styles.logo}
+                            />
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>No messages, yet.</Text>
+                            <View style={{ marginTop: windowHeight / 60, alignItems: 'center' }}>
+                                <Text style={{ fontSize: 16 }}>No messages in your inbox, yet.</Text>
+                                <Text style={{ fontSize: 16 }}>Start chetting with people around you.</Text>
+                            </View>
+                        </View> : null
+                }
 
 
                 <ScrollView key={restartScreen} >
@@ -194,5 +213,17 @@ const styles = StyleSheet.create({
     },
     userGreetingText: {
         fontSize: 18
-    }
+    },
+
+    logoContainer: {
+        marginTop: windowHeight / 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        //     marginBottom: windowHeight / 80
+
+    }, logo: {
+        height: 120,
+        width: 120,
+        // marginBottom: windowHeight / 26.92121,
+    },
 })
