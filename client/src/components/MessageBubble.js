@@ -131,7 +131,7 @@ const MessageBubble = (props) => {
                                                 }
                                             ]}>
 
-                                            {`${otherMemberFirstName} sent you invitation ${meetingEventTitle}`}
+                                            {`${otherMemberFirstName} sent you invitation for ${meetingEventTitle}`}
                                             {'\n'}
 
                                             {`${meetingDateLabel} at ${meetingTimeLabel}`}
@@ -148,7 +148,7 @@ const MessageBubble = (props) => {
                                                 }
                                             ]}>
 
-                                            {`You sent ${otherMemberFirstName} invitation ${meetingEventTitle}`}
+                                            {`You sent ${otherMemberFirstName} invitation for ${meetingEventTitle}`}
                                             {'\n'}
 
                                             {`${meetingDateLabel} at ${meetingTimeLabel}`}

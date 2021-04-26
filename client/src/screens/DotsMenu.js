@@ -14,6 +14,9 @@ const DotsMenu = (props) => {
             <TouchableOpacity>
                 <Text style={styles.optionText}>Get Certification</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => props.logout()}>
+                <Text style={styles.logout}>Logout</Text>
+            </TouchableOpacity>
         </View>
 
     )
@@ -30,5 +33,10 @@ const styles = StyleSheet.create({
     optionText: {
         fontSize: 16,
         marginBottom: windowHeight / 50
+    },
+    logout: {
+        fontSize: 16,
+        marginBottom: windowHeight / 50,
+        color: 'red'
     }
 })

@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, REGISTER_SUCCESS } from '../actions/types';
+import { LOGIN_SUCCESS, REGISTER_SUCCESS, LOGOUT } from '../actions/types';
 const initialState = {
     // token: localStorage.getItem('token'),
     // isAuthenticated: null,
@@ -34,6 +34,11 @@ function authReducer(state = initialState, action) {
                 // participantGender: "Dosen't Matter",
                 // participantAge: "Dosen't Matter"
 
+            }
+        case LOGOUT:
+            return {
+                ...state,
+                isLogged: false
             }
 
 
