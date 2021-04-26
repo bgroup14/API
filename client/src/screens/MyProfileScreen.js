@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, Platform } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
@@ -21,6 +21,10 @@ import { Rating, AirbnbRating } from 'react-native-elements';
 import { TextInput } from 'react-native-gesture-handler';
 import UserReviews from './UserReviews';
 
+import { LOGOUT } from '../../store/actions/types';
+
+
+
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
@@ -33,8 +37,12 @@ const MyProfileScreen = (props) => {
     const [userOccupation, setUserOccupation] = useState(null);
     const [userCity, setUserCity] = useState(null);
     const [userRating, setUserRating] = useState(null);
+    const [userGold, setUserGold] = useState(false);
     const [reviewsCount, setReviewsCount] = useState(null);
     const [userHobbies, setUserHobbies] = useState("");
+    const dispatch = useDispatch();
+
+
 
 
 
@@ -87,10 +95,11 @@ const MyProfileScreen = (props) => {
     const fetchUserDetails = async () => {
         //  console.log("fetching user details...");
         const res = await axios(userDetailsFetchURL);
-        // console.log(res.data)
+        console.log(res.data)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
         setUserRating(res.data.rating)
+        setUserGold(res.data.goldMember)
         res.data.reviewsCount == 1 ? setReviewsCount(res.data.reviewsCount + " Review") : setReviewsCount(res.data.reviewsCount + " Reviews")
         //  console.log("user image is :" + res.data.pictureUrl)
         setUserImage(res.data.pictureUrl)
@@ -167,6 +176,16 @@ const MyProfileScreen = (props) => {
 
     }
 
+    const logout = () => {
+
+        setIsMenuVisible(false)
+        dispatch({
+            type: LOGOUT,
+            payload: null
+        });
+
+    }
+
     if (!isReady) {
         return (
             <View>
@@ -197,7 +216,7 @@ const MyProfileScreen = (props) => {
                 <Appbar.Action icon={MORE_ICON} onPress={() => setIsMenuVisible(true)} />
             </Appbar.Header>
             <DotsMenuOverlay isVisible={isMenuVisible} onBackdropPress={() => setIsMenuVisible(false)}  >
-                <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} />
+                <DotsMenu editProfile={() => editProfile()} editFeedSettings={() => editFeedSettings()} logout={() => logout()} />
             </DotsMenuOverlay>
             {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
             {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
@@ -218,7 +237,13 @@ const MyProfileScreen = (props) => {
                 <View style={styles.profileImageContainer}>
                     <Avatar
                         size='xlarge'
-                        //   containerStyle={{ marginTop: 10 }}
+                        avatarStyle=
+                        {
+                            userGold ? {
+
+                                borderWidth: 3,
+                                borderColor: '#FFD700',
+                            } : null}
                         rounded
                         source={{
                             uri:

@@ -478,6 +478,17 @@ namespace WebApi.Controllers
                     profileDetailsDTO.rating = rating;
                     profileDetailsDTO.reviewsCount = ratings.Count();
 
+                    //CHECK IF GOLD MEMBER
+
+                    if (ratings.Count() >= 5 && rating > 4)
+                    {
+                        profileDetailsDTO.goldMember = true;
+                    }
+                    else
+                    {
+                        profileDetailsDTO.goldMember = false;
+                    }
+
 
                 }
 

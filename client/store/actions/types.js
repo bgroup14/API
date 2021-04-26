@@ -1,4 +1,5 @@
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGOUT = 'LOGOUT';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const USER_LOGGED = 'USER_LOGGED';
 export const IMAGE_UPDATED = 'IMAGE_UPDATED';

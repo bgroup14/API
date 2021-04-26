@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Post from '../components/Post';
@@ -38,6 +38,7 @@ const OtherUserProfileScreen = (props) => {
     const [userHobbies, setUserHobbies] = useState("");
     const [userName, setUserName] = useState(null);
     const [userImage, setUserImage] = useState(null);
+    const [userGold, setUserGold] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [userRating, setUserRating] = useState(null);
     const [reviewsCount, setReviewsCount] = useState(null);
@@ -104,6 +105,8 @@ const OtherUserProfileScreen = (props) => {
         setUserName(res.data.fullName)
         setUserImage(res.data.pictureUrl)
         setUserRating(res.data.rating)
+        setUserGold(res.data.goldMember)
+
         res.data.reviewsCount == 1 ? setReviewsCount(res.data.reviewsCount + " Review") : setReviewsCount(res.data.reviewsCount + " Reviews")
         let cityName = res.data.city.replace(/,[^,]+$/, "")
         // console.log(str)
@@ -266,10 +269,18 @@ const OtherUserProfileScreen = (props) => {
                         onPress={() => goToChatWithUser()}
                     />
                 </View>
+
                 <View style={styles.profileImageContainer}>
+
                     <Avatar
                         size='xlarge'
-                        // containerStyle={{ marginTop: windowHeight / 100 }}
+                        avatarStyle=
+                        {
+                            userGold ? {
+
+                                borderWidth: 3,
+                                borderColor: '#DAA520',
+                            } : null}
                         rounded
                         source={{
                             uri:
@@ -277,11 +288,14 @@ const OtherUserProfileScreen = (props) => {
                         }}
                     />
 
+
                 </View>
 
 
                 <View style={styles.usernameContainer}>
                     <Text style={styles.usernameText}>{userName}</Text>
+
+
                 </View>
                 <View style={styles.personalInfoContainer}>
                     <View style={{ flexDirection: 'row' }}>
@@ -322,9 +336,21 @@ const OtherUserProfileScreen = (props) => {
                                 Show Reviews
                             </Button>
 
+                            {userGold ? <Avatar
+                                size='large'
+                                // containerStyle={{ marginVertical: 1 }}
+                                // rounded
+                                source={
+                                    require("../../assets/goldMember.png")
+                                }
+                            /> : null
+                            }
+
+
 
                         </View> :
                         null}
+
                     {userPosts.map((post) => {
                         // console.log(post)
                         return <View key={post.postId}>

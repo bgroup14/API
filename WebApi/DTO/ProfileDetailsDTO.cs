@@ -20,5 +20,6 @@ namespace WebApi.DTO
         public int memberId;
         public double rating;
         public int reviewsCount;
+        public bool goldMember;
     }
 }

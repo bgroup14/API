@@ -19,7 +19,7 @@ export default DotsMenuOverlay
 
 const styles = StyleSheet.create({
     overlay: {
-        marginBottom: windowHeight / 1.3,
+        marginBottom: windowHeight / 1.4,
         padding: windowHeight / 50,
         marginLeft: windowHeight / 5,
         borderRadius: 6,
