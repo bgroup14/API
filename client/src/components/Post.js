@@ -43,7 +43,7 @@ const Post = (props) => {
         Inter_700Bold
     });
     const { postId, text, cityName, recurring, dateLabel, timeOfDay,
-        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category } = props.post;
+        postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category, goldenMember } = props.post;
     let currentMemberId = props.currentMemberId;
     //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
@@ -348,25 +348,52 @@ const Post = (props) => {
         return <AppLoading />
     }
 
+
+
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.postContainer}>
-                <Avatar
+                <View style={{ flexDirection: 'column' }} >
+                    <Avatar
 
-                    size='large'
-                    containerStyle={{ marginTop: windowHeight / 80, marginLeft: windowWidth / 60 }}
-                    rounded
-                    source={{
-                        uri:
-                            postCreatorImg,
-                    }}
-                />
+                        size='large'
+                        avatarStyle=
+                        {
+                            goldenMember ? {
+
+                                borderWidth: 1.5,
+                                borderColor: '#FFD700',
+                            } : null}
+                        containerStyle={{ marginTop: windowHeight / 80, marginLeft: windowWidth / 60 }}
+                        rounded
+                        source={{
+                            uri:
+                                postCreatorImg,
+                        }}
+                    />
+                    {/* {
+                        goldenMember ?
+                            <Avatar
+                                containerStyle={{ marginLeft: 30, marginTop: 10 }}
+                                size='small'
+                                // containerStyle={{ marginVertical: 1 }}
+                                // rounded
+                                source={
+                                    require("../../assets/goldMember.png")
+                                }
+                            /> : null
+                    } */}
+
+                </View>
+
                 <View style={styles.postDetailsContainer}>
                     <View style={styles.userNameContainer}>
                         {/* <TouchableOpacity onPress={() => props.navigation.navigate('OtherUserProfileScreen', {
                             userId: member_id
                         })}> */}
                         <TouchableOpacity onPress={() => goToOtherUserProfile()}>
+                            {/* <Text style={styles.userName}>{goldenMember}</Text> */}
                             <Text style={styles.userName}>{postCreatorName}</Text>
 
                         </TouchableOpacity>
