@@ -782,6 +782,7 @@ const HomeScreen = (props) => {
 
 
                 <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} />
+                <Appbar.Action icon="trophy" onPress={() => { props.navigation.navigate('TrhopyScreen') }} />
 
 
                 {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}

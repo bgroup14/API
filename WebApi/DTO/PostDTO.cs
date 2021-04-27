@@ -29,5 +29,6 @@ namespace WebApi.DTO
         public List<CommentDTO> comments;
         public string authorGender;
         public double distanceFromMe;
+        public bool goldenMember;
     }
 }

@@ -327,7 +327,7 @@ const OtherUserProfileScreen = (props) => {
                 <View style={styles.userPostsContainer}>
                     {userRating > 0 ?
                         <View style={styles.ratingContainer} >
-                            <Rating fractions={2} startingValue={userRating} imageSize={24} />
+                            <Rating readonly fractions={2} startingValue={userRating} imageSize={24} />
                             <View style={{ marginTop: windowHeight / 200 }}>
                                 <Text>({userRating} Stars - {reviewsCount})</Text>
 

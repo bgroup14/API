@@ -792,7 +792,8 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 // Show favorite categories first if categories selection is ALL
-                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new
+                                {
                                     g.categoryName,
                                     g.strength
                                 }).OrderByDescending(g => g.strength).Take(2).ToList();
@@ -910,7 +911,8 @@ namespace WebApi.Controllers
                             case "Relevance":
                                 //Need to setup smart element
                                 // Show favorite categories first if categories selection is ALL
-                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new
+                                {
                                     g.categoryName,
                                     g.strength
                                 }).OrderByDescending(g => g.strength).Take(2).ToList();
@@ -933,6 +935,14 @@ namespace WebApi.Controllers
                         }
                     }
                 }
+
+                foreach (var post in filteredPosts)
+                {
+                    Member member1 = db.Members.Where(x => x.id == post.member_id).FirstOrDefault();
+                    post.goldenMember = checkIfMemberGold(member1.id);
+
+                };
+
                 return Request.CreateResponse(HttpStatusCode.OK, filteredPosts);
                 /* return filteredPosts.ToList();*/
             }
@@ -970,6 +980,45 @@ namespace WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
+
+        }
+
+        public static bool checkIfMemberGold(int memberId)
+        {
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            var ratings = db.Reviews.Where(x => x.memberId == memberId).ToList();
+
+            double rating = 0;
+            double ratingSum = 0;
+            int numOfRatings = ratings.Count();
+
+            if (ratings.Count() > 0)
+            {
+
+                foreach (var r in ratings)
+                {
+                    ratingSum += (int)r.stars;
+                };
+
+                rating = ratingSum / (double)ratings.Count();
+                rating = Math.Round(rating, 1);
+
+
+                //CHECK IF GOLD MEMBER
+
+                if (ratings.Count() >= 5 && rating > 4)
+                {
+                    return true;
+                }
+
+                return false;
+
+
+            }
+            return false;
+
+
 
         }
 
@@ -1364,7 +1413,7 @@ namespace WebApi.Controllers
             int datetimenow = (int)DateTimeOffset.Now.ToUnixTimeSeconds();
             try
             {
-                
+
                 //Get my age
                 float age = 0;
                 var myDateOfBirth = db.Members.Select(x => x.dateOfBirth).FirstOrDefault();
@@ -1392,7 +1441,8 @@ namespace WebApi.Controllers
                     categoryName = g.Key,
                     Strength = g.Sum(x => x.strength != null ? x.strength : 0)
                 }).OrderByDescending(g => g.Strength).ToList();*/
-                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new {
+                var categories = db.Interactions.Where(x => x.memberId == memberId).Select(g => new
+                {
                     g.categoryName,
                     g.strength
                 }).OrderByDescending(g => g.strength).Take(2).ToList();
@@ -1425,12 +1475,14 @@ namespace WebApi.Controllers
                     category2 = categories[1].categoryName.ToString();
 
                 //Fetch 20 members of close location
-                var locationSimilarMembers = db.Members.Where(x => x.id != memberId && Math.Abs((float)x.lastLocationLat - myLat) <= 1 && Math.Abs((float)x.lastLocationLong - myLong) <= 1).Select(g => new { //0.4 ~ 30km
+                var locationSimilarMembers = db.Members.Where(x => x.id != memberId && Math.Abs((float)x.lastLocationLat - myLat) <= 1 && Math.Abs((float)x.lastLocationLong - myLong) <= 1).Select(g => new
+                { //0.4 ~ 30km
                     g.id,
                 }).Take(20).ToList();
 
                 //Fetch 20 members of similar categories
-                var categorySimilarMembers = db.Interactions.OrderByDescending(x => x.strength).Where(x => x.memberId != memberId && (x.categoryName == category1 || x.categoryName == category2)).Select(g => new {
+                var categorySimilarMembers = db.Interactions.OrderByDescending(x => x.strength).Where(x => x.memberId != memberId && (x.categoryName == category1 || x.categoryName == category2)).Select(g => new
+                {
                     g.memberId,
                     g.categoryName,
                     g.strength
@@ -1444,12 +1496,13 @@ namespace WebApi.Controllers
                 }
                 foreach (var member in categorySimilarMembers)
                 {
-                    if((!members.Contains((int)member.memberId)))
+                    if ((!members.Contains((int)member.memberId)))
                         members.Add((int)member.memberId);
                 }
 
                 //Select members and filter using age
-                var initialFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new {
+                var initialFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new
+                {
                     g.id,
                     g.fullName,
                     g.dateOfBirth,
@@ -1467,8 +1520,10 @@ namespace WebApi.Controllers
                 members = new List<int>();
                 foreach (var member in initialFilteredMembers)
                 {
-                    if (age > 0) {
-                        if (Math.Abs(member.age) - age <= 5) {
+                    if (age > 0)
+                    {
+                        if (Math.Abs(member.age) - age <= 5)
+                        {
                             if ((!members.Contains((int)member.id)))
                                 members.Add((int)member.id);
                         }
@@ -1490,7 +1545,8 @@ namespace WebApi.Controllers
                     }
                 }
 
-                var finalFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new MemberDTO {
+                var finalFilteredMembers = db.Members.Where(x => members.Contains(x.id)).Select(g => new MemberDTO
+                {
                     id = g.id,
                     name = g.fullName,
                     dateOfBirth = g.dateOfBirth,
@@ -1661,19 +1717,19 @@ namespace WebApi.Controllers
                 //return Request.CreateResponse(HttpStatusCode.InternalServerError, "Error occured: "+e.ToString());
                 return null;
             }
-}
-            /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
-            {
-                if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
-                {
-                    var sCoord = new GeoCoordinate(longitudeA, latitudeA);
-                    var eCoord = new GeoCoordinate(longitudeB, latitudeB);
-
-                    return sCoord.GetDistanceTo(eCoord) / 1000;
-                }
-
-                return 0;
-
-            }*/
         }
+        /*double CalculateDistance(double longitudeA, double latitudeA, double longitudeB, double latitudeB)
+        {
+            if (longitudeA != 0 && latitudeA != 0 && longitudeA != 0 && longitudeB != 0)
+            {
+                var sCoord = new GeoCoordinate(longitudeA, latitudeA);
+                var eCoord = new GeoCoordinate(longitudeB, latitudeB);
+
+                return sCoord.GetDistanceTo(eCoord) / 1000;
+            }
+
+            return 0;
+
+        }*/
+    }
 }

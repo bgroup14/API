@@ -622,6 +622,44 @@ namespace WebApi.Controllers
 
 
 
+
+
+        [HttpGet]
+        [Route("gettrophymembers/{filter}")]
+        public HttpResponseMessage GetTrophyMembers(string filter)
+        {
+            //CHECK IF FILTER = "allTime" OR "thisMonth" 
+            //THEN RETURN A LIST OF TOP RATED USERS WITH TrophyMmberDTO ACCORDING TO THE FILTER
+
+            
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            /*List<Member> members = db.*/
+
+            try
+            {
+
+
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, "");
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+
+        }
+
+
+
+
+
+
+
+
         [HttpGet]
         [Route("getmembersbysearchword/{searchWord}")]
         public HttpResponseMessage GetMembersBySearchWord(string searchWord)

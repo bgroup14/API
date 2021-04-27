@@ -289,13 +289,24 @@ const MyProfileScreen = (props) => {
                 <View style={styles.userPostsContainer}>
                     {userRating > 0 ?
                         <View style={styles.ratingContainer} >
-                            <Rating fractions={2} startingValue={userRating} imageSize={24} />
+                            <Rating readonly fractions={2} startingValue={userRating} imageSize={24} />
                             <View style={{ marginTop: windowHeight / 200 }}>
                                 <Text>({userRating} Stars - {reviewsCount})</Text>
                             </View>
                             <Button uppercase={false} mode='text' labelStyle={{ color: 'blue' }} onPress={() => setIsReiviewsVisible(true)}>
                                 Show Reviews
                             </Button>
+                            {userGold ? <Avatar
+                                size='large'
+                                // containerStyle={{ marginVertical: 1 }}
+                                // rounded
+                                source={
+                                    require("../../assets/goldMember.png")
+                                }
+                            /> : null
+                            }
+
+
 
                         </View> :
                         null}

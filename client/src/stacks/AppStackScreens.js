@@ -14,6 +14,7 @@ import EditProfile from '../screens/EditProfile';
 import EditHobbiesScreen from '../screens/EditHobbiesScreen';
 import EditFeedSettingsScreen from '../screens/EditFeedSettingsScreen';
 import ChatWithOtherUser from '../screens/ChatWithOtherUser';
+import TrhopyScreen from '../screens/TrophyScreen';
 import { Fragment } from 'react';
 
 
@@ -45,6 +46,7 @@ const AppStackScreens = () => {
                 <AppStack.Screen name="EditProfile" component={EditProfile} />
                 <AppStack.Screen name="EditFeedSettingsScreen" component={EditFeedSettingsScreen} />
                 <AppStack.Screen name="ChatWithOtherUser" component={ChatWithOtherUser} />
+                <AppStack.Screen name="TrhopyScreen" component={TrhopyScreen} />
 
             </Fragment>
                 :
