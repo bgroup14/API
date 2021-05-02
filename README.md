@@ -1,6 +1,12 @@
-# VolunteerMatch
+# VolunteerZ
 ## (Still under development)
 ## Some Screenshots...
+
+
+
+### Login Screen
+![Post](https://user-images.githubusercontent.com/59963384/116822348-0fdcdf00-ab87-11eb-9858-7ab1b1bdaa78.jpeg)
+
 
 ### Home Screen
 ![Feed](https://user-images.githubusercontent.com/59963384/115145126-b8a02000-a058-11eb-9524-0104e6dac665.PNG)
@@ -23,7 +29,10 @@
 ### Post Screen
 ![Post](https://user-images.githubusercontent.com/59963384/115145155-d40b2b00-a058-11eb-83ee-027749050c9b.PNG)
 
-### Login Screen
-![Login](https://user-images.githubusercontent.com/59963384/115145153-d2416780-a058-11eb-9a59-fdbb9e37cc7e.PNG)
+
+
+
+
+
 
 
