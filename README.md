@@ -1,5 +1,5 @@
 # VolunteerZ
-## (Still under development)
+
 ## Some Screenshots...
 
 
