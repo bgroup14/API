@@ -567,7 +567,7 @@ const EditProfile = (props) => {
                 title={hobbisTitleFunc()}
                 type="outline"
                 raised={true}
-                buttonStyle={{ padding: 15 }}
+                buttonStyle={{ padding: 15, borderRadius: 15 }}
                 onPress={() => props.navigation.navigate('EditHobbiesScreen')}
 
               />
@@ -609,7 +609,7 @@ const EditProfile = (props) => {
             />
           </View> */}
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
+            <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20, borderRadius: 15 }} mode="outlined" onPress={() => updateProfie()}>
               Update Profile </Btn>
           </View>
 
@@ -698,8 +698,9 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    width: windowWidth / 3.2,
-    height: windowWidth / 3.2
+    width: windowWidth / 3,
+    height: windowWidth / 3,
+    borderRadius: 100
   },
   setupParams: {
     fontSize: 14,
