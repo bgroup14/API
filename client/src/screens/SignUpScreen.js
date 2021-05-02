@@ -160,17 +160,18 @@ const SignupScreenTest = (props) => {
 
 
   return (
-    <KeyboardAvoidingView >
-      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
+    <KeyboardAvoidingView  >
+      <MyLinearGradient firstColor="#ffffff" secondColor="#fff" height={1000} />
 
       <View style={styles.container}>
-        <Text style={styles.text}>Create an account</Text>
         <View style={styles.imageContainer}>
           <Image
-            source={require('../../assets/logo.png')}
+            source={require('../../assets/logo.jpg')}
             style={styles.logo}
           />
         </View>
+        {/* <Text style={styles.text}>Create an account</Text> */}
+
         <View >
 
           <FormInput
@@ -212,7 +213,7 @@ const SignupScreenTest = (props) => {
         <View style={styles.signUpBtnContainer}>
 
           <FormButton
-            buttonTitle="Sign Up"
+            buttonTitle="Next"
             onPress={() => signUn()}
           />
 
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
 
   container: {
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   text: {
     //fontFamily: 'Kufam-SemiBoldItalic',
@@ -253,8 +255,8 @@ const styles = StyleSheet.create({
     //fontFamily: 'Lato-Regular',
   },
   logo: {
-    height: windowHeight / 5.384242,
-    width: windowHeight / 5.384242,
+    height: windowHeight / 3.2,
+    width: windowHeight / 1.8,
   },
   imageContainer: {
     margin: windowHeight / 40.381815

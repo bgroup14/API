@@ -311,131 +311,100 @@ const ProfileSetup = (props) => {
 
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text style={styles.text}>Profile Setup</Text>
+            {/* <Text style={styles.text}>Profile Setup</Text> */}
             <View style={styles.imageContainer}>
               {image}
             </View>
           </View>
+          <View style={{ marginTop: windowHeight / 30 }}>
 
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>CURRENT CITY</Text>
-            <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)} />
-
-
-            {/* <FormInput
-            labelValue={city}
-            placeholderText="City"
-            iconType="home"
-            autoCapitalize="none"
-            autoCorrect={true}
-            onChangeText={(text) => setCity(text)} /> */}
-          </View>
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>SHORT BIO</Text>
-
-            <TextArea
-              labelValue={bio}
-              placeholderText="What do you want people to know about you?"
-              iconType="calendar"
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={(text) => setBio(text)}
-
-            />
-          </View >
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>OCCUPATION</Text>
-
-            <FormInput
-              labelValue={occupation}
-              placeholderText="Occupation"
-              iconType="suitcase"
-              autoCapitalize='words'
-              onChangeText={(text) => setOccupation(text)}
-            />
-          </View>
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>DATE OF BIRTH</Text>
-            <TouchableOpacity onPress={showDatepicker}>
-              <FormInput
-                onDatePress={showDatepicker}
-                // labelValue={dateLabel}
-                placeholderText={dateLabel}
-                iconType="calendar"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                editable={false}
-                onChangeText={(text) => setDateOfBirth(text)}
-              />
-
-            </TouchableOpacity>
-          </View>
-
-
-          <View style={styles.setupParamsContainer}>
-            <Text style={styles.setupParams}>HOBBIES</Text>
-
-            <TouchableOpacity style={styles.dropDownContainer} >
-              <Button
-                title={hobbisTitleFunc()}
-                type="outline"
-                raised={true}
-                buttonStyle={{ padding: 15 }}
-                onPress={() => props.navigation.navigate('HobbiesScreen')}
-
-              />
-            </TouchableOpacity>
-          </View>
-
-
-
-          <View style={styles.genderContainer}>
-            <Text style={styles.setupParams}>GENDER</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <RadioButton
-                color="blue"
-                value="first"
-                status={gender === 'Male' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Male')}
-              />
-              <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
-
-              <RadioButton
-                color="pink"
-                value="second"
-                status={gender === 'Female' ? 'checked' : 'unchecked'}
-                onPress={() => setGender('Female')}
-              />
-              <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
+            <View style={styles.setupParamsContainer}>
+              <Text style={styles.setupParams}>CURRENT CITY</Text>
+              <GooglePlacesInput getCityName={(cityName) => getCityName(cityName)} />
 
             </View>
-            {/* <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-            <RadioButton
-              color="pink"
-              value="second"
-              status={gender === 'Female' ? 'checked' : 'unchecked'}
-              onPress={() => setGender('Female')}
-            />
-            <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
+            <View style={styles.setupParamsContainer}>
+              <Text style={styles.setupParams}>SHORT BIO</Text>
 
-          </View> */}
+              <TextArea
+                labelValue={bio}
+                placeholderText="Enter a short bio..."
+                iconType="calendar"
+                autoCapitalize="none"
+                autoCorrect={false}
+                onChangeText={(text) => setBio(text)}
 
-            {/* <DropDownPicker
-            placeholder="Select"
-            items={[
-              { label: 'Male', value: 'male', icon: () => <Icon name="male" size={18} color="blue" /> },
-              { label: 'Female', value: 'female', icon: () => <Icon name="female" size={18} color="pink" /> },
-            ]}
-            containerStyle={styles.dropDownContainer}
-            // style={{ borderWidth: 1, borderColor: '#ccc' }}
-            itemStyle={{
+              />
+            </View >
+            <View style={styles.setupParamsContainer}>
+              <Text style={styles.setupParams}>OCCUPATION</Text>
 
-              justifyContent: 'center', marginTop: 10
-            }}
-            onChangeItem={item => setGender(item.value)
-            }
-          /> */}
+              <FormInput
+                labelValue={occupation}
+                placeholderText="Occupation"
+                iconType="suitcase"
+                autoCapitalize='words'
+                onChangeText={(text) => setOccupation(text)}
+              />
+            </View>
+            <View style={styles.setupParamsContainer}>
+              <Text style={styles.setupParams}>DATE OF BIRTH</Text>
+              <TouchableOpacity onPress={showDatepicker}>
+                <FormInput
+                  onDatePress={showDatepicker}
+                  // labelValue={dateLabel}
+                  placeholderText={dateLabel}
+                  iconType="calendar"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  editable={false}
+                  onChangeText={(text) => setDateOfBirth(text)}
+                />
+
+              </TouchableOpacity>
+            </View>
+
+
+            <View style={styles.setupParamsContainer}>
+              <Text style={styles.setupParams}>HOBBIES</Text>
+
+              <TouchableOpacity style={styles.dropDownContainer} >
+                <Button
+                  title={hobbisTitleFunc()}
+                  type="outline"
+                  raised={true}
+                  buttonStyle={{ padding: 15, borderRadius: 15 }}
+                  onPress={() => props.navigation.navigate('HobbiesScreen')}
+
+                />
+              </TouchableOpacity>
+            </View>
+
+
+
+            <View style={styles.genderContainer}>
+              <Text style={styles.setupParams}>GENDER</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <RadioButton
+                  color="blue"
+                  value="first"
+                  status={gender === 'Male' ? 'checked' : 'unchecked'}
+                  onPress={() => setGender('Male')}
+                />
+                <Text style={{ marginTop: 6, marginRight: windowWidth / 20 }}>Male</Text>
+
+                <RadioButton
+                  color="pink"
+                  value="second"
+                  status={gender === 'Female' ? 'checked' : 'unchecked'}
+                  onPress={() => setGender('Female')}
+                />
+                <Text style={{ marginTop: 6, marginRight: windowWidth / 100 }}>Female</Text>
+
+              </View>
+
+            </View>
           </View>
 
 
@@ -494,7 +463,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageContainer: {
-    margin: windowHeight / 50
+    margin: windowHeight / 50,
+    marginTop: windowHeight / 30
   },
   overlayStyle: {
     flex: 1,
@@ -524,8 +494,13 @@ const styles = StyleSheet.create({
 
   },
   profileImage: {
-    width: windowWidth / 3.2,
-    height: windowWidth / 3.2
+    width: windowWidth / 3,
+    height: windowWidth / 3,
+    borderRadius: 100,
+    marginTop: windowHeight / 100
+  },
+  setupParamsContainer: {
+    // marginTop: windowHeight / 100
   },
   setupParams: {
     fontSize: 14,

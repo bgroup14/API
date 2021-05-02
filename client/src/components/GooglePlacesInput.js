@@ -45,7 +45,7 @@ const GooglePlacesInput = (props) => {
                     width: windowWidth / 1.1,
                     height: windowHeight / 15,
                     borderColor: '#ccc',
-                    borderRadius: 5,
+                    borderRadius: 15,
                     borderWidth: 1,
                     flexDirection: 'row',
                     alignItems: 'center',

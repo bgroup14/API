@@ -137,12 +137,12 @@ const LoginScreen = (props) => {
 
     <View style={styles.container}>
       {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={1000} /> */}
-      <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} />
+      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} /> */}
 
 
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/logo.png')}
+          source={require('../../assets/logo.jpg')}
           style={styles.logo}
         />
 
@@ -212,18 +212,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: windowHeight / 40.381815,
-    maxHeight: windowHeight + 200
+    maxHeight: windowHeight + 200,
+    backgroundColor: '#fff'
   },
   logo: {
-    height: windowHeight / 4.486868333,
-    width: windowHeight / 4.0381815,
-    marginBottom: windowHeight / 26.92121,
+    height: windowHeight / 3.2,
+    width: windowHeight / 1.8,
   },
   logoContainer: {
-    marginTop: windowHeight / 26.92121,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: windowHeight / 80
 
   },
 
