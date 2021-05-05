@@ -9,7 +9,7 @@ namespace WebApi.DTO
     {
 
         public int otherMemberId;
-        public int userRating;
+        public double userRating;
         public int reviewsCount;
         public string memberName;
         public string memberImage;

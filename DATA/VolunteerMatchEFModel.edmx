@@ -227,6 +227,7 @@
           <Property Name="text" Type="varchar" MaxLength="255" />
           <Property Name="url" Type="varchar" MaxLength="255" />
           <Property Name="stars" Type="int" />
+          <Property Name="date" Type="int" />
         </EntityType>
         <EntityType Name="WhereActivity">
           <Key>
@@ -930,6 +931,7 @@
 					<Property Name="url" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
 					<Property Name="stars" Type="Int32" />
 					<Property Name="memberId" Type="Int32" />
+          <Property Name="date" Type="Int32" />
 				</EntityType>
 				<EntityType Name="WhereActivity">
 					<Key>
@@ -1443,7 +1445,8 @@
 					<EntitySetMapping Name="Reviews">
 						<EntityTypeMapping TypeName="bgroup14_prodModel.Review">
 							<MappingFragment StoreEntitySet="Reviews">
-								<ScalarProperty Name="memberId" ColumnName="memberId" />
+								<ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="memberId" ColumnName="memberId" />
 								<ScalarProperty Name="stars" ColumnName="stars" />
 								<ScalarProperty Name="url" ColumnName="url" />
 								<ScalarProperty Name="text" ColumnName="text" />
