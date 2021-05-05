@@ -241,6 +241,7 @@
     <Compile Include="DTO\MemberSignupDTO.cs" />
     <Compile Include="DTO\PostDTO.cs" />
     <Compile Include="DTO\ProfileDetailsDTO.cs" />
+    <Compile Include="DTO\TrophyMemberDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

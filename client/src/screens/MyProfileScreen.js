@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MyIcon from 'react-native-vector-icons/Ionicons';
 import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import MyOverlay from '../components/MyOverlay';
@@ -279,6 +280,12 @@ const MyProfileScreen = (props) => {
 
 
                 </View>
+                {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
+                    <MyIcon name="person-circle-outline" size={72} />
+                    <Text style={{ fontSize: 22 }}>No Posts Yet </Text>
+
+                </View> : null}
+
                 {/* {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
                     <Text style={{ fontSize: 22 }}>You have no posts yet </Text>
 

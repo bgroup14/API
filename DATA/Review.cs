@@ -20,5 +20,6 @@ namespace DATA
         public string url { get; set; }
         public Nullable<int> stars { get; set; }
         public Nullable<int> memberId { get; set; }
+        public Nullable<int> date { get; set; }
     }
 }

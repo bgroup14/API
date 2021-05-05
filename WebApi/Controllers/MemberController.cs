@@ -520,7 +520,12 @@ namespace WebApi.Controllers
         [Route("addreview")]
         public HttpResponseMessage AddReview(ReviewsDTO reviewsDTO)
         {
+
+
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+            DateTime now = DateTime.Now;
+            long unixTime = ((DateTimeOffset)now).ToUnixTimeSeconds();
             try
             {
                 Review review = new Review
@@ -529,7 +534,8 @@ namespace WebApi.Controllers
                     memberId = reviewsDTO.memberId,
                     text = reviewsDTO.text,
                     url = reviewsDTO.url,
-                    stars = reviewsDTO.stars
+                    stars = reviewsDTO.stars,
+                    date = (int)unixTime
                 };
 
                 db.Reviews.Add(review);
@@ -626,22 +632,122 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("gettrophymembers/{filter}")]
+
         public HttpResponseMessage GetTrophyMembers(string filter)
         {
             //CHECK IF FILTER = "allTime" OR "thisMonth" 
             //THEN RETURN A LIST OF TOP RATED USERS WITH TrophyMmberDTO ACCORDING TO THE FILTER
 
-            
-            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
-            /*List<Member> members = db.*/
 
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            bool exists = false;
+            DateTime monthAgo = DateTime.Today.AddDays(-30);
+
+            long unixTime = ((DateTimeOffset)monthAgo).ToUnixTimeSeconds();
+            int unixMonthAgo = (int)unixTime;
+
+
+
+
+            List<Review> lastMonthReviews = new List<Review>();
             try
             {
 
+                if (filter == "allTime")
+                {
+
+                    lastMonthReviews = db.Reviews.ToList();
+                }
+                else
+                {
+
+                    lastMonthReviews = db.Reviews.Where(x => x.date > unixMonthAgo).ToList();
+                }
+
+
+                /* List<Review> lastMonthReviews = db.Reviews.Where(x => x.date > unixMonthAgo).ToList();*/
+                List<Member> members = new List<Member>();
+
+                //ADD TO MEMBERS EVERY MEMBER THAT GOT AN REVIEW IN THE LAST MONTH
+
+                foreach (Review review in lastMonthReviews)
+                {
+
+                    if (!CheckIfUserExistsInList(members, (int)review.memberId))
+                    {
+                        Member member = new Member()
+                        {
+                            id = (int)review.memberId,
+                            fullName = db.Members.Where(x => x.id == (int)review.memberId).Select(y => y.fullName).FirstOrDefault(),
+                            pictureUrl = db.Members.Where(x => x.id == (int)review.memberId).Select(y => y.pictureUrl).FirstOrDefault()
+                        };
+                        members.Add(member);
+
+                    }
+
+
+                }
+
+
+                List<TrophyMemberDTO> trophyMemberDTOs = new List<TrophyMemberDTO>();
+                double userRating = 0;
+                int reviewCount = 0;
+                string memberName;
+                string memberImage;
 
 
 
-                return Request.CreateResponse(HttpStatusCode.OK, "");
+                foreach (Member member1 in members) // RUN ON EACH UNIQUE MEMBER THAT GOT REVIEW LAST MONTH
+                {
+                    foreach (Review review1 in lastMonthReviews)
+                    {
+
+                        if (review1.memberId == member1.id)
+                        {
+                            reviewCount++;
+                            userRating += (int)review1.stars;
+
+
+                        };
+
+                    }
+
+
+                    memberName = member1.fullName;
+                    memberImage = member1.pictureUrl;
+
+
+
+                    TrophyMemberDTO trophyMemberDTO = new TrophyMemberDTO()
+                    {
+                        reviewsCount = reviewCount,
+                        memberName = memberName,
+                        memberImage = memberImage,
+                        userRating = (double)System.Math.Round(userRating / reviewCount, 2)
+
+
+                    };
+
+                    trophyMemberDTOs.Add(trophyMemberDTO);
+
+                    userRating = 0;
+                    reviewCount = 0;
+
+                };
+
+                trophyMemberDTOs = trophyMemberDTOs.OrderByDescending(x => x.userRating).ThenByDescending(y => y.reviewsCount).ToList();
+
+
+
+
+
+                if (filter == "allTime")
+                {
+                    trophyMemberDTOs = trophyMemberDTOs.Where(x => x.reviewsCount >=5).ToList();
+                }
+
+
+                return Request.CreateResponse(HttpStatusCode.OK, trophyMemberDTOs);
 
 
 
@@ -650,6 +756,21 @@ namespace WebApi.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
             }
+
+        }
+
+        public static bool CheckIfUserExistsInList(List<Member> members, int id)
+        {
+
+            foreach (Member member in members)
+            {
+                if (member.id == id)
+                {
+                    return true;
+                }
+            }
+            return false;
+
 
         }
 

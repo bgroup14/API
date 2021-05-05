@@ -320,7 +320,8 @@ const OtherUserProfileScreen = (props) => {
 
                 </View>
                 {userPosts.length == 0 ? <View style={{ alignItems: 'center', marginTop: windowHeight / 10 }}>
-                    <Text style={{ fontSize: 22 }}>{userName} has no posts yet </Text>
+                    <Icon name="person-circle-outline" size={72} />
+                    <Text style={{ fontSize: 22 }}>No Posts Yet </Text>
 
                 </View> : null}
 
