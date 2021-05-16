@@ -1522,7 +1522,7 @@ namespace WebApi.Controllers
                 {
                     if (age > 0)
                     {
-                        if (Math.Abs(member.age) - age <= 5)
+                        if (Math.Abs(member.age - age) <= 5)
                         {
                             if ((!members.Contains((int)member.id)))
                                 members.Add((int)member.id);
@@ -1645,7 +1645,7 @@ namespace WebApi.Controllers
 
                 //Fetch 5 posts the similar member had interaction with if exist
                 List<int> similarMembersInteractionOtherMemberIDs = new List<int>();
-                var similarInteractions = db.InteractionsMembers.Where(x => similarMembersIDs.Contains((int)x.memberId)).Take(5);
+                var similarInteractions = db.InteractionsMembers.Where(x => similarMembersIDs.Contains((int)x.memberId)).OrderByDescending(x => x.strength).Take(5);
                 foreach (var similarInteraction in similarInteractions)
                 {
                     similarMembersInteractionOtherMemberIDs.Add((int)similarInteraction.otherMemberId);
