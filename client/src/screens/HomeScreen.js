@@ -153,36 +153,6 @@ const HomeScreen = (props) => {
 
 
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setCategoryameToSend(null)
-            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newNotificationFromRedux)
-            // newMeetingApproved();
-            getUserCurrentLocationAndFecthPosts();
-            // console.log("token is " + pushNotificationToken)
-            // console.log("redux newMessage is: " + newMessage)
-            setRestartComponent(Date.now)
-            let categories = [
-                { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
-                { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
-                { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
-                { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
-                { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
-            ]
-            setCategoriesToShow(categories)
-            setPostsFilteredObj(null)
-
-
-
-            //  fetchPosts(postsFilteredObj)
-            setNewComment(false)
-            // console.log("nenenrewnfewnfwnfwn" + userLong)
-
-        }, [newComment])
-    )
-
-
-
 
 
 
@@ -271,6 +241,7 @@ const HomeScreen = (props) => {
 
 
 
+
     useEffect(() => {
 
         const loadFonts = async () => {
@@ -296,6 +267,8 @@ const HomeScreen = (props) => {
     }, [commentsToShow])
 
 
+
+
     useEffect(() => {
         if (pushNotificationToken != null) {
             //SEND NOTIFICATION TO SERVER
@@ -305,6 +278,9 @@ const HomeScreen = (props) => {
         }
 
     }, [pushNotificationToken])
+
+
+
 
     const sendPushTokenToServer = async () => {
         const fetchNotificationIdURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/setnotificationid/${userId}/${pushNotificationToken}`
@@ -320,6 +296,31 @@ const HomeScreen = (props) => {
     }
 
 
+
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setCategoryameToSend(null)
+            console.log("djdfejfewjfkpefjefjpefjewpkfjewpkfjewpkfjwe " + newNotificationFromRedux)
+            getUserCurrentLocationAndFecthPosts();
+            setRestartComponent(Date.now)
+            let categories = [
+                { label: 'Sport', value: 'Sport', icon: () => <Icon name="dribbble" size={22} color="#000000" /> },
+                { label: 'Study', value: 'Study', icon: () => <Icon name="book" size={24} color="#000000" /> },
+                { label: 'Mental', value: 'Mental', icon: () => <Icon name="phone" size={24} color="#000000" /> },
+                { label: 'Elder People', value: 'Elder', icon: () => <MaterialIcons name="elderly" size={24} color="#000000" /> },
+                { label: 'General', value: 'General', icon: () => <Icon name="hearto" size={24} color="#000000" /> },
+            ]
+            setCategoriesToShow(categories)
+            setPostsFilteredObj(null)
+
+            setNewComment(false)
+
+        }, [newComment])
+    )
+
+
     const checkPushNotifications = async () => {
 
         try {
@@ -329,10 +330,8 @@ const HomeScreen = (props) => {
                 //GET TOKEN FROM EXPO
                 registerForPushNotificationsAsync()
                     .then((token) => {
-                        //console.log('token from app.js=', token);
-                        // this.setState({ token });
+
                         setPushNotificationToken(token)
-                        //console.log('state.token from app.js=', this.state.token);
                     });
 
                 await AsyncStorage.setItem('lastTimeTokenTaken', today)
@@ -381,91 +380,7 @@ const HomeScreen = (props) => {
         } catch (err) {
             console.log(err)
         }
-        // }
 
-        //     // try {
-
-        //     //     const config = {
-        //     //         headers: {
-        //     //             'Content-Type': 'application/json'
-        //     //         }
-        //     //     }
-
-        //     //     const res = await axios.post(postsFetchURL, body, config);
-
-        //     //     setPosts(res.data)
-
-        //     // } catch (err) {
-        //     //     console.log(err)
-        //     // }
-
-
-        //     // if (filterObj == null) {
-        //     //     try {
-
-        //     //         console.log(userId)
-
-        //     //         ///HERE WILL IMPLEMENT SMART ELEMNT
-
-        //     //         const res = await axios.post(postsFetchURL);
-        //     //         // const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/161");
-        //     //         console.log(res.data);
-
-
-        //     //         setPosts(res.data)
-
-        //     //     } catch (err) {
-        //     //         console.log("error in fetching post")
-        //     //         console.log(err.message)
-        //     //     }
-
-        //     // }
-
-        //     // else {
-
-
-
-
-        //     let objectLength = Object.keys(obj).length;
-
-
-        //     var filterdObjToSend;
-        //     if (objectLength == 1) {
-        //         filterdObjToSend = {
-
-        //             ...filterObj,
-        //             ...postsFilteredObj
-        //         }
-        //     }
-        //     else {
-        //         console.log(object)
-        //         filterdObjToSend = {
-        //             ...filterObj
-        //         }
-        //     }
-
-        //     console.log("not empty")
-        //     const body = JSON.stringify(filterdObjToSend)
-        //     console.log("body that will be send to filter post is: " + body)
-        //     try {
-
-        //         const config = {
-        //             headers: {
-        //                 'Content-Type': 'application/json'
-        //             }
-        //         }
-
-        //         const res = await axios.post(postsFetchURL, body, config);
-
-        //         setPosts(res.data)
-
-        //     } catch (err) {
-        //         console.log(err)
-        //     }
-        //     // }
-
-
-        // }
 
     }
 
@@ -482,19 +397,9 @@ const HomeScreen = (props) => {
         }
         fetchPosts(obj)
 
-        // let objToSend = {
-        //     ...filteredPostObj,
-        //     categoryName: categoryNameToSend
-        // }
-        // fetchPosts(objToSend)
 
         // //In case we go to anoher screen so useFocus will be activated and will dend this obj to the server 
         setPostsFilteredObj(filteredPostObj);
-        // let body = JSON.stringify(objToSend)
-        // console.log(body)
-
-
-
         setIsFilterVisble(false)
 
 
@@ -636,21 +541,15 @@ const HomeScreen = (props) => {
         var obj;
         // console.log("user long is :" + userlong)
         if (userLong == null) {
-            // console.log("getting user location.........")
-            // console.log("user long is null!!!!")
-            // console.log(userLong)
-
 
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
-                // alert("here")
 
                 // setErrorMsg('Permission to access location was denied');
                 return;
             }
 
             let location = await Location.getCurrentPositionAsync({});
-            //setLocation(location);
 
 
             let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
@@ -683,10 +582,6 @@ const HomeScreen = (props) => {
 
         }
         else {
-            // console.log("not getting user location....")
-            // console.log("user long is not null!!!!")
-            // console.log(userLong)
-
 
             obj = {
                 filterActivated: false,
@@ -713,16 +608,13 @@ const HomeScreen = (props) => {
     }
 
     const setCurrentLocationDB = async (lat, long) => {
-        // alert("in")
-        console.log("!!!!!!!!!!!!!!!!1lat and long " + lat + " ," + long + "user id + " + userId)
+
         try {
             const setCurrentLocationDBUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/addcurrentlocation/${userId}/${lat}/${long}/`
 
             const res = await axios.post(setCurrentLocationDBUrl);
-            // alert(res.data)
 
         } catch (error) {
-            // alert(error.message)
             console.log(error)
         }
 
@@ -736,11 +628,6 @@ const HomeScreen = (props) => {
                 <AppLoading
                     startAsync={getUserCurrentLocationAndFecthPosts}
                     onFinish={() => console.log("finished app loading")}
-                    // onFinish={() => setIsReady(true)}
-                    // onFinish={() => setTimeout(() => {
-                    //     setIsReady(true);
-                    //     setSpinner(false)
-                    // }, 500)}
                     onError={console.warn}
                 />
                 <Spinner
@@ -785,33 +672,11 @@ const HomeScreen = (props) => {
                 <Appbar.Action icon="trophy" onPress={() => { props.navigation.navigate('TrhopyScreen') }} />
 
 
-                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
             </Appbar.Header>
 
 
-            {/* {!newNotificationFromRedux ? < Badge
-                status="error"
-                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
-            /> : null} */}
-            {/* < Badge
-                status="error"
-                containerStyle={{ position: 'absolute', top: 0, right: -3 }}
-            /> */}
+
             <View style={styles.inner}>
-                {/* <Badge>3</Badge> */}
-                {/* < Badge
-                
-                    status="error"
-                    containerStyle={{ position: 'absolute', top: 0, right: 0}}
-                /> */}
-                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
-
-                {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={80} /> */}
-
-
-
-
 
 
                 <View style={styles.selectCategoryContainer} key={restartComponent} >
@@ -855,7 +720,6 @@ const HomeScreen = (props) => {
                     </ScrollView> :
                     <View style={{ marginHorizontal: windowWidth / 10, maxWidth: windowWidth / 1.3, marginTop: windowWidth / 10 }}>
                         <Text style={{ textAlign: 'center', fontSize: 18 }}>We couldn't find posts that matches your posts filter request</Text>
-                        {/* <TouchableOpacity onPress={() => props.navigation.navigate('EditFeedSettingsScreen') */}
                         <TouchableOpacity onPress={() => setIsFilterVisble(true)
                         }><Text style={{ textAlign: 'center', fontSize: 18 }}>Click here to try again</Text></TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20, marginTop: 20 }}>
@@ -892,16 +756,13 @@ export default HomeScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#fff',
         backgroundColor: '#d9d9d9',
-        // justifyContent: 'center',
-        // alignItems: 'center'
+
     },
     inner: {
         padding: windowWidth / 90,
 
         flex: 1,
-        //  justifyContent: "space-around"
     },
     categoryContainer: {
         flex: 1,
@@ -911,29 +772,22 @@ const styles = StyleSheet.create({
     },
 
     barContainer: {
-        // flex: 1,
-
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        //  marginLeft: 30,
         marginTop: windowHeight / 22,
         flexDirection: 'row',
         marginHorizontal: windowHeight / 40
-        // paddingLeft: windowWidth / 100,
-        // paddingRight: windowWidth / 100,
+
 
     },
     barText: {
         color: "#ffffff",
         fontSize: 24,
-        // fontWeight: 'bold',
         marginTop: windowHeight / 200,
 
         // fontFamily: 'Ubuntu_700Bold',
         fontFamily: 'Ubuntu_300Light',
-        // fontFamily: 'Roboto_medium'
-        // fontFamily: 'Allan_400Regular'
-        // fontFamily: 'Inter_900Black'
+
     },
     bellIcon: {
         color: '#ffffff',
@@ -941,19 +795,11 @@ const styles = StyleSheet.create({
     },
     selectCategoryContainer:
     {
-        //  flex: 1,
-        // position: 'relative',
-        // backgroundColor: 'red',
-        // marginTop: windowHeight / 70,
+
         marginVertical: windowHeight / 80,
 
         flexDirection: 'row',
-        //alignItems: 'flex-start',
-        //  justifyContent: 'space-around',
-        // marginBottom: windowHeight / 70,
-        // width: '100%',
-        // marginLeft: windowWidth / 50,
-        //borderRadius: 50
+
     }, dropDownContainer: {
 
         width: '85%',
@@ -965,11 +811,7 @@ const styles = StyleSheet.create({
     postsContainer: {
 
         justifyContent: 'flex-start',
-        // backgroundColor: '#ffffff'
-        //    / flex: 1,
-        //   minHeight: 140
-        // justifyContent: '',
-        //alignItems: 'center'
+
     },
     userGreetingText: {
         fontSize: 18
