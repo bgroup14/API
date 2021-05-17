@@ -19,17 +19,28 @@ const TrophyScreen = (props) => {
 
     useEffect(() => {
 
-        const fecthTrophies = async () => {
-            const res = await axios.get(fecthTrophiesUrl);
-            setTrophiesList(res.data)
-        }
+
         fecthTrophies();
 
-    }, [trophiesList, filter])
+    }, [filter])
+
+    const fecthTrophies = async () => {
+        const res = await axios.get(fecthTrophiesUrl);
+        setTrophiesList(res.data)
+    }
 
     const filterHanlder = (time) => {
         setFilter(time);
 
+    }
+
+    const goToOtherUserProfile = (member) => {
+
+        // alert(member.otherMemberId)
+        // console.log(member)
+        props.navigation.navigate('OtherUserProfileScreen', {
+            userId: member.otherMemberId
+        })
     }
 
 
@@ -54,11 +65,13 @@ const TrophyScreen = (props) => {
             </View>
             <View style={styles.inner}>
                 {trophiesList.map((member, index) => {
-                    return <TrophyMemeber key={index} trophyMember={member} place={index + 1} />
+                    return <TrophyMemeber key={index} trophyMember={member} place={index + 1} goToOtherUserProfile={() => goToOtherUserProfile(member)} />
 
                 })}
                 {/* <TrophyMemeber trophyMember={temp} place={1} />
                 <TrophyMemeber trophyMember={temp} place={2} /> */}
+
+
 
 
             </View>

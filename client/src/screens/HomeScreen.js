@@ -542,6 +542,7 @@ const HomeScreen = (props) => {
         // console.log("user long is :" + userlong)
         if (userLong == null) {
 
+
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
 
@@ -564,7 +565,8 @@ const HomeScreen = (props) => {
             fetchPosts(obj)
             setMyLat(location.coords.latitude);
             setMyLong(location.coords.longitude);
-
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            console.log(location)
             dispatch({
                 type: RECEIVED_USER_COORDINATES,
                 payload: {

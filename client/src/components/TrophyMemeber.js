@@ -40,10 +40,6 @@ const TrophyMemeber = (props) => {
     )
 
 
-    const goToOtherUserProfile = () => {
-        alert(1)
-        // props.goToOtherUserChat(chatRoomId, memberName, memberImage, otherMemberId, otherMemberId)
-    }
 
 
     return (
@@ -53,7 +49,7 @@ const TrophyMemeber = (props) => {
                 <Text style={styles.place}>{place}) </Text>
 
             </View>
-            <TouchableOpacity onPress={() => goToOtherUserProfile()}>
+            <TouchableOpacity onPress={() => props.goToOtherUserProfile()}>
                 <Avatar
 
                     size='medium'
@@ -67,7 +63,7 @@ const TrophyMemeber = (props) => {
             </TouchableOpacity>
 
             <View style={{ marginTop: windowHeight / 100, marginLeft: windowHeight / 80 }}>
-                <TouchableOpacity onPress={() => goToOtherUserProfile()}>
+                <TouchableOpacity onPress={() => props.goToOtherUserProfile()}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', marginLeft: windowWidth / 60 }}>{memberName}</Text>
                 </TouchableOpacity>
                 <View style={styles.ratingContainer} >

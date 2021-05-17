@@ -145,13 +145,19 @@ const OtherUserProfileScreen = (props) => {
         }
     }
     const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
-    console.log("userLat is " + userLat)
-    console.log("userLong is " + userLong)
+
 
     const fetchUserPosts = async () => {
-        console.log("fetching user posts...")
-        const res = await axios(userPostsFetchURL);
-        setUserPosts(res.data);
+        try {
+            console.log("fetching user posts...")
+
+            const res = await axios(userPostsFetchURL);
+
+            setUserPosts(res.data);
+        } catch (error) {
+            console.log(error)
+        }
+
 
 
     }

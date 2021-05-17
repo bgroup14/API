@@ -665,6 +665,9 @@ namespace WebApi.Controllers
                 }
 
 
+
+
+
                 /* List<Review> lastMonthReviews = db.Reviews.Where(x => x.date > unixMonthAgo).ToList();*/
                 List<Member> members = new List<Member>();
 
@@ -723,7 +726,9 @@ namespace WebApi.Controllers
                         reviewsCount = reviewCount,
                         memberName = memberName,
                         memberImage = memberImage,
-                        userRating = (double)System.Math.Round(userRating / reviewCount, 2)
+                        userRating = (double)System.Math.Round(userRating / reviewCount, 2),
+                        otherMemberId = member1.id
+
 
 
                     };
@@ -743,7 +748,7 @@ namespace WebApi.Controllers
 
                 if (filter == "allTime")
                 {
-                    trophyMemberDTOs = trophyMemberDTOs.Where(x => x.reviewsCount >=5).ToList();
+                    trophyMemberDTOs = trophyMemberDTOs.Where(x => x.reviewsCount >= 5).ToList();
                 }
 
 
