@@ -1,5 +1,5 @@
 # VolunteerZ 
-## Check out the demo at : https://www.youtube.com/watch?v=0Gs8CXwwpBw&t=2s
+## Check out the demo at : https://youtu.be/0Gs8CXwwpBw
 
 
 ## Some Screenshots...
