@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Appbar, Badge } from 'react-native-paper';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Button } from 'react-native-paper';
@@ -63,7 +63,7 @@ const TrophyScreen = (props) => {
                     Last Month
                       </Button>
             </View>
-            <View style={styles.inner}>
+            <ScrollView style={styles.inner}>
                 {trophiesList.map((member, index) => {
                     return <TrophyMemeber key={index} trophyMember={member} place={index + 1} goToOtherUserProfile={() => goToOtherUserProfile(member)} />
 
@@ -74,7 +74,7 @@ const TrophyScreen = (props) => {
 
 
 
-            </View>
+            </ScrollView>
 
 
         </View>
