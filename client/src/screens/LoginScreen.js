@@ -184,13 +184,13 @@ const LoginScreen = (props) => {
           onPress={() => btnFBLogin()}
         />
 
-        {/* <SocialButton
+        <SocialButton
           buttonTitle="Sign In with Google"
           btnType="google"
           color="#de4d41"
           backgroundColor="#f5e7ea"
           onPress={() => googleLogin()}
-        /> */}
+        />
       </View>
 
       <View style={styles.forgetBtnContainer}>

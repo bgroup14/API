@@ -1353,7 +1353,7 @@ namespace WebApi.Controllers
             dtDateTime = dtDateTime.AddSeconds(meetingDate).ToLocalTime();
             double daysPassedFromMeeting = (now - dtDateTime).TotalDays;
             /* long noww = DateTimeOffset.Now.ToUnixTimeSeconds();*/
-            if (daysPassedFromMeeting >= 3)
+            if (daysPassedFromMeeting >= 1)
             {
                 return true;
             }
