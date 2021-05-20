@@ -16,18 +16,14 @@ const Comment = (props) => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.commentContainer}>
-                {/* <View style={styles.userImageContainer}> */}
                 <View style={{ backgroundColor: 'white', padding: 5, marginTop: windowHeight / 80 }}>
                     <Avatar
 
                         size='medium'
-                        // avatarStyle={{ height: 59, }}
-                        // containerStyle={{ marginTop: 10 }}
                         rounded
                         source={{
                             uri:
                                 commentingMemberImage,
-                            // postCreatorImg,
                         }}
                     />
                 </View>
@@ -43,21 +39,7 @@ const Comment = (props) => {
                     </View>
                 </View>
 
-
-
-
-
-
-
-
             </View>
-
-            {/* <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
-                <Text>{comments.length} Comments</Text>
-            </TouchableOpacity> */}
-
-
-
         </KeyboardAvoidingView>
 
     )
@@ -70,25 +52,25 @@ const styles = StyleSheet.create({
     container: {
         marginVertical: windowHeight / 50,
         flex: 1,
-        //  flexDirection: 'row',
-        // justifyContent: 'flex-end',
-        //  alignItems: 'flex-start'
+
     },
     commentContainer: {
         flex: 1,
         flexDirection: 'row',
-        //  marginVertical: 1,
         alignItems: 'flex-start',
-        // maxHeight: 100,
-        // borderRadius: 40
 
     },
-    comment: { backgroundColor: '#EDEDED', width: windowWidth / 1.5, borderRadius: 16, marginTop: windowHeight / 60, height: '100%', },
+    comment: {
+        backgroundColor: '#EDEDED',
+        width: windowWidth / 1.5,
+        borderRadius: 16,
+        marginTop: windowHeight / 60,
+        height: '100%'
+    },
 
     userNameContainer: {
         marginTop: windowWidth / 80,
         marginLeft: windowWidth / 50,
-        //margin: 2
     },
     userName:
     {
@@ -101,7 +83,6 @@ const styles = StyleSheet.create({
 
     },
     postDateText: {
-        // color: 'red'
         color: 'black'
     },
     postCityName: {
@@ -119,7 +100,6 @@ const styles = StyleSheet.create({
 
     },
     postBtn: {
-        //  flex: 1,
         flexDirection: 'row',
         marginVertical: 10,
         justifyContent: 'flex-end',
@@ -133,16 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end'
     },
 
-    // userImageContainer: {
-    //     flex: 1,
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-around',
-    //     alignItems: 'center'
-
-    // },
     userImage: {
-        // width: 100,
-        // height: 100
 
     }
 

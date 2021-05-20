@@ -8,11 +8,7 @@ import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import MyCamera from '../components/MyCamera';
-
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
@@ -44,7 +40,6 @@ const ProfileSetup = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log(windowHeight)
 
       getDataFromAS();
 
@@ -77,7 +72,6 @@ const ProfileSetup = (props) => {
       return;
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log("picker res is:!!!")
     console.log(pickerResult);
     if (pickerResult.cancelled === true) {
       return;
@@ -92,16 +86,13 @@ const ProfileSetup = (props) => {
       let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (jsonObj != null) {
         setSignUpDetails(jsonObj)
-        console.log("sign up name from previous page: " + jsonObj.fullName)
       }
       const hobbiesJsonValue = await AsyncStorage.getItem('hobbies')
       let jsonObjHobbies = hobbiesJsonValue != null ? JSON.parse(hobbiesJsonValue) : null;
       if (jsonObjHobbies != null) {
         setHobbies(jsonObjHobbies)
-        console.log("hobbies wwere saved!: ")
       } else {
         setHobbies([])
-        console.log("hobbies AS are null")
       }
 
 
@@ -201,7 +192,6 @@ const ProfileSetup = (props) => {
   }
 
   const getCityName = (cityName) => {
-    // console.log("city name is: " + cityName)
     setCity(cityName)
 
   }
@@ -232,11 +222,6 @@ const ProfileSetup = (props) => {
   };
 
 
-  const checkDate = () => {
-    console.log(date)
-    console.log(dateLabel)
-    console.log("unix date is: " + unixDate)
-  }
 
   const hobbisTitleFunc = () => {
     if (hobbies.length == 0) {
@@ -311,7 +296,6 @@ const ProfileSetup = (props) => {
 
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            {/* <Text style={styles.text}>Profile Setup</Text> */}
             <View style={styles.imageContainer}>
               {image}
             </View>
@@ -500,7 +484,6 @@ const styles = StyleSheet.create({
     marginTop: windowHeight / 100
   },
   setupParamsContainer: {
-    // marginTop: windowHeight / 100
   },
   setupParams: {
     fontSize: 14,

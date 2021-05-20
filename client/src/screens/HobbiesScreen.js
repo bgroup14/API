@@ -49,7 +49,6 @@ const HobbiesScreen = (props) => {
 
     try {
       await AsyncStorage.removeItem(key);
-      console.log("AS Hobbies removed")
       return true;
     }
     catch (exception) {

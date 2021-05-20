@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import Divider from 'react-native-btr/src/Components/Separator';
 import { Avatar, Rating } from 'react-native-elements';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
@@ -11,35 +9,12 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 const TrophyMemeber = (props) => {
-    // const { fullName, memberId, pictureUrl, chatSentence, chatDate } = props.user;
-    let userId = useSelector(state => state.auth.userId);
-    // const [bold, setBold] = useState(false);
 
 
     const { memberName, otherMemberId, memberImage,
         userRating, reviewsCount } = props.trophyMember;
 
     let place = props.place;
-    // console.log("read??: " + lastMessageMarkedAsRead)
-    // setBold(false)
-    // console.log("bold is set to: " + bold)
-
-    useFocusEffect(
-        React.useCallback(() => {
-            // setBold(false)
-            // console.log(bold)
-            // console.log("last messenger id:" + lastMessageSenderId)
-            // console.log("mark as read: " + lastMessageMarkedAsRead)
-            // if (lastMessageSenderId != userId && !lastMessageMarkedAsRead) {
-
-            //     console.log("setting to bold...")
-            //     setBold(true)
-            // }
-
-        }, [])
-    )
-
-
 
 
     return (
@@ -82,7 +57,6 @@ const TrophyMemeber = (props) => {
 
         </View>
 
-        // <Divider />
 
     )
 }
@@ -92,14 +66,9 @@ export default TrophyMemeber
 const styles = StyleSheet.create({
 
     userContainer: {
-        // flex: 1,
         flexDirection: 'row',
-        //  marginVertical: 1,
-        // alignItems: 'flex-start',
-        // justifyContent: 'flex-start',
         maxHeight: windowHeight / 5,
         marginVertical: windowHeight / 50,
-        // backgroundColor: 'red'
     },
     ratingContainer: {
         alignItems: 'flex-start',

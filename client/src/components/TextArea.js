@@ -1,16 +1,13 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-import FontAwsome from 'react-native-vector-icons/FontAwesome';
 
 const TextArea = ({ labelValue, placeholderText, iconType, ...rest }) => {
 
 
   return (
     <View style={styles.inputContainer}>
-      {/* <View style={styles.iconStyle}>
-        <FontAwsome name={iconType} size={25} color="#666" />
-      </View> */}
+
       <TextInput
         value={labelValue}
         style={styles.input}
@@ -35,7 +32,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 20,
     borderWidth: 1,
-    //alignItems: 'center',
     backgroundColor: '#fff',
 
 

@@ -13,7 +13,6 @@ const Confetti = () => {
     return (
         <LottieView style={styles.lottie}
             ref={animation}
-            // source={require('../../assets/lottie/1370-confetti.json')}
             source={require('../../assets/lottie/14162-taras-chenenko-succcess-confetti.json')}
             autoPlay={false}
             loop={false} />
@@ -26,9 +25,7 @@ const styles = StyleSheet.create({
     lottie: {
         width: 400,
         height: 400,
-        // position: 'absolute',
         zIndex: 1, position: 'absolute', bottom: windowHeight / 8, right: - (windowHeight / 130)
-        // zIndex: 1, position: 'absolute', bottom: windowHeight / 10, right: - (windowHeight / 30)
-        // paddingRight: 200
+
     }
 })

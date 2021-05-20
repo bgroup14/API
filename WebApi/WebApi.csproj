@@ -224,6 +224,7 @@
     <Compile Include="DTO\ChatRoomDTO.cs" />
     <Compile Include="DTO\FeedFilterDTO.cs" />
     <Compile Include="DTO\InteractionMemberDTO.cs" />
+    <Compile Include="DTO\LongLatDTO.cs" />
     <Compile Include="DTO\MeetingDTO.cs" />
     <Compile Include="DTO\NotificationDTO.cs" />
     <Compile Include="DTO\NotificationIdDTO.cs" />

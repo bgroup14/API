@@ -1,37 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
-import MyLinearGradient from '../components/MyLinearGradient';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingView } from 'react-native';
 import MyOverlay from '../components/MyOverlay';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import axios from 'axios';
-import Post from '../components/Post';
 import Meeting from '../components/Meeting';
 import Notification from '../components/Notification';
-import User from '../components/User';
 import { useFocusEffect } from '@react-navigation/native';
 import { NO_NEW_NOTIFICATION } from '../../store/actions/types';
 import { useSelector, useDispatch } from 'react-redux';
-import { Appbar, Title } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import Review from '../screens/Review';
 import MeetingNotApprovedScreen from './MeetingNotApprovedScreen';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
-
-
-
-
-import LottieView from 'lottie-react-native';
-
-import { Button } from 'react-native-paper';
 import Confetti from '../components/Confetti';
-import { Alert } from 'react-native';
-// import MyOverlay from '../components/MyOverlay';
-// 
+
 
 
 const Notifications = (props) => {
@@ -45,14 +30,12 @@ const Notifications = (props) => {
     const [reviewObj, setReviewObj] = useState({});
     const [meetingDidntOccurObj, setMeetingDidntOccurObj] = useState({});
 
-    let newNotificationFromRedux = useSelector(state => state.notification.newNotification);
     let userId = useSelector(state => state.auth.userId);
     const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/meeting/getUpcomingMeetings/${userId}`
     const notificationsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getNotifications/${userId}`
 
     const noNewNotifications = async () => {
-        //  console.log("trying to change redux msg recieved state...")
-        // alert(3)
+
         dispatch({
             type: NO_NEW_NOTIFICATION,
             payload: null
@@ -63,7 +46,6 @@ const Notifications = (props) => {
     const [isVisible, setIsvisible] = useState(false);
     const [meetingNotApproved, setMeetingNotApproved] = useState(false);
 
-    const isFirstRun = React.useRef(true)
 
     useEffect(() => {
 
@@ -79,8 +61,7 @@ const Notifications = (props) => {
 
         if (meetingHappend) {
             setTimeout(() => {
-                // alert(1)
-                // setMeetingHappend(false)
+
                 setIsvisible(true)
                 setMeetingHappend(false)
 
@@ -97,16 +78,12 @@ const Notifications = (props) => {
         React.useCallback(() => {
             noNewNotifications();
             let isActive = true;
-            // setChatRooms([])
 
             const fetchUpcomingMeetings = async () => {
-                console.log("Fetching chat rooms.!..")
                 try {
 
                     const res = await axios(upcomingMeetingsFetchURL);
                     if (isActive) {
-                        console.log("setting upcoming meetings ...")
-                        //console.log(res.data)
                         setRestartScreen(!restartScreen)
                         setUpcomingMeetings(res.data);
                     }
@@ -119,16 +96,13 @@ const Notifications = (props) => {
 
 
             const fetchNotifications = async () => {
-                console.log("Fetching notificions....")
                 try {
 
                     const res = await axios.post(notificationsFetchURL);
                     if (isActive) {
-                        console.log("setting notifications......")
-                        console.log(res.data)
+
                         setNotifications(res.data)
-                        //setRestartScreen(!restartScreen)
-                        // setUpcomingMeetings(res.data);
+
                     }
                     setWasFetched(true)
 
@@ -147,13 +121,6 @@ const Notifications = (props) => {
         }, [refreshPage])
     )
 
-
-    // const upcomingMeetingsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getroomchats/${userId}`
-    // https://localhost:44303/api/meeting/getUpcomingMeetings/157
-
-
-
-    // const chatRoomsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getFilteredPosts/${userId}`
 
 
     const goToOtherUserProfile = (member_id) => {
@@ -179,7 +146,6 @@ const Notifications = (props) => {
             otherMemberName,
 
         }
-        // alert(notificationId)
         setMeetingDidntOccurObj(obj)
         setMeetingNotApproved(true)
 
@@ -191,7 +157,7 @@ const Notifications = (props) => {
 
         try {
             const res = await axios.delete(deleteNotificationUrl);
-            console.log(res.data)
+
 
         } catch (error) {
             console.log(error)
@@ -200,7 +166,6 @@ const Notifications = (props) => {
     }
 
     const closeReview = () => {
-        // fetchNotifications();
         setIsvisible(false);
         setRefreshPage(!refreshPage)
 
@@ -208,7 +173,6 @@ const Notifications = (props) => {
 
         Toast.show({
             text: "Review published successfully",
-            // buttonText: "Okay",
             type: "success",
             duration: 4000
         });
@@ -220,25 +184,7 @@ const Notifications = (props) => {
 
     }
 
-    const fetchNotifications = async () => {
-        console.log("Fetching notificions....")
-        try {
 
-            const res = await axios.post(notificationsFetchURL);
-            if (isActive) {
-                console.log("setting notifications......")
-                console.log(res.data)
-                setNotifications(res.data)
-                //setRestartScreen(!restartScreen)
-                // setUpcomingMeetings(res.data);
-            }
-            setWasFetched(true)
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
     const closeWindow = () => {
 
         setRefreshPage(!refreshPage);
@@ -272,19 +218,12 @@ const Notifications = (props) => {
                     <MeetingNotApprovedScreen meetingDidntOccurObj={meetingDidntOccurObj} closeWindow={() => setMeetingNotApproved(false)} closeWindow={() => closeWindow()} />
                 </MyOverlay>
 
-                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
-                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+
             </Appbar.Header>
 
             {meetingHappend ? <Confetti /> : null}
 
-            {/* <View style={{ zIndex: 1, position: 'absolute', bottom: windowHeight / 5, right: - (windowHeight / 20) }}>
-                <LottieView style={styles.lottie}
-                    ref={animation}
-                    source={require('../../assets/lottie/1370-confetti.json')}
-                    autoPlay={false}
-                    loop={false} />
-            </View> */}
+
 
             {
                 upcomingMeetings.length == 0 && notifications.length == 0 && wasFetched ?
@@ -297,20 +236,12 @@ const Notifications = (props) => {
                     </View> : null
             }
             <ScrollView style={styles.inner}>
-                {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-                {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
 
-
-                <View style={styles.barContainer}><Text style={styles.barText}>Notifications</Text>
-
-                </View> */}
 
 
                 {upcomingMeetings.length > 0 ? <View style={styles.upcomingMeetingsHeaderContainer}><Text style={styles.upcomingMeetingsHeader}>Upcoming Meetings</Text></View> : null}
                 <View style={styles.upcomingMeetingsContainer} key={restartScreen} >
-                    {/* {console.log(chatRooms)} */}
                     {upcomingMeetings.map((meeting) => {
-                        // console.log("upcoming meeting is: " + meeting)
                         return <Meeting meeting={meeting} key={meeting.otherMemberId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                         />
@@ -322,7 +253,6 @@ const Notifications = (props) => {
                 <View style={styles.upcomingMeetingsHeaderContainer}><Text style={styles.upcomingMeetingsHeader}>{notificationsHeader}</Text></View>
                 <View style={styles.notificationContainer}>
                     {notifications.map((notification) => {
-                        // console.log("notification is: " + notification)
                         return <Notification notification={notification} key={notification.notificationId}
                             goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)}
                             meetingApprovedBtn={(otherMemberImage, otherMemberName, otherMemberId) => meetingApproveHanlder(otherMemberImage, otherMemberName, otherMemberId)}
@@ -346,9 +276,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         zIndex: 1
-        //backgroundColor: '#fff',
-        // justifyContent: 'center',
-        // alignItems: 'center'
+
     },
     inner: {
         //padding: windowHeight / 90,

@@ -1,25 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
-import FormButton from '../components/FormButton';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CheckBox } from 'react-native-elements'
 import HorizontalLine from '../components/HorizontalLine';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import axios from 'axios';
-
-
 import { useSelector, useDispatch } from 'react-redux';
 import { updateFeedSettingsRedux } from '../../store/actions/user';
-
-
-import { register } from '../../store/actions/auth';
-
 import { Toast } from "native-base";
 import * as Font from "expo-font";
 import { Appbar, Button as Btn } from 'react-native-paper';
-
-
 
 const EditFeedSettingsScreen = (props) => {
   let userId = useSelector(state => state.auth.userId);
@@ -66,7 +56,6 @@ const EditFeedSettingsScreen = (props) => {
       );
       return null
     }
-    // console.log(feedSettings)
     let body = JSON.stringify(feedSettings);
     const config = {
       headers: {
@@ -81,25 +70,10 @@ const EditFeedSettingsScreen = (props) => {
 
       Toast.show({
         text: "Feed settings updated successfully!",
-        // buttonText: "Okay",
         type: "success",
         duration: 4000
       });
       props.navigation.navigate('MyProfile')
-
-
-
-      // Alert.alert(
-      //   "Feed Settings Updated",
-      //   res.data,
-      //   [
-      //     { text: 'OK', onPress: () => props.navigation.navigate('Home') },
-      //   ],
-      // );
-
-
-
-
 
 
     } catch (error) {
@@ -111,9 +85,6 @@ const EditFeedSettingsScreen = (props) => {
           { text: "OK" }
         ],
       );
-
-      console.log("body is " + body)
-
 
     }
 
@@ -144,7 +115,6 @@ const EditFeedSettingsScreen = (props) => {
   }
   return (
     <ScrollView >
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1500} />
       <View style={{ marginBottom: windowHeight / 40 }}>
         <Appbar.Header style={{ backgroundColor: '#3b5998' }} >
@@ -154,19 +124,6 @@ const EditFeedSettingsScreen = (props) => {
         </Appbar.Header>
       </View>
       <View style={styles.container}>
-
-        {/* <View style={styles.headerContainer}>
-          <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
-          >
-            <Text style={styles.barReset}>Cancel</Text>
-          </TouchableOpacity>
-          <View style={{ marginRight: 120 }}>
-            <Text style={styles.text}>Feed Settings</Text>
-          </View>
-
-
-        </View> */}
-
         <Text style={styles.feedSettingsFilterText}>Do you</Text>
         <View style={styles.radioBtnContainer}>
           <CheckBox containerStyle={styles.CheckBox}
@@ -260,12 +217,6 @@ const EditFeedSettingsScreen = (props) => {
 
           />
         </View>
-
-
-        {/* <FormButton
-          buttonTitle="Update"
-          onPress={() => updateFeedSettings()}
-        /> */}
         <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: windowHeight / 40 }}>
           <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateFeedSettings()}>
             Update Feed Settings </Btn>
@@ -282,16 +233,13 @@ export default EditFeedSettingsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // padding: windowWidth / 50,
 
   },
   radioBtnContainer: {
 
     marginVertical: windowHeight / 150,
-    // width: '100%',
   },
   text: {
-    // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     color: '#051d5f',
     marginBottom: windowHeight / 25,
@@ -319,27 +267,19 @@ const styles = StyleSheet.create({
     marginLeft: windowWidth / 20,
 
   },
-  // headerContainer:
-  // {
-  //   flex: 1,
-  //   alignItems: 'center'
-  // }
+
   headerContainer: {
     flexDirection: 'row-reverse',
     margin: windowHeight / 160,
-    //marginTop: windowHeight / 100,
     justifyContent: 'space-between',
     alignItems: 'center',
-    // flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 30,
-    // height: windowHeight / 10,
-    //  alignItems: 'center'
+
   },
   barReset: {
     color: 'red',
     marginTop: windowHeight / 140,
-    //marginLeft: 200
   },
 
 

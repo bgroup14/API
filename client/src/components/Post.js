@@ -1,14 +1,12 @@
-import { text } from '@fortawesome/fontawesome-svg-core';
 import React, { useState, useEffect } from 'react'
 import { KeyboardAvoidingView, Alert } from 'react-native';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native'
 import { Avatar } from 'react-native-elements';
 import { Divider } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
 import FontAwsome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
@@ -45,7 +43,6 @@ const Post = (props) => {
     const { postId, text, cityName, recurring, dateLabel, timeOfDay,
         postCreatorImg, postCreatorName, comments, member_id, distanceFromMe, category, goldenMember } = props.post;
     let currentMemberId = props.currentMemberId;
-    //  console.log("current member id is: " + currentMemberId)
     const [showCommentInput, setShowCommentInput] = useState(false);
     const [comment, setComment] = useState(null);
     let userId = useSelector(state => state.auth.userId);
@@ -88,33 +85,20 @@ const Post = (props) => {
 
         }
         const body = JSON.stringify(commentObj)
-        console.log("Will publish comment with body: " + body);
 
 
 
         try {
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/post/publishcomment", body, config);
-            //    console.log(res);
 
             Toast.show({
                 text: "Comment published successfully!",
-                // buttonText: "Okay",
                 type: "success",
                 duration: 4000
             });
             props.refreshPage();
             setShowCommentInput(false)
-            // Alert.alert(
-            //     "Comment Publish",
-            //     "Comment published successfully. ",
-            //     [
-            //         { text: "OK", onPress: () => props.refreshPage() }
-
-            //     ],
-            //     setShowCommentInput(false)
-            // );
-
             updateCategoryStrength();
 
 
@@ -144,17 +128,11 @@ const Post = (props) => {
 
         const notificationBody = JSON.stringify(obj)
 
-        console.log("Will add notification with body: " + notificationBody);
         const addNotificationUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addNotification';
-        // const config = {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // }
+
         try {
 
             const res = await axios.post(addNotificationUrl, notificationBody, config);
-            console.log(res.data)
 
 
         } catch (error) {
@@ -162,10 +140,7 @@ const Post = (props) => {
         }
         let pushObj = {
             functionToRun: "receivedNewComment",
-            // chatRoomId: chatRoomId,
-            // otherMemberName: userName,
-            // otherMemberId: userId,
-            // otherMemberImage: userImage
+
 
         }
         PushFromClient(pushObj)
@@ -182,7 +157,6 @@ const Post = (props) => {
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${member_id}`
         try {
-            // console.log("getting other memner push id with id: " + otherMemberId)
             const res = await axios(fetchOtherUserPushNotificationID);
 
             var otherUserNotificationId = res.data;
@@ -195,30 +169,8 @@ const Post = (props) => {
             return null
         }
 
-        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
-        // var body = comment;
-
-        // switch (pushObj.functionToRun) {
-        //     case "receivedNewComment":
-        //         body = `${userName} sent you a meeting invitation`
-        //         break;
-        //     // case "meetingApproved":
-        //     //     body = `Accepted your meeting invitation`
-        //     //     break;
-        //     // case "meetingRejected":
-        //     //     body = `Rejected your meeting invitation`
-        //     //     break;
-        //     default:
-        //         break;
-        // }
-        // if (pushObj.functionToRun == "receivedNewMeetingInvitation") {
-        //     body = `${userName} sent you a meeting invitation`
-        // }
-
-
         let push = {
             to: otherUserNotificationId,
-            // to: "ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]",
             title: `${userName}commented on your post`,
             body: comment,
             badge: 3,
@@ -274,23 +226,11 @@ const Post = (props) => {
 
             Toast.show({
                 text: "Post deleted successfully!",
-                // buttonText: "Okay",
                 type: "success",
                 duration: 4000
             });
 
-            // Alert.alert(
-            //     "Post Deleted!",
-            //     "Post deleted successfully.",
-            //     [
-
-            //         { text: "OK" }
-            //     ],
-            // );
             props.refreshPage();
-
-
-
 
         } catch (error) {
 
@@ -304,14 +244,6 @@ const Post = (props) => {
             );
         }
 
-
-
-        //19
-        // console.log(postId)
-
-
-
-        //AT THE END ACTIVATE PROPS.refreshPage
     }
 
     const updateCategoryStrength = async () => {
@@ -320,15 +252,12 @@ const Post = (props) => {
             const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${category}`
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.patch(postInteractionUrl);
-            console.log(res.data);
 
 
 
         } catch (err) {
 
             console.log(err)
-
-
         }
 
 
@@ -372,28 +301,13 @@ const Post = (props) => {
                                 postCreatorImg,
                         }}
                     />
-                    {/* {
-                        goldenMember ?
-                            <Avatar
-                                containerStyle={{ marginLeft: 30, marginTop: 10 }}
-                                size='small'
-                                // containerStyle={{ marginVertical: 1 }}
-                                // rounded
-                                source={
-                                    require("../../assets/goldMember.png")
-                                }
-                            /> : null
-                    } */}
 
                 </View>
 
                 <View style={styles.postDetailsContainer}>
                     <View style={styles.userNameContainer}>
-                        {/* <TouchableOpacity onPress={() => props.navigation.navigate('OtherUserProfileScreen', {
-                            userId: member_id
-                        })}> */}
+
                         <TouchableOpacity onPress={() => goToOtherUserProfile()}>
-                            {/* <Text style={styles.userName}>{goldenMember}</Text> */}
                             <Text style={styles.userName}>{postCreatorName}</Text>
 
                         </TouchableOpacity>
@@ -415,7 +329,6 @@ const Post = (props) => {
 
 
 
-                {/* </View> */}
 
             </View>
             {comments.length > 0 ? <TouchableOpacity style={styles.commentsContainer} onPress={() => props.showComments(comments)}>
@@ -433,11 +346,6 @@ const Post = (props) => {
             <View style={styles.postBtnContainer}>
 
 
-                {/* <TouchableOpacity style={styles.postBtn}>
-                    <FontAwsome name='heart-o' size={25} color="gray" />
-                    <Text style={styles.btnText}>Like</Text>
-                </TouchableOpacity > */}
-
                 {currentMemberId == member_id ? null : <TouchableOpacity onPress={() => goToChat()} style={styles.postBtn}>
                     <Ionicons name='chatbubbles-outline' size={25} color="gray" />
                     <Text style={styles.btnText}>Chat</Text>
@@ -448,14 +356,6 @@ const Post = (props) => {
                 </TouchableOpacity >
 
             </View>
-
-
-
-
-
-            {/* <Divider style={{ height: 3, marginTop: windowHeight / 80, marginBottom: windowHeight / 100 }} /> */}
-
-
         </KeyboardAvoidingView>
 
     )
@@ -466,21 +366,13 @@ export default Post
 const styles = StyleSheet.create({
 
     container: {
-        // marginVertical: 10,
         flex: 1,
-        //  flexDirection: 'row',
-        // justifyContent: 'flex-end',
-        //  alignItems: 'flex-start'
         backgroundColor: '#fff',
-
-
     },
     postContainer: {
         flex: 1,
         flexDirection: 'row',
-        //  marginVertical: 1,
         alignItems: 'flex-start',
-        // maxHeight: 100
         maxHeight: windowHeight / 4,
         marginVertical: 10,
 
@@ -488,35 +380,27 @@ const styles = StyleSheet.create({
     },
     postDetailsContainer: {
         flex: 1,
-        //justifyContent: 'flex-start',
-        //justifyContent: 'space-between',
         marginLeft: windowWidth / 20,
         marginTop: windowHeight / 80,
         maxWidth: windowWidth / 1.8,
         marginBottom: windowHeight / 60
 
 
-        // alignItems: 'center'
-
     },
     userNameContainer: {
-        //margin: 2
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
     userName:
     {
         fontSize: 16,
-        // fontWeight: 'bold',
         fontFamily: 'Inter_700Bold'
     },
     postText: {
-        // fontSize: 14
         marginVertical: 5,
         fontFamily: 'Inter_400Regular'
     },
     postDateText: {
-        // color: 'blue',
         marginVertical: windowHeight / 100,
         color: 'black'
     },
@@ -531,15 +415,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: windowWidth / 100,
         justifyContent: 'space-evenly',
-        // justifyContent: 'flex-end',
         alignItems: 'center',
         marginBottom: windowHeight / 100,
-        // marginTop: 2
-
 
     },
     postBtn: {
-        //  flex: 1,
         flexDirection: 'row',
         marginVertical: 10,
         justifyContent: 'flex-end',
@@ -549,31 +429,17 @@ const styles = StyleSheet.create({
     btnText: { marginLeft: 5 },
     commentsContainer:
     {
-        //marginTop: 1,
         marginBottom: windowHeight / 100,
         marginRight: windowHeight / 100,
         alignItems: 'flex-end'
     },
 
-    // userImageContainer: {
-    //     flex: 1,
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-around',
-    //     alignItems: 'center'
-
-    // },
-    userImage: {
-        // width: 100,
-        // height: 100
-
-    }, commentContainer: {
-        // flex 1,
+    commentContainer: {
         backgroundColor: '#D7D6D6',
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 5,
         height: 60
-        // justifyContent: 'flex-start'
     },
     commentInput: {
         maxWidth: '85%'

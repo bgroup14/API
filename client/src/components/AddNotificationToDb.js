@@ -1,5 +1,3 @@
-import React from 'react'
-import { View, Text } from 'react-native'
 import axios from 'axios';
 
 const AddNotificationToDb = async (notificationObj) => {
@@ -19,7 +17,6 @@ const AddNotificationToDb = async (notificationObj) => {
     try {
 
         const res = await axios.post(addNotificationUrl, notificationBody, config);
-        console.log(res.data)
 
     }
     catch (error) {

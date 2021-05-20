@@ -1177,6 +1177,42 @@ namespace WebApi.Controllers
 
 
 
+        [HttpGet]
+        [Route("getmemberlastlocation/{memberId}")]
+
+
+        public HttpResponseMessage GetMemberLastLocation(int memberId)
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+
+
+
+            try
+            {
+                Member member = db.Members.Where(x => x.id == memberId).FirstOrDefault();
+
+                LongLatDTO longLatDTO = new LongLatDTO()
+                {
+                    lastLocationLat = (double)member.lastLocationLat,
+                    lastLocationLong = (double)member.lastLocationLong,
+                };
+                return Request.CreateResponse(HttpStatusCode.OK, longLatDTO);
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         [Route("addMeetingSkipped/{memberId}")]

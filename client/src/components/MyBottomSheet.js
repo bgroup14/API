@@ -16,13 +16,9 @@ import { windowHeight } from '../../utils/Dimentions';
 
 const MyBottomSheet = (props) => {
     const [visible, setVisible] = useState(props.visible);
-    console.log(props.visible)
 
 
     const toggleBottomNavigationView = () => {
-        //Toggling the visibility state of the bottom sheet
-        //setVisible(!visible);
-
         props.toggle();
     };
 
@@ -36,7 +32,6 @@ const MyBottomSheet = (props) => {
                     onBackButtonPress={toggleBottomNavigationView}
                     onBackdropPress={toggleBottomNavigationView}
                 >
-                    {/*Bottom Sheet inner View*/}
                     <View style={styles.bottomNavigationView}>
                         <View
                             style={{
@@ -76,7 +71,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         width: '100%',
         height: windowHeight / 6,
-        // justifyContent: 'center',
-        // alignItems: 'center',
+
     },
 });

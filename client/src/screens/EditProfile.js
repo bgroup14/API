@@ -1,18 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Platform, Alert } from 'react-native';
 import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
 import TextArea from '../components/TextArea';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import MyCamera from '../components/MyCamera';
-
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-
-import DropDownPicker from 'react-native-dropdown-picker';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { useFocusEffect } from '@react-navigation/native';
 import MyBottomSheet from '../components/MyBottomSheet';
@@ -22,17 +17,10 @@ import GooglePlacesInput from '../components/GooglePlacesInput';
 import { KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-
 import { updateImage } from '../../store/actions/user';
 import { Toast } from "native-base";
 import * as Font from "expo-font";
-
 import { Appbar, Button as Btn } from 'react-native-paper';
-
-
-
-
-
 
 
 const EditProfile = (props) => {
@@ -49,26 +37,18 @@ const EditProfile = (props) => {
 
   const [city, setCity] = useState();
   const [dateOfBirth, setDateOfBirth] = useState();
-  const [signUpDetails, setSignUpDetails] = useState({});
   const [visible, setVisible] = useState(false);
-  const [bio, setBio] = useState();
-  const [occupation, setOccupation] = useState();
   const [dateLabel, setDateLabel] = useState('Date of birth');
   const [gender, setGender] = useState(null);
   const [hobbies, setHobbies] = useState([]);
   const [unixDate, setUnixDate] = useState(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
-
   const [checked, setChecked] = useState('first');
 
 
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-
-
-
 
   useEffect(() => {
 
@@ -89,7 +69,6 @@ const EditProfile = (props) => {
 
 
     if (!pictureWasUpdated) {
-      // console.log("pictrue ws updated? " + pictureWasUpdated)
       fetchUserDetails();
     }
 
@@ -106,7 +85,6 @@ const EditProfile = (props) => {
 
     try {
       await AsyncStorage.removeItem(key);
-      // console.log("AS Hobbies removed")
       return true;
     }
     catch (exception) {
@@ -119,24 +97,15 @@ const EditProfile = (props) => {
   const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
 
   const fetchUserDetails = async () => {
-    //   console.log("fetching user details...");
     const res = await axios(userDetailsFetchURL);
-    //console.log(res.data)
     setUserCurrentImage(res.data.pictureUrl)
-    //console.log(res.data.city + "cityy")
-    //setUserAge(res.data.age)
-
     setUserCurrentBio(res.data.bio)
     let cityName = res.data.city.replace(/,[^,]+$/, "")
     setUserCurrentCity(cityName)
     setUserCurrentDateOfBirth(res.data.dateOfBirth)
     setDateLabel(res.data.dateOfBirth)
     setUserCurrentGender(res.data.gender)
-
-    // console.log(str)
     setUserCurrentOccupation(res.data.occupation)
-
-
   }
 
 
@@ -146,10 +115,7 @@ const EditProfile = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      //console.log(windowHeight)
-
       getDataFromAS();
-
     }, [])
   )
 
@@ -179,8 +145,6 @@ const EditProfile = (props) => {
       return;
     }
     let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    //console.log("picker res is:!!!")
-    // console.log(pickerResult);
     if (pickerResult.cancelled === true) {
       return;
     }
@@ -195,10 +159,8 @@ const EditProfile = (props) => {
       let jsonObjHobbies = hobbiesJsonValue != null ? JSON.parse(hobbiesJsonValue) : null;
       if (jsonObjHobbies != null) {
         setHobbies(jsonObjHobbies)
-        // console.log("hobbies wwere saved!: ")
       } else {
         setHobbies([])
-        // console.log("hobbies AS are null")
       }
 
 
@@ -217,13 +179,10 @@ const EditProfile = (props) => {
     }
   }
   const updateProfie = async () => {
-    // console.log(userCurrentImage)
     if (uploadedPicture.uri == undefined) {
-      // console.log("is undefiend!!")
       setImage();
       return null;
     }
-    // console.log("is defined!!!!!")
 
     let profileSetupDetails = {
       city: userCurrentCity,
@@ -250,7 +209,6 @@ const EditProfile = (props) => {
 
       Toast.show({
         text: "Profile updated successfully!",
-        // buttonText: "Okay",
         type: "success",
         duration: 4000
       });
@@ -258,17 +216,6 @@ const EditProfile = (props) => {
 
 
       props.navigation.navigate('MyProfile')
-
-      // Alert.alert(
-      //   "Profile Updated",
-      //   res.data,
-      //   [
-
-      //     { text: 'OK', onPress: () => props.navigation.navigate('MyProfile') },
-      //   ],
-      // );
-
-
 
     } catch (error) {
       Alert.alert(
@@ -281,16 +228,12 @@ const EditProfile = (props) => {
       );
 
     }
-    // console.log(body)
-    //console.log("Profile updated detials are " + userCurrentImage)
+
     return null;
-    // storeData(profileSetupDetails).then(
-    //   props.navigation.navigate('FeedSettings')
-    // );
+
   }
 
   const setImage = () => {
-    // console.log("selected image is " + selectedImage)
     if (selectedImage != null) {
       let urlAPI = "http://proj.ruppin.ac.il/bgroup14/prod/uploadpicture";
       let imgName = "alan93@walla.co.il" + '_imgFromCamera.jpg';
@@ -308,7 +251,6 @@ const EditProfile = (props) => {
 
       fetch(urlAPI, config)
         .then((res) => {
-          //  console.log('res.status=', res.status);
           if (res.status == 201) {
             return res.json();
           }
@@ -318,33 +260,27 @@ const EditProfile = (props) => {
           }
         })
         .then((responseData) => {
-          // console.log(responseData);
           if (responseData != "err") {
             let picNameWOExt = imgName.substring(0, imgName.indexOf("."));
             let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
             let uploadedPicture = ({ uri: uplodedPicPath + imageNameWithGUID })
-            // return uploadedPicture;
             setPictureWasUpdated(true)
             setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
 
 
-            console.log("img uploaded successfully!");
           }
           else {
-            console.log('error uploding ...');
             alert('error uploding ...');
           }
         })
         .catch(err => {
           alert('err upload= ' + err);
         });
-      // return selectedImage;
     } else {
       setPictureWasUpdated(true)
       setUploadedPicture({ uri: userCurrentImage })
 
 
-      // console.log(userCurrentImage)
     }
 
 
@@ -379,7 +315,6 @@ const EditProfile = (props) => {
   }
 
   const getCityName = (cityName) => {
-    // console.log("city name is: " + cityName)
     setUserCurrentCity(cityName)
 
   }
@@ -409,12 +344,6 @@ const EditProfile = (props) => {
     showMode('date');
   };
 
-
-  const checkDate = () => {
-    console.log(date)
-    console.log(dateLabel)
-    console.log("unix date is: " + unixDate)
-  }
 
   const hobbisTitleFunc = () => {
     if (hobbies.length == 0) {
@@ -493,17 +422,7 @@ const EditProfile = (props) => {
 
 
         <View style={styles.container}>
-          {/* <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={() => props.navigation.navigate('MyProfile')}
-            >
-              <Text style={styles.barReset}>Cancel</Text>
-            </TouchableOpacity>
-            <View style={{ marginRight: 120 }}>
-              <Text style={styles.text}>Profile Setup</Text>
-            </View>
 
-
-          </View> */}
           <View style={styles.imageContainer}>
             {image}
           </View>
@@ -544,7 +463,6 @@ const EditProfile = (props) => {
               <FormInput
                 onDatePress={showDatepicker}
                 labelValue={dateLabel}
-                // placeholderText={dateLabel}
                 placeholderText={userCurrentDateOfBirth}
                 iconType="calendar"
                 keyboardType="email-address"
@@ -599,15 +517,6 @@ const EditProfile = (props) => {
 
           </View>
 
-
-
-          {/* <View style={styles.nextBtnContainer}>
-            <FormButton
-              buttonTitle="Update"
-              onPress={() => updateProfie()}
-
-            />
-          </View> */}
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
             <Btn uppercase={false} color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20, borderRadius: 15 }} mode="outlined" onPress={() => updateProfie()}>
               Update Profile </Btn>
@@ -712,14 +621,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row-reverse',
     margin: windowHeight / 160,
-    //marginTop: windowHeight / 100,
     justifyContent: 'space-between',
     alignItems: 'center',
-    // flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 30,
-    // height: windowHeight / 10,
-    //  alignItems: 'center'
+
   },
   nextBtnContainer: {
 
@@ -727,7 +633,6 @@ const styles = StyleSheet.create({
   barReset: {
     color: 'red',
     marginTop: windowHeight / 40,
-    //marginLeft: 200
   },
 
 });

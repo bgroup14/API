@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Divider } from 'react-native-elements';
 import { Button } from 'react-native-elements';
 import { useSelector, useDispatch } from 'react-redux';
-
-
-
-
 
 const FeedFilterScreen = (props) => {
 
@@ -87,7 +82,6 @@ const FeedFilterScreen = (props) => {
                         justifyContent: 'flex-start', marginTop: 1, paddingBottom: 15
                     }}
                     onChangeItem={item => setSortBy(item.value)}
-                // onChangeItem={item => setPostCategory(item.value)}
                 />
 
             </View>
@@ -106,7 +100,6 @@ const FeedFilterScreen = (props) => {
                         justifyContent: 'flex-start', marginTop: 1, borderBottomWidth: 0, borderColor: 'black', paddingBottom: 10
                     }}
                     onChangeItem={item => setUserType(item.value)}
-                // onChangeItem={item => setPostCategory(item.value)}
                 />
 
             </View>
@@ -124,7 +117,6 @@ const FeedFilterScreen = (props) => {
                         justifyContent: 'flex-start', marginTop: 1, paddingBottom: 8
                     }}
                     onChangeItem={item => setMeetingLocation(item.value)}
-                // onChangeItem={item => setPostCategory(item.value)}
                 />
 
             </View>
@@ -143,7 +135,6 @@ const FeedFilterScreen = (props) => {
                         justifyContent: 'flex-start', marginTop: 1, paddingBottom: 8
                     }}
                     onChangeItem={item => setParticipantAge(item.value)}
-                // onChangeItem={item => setPostCategory(item.value)}
                 />
 
             </View>
@@ -163,7 +154,6 @@ const FeedFilterScreen = (props) => {
                             justifyContent: 'flex-start', marginTop: 1, paddingBottom: 10
                         }}
                         onChangeItem={item => setParticipantGender(item.value)}
-                    // onChangeItem={item => setPostCategory(item.value)}
                     />
 
                 </View>
@@ -211,14 +201,8 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         flexDirection: 'row-reverse',
-        // justifyContent: 'flex-start',
         marginTop: windowHeight / 40,
-
-        // marginRight: 50,
         width: '90%',
-        // padding: windowHeight / 100,
-        // height: windowHeight / 10
-        // alignItems: 'flex-start'
 
     },
 
