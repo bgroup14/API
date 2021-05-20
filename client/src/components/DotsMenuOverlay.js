@@ -1,7 +1,7 @@
 
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Button, Overlay } from 'react-native-elements';
+import { StyleSheet } from 'react-native'
+import { Overlay } from 'react-native-elements';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 
 const DotsMenuOverlay = (props) => {

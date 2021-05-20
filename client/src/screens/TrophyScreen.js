@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import { Appbar, Badge } from 'react-native-paper';
-import { windowHeight, windowWidth } from '../../utils/Dimentions';
+import { StyleSheet, View, ScrollView } from 'react-native'
+import { Appbar } from 'react-native-paper';
 import { Button } from 'react-native-paper';
-import { Divider } from 'react-native-elements';
 import TrophyMemeber from '../components/TrophyMemeber';
 import axios from 'axios';
-
-
 
 
 const TrophyScreen = (props) => {
@@ -36,8 +32,6 @@ const TrophyScreen = (props) => {
 
     const goToOtherUserProfile = (member) => {
 
-        // alert(member.otherMemberId)
-        // console.log(member)
         props.navigation.navigate('OtherUserProfileScreen', {
             userId: member.otherMemberId
         })
@@ -68,12 +62,6 @@ const TrophyScreen = (props) => {
                     return <TrophyMemeber key={index} trophyMember={member} place={index + 1} goToOtherUserProfile={() => goToOtherUserProfile(member)} />
 
                 })}
-                {/* <TrophyMemeber trophyMember={temp} place={1} />
-                <TrophyMemeber trophyMember={temp} place={2} /> */}
-
-
-
-
             </ScrollView>
 
 
@@ -91,9 +79,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        // width: 400
-        // marginHorizontal: 0
-        // marginTop: windowHeight / 200
+
     },
     inner: {
         // backgroundColor: 'red',

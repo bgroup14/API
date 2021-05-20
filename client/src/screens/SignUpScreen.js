@@ -6,7 +6,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight } from '../../utils/Dimentions';
 import MyLinearGradient from '../components/MyLinearGradient';
-import { ScrollView } from 'react-native-gesture-handler';
 import { KeyboardAvoidingView } from 'react-native';
 
 const SignupScreenTest = (props) => {
@@ -170,7 +169,6 @@ const SignupScreenTest = (props) => {
             style={styles.logo}
           />
         </View>
-        {/* <Text style={styles.text}>Create an account</Text> */}
 
         <View >
 

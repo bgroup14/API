@@ -6,11 +6,8 @@ import { CheckBox } from 'react-native-elements'
 import HorizontalLine from '../components/HorizontalLine';
 import MyLinearGradient from '../components/MyLinearGradient';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
-
 import { useSelector, useDispatch } from 'react-redux';
-
 import { register } from '../../store/actions/auth';
-
 
 const FeedSettingsScreen = () => {
   const [userType, setUserType] = useState();
@@ -44,14 +41,12 @@ const FeedSettingsScreen = () => {
       let jsonObj = jsonValue != null ? JSON.parse(jsonValue) : null;
       if (jsonObj != null) {
         setSignUpDetails(jsonObj)
-        console.log("sign up name from signup screen page: " + jsonObj.fullName)
       }
       let jsonValueTwo = await AsyncStorage.getItem('profileSetupDetails')
       let jsonObjTwo = jsonValueTwo != null ? JSON.parse(jsonValueTwo) : null;
       if (jsonObjTwo != null) {
         setProfileSetupDetails(jsonObjTwo)
 
-        console.log("profile setup image is : " + jsonObjTwo.image)
       }
       let jsonValueThree = await AsyncStorage.getItem('hobbies')
       let jsonObjThree = jsonValueThree != null ? JSON.parse(jsonValueThree) : null;
@@ -62,7 +57,6 @@ const FeedSettingsScreen = () => {
 
 
     } catch (e) {
-      console.log("error in feed setting page !!")
 
     }
   }
@@ -101,10 +95,8 @@ const FeedSettingsScreen = () => {
           let imageNameWithGUID = responseData.substring(responseData.indexOf(picNameWOExt), responseData.indexOf(".jpg") + 4);
           setUploadedPicture({ uri: uplodedPicPath + imageNameWithGUID })
 
-          console.log("img uploaded successfully!");
         }
         else {
-          console.log('error uploding ...');
           alert('error uploding ...');
         }
       })
@@ -159,7 +151,6 @@ const FeedSettingsScreen = () => {
 
 
     }
-    console.log("full sign up details " + fullSignUpDetails.signUpDetails)
     clearAsyncStorage()
     dispatch(register(registerDetails));
   }
@@ -191,7 +182,6 @@ const FeedSettingsScreen = () => {
   }
   return (
     <ScrollView >
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={2000} /> */}
       <MyLinearGradient firstColor="#ffffff" secondColor="#e7f0fd" height={1500} />
 
       <View style={styles.container}>

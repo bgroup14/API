@@ -20,10 +20,6 @@ export const login = (email, password) => async dispatch => {
         //if this will fail (status !=200 ) it will catch the error in the error block
         const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/login", body, config);
 
-        console.log(res);
-        console.log("res data of login (payload is:)")
-        console.log(res.data[0]);
-
         dispatch({
             type: LOGIN_SUCCESS,
             //payload will be the what we recieve from the server
@@ -64,15 +60,12 @@ export const register = (fullSignUpDetails) => async dispatch => {
 
     }
     const body = JSON.stringify(fullSignUpDetails)
-    console.log("Will register with body: " + body);
 
     try {
         //if this will fail (status !=200 ) it will catch the error in the error block
         const res = await axios.post("https://proj.ruppin.ac.il/bgroup14/prod/api/member/register", body, config);
 
-        console.log(res.data);
 
-        console.log("res data (payload is:)")
 
         dispatch({
             type: REGISTER_SUCCESS,

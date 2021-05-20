@@ -6,31 +6,18 @@ import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import MyOverlay from '../components/MyOverlay';
 import { Avatar } from 'react-native-elements';
-import MyLinearGradient from '../components/MyLinearGradient';
 import { KeyboardAvoidingView } from 'react-native';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import axios from 'axios';
 import CommentsScreens from './CommentsScreens';
-import DotsMenu from './DotsMenu';
-import DotsMenuOverlay from '../components/DotsMenuOverlay';
 import AppLoading from 'expo-app-loading';
-import Spinner from 'react-native-loading-spinner-overlay';
 import { Divider } from 'react-native-elements';
 import { Appbar, Button } from 'react-native-paper';
-import { Rating, AirbnbRating } from 'react-native-elements';
+import { Rating } from 'react-native-elements';
 import UserReviews from './UserReviews';
-
-
-
-
-
-
-//
-
 
 const OtherUserProfileScreen = (props) => {
     const { userId } = props.route.params;
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [userAge, setUserAge] = useState(null);
     const [userBio, setUserBio] = useState(null);
     const [userOccupation, setUserOccupation] = useState(null);
@@ -42,12 +29,6 @@ const OtherUserProfileScreen = (props) => {
     const [isReady, setIsReady] = useState(false);
     const [userRating, setUserRating] = useState(null);
     const [reviewsCount, setReviewsCount] = useState(null);
-
-
-
-    const [posts, setPosts] = useState([]);
-    const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getallposts`
-    const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [isReviewsVisible, setIsReiviewsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
@@ -63,7 +44,6 @@ const OtherUserProfileScreen = (props) => {
 
         addMemberInteraction()
         if (commentsToShow.length > 0) {
-            console.log(commentsToShow)
             setIsCommentsVisible(true)
         }
 
@@ -82,24 +62,11 @@ const OtherUserProfileScreen = (props) => {
     )
 
 
-
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         // fetchPosts()
-    //         //   setNewComment(false)
-
-    //     }, [])
-    // )
     let currentMemberId = useSelector(state => state.auth.userId);
     const userDetailsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmyprofile/${userId}`
 
     const fetchUserDetails = async () => {
-        console.log("fetching user details!!");
-
         const res = await axios(userDetailsFetchURL);
-        //console.log(res.data.city + "cityy")
-        // console.log(res.data.fullName)
-        // console.log(res.data.pictureUrl)
         setUserAge(res.data.age)
         setUserBio(res.data.bio)
         setUserName(res.data.fullName)
@@ -109,7 +76,6 @@ const OtherUserProfileScreen = (props) => {
 
         res.data.reviewsCount == 1 ? setReviewsCount(res.data.reviewsCount + " Review") : setReviewsCount(res.data.reviewsCount + " Reviews")
         let cityName = res.data.city.replace(/,[^,]+$/, "")
-        // console.log(str)
         setUserCity(cityName)
         setUserOccupation(res.data.occupation)
         let hobbiesArray = res.data.hobbies
@@ -138,18 +104,29 @@ const OtherUserProfileScreen = (props) => {
         const addMemberInteractionUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addInteractionMember'
         try {
             const res = await axios.post(addMemberInteractionUrl, body, config);
-            console.log(res.data)
 
         } catch (error) {
             console.log(error)
         }
     }
-    const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
 
 
     const fetchUserPosts = async () => {
+        if (userLong || !userLat) {
+            try {
+                const getLastLocationUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getmemberlastlocation/${userId}`
+                const res = await axios(getLastLocationUrl);
+                userLong = res.data.lastLocationLong;
+                userLat = res.data.lastLocationLat;
+
+            } catch (error) {
+                console.log(erorr)
+            }
+
+        }
+        const userPostsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getuserposts/${userId}/${userLong}/${userLat}/`
+
         try {
-            console.log("fetching user posts...")
 
             const res = await axios(userPostsFetchURL);
 
@@ -163,12 +140,7 @@ const OtherUserProfileScreen = (props) => {
     }
 
 
-    // let userName = userName;
-    // let userImage = useSelector(state => state.user.userImage);
-    ///DELETE THIS!
 
-
-    // const userId = useSelector(state => state.auth.userId);
     const showComments = (comments) => {
         setCommentsToShow(comments)
 
@@ -197,13 +169,9 @@ const OtherUserProfileScreen = (props) => {
 
     const goToChatWithUser = async () => {
 
-        console.log(userId)// this is gal id
-        console.log(currentMemberId)
         try {
 
-            console.log("Checking Room Id...")
             const res = await axios(getChatRoomIdUrl);
-            console.log(res.data);
             const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
 
 
@@ -254,16 +222,9 @@ const OtherUserProfileScreen = (props) => {
             <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
 
                 <Appbar.Content title={userName} />
-                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
-                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+
             </Appbar.Header>
-            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-            {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
 
-            {/* <View style={styles.barContainer}>
-
-                <Text style={styles.barText}>{userName}</Text>
-            </View> */}
 
             <ScrollView style={styles.inner}>
 
@@ -310,7 +271,6 @@ const OtherUserProfileScreen = (props) => {
                         <Text style={{ fontSize: 16, marginHorizontal: 5, fontStyle: 'italic' }}> {userOccupation} </Text>
                         <Text>|</Text>
                         <Text style={{ fontSize: 16, marginHorizontal: 5, fontStyle: 'italic' }}> {userCity}</Text>
-                        {/* <Text style={{ fontSize: 16 }}>{userCity}</Text> */}
                     </View>
                     {userHobbies.length > 0 ? <View style={{ flexDirection: 'row', marginTop: windowHeight / 70 }}>
                         <Text style={{ fontWeight: 'bold' }} >Hobbies: </Text><Text>{userHobbies}</Text>
@@ -359,7 +319,6 @@ const OtherUserProfileScreen = (props) => {
                         null}
 
                     {userPosts.map((post) => {
-                        // console.log(post)
                         return <View key={post.postId}>
                             <Post post={post} showComments={(comments) => showComments(comments)}
                                 refreshPage={() => setNewComment(true)} currentMemberId={currentMemberId}
@@ -368,8 +327,7 @@ const OtherUserProfileScreen = (props) => {
                             <Divider style={{ height: 6, marginTop: windowHeight / 80, marginBottom: windowHeight / 100, backgroundColor: '#d9d9d9' }} />
 
                         </View>
-                        // return <Post post={post} key={post.postId} currentMemberId={userId} />
-                        // return <Post text={post.text} cityName={post.cityName} />
+
 
                     })}
                 </View>
@@ -386,24 +344,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        // justifyContent: 'center',
-        // alignItems: 'center'
+
     },
     inner: {
-        // padding: windowHeight / 45,
         padding: windowWidth / 90,
 
         flex: 1,
-        //  justifyContent: "space-around"
     },
 
     barContainer: {
-        // flex: 1,
         marginBottom: windowHeight / 40,
 
         justifyContent: 'space-between',
         alignItems: 'flex-end',
-        //  marginLeft: 30,
         marginTop: windowHeight / 22,
         flexDirection: 'row',
         marginHorizontal: windowHeight / 40
@@ -418,27 +371,20 @@ const styles = StyleSheet.create({
 
     },
     chatIconContainer: {
-        //  flexDirection: 'column-reverse',
         alignItems: 'flex-end',
-        // marginBottom: 0,
         height: 0
     },
 
     chatIcon: {
         marginTop: windowHeight / 25,
         marginRight: windowWidth / 5
-        // marginLeft: 10
-        //   color: '#ffffff',
-        //  fontSize: 32,
 
     },
     profileImageContainer: {
-        //  flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: windowHeight / 30,
         alignItems: 'center',
-        //justifyContent: 'flex-end'
 
     },
     usernameContainer: {
@@ -449,14 +395,11 @@ const styles = StyleSheet.create({
         fontSize: 24
     },
     personalInfoContainer: {
-        // height: windowHeight / 6,
 
         alignItems: 'center'
     },
     userPostsContainer: {
-        //marginTop: 0,
-        // alignItems: 'stretch',
-        //width: '100%'
+
     },
     ratingContainer: {
         alignItems: 'center',

@@ -1,7 +1,7 @@
 
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Button, Overlay } from 'react-native-elements';
+import { StyleSheet } from 'react-native'
+import { Overlay } from 'react-native-elements';
 import { windowHeight } from '../../utils/Dimentions';
 
 const MyOverlay = (props) => {
@@ -16,12 +16,7 @@ const MyOverlay = (props) => {
 export default MyOverlay
 
 const styles = StyleSheet.create({
-    overlay: {
 
-        height: '40%',
-        // width: '75%',
-
-    },
 
 })
 

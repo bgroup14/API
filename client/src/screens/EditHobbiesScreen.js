@@ -28,7 +28,6 @@ const EditHobbiesScreen = (props) => {
   }, []);
 
   const fetchHobbies = async () => {
-    console.log("fetching data...");
     const result = await axios(
       hobbiesFetchURL
     );
@@ -50,7 +49,6 @@ const EditHobbiesScreen = (props) => {
 
     try {
       await AsyncStorage.removeItem(key);
-      console.log("AS Hobbies removed")
       return true;
     }
     catch (exception) {
@@ -82,7 +80,6 @@ const EditHobbiesScreen = (props) => {
 
 
   const saveHobbies = () => {
-    console.log(selectedHobbies)
     storeDataToAs(selectedHobbies).then(
       props.navigation.navigate('EditProfile')
     );
@@ -144,7 +141,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   text: {
-    // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',

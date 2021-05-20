@@ -1,68 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { useSelector } from 'react-redux';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Post from '../components/Post';
 import { useFocusEffect } from '@react-navigation/native';
 import MyOverlay from '../components/MyOverlay';
-import { Avatar } from 'react-native-elements';
-import MyLinearGradient from '../components/MyLinearGradient';
 import { KeyboardAvoidingView } from 'react-native';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import axios from 'axios';
 import CommentsScreens from './CommentsScreens';
-import DotsMenu from './DotsMenu';
-import DotsMenuOverlay from '../components/DotsMenuOverlay';
-import { SearchBar } from 'react-native-elements';
 import User from '../components/User';
-import { Fragment } from 'react';
-
 import { Appbar, Searchbar } from 'react-native-paper';
 
 const SearchScreen = (props) => {
     const [searchWord, setSearchWord] = useState("");
     const [postContainerHeight, setPostContainerHeight] = useState(windowHeight / 10);
-
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [userAge, setUserAge] = useState(null);
-    const [userImage, setUserImage] = useState(null);
-    const [userBio, setUserBio] = useState(null);
-    const [userOccupation, setUserOccupation] = useState(null);
-    const [userCity, setUserCity] = useState(null);
-    const [userHobbies, setUserHobbies] = useState("");
     const [searchQuery, setSearchQuery] = React.useState('');
     const onChangeSearch = query => setSearchQuery(query);
-
-
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([])
-    // const [users, setUsers] = useState([
-    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-    //     { Name: 'Alu', Age: 27, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/983712/983712_v9_bb.jpg' },
-    //     { Name: 'Gal', Age: 28, pictureUrl: 'http://www.gstatic.com/tv/thumb/persons/532761/532761_v9_bc.jpg' },
-    // ]);
     const postsFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/getpostsbysearchword/`
     const usersFetchURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/GetMembersBySearchWord/`
-
-    const [isFilterVisible, setIsFilterVisble] = useState(false);
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
     const [commentsToShow, setCommentsToShow] = useState([]);
     const [newComment, setNewComment] = useState(false);
     const [hasBeenFetched, setHasBeenFetched] = useState(false);
-    // const [userPosts, setUserPosts] = useState([]);
 
     useEffect(() => {
-        // fetchUserDetails()
         if (searchQuery.length > 0) {
             fetchUserPosts()
             fetchUsers()
-
-
         }
         else {
             setPosts([])
@@ -72,7 +38,6 @@ const SearchScreen = (props) => {
 
         }
         if (commentsToShow.length > 0) {
-            //console.log(commentsToShow)
             setIsCommentsVisible(true)
         }
 
@@ -85,17 +50,11 @@ const SearchScreen = (props) => {
         React.useCallback(() => {
             setSearchWord("")
             setSearchQuery('')
-            // fetchPosts()
-            // fetchUserDetails()
-            // fetchUserPosts()
             setNewComment(false)
-
-
         }, [])
     )
 
     const fetchUserPosts = async () => {
-        //console.log("fetching posts...")
         setHasBeenFetched(false)
         try {
             const res = await axios(`${postsFetchURL}${searchQuery}`);
@@ -109,11 +68,8 @@ const SearchScreen = (props) => {
     }
 
     const fetchUsers = async () => {
-        //  console.log("fetching users...")
         try {
             const res = await axios(`${usersFetchURL}${searchQuery}`);
-            // const res = await axios(`https://proj.ruppin.ac.il/bgroup14/prod/api/member/GetMembersBySearchWord/messi`);
-            //   console.log(res.data)
             setUsers(res.data);
 
         } catch (error) {
@@ -159,13 +115,6 @@ const SearchScreen = (props) => {
 
 
 
-
-    const onChangeSearchText = (searchText) => {
-        setSearchWord(searchText);
-
-    }
-
-
     let postsHeader = posts.length > 0 && users.length > 0 ? <Text style={styles.usersText}>Posts:</Text> : null
     let usersHeader = users.length > 0 && posts.length > 0 ? <Text style={styles.usersText}>Users:</Text> : null
 
@@ -180,22 +129,8 @@ const SearchScreen = (props) => {
             <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
 
                 <Appbar.Content title="Search" />
-                {/* <Appbar.Action icon="bell" onPress={() => { props.navigation.navigate('Notifications') }} /> */}
-                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
+
             </Appbar.Header>
-            {/* <View style={{ padding: windowHeight / 45 }}> */}
-            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} />
-                <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} />
-
-                <View style={styles.barContainer}>
-
-                    <Text style={styles.barText}>Search</Text>
-
-                </View> */}
-            {/* </View> */}
-
-
-
             <Searchbar
                 placeholder="Search for users & posts"
                 onChangeText={onChangeSearch}

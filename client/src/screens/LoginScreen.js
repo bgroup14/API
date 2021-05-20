@@ -16,7 +16,6 @@ import * as Facebook from 'expo-facebook';
 import { LOGIN_SUCCESS, USER_LOGGED } from '../../store/actions/types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyLinearGradient from '../components/MyLinearGradient';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -64,8 +63,6 @@ const LoginScreen = (props) => {
         const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,picture.type(large)&
     access_token=${token}`);
         let res = await response.json();
-        console.log("facebook email is: ")
-        console.log(res.email);
         const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
 
         const config = {
@@ -84,7 +81,6 @@ const LoginScreen = (props) => {
         try {
           //check if member  exists on DB - if  dosent exists will catch  400 or 500 error
           let res = await axios.post(url, body, config);
-          console.log(res.data[0])
           dispatch({
             type: LOGIN_SUCCESS,
             //payload will be the what we recieve from the server
@@ -119,8 +115,7 @@ const LoginScreen = (props) => {
                 { text: "OK" }
               ],
             );
-            console.log("error is:")
-            console.log(error.response)
+
           }
 
         }
@@ -136,10 +131,6 @@ const LoginScreen = (props) => {
   return (
 
     <View style={styles.container}>
-      {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={1000} /> */}
-      {/* <MyLinearGradient firstColor="#ffffff" secondColor="#dfe9f3" height={1000} /> */}
-
-
       <View style={styles.logoContainer}>
         <Image
           source={require('../../assets/logo.jpg')}

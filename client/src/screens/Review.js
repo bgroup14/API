@@ -2,27 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, TextInput } from 'react-native'
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import { Avatar, } from 'react-native-elements';
-// import ReviewTextArea from '../components/ReviewTextArea'
-
 import { Rating, AirbnbRating, Divider } from 'react-native-elements';
 import { Button } from 'react-native-paper';
 import { KeyboardAvoidingView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { Toast } from "native-base";
 import * as Font from "expo-font";
 import AddNotificationToDb from '../components/AddNotificationToDb';
-
-
-
-
-
-
-
-
-
-
-
 
 const Review = (props) => {
 
@@ -57,7 +43,6 @@ const Review = (props) => {
         setRating(rating)
     }
     const reviewTextHandler = text => {
-        // console.log(text)
         setReviewText(text)
     }
 
@@ -76,7 +61,6 @@ const Review = (props) => {
         const addMemberInteractionUrl = 'https://proj.ruppin.ac.il/bgroup14/prod/api/member/addInteractionMember'
         try {
             const res = await axios.post(addMemberInteractionUrl, body, config);
-            console.log(res.data)
 
         } catch (error) {
             console.log(error)
@@ -88,7 +72,6 @@ const Review = (props) => {
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
         try {
-            // console.log("getting other memner push id with id: " + otherMemberId)
             const res = await axios(fetchOtherUserPushNotificationID);
 
             var otherUserNotificationId = res.data;
@@ -101,7 +84,6 @@ const Review = (props) => {
             return null
         }
 
-        console.log("push object is:~!!!@#@!#!@#@!#!@#!!" + pushObj.functionToRun)
 
 
 
@@ -139,8 +121,7 @@ const Review = (props) => {
     }
 
     const submitReview = async () => {
-        console.log(rating)
-        console.log(reviewText)
+
         const config = {
             headers: {
                 'Content-Type': 'application/json'
@@ -161,7 +142,6 @@ const Review = (props) => {
 
 
         const body = JSON.stringify(review)
-        console.log("Will publish review with body: " + body)
 
 
 
@@ -170,14 +150,12 @@ const Review = (props) => {
 
         try {
             const res = await axios.post(addReviewUrl, body, config);
-            console.log(res.data);
-            // Deltete meeting notificTIION
 
             props.closeReview();
-            // Deltete meeting notificTIION
 
 
         } catch (error) {
+            alert("error has occured, try again.")
             //ALERT ERROR
         }
 
@@ -214,7 +192,6 @@ const Review = (props) => {
             <View style={styles.profileImageContainer}>
                 <Avatar
                     size='large'
-                    //   containerStyle={{ marginTop: 10 }}
                     rounded
                     source={{
                         uri:
@@ -246,7 +223,6 @@ const Review = (props) => {
                     />
                 </View>
 
-                {/* <ReviewTextArea /> */}
             </View>
             <View style={styles.btnContainer}>
                 <Button style={{ width: windowWidth / 2.7 }} labelStyle={{ color: '#3b5998' }} mode='outlined' uppercase={false} onPress={() => console.log("object")}>
@@ -268,36 +244,27 @@ const styles = StyleSheet.create({
         color: '#3b5998'
     },
     headerContainer: {
-        // flexDirection: 'row',
         marginTop: windowHeight / 50,
         alignItems: 'center',
-        // justifyContent: 'center',
-        // alignContent: 'center'
+
     },
     profileImageContainer: {
-        //  flex: 1,
         marginTop: windowHeight / 30,
         alignItems: 'center',
-        //justifyContent: 'flex-end'
 
     },
     nameContainer: {
-        // alignItems: 'flex-end',
-        // justifyContent: 'flex-end',
+
         marginTop: windowHeight / 60
     },
     name: {
         fontSize: 18,
         textAlign: 'center'
-        // fontSize: 20,
-        // justifyContent: 'center',
-        // alignContent: 'center',
-        // alignItems: 'center'
+
     },
     btnContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        // alignItems: 'flex-end',
         marginVertical: windowHeight / 30
     },
     inputContainer: {

@@ -7,7 +7,6 @@ import { windowHeight } from '../../utils/Dimentions';
 
 const User = (props) => {
     const { fullName, memberId, pictureUrl, chatSentence } = props.user;
-    // console.log("user derails are: " + fullName)
 
     return (
         <TouchableOpacity onPress={() => props.goToOtherUserProfile(memberId)}>
@@ -40,7 +39,6 @@ const styles = StyleSheet.create({
     userContainer: {
         flex: 1,
         flexDirection: 'row',
-        //  marginVertical: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
         maxHeight: windowHeight / 10,

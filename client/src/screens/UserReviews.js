@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import axios from 'axios';
 import Review from '../components/Review';
 
@@ -12,10 +12,8 @@ const UserReviews = (props) => {
 
     useEffect(() => {
         const fetchReviews = async () => {
-            //axios review func
             try {
                 const res = await axios.get(fetchReviewsUrl);
-                console.log(res.data)
                 setReviews(res.data);
 
             } catch (error) {
@@ -29,11 +27,8 @@ const UserReviews = (props) => {
 
     return (
         <ScrollView  >
-            {/* {console.log(chatRooms)} */}
             {reviews.map((review) => {
-                // console.log("chat room is: " + chatRoom)
                 return <Review review={review} key={review.id} goToOtherUserProfile={(member_id) => props.goToOtherUserProfile(member_id)} />
-                // return <User user={user} key={user.memberId} goToOtherUserProfile={(member_id) => goToOtherUserProfile(member_id)} />
 
             })}
         </ScrollView>

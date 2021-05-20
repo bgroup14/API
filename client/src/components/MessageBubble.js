@@ -24,18 +24,13 @@ const MessageBubble = (props) => {
     const { meetingMsg, meetingEventTitle, meetingDateLabel, meetingTimeLabel, meetingLocationLabel } = props.message;
 
     const otherMemberName = props.otherMemberName
-    // const { otherMemberName } = props.otherMemberName
 
     const fullName = otherMemberName.split(' ');
 
-    // console.log(fullName)
 
 
     const otherMemberFirstName = fullName[0];
-    // console.log(otherMemberFirstName)
-    // // const { firstName } = props.firstName
-    // console.log(meetingMsg)
-    // console.log(props.message)
+
     return (
         <View>
             {!meetingMsg ?
@@ -111,7 +106,6 @@ const MessageBubble = (props) => {
                             styles.cloud,
                             {
                                 backgroundColor: props.mine ? '#dddddd' : '#007aff',
-                                // height: props.mine ? windowHeight / 5 : windowHeight / 7,
                                 width: windowWidth / 1.7
                             }
                         ]}
@@ -137,7 +131,6 @@ const MessageBubble = (props) => {
                                             {`${meetingDateLabel} at ${meetingTimeLabel}`}
                                             {'\n'}
                                             {meetingLocationLabel == "Zoom Meeting" ? meetingLocationLabel : "In " + meetingLocationLabel}
-                                            {/* {"In Tel Aviv"} */}
 
                                         </Text> :
                                         <Text
@@ -155,7 +148,6 @@ const MessageBubble = (props) => {
                                             {'\n'}
                                             {meetingLocationLabel == "Zoom Meeting" ? meetingLocationLabel : "In " + meetingLocationLabel}
 
-                                            {/* {"In Tel Aviv"} */}
 
                                         </Text>}
                                     {props.mine ? <View style={{

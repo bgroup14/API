@@ -4,7 +4,7 @@ const initialState = {
     receivedMessage: false
 };
 
-// this state name is counter! we define it in the combine reducer.
+// this state name is notification we define it in the combine reducer.
 function notification(state = initialState, action) {
     const { type, payload } = action
 
@@ -23,7 +23,6 @@ function notification(state = initialState, action) {
             }
 
         case NEW_NOTIFICATION:
-            console.log("in the notification reducer with new notifiation dispeched")
             return {
                 ...state,
                 newNotification: true,

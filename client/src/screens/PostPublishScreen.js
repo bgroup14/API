@@ -1,33 +1,21 @@
 
 import React, { useState, useEffect } from 'react'
-
-
-
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert } from 'react-native'
-import MyLinearGradient from '../components/MyLinearGradient';
 import { useSelector, useDispatch } from 'react-redux';
-
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/AntDesign';
-import FontAwsome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { windowHeight, windowWidth } from '../../utils/Dimentions';
 import PublishPostTextArea from '../components/PublishPostTextArea';
 import ModalSelector from 'react-native-modal-selector'
-import { Divider } from 'react-native-elements';
-import FormButton from '../components/FormButton';
 import MyOverlay from '../components/MyOverlay';
 import DatePicker from '../components/DatePicker';
 import { Button } from 'react-native-elements';
 import SetLocationScreen from './SetLocationScreen';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
-
 import { Toast } from "native-base";
-import { RotationGestureHandler } from 'react-native-gesture-handler';
-import Root from "native-base";
 import * as Font from "expo-font";
-
 import { Appbar, Button as Btn } from 'react-native-paper';
 
 const PostPublishScreen = (props) => {
@@ -192,7 +180,6 @@ const PostPublishScreen = (props) => {
 
         }
 
-        console.log("Post location saved!!")
 
     }
 
@@ -280,8 +267,7 @@ const PostPublishScreen = (props) => {
             return null
         }
         const body = JSON.stringify(postDetails)
-        // console.log("not null")
-        // console.log("Will publish post with body: " + body);
+
 
 
         try {
@@ -298,17 +284,8 @@ const PostPublishScreen = (props) => {
             });
 
             props.navigation.navigate('Home')
-            // Alert.alert(
-            //     "Post Publish",
-            //     "Post published successfully. ",
-            //     [
-            //         { text: "OK", onPress: () => props.navigation.navigate('Home') }
-
-            //     ],
-            // );
             updateCategoryStrength();
 
-            // console.log("res data (payload is:)")
 
         } catch (err) {
 
@@ -332,7 +309,6 @@ const PostPublishScreen = (props) => {
             const postInteractionUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/post/postIntercation/${userId}/${postCategory}`
             //if this will fail (status !=200 ) it will catch the error in the error block
             const res = await axios.patch(postInteractionUrl);
-            console.log(res.data);
 
 
 
@@ -367,22 +343,8 @@ const PostPublishScreen = (props) => {
             <Appbar.Header style={{ backgroundColor: '#3b5998', marginHorizontal: windowWidth / 100 }} >
                 <Appbar.Content title="Create Post" />
 
-                {/* <Appbar.Action icon='' onPress={() => { props.navigation.navigate('Notifications') }} /> */}
-                {/* <Appbar.Action icon={MORE_ICON} onPress={() => { }} /> */}
             </Appbar.Header>
 
-            {/* <MyLinearGradient firstColor="#00c6fb" secondColor="#005bea" height={90} /> */}
-            {/* <MyLinearGradient firstColor="#f5f7fa" secondColor="#c3cfe2" height={2000} /> */}
-            {/* <MyLinearGradient firstColor="#ebf4f5" secondColor="#b5c6e0" height={2000} /> */}
-            {/* <MyLinearGradient firstColor="#3b5998" secondColor="#3b5998" height={90} /> */}
-
-
-
-            {/* <View style={styles.barContainer}><Text style={styles.barText}>Create Post</Text>
-                <TouchableOpacity onPress={() => publishPost()}>
-                    <Text style={styles.barReset}>POST</Text>
-                </TouchableOpacity>
-            </View> */}
 
             <View View style={styles.userGreetingContainer} ><Text style={styles.userGreetingText}>{greeting}, {userFirstName}</Text>
                 <Text style={{ padding: windowWidth / 30, fontSize: 16 }}>{userGiveOrGet}</Text>
@@ -465,7 +427,6 @@ const PostPublishScreen = (props) => {
                     </ModalSelector>
 
                 </View>
-                {/* <Divider /> */}
 
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Participant Age</Text>
@@ -493,7 +454,6 @@ const PostPublishScreen = (props) => {
                 </View>
 
 
-                {/* <Divider /> */}
                 <View style={styles.optionContainer}>
                     <Text style={{ marginTop: windowHeight / 90, fontSize: 16 }} >Meeting Location</Text>
                     {locationLabel == null ? <TouchableOpacity onPress={() => setIsVisibleLocation(true)} >
@@ -559,29 +519,11 @@ const PostPublishScreen = (props) => {
 
 
 
-                {/* <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: windowWidth / 25 }}>
-                    <Btn color='#3b5998' style={{ width: windowWidth / 1.1, height: windowHeight / 20 }} mode="outlined" onPress={() => updateProfie()}>
-                        post </Btn>
-                </View> */}
-
-                {/* <View style={styles.btnContainer}>
-
-
-                    <FormButton
-                        buttonTitle="Publish Post"
-                        onPress={() => publishPost()}
-                    />
-
-                </View> */}
 
             </View>
-            {/* <View style={{ width: windowWidth / 3 }} >
-                <Button containerStyle={{ alignItems: 'center', justifyContent: 'center' }} buttonStyle={{ backgroundColor: 'blue' }} title='Post' />
 
-            </View> */}
             <View style={{ alignItems: 'center', marginTop: windowWidth / 12 }}>
-                {/* <Btn mode='contained' color='#3b5998' onPress={() => publishPost()}>
-                    post  </Btn> */}
+
                 <Button containerStyle={{ alignItems: 'center', justifyContent: 'center' }}
                     buttonStyle={{ backgroundColor: '#3b5998', width: windowWidth / 2 }}
                     title='Post' onPress={() => publishPost()} />

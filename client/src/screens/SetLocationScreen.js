@@ -18,26 +18,11 @@ const SetLocationScreen = (props) => {
     const [address, setAddress] = useState(null);
     const [addressShow, setAddressShow] = useState(false);
 
-    // useEffect(() => {
-    //     (async () => {
-
-    //         let { status } = await Location.requestPermissionsAsync();
-    //         if (status !== 'granted') {
-    //             setErrorMsg('Permission to access location was denied');
-    //             return;
-    //         }
-
-    //         let location = await Location.getCurrentPositionAsync({});
-    //         setLocation(location);
-    //     })();
-    // }, []);
-
 
     if (errorMsg) {
         text = errorMsg;
     } else if (location) {
         text = JSON.stringify(location);
-        console.log(location.coords.latitude)
     }
     const setToMyArea = async () => {
 
@@ -52,7 +37,6 @@ const SetLocationScreen = (props) => {
 
 
         let regionName = await Location.reverseGeocodeAsync({ longitude: location.coords.longitude, latitude: location.coords.latitude });
-        console.log(regionName[0].city)
         let locationObj = {
             locationLabel: regionName[0].city,
             longitude: location.coords.longitude,
@@ -87,8 +71,7 @@ const SetLocationScreen = (props) => {
         }
         props.setLocation(locationObj);
         props.closeSetLocation();
-        console.log("lat issss:" + coordinates.latitude)
-        console.log("long issss:" + coordinates.longitude)
+
     }
 
 
@@ -98,7 +81,6 @@ const SetLocationScreen = (props) => {
         <View style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>Meeting Location</Text>
-                {/* <Text style={styles.header}>{adress}</Text> */}
             </View>
             <View style={styles.optionsContainer}>
                 <View style={styles.btnContainer}>
@@ -117,7 +99,6 @@ const SetLocationScreen = (props) => {
                         buttonStyle={styles.locationBtn}
                         onPress={() => setToMyArea()}
 
-                    //  onPress={() => openImagePickerAsync()}
 
                     />
                 </View>
@@ -190,11 +171,6 @@ const styles = StyleSheet.create({
 
     },
     locationBtn: {
-
-        // marginTop: 3
-        //justifyContent: 'flex-start',
-        // borderWidth: 0,
-        // backgroundColor: 'red'
 
 
     },
