@@ -16,11 +16,39 @@ import * as Facebook from 'expo-facebook';
 import { LOGIN_SUCCESS, USER_LOGGED } from '../../store/actions/types';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Expo from "expo"
+// import * as Google from 'expo-google-app-auth'
+// import { Google } from "expo"
 import { useSelector, useDispatch } from 'react-redux';
+
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 
 
 const LoginScreen = (props) => {
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: '240686007874-ltqlbg8u1cukrmam7v1ehp2j85la3oml.apps.googleusercontent.com',
+    // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+    // androidClientId: '240686007874-uorsqm1u8mv4vmitqb2jonb9ngemmd5o.apps.googleusercontent.com',
+    // webClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+    scopes: ["email"]
+  });
+
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      const { authentication } = response;
+      // console.log(response.authentication.accessToken)
+      // console.log(response)
+      // console.log("success")
+      googleLogin(response.authentication.accessToken);
+
+    }
+  }, [response]);
+
+
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const dispatch = useDispatch();
@@ -87,6 +115,8 @@ const LoginScreen = (props) => {
             payload: res.data[0]
           });
 
+          console.log("facebook res data")
+          console.log(res.data)
           dispatch({
             type: USER_LOGGED,
             //payload will be what we recieve from the server
@@ -126,6 +156,85 @@ const LoginScreen = (props) => {
       alert(`Facebook Login Error: ${message}`);
     }
   }
+
+
+  const googleLogin = async (token) => {
+    try {
+      const res = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`)
+      // console.log("google login: ")
+      // console.log(res.data.email);
+
+
+
+      const url = "https://proj.ruppin.ac.il/bgroup14/prod/api/member/checkifmemberexists";
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+
+
+
+      let bodyObj = {
+        email: res.data.email
+      }
+      const body = JSON.stringify(bodyObj)
+
+
+      //Check if user already has been registered - if he did, redirect to feed. if not - redirect to profile setup
+      try {
+        //check if member  exists on DB - if  dosent exists will catch  400 or 500 error
+        let res = await axios.post(url, body, config);
+        console.log("after ruppin...")
+        console.log(res.data[0])
+        dispatch({
+          type: LOGIN_SUCCESS,
+          //payload will be the what we recieve from the server
+          payload: res.data[0]
+        });
+
+        dispatch({
+          type: USER_LOGGED,
+          //payload will be what we recieve from the server
+          payload: res.data[0]
+        });
+
+
+
+
+      } catch (error) {
+        console.log("erorr!")
+        // if error code is 400 - user email not in db so redirect to profie setup 
+        if (error.response.status == 400) {
+          let signUpDetails = {
+            email: res.data.email,
+            fullName: res.data.name,
+            fbImage: res.data.picture
+          }
+          await storeData(signUpDetails);
+          goToProfileSetup();
+        }
+        else if (error.response.status == 500) {
+          Alert.alert(
+            "OOPS!",
+            "General error, please try again.",
+            [
+              { text: "OK" }
+            ],
+          );
+
+        }
+
+      }
+
+
+    } catch (e) {
+      console.log("error", e)
+    }
+  }
+
+
 
 
   return (
@@ -180,7 +289,8 @@ const LoginScreen = (props) => {
           btnType="google"
           color="#de4d41"
           backgroundColor="#f5e7ea"
-          onPress={() => googleLogin()}
+          onPress={() => promptAsync()}
+        // onPress={() => googleLogin()}
         />
       </View>
 
