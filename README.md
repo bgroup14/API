@@ -7,7 +7,7 @@
 
 
 ### Login Screen
-![Post](https://user-images.githubusercontent.com/59963384/116822348-0fdcdf00-ab87-11eb-9858-7ab1b1bdaa78.jpeg)
+![Post](https://user-images.githubusercontent.com/59963384/119743947-98ebeb00-be93-11eb-9f01-75285c539840.png)
 
 
 ### Home Screen
