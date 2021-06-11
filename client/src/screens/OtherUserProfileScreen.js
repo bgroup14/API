@@ -167,13 +167,16 @@ const OtherUserProfileScreen = (props) => {
 
     const getChatRoomIdUrl = `https://proj.ruppin.ac.il/bgroup14/prod/api/chat/getChatRoomId/${currentMemberId}/${userId}`
 
+
+
     const goToChatWithUser = async () => {
+
 
         try {
 
             const res = await axios(getChatRoomIdUrl);
-            const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
 
+            const { chatRoomId, otherMemberName, otherMemberId, otherMemberImage } = res.data
 
             props.navigation.navigate('ChatWithOtherUser', {
                 chatRoomId: chatRoomId,

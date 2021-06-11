@@ -270,6 +270,7 @@ namespace WebApi.Controllers
                 var chats = db.ChatHistories.Where(x => (x.fromMemberId == memberId && x.toMemberId == otherMemberId) || (x.fromMemberId == otherMemberId && x.toMemberId == memberId)).Select(x => new ChatRoomDTO()
                 {
                     chatRoomId = (int)x.chatRoomId,
+                    otherMemberId = otherMemberId,
                     otherMemberName = db.Members.Where(z => z.id == otherMemberId).Select(y => y.fullName).FirstOrDefault(),
                     otherMemberImage = db.Members.Where(z => z.id == otherMemberId).Select(y => y.pictureUrl).FirstOrDefault()
                 }).FirstOrDefault();

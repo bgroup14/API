@@ -108,8 +108,12 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
 
+        console.log("notifications")
+
         //when user in app will preform this
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            console.log("open!!!!!!")
+
             setNotification(notification);
             let notificationBody = JSON.parse(notification.request.trigger.remoteMessage.data.body)
             switch (notificationBody.functionToRun) {
@@ -135,6 +139,7 @@ const HomeScreen = (props) => {
 
         //When user not in the app will preform this
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log("close!!!!!!")
             let notificationBody = JSON.parse(response.notification.request.trigger.remoteMessage.data.body)
             switch (notificationBody.functionToRun) {
                 case "receivedNewMessage":
@@ -547,7 +552,7 @@ const HomeScreen = (props) => {
                 <Appbar.Content title="Feed" />
                 {newNotificationFromRedux ? <Badge
                     size={10}
-                    style={{ position: 'absolute', top: 14, right: 14 }}
+                    style={{ position: 'absolute', top: 14, right: 60 }}
                 /> : null}
 
 
