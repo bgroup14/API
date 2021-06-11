@@ -11,6 +11,8 @@ using DATA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WebApi.DTO;
+using System.Net.Mail;
+
 
 
 using System.Text;
@@ -1232,7 +1234,7 @@ namespace WebApi.Controllers
                 if (member.numMeetingsSkipped >= 2)
                 {
                     //TO ADD:
-                    //PDF TO MAIL THAT ACCOUNT IS BLOCKED SINCE SKIPPED 3 MEETINGS
+                    // MAIL THAT ACCOUNT IS BLOCKED SINCE SKIPPED 3 MEETINGS
                     //DELETE MEMBER FROM DB
                     member.numMeetingsSkipped += 1;
                     db.SaveChanges();
@@ -1291,6 +1293,53 @@ namespace WebApi.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+        [HttpGet]
+        [Route("mail")]
+
+
+        public HttpResponseMessage Mail()
+        {
+
+            VolunteerMatchDbContext db = new VolunteerMatchDbContext();
+            try
+            {
+
+                SmtpClient client = new SmtpClient("smtp.mail.yahoo.com", 587)
+                {
+                    Credentials = new NetworkCredential("volunteerzapp@yahoo.com", "jocmheavcewlyclt"),
+                    EnableSsl = true,
+                  //add to member blocked == true
+                  //in client - while register or logn check if member is bloked - if block show alert else contuniue regular
+                  //
+                };
+                client.Send("volunteerzapp@yahoo.com", "alanskverer@gmail.com", "Volunteerz - You got blocked", "dear Alan, since you bailed 3 times from meeting we have to block your account");
+                return Request.CreateResponse(HttpStatusCode.OK, "SEND MAIL");
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e.Message);
+            }
+
+
+            //Console.WriteLine("Sent");
+            //Console.ReadLine();
+
+
+
+
+
+
+        }
 
 
 

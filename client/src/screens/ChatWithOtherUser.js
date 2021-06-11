@@ -18,6 +18,11 @@ import { NO_NEW_MESSAGE } from '../../store/actions/types';
 import ScheduleMeeting from '../components/ScheduleMeeting';
 
 const ChatWithOtherUser = (props) => {
+    const { route, navigation } = props
+    const scrollView = useRef()
+    const [keyboadrdOpen, setKeyboadOpen] = useState(false);
+    const { chatRoomId, otherMemberName, otherMemberImage, otherMemberId } = route.params;
+
 
 
     let userName = useSelector(state => state.user.userName);
@@ -52,10 +57,6 @@ const ChatWithOtherUser = (props) => {
 
 
 
-    const { route, navigation } = props
-    const scrollView = useRef()
-    const [keyboadrdOpen, setKeyboadOpen] = useState(false);
-
 
 
 
@@ -66,7 +67,6 @@ const ChatWithOtherUser = (props) => {
             fetchChatHistory()
         }, [keyboardStatus, newMessageFromRedux, sentNewMessage])
     )
-    const { chatRoomId, otherMemberName, otherMemberImage, otherMemberId } = route.params;
     let userId = useSelector(state => state.auth.userId);
     const [chatHistory, setChatHistory] = useState([]);
     const [restartComponent, setRestartComponent] = useState(1);
@@ -170,12 +170,14 @@ const ChatWithOtherUser = (props) => {
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
         try {
+            console.log(otherMemberId)
             const res = await axios(fetchOtherUserPushNotificationID);
             var otherUserNotificationId = res.data;
 
         } catch (error) {
 
             console.log(error)
+            console.log("erorr!!")
             return null
         }
 
