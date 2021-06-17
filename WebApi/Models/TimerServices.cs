@@ -28,7 +28,7 @@ namespace GlobalTimerWebApi2.Models
             VolunteerMatchDbContext db = new VolunteerMatchDbContext();
 
             //ExponentPushToken[bd3PgHK1A50SU4Iyk3fNpX]
-        /*    TestPush();*/
+            /*    TestPush();*/
 
             /* Test();*/
             try
@@ -39,9 +39,9 @@ namespace GlobalTimerWebApi2.Models
                     if (CheckIfShouldSendPush((int)meeting.meetingUnixDate))
                     {
                         Member firstMember = db.Members.Where(x => x.id == meeting.firstMemberId).FirstOrDefault();
-                        SendPush(firstMember.notificationId);
+                        SendPush(firstMember.notificationId, firstMember.fullName);
                         Member secondMember = db.Members.Where(x => x.id == meeting.secondMemberId).FirstOrDefault();
-                        SendPush(secondMember.notificationId);
+                        SendPush(secondMember.notificationId, secondMember.fullName);
                         //Add Notification To DB 
 
                         Notification firstNotification = new Notification()
@@ -131,7 +131,7 @@ namespace GlobalTimerWebApi2.Models
             return false;
         }
 
-        public static void SendPush(string notificationId)
+        public static void SendPush(string notificationId, string name)
         {
             if (notificationId == null)
             {
@@ -145,8 +145,8 @@ namespace GlobalTimerWebApi2.Models
             var objectToSend = new
             {
                 to = notificationId,
-                title = "Meeting check title",
-                body = "Meeting check body",
+                title = "Meeting with " + name,
+                body = "Let us know how was the meeting",
                 /*badge = 7,*/
                 /*data = new { name = "nir", grade = 100, seconds = DateTime.Now.Second }*/
                 data = new { functionToRun = "meetingCheck" }
@@ -248,10 +248,10 @@ namespace GlobalTimerWebApi2.Models
 
         public static void TestPush()
         {
-           /* if (notificationId == null)
-            {
-                return;
-            }*/
+            /* if (notificationId == null)
+             {
+                 return;
+             }*/
             // Create a request using a URL that can receive a post.   
             WebRequest request = WebRequest.Create("https://exp.host/--/api/v2/push/send");
             // Set the Method property of the request to POST.  
