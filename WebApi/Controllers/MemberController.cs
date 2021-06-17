@@ -1318,9 +1318,9 @@ namespace WebApi.Controllers
                 {
                     Credentials = new NetworkCredential("volunteerzapp@yahoo.com", "jocmheavcewlyclt"),
                     EnableSsl = true,
-                  //add to member blocked == true
-                  //in client - while register or logn check if member is bloked - if block show alert else contuniue regular
-                  //
+                    //add to member blocked == true
+                    //in client - while register or logn check if member is bloked - if block show alert else contuniue regular
+                    //
                 };
                 client.Send("volunteerzapp@yahoo.com", "alanskverer@gmail.com", "Volunteerz - You got blocked", "dear Alan, since you bailed 3 times from meeting we have to block your account");
                 return Request.CreateResponse(HttpStatusCode.OK, "SEND MAIL");
@@ -1374,9 +1374,9 @@ namespace WebApi.Controllers
                     if (CheckIfShouldSendPush((int)meeting.meetingUnixDate))
                     {
                         Member firstMember = db.Members.Where(x => x.id == meeting.firstMemberId).FirstOrDefault();
-                        SendPush(firstMember.notificationId);
+                        SendPush(firstMember.notificationId, firstMember.fullName);
                         Member secondMember = db.Members.Where(x => x.id == meeting.secondMemberId).FirstOrDefault();
-                        SendPush(secondMember.notificationId);
+                        SendPush(secondMember.notificationId, secondMember.fullName);
                         //Add Notification To DB 
 
                         Notification firstNotification = new Notification()
@@ -1445,7 +1445,7 @@ namespace WebApi.Controllers
             return false;
         }
 
-        public static void SendPush(string notificationId)
+        public static void SendPush(string notificationId, string name)
         {
             if (notificationId == null)
             {
@@ -1459,8 +1459,8 @@ namespace WebApi.Controllers
             var objectToSend = new
             {
                 to = notificationId,
-                title = "Meeting check title",
-                body = "Meeting check body",
+                title = "Meeting with " + name,
+                body = "Let us know how was the meeting",
                 /*badge = 7,*/
                 /*data = new { name = "nir", grade = 100, seconds = DateTime.Now.Second }*/
                 data = new { functionToRun = "meetingCheck" }

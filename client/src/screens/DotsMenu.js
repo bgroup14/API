@@ -11,9 +11,9 @@ const DotsMenu = (props) => {
             <TouchableOpacity onPress={() => props.editFeedSettings()}>
                 <Text style={styles.optionText}>Feed Settings</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
                 <Text style={styles.optionText}>Get Certification</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={() => props.logout()}>
                 <Text style={styles.logout}>Logout</Text>
             </TouchableOpacity>
