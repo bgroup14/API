@@ -170,9 +170,14 @@ const ChatWithOtherUser = (props) => {
         //GET OTHER USER TOKEN ID FROM SERVER
         const fetchOtherUserPushNotificationID = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/getnotificationid/${otherMemberId}`
         try {
+
+            console.log("other member id is :")
+
             console.log(otherMemberId)
             const res = await axios(fetchOtherUserPushNotificationID);
             var otherUserNotificationId = res.data;
+            // console.log("other user not id is :")
+            // console.log(otherUserNotificationId)
 
         } catch (error) {
 
@@ -210,6 +215,8 @@ const ChatWithOtherUser = (props) => {
 
 
         };
+
+        // console.log("other user id is:" + otherUserNotificationId)
 
         // POST adds a random id to the object sent
         fetch('https://exp.host/--/api/v2/push/send', {
