@@ -192,7 +192,11 @@ const HomeScreen = (props) => {
         loadFonts();
 
         if (pushNotificationToken == null) {
+            console.log("push not is null")
             checkPushNotifications();
+        } else {
+            console.log("push not is not null")
+            console.log(pushNotificationToken)
         }
 
         if (commentsToShow.length > 0) {
@@ -219,6 +223,7 @@ const HomeScreen = (props) => {
 
 
     const sendPushTokenToServer = async () => {
+        console.log("sending notification id to server....");
         const fetchNotificationIdURL = `https://proj.ruppin.ac.il/bgroup14/prod/api/member/setnotificationid/${userId}/${pushNotificationToken}`
         try {
             const res = await axios.post(fetchNotificationIdURL);
@@ -259,23 +264,20 @@ const HomeScreen = (props) => {
         try {
             var today = new Date().toDateString();
             const lastTimeTokenTaken = await AsyncStorage.getItem('lastTimeTokenTaken')
+
             if (lastTimeTokenTaken == null || lastTimeTokenTaken != today) {
                 //GET TOKEN FROM EXPO
+                console.log("getting user notificatin id")
                 registerForPushNotificationsAsync()
                     .then((token) => {
-
-                        setPushNotificationToken(token)
+                        console.log("the token is....");
+                        console.log(token);
+                        setPushNotificationToken(token.data)
                     });
 
                 await AsyncStorage.setItem('lastTimeTokenTaken', today)
-
-
-
-
             }
-            else {
-                // console.log("Push token is updated to : " + lastTimeTokenTaken)
-            }
+
         }
         catch (error) {
             console.log(error)
